@@ -24,6 +24,10 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import HelloWorld from './HelloWorld';
+
+HelloWorld.sayHello("Hello from native-react");
+
 const App: () => React$Node = () => {
   return (
     <>
