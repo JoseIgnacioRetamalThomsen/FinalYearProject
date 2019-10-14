@@ -28,7 +28,7 @@ export default class Login extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/message/ultraviolet/50/3498db' }} />
+                    <Image style={styles.inputIcon}  source={require('../img/mail.png')} />
                     <TextInput style={styles.inputs}
                         placeholder="Email"
                         keyboardType="email-address"
@@ -37,7 +37,7 @@ export default class Login extends Component {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={{ uri: 'https://png.icons8.com/key-2/ultraviolet/50/3498db' }} />
+                    <Image style={styles.inputIcon} source={require('../img/key.png')} />
                     <TextInput style={styles.inputs}
                         placeholder="Password"
                         secureTextEntry={true}
