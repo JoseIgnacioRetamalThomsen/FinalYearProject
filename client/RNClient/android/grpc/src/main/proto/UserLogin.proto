@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+
+
+package wcity;
+
+option java_multiple_files = true;
+option java_package = "io.grpc.wcity.login";
+option java_outer_classname = "UserLoginProto";
+option objc_class_prefix = "RPC";
+
+service UserAuthentication{
+
+    rpc Check(UserData) returns (LoginResponse);
+    rpc Create(UserData) returns (LoginResponse);
+    
+
+}
+
+message UserData{
+    string email = 1;
+    string hashPassword = 2;
+    string name = 3;
+
+}
+
+message LoginResponse{
+     bool IsUser = 1;
+     string cookie = 2;
+}

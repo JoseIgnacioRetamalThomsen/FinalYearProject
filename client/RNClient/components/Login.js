@@ -7,6 +7,7 @@ import {
     Image,
     Alert
 } from 'react-native';
+import LoginGrpc from "./LoginGrpc"
 //import { LoginButton } from 'react-native-fbsdk';
 import styles from './Style'
 
@@ -22,6 +23,7 @@ export default class Login extends Component {
 
     onClickListener = (viewId) => {
         Alert.alert("Alert", "Button pressed " + viewId);
+        LoginGrpc.check("one","two");
     }
 
     render() {
