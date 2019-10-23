@@ -25,7 +25,7 @@ public class LoginModule  extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void check(String email,String password) {
-        LoginClient client = new LoginClient("localhost", 50051);
+        LoginClient client = new LoginClient("192.168.43.221", 50051);
 
         client.Check(email,password);
     }

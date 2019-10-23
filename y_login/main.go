@@ -1,44 +1,41 @@
 //go:generate protoc -I ../Login --go_out=plugins=grpc:../Login ../Login/UserLogin.proto
 //go:generate protoc -I . --go_out=plugins=grpc:. UserLogin.proto
-// 
-
-
+//
 
 package main
 
 import (
-	"log"
-	"fmt"
 	"context"
+	"fmt"
+	"log"
 	"net"
-	"google.golang.org/grpc"
-	pb "github.com/JoseIgnacioRetamalThomsen/wcity"
-)
 
+	pb "github.com/JoseIgnacioRetamalThomsen/wcity"
+	"google.golang.org/grpc"
+)
 
 const (
 	port = ":50051"
 )
 
-
 type server struct {
 	pb.UnimplementedUserAuthenticationServer
 }
 
-// SayHello implements helloworld.GreeterServer
-func (s *server) Check(ctx context.Context, in *pb.UserData) (*pb.LoginResponse, error) {
+// SayHello implements helloworld.GreeterServerUserResponse
+func (s *server) Check(ctx context.Context, in *pb.UserRequest) (*pb.LoginResponse, error) {
 	log.Printf("Received: %v %v", in.GetEmail(), in.GetHashPassword())
-	
-	return &pb.LoginResponse{IsUser: false,Cookie: "cookie"}, nil
+
+	return &pb.UserResponse{IsUser: false, Cookie: "cookie"}, nil
 }
 
-func (s *server) Create(ctx context.Context, in *pb.UserData)(*pb.LoginResponse, error){
+func (s *server) Create(ctx context.Context, in *pb.UserData) (*pb.LoginResponse, error) {
 
-	return &pb.LoginResponse{IsUser: false,Cookie: "cookie"}, nil
+	return &pb.UserResponse{IsUser: false, Cookie: "cookie"}, nil
 }
 
-func main(){
-	fmt.Print("hello");
+func main() {
+	fmt.Print("hello")
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

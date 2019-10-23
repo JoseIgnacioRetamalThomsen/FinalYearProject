@@ -3,7 +3,7 @@
 
 // user helloword.proto which must be compiled using:
 //go:generate protoc -I ../helloworld --go_out=plugins=grpc:../helloworld ../helloworld/helloworld.proto
-// then the generated file must be places in $GO-PATH\srczgithub.com\JoseIgnacioRetamalThomsen\wcity
+// then the generated file must be places in $GO-PATH\src\github.com\JoseIgnacioRetamalThomsen\wcity
 
 
 
