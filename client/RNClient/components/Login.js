@@ -7,7 +7,7 @@ import {
     Image,
     Alert
 } from 'react-native';
-import LoginGrpc from "./LoginGrpc"
+import LoginGrpc from "./LoginGrpc" 
 //import { LoginButton } from 'react-native-fbsdk';
 import styles from './Style'
 

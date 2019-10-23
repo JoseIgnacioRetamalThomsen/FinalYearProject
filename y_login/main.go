@@ -10,7 +10,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/JoseIgnacioRetamalThomsen/wcity"
+	pb "github.com/joseignacioretamalthomsen/z_wcity"
 	"google.golang.org/grpc"
 )
 
