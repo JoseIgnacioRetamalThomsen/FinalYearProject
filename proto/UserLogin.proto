@@ -2,7 +2,7 @@ syntax = "proto3";
 
 
 
-package y_wcity;
+package wcity;
 
 option java_multiple_files = true;
 option java_package = "io.grpc.wcity.login";
