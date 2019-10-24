@@ -7,8 +7,8 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 import io.grpc.wcity.helloworld.GreeterGrpc;
 
-import io.grpc.wcity.login.LoginResponse;
-import io.grpc.wcity.login.UserData;
+import io.grpc.wcity.login.UserResponse;
+import io.grpc.wcity.login.UserRequest;
 import io.grpc.wcity.login.UserAuthenticationGrpc;
 
 public class LoginClient {
@@ -30,15 +30,17 @@ public class LoginClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
-    public LoginResponse Check(String email, String password) {
-        UserData userData = UserData.newBuilder().setEmail(email).setHashPassword(password).build();
-        LoginResponse response = null;
+    public String Check(String email, String password) {
+        UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
+        UserResponse response = null;
+        String cookig = "";
         try {
-            response = stub.check(userData);
+            response = stub.checkUser(userData);
+            cookig = response.getCookie();
         } catch (StatusRuntimeException e) {
-
+           return e.toString();
         }
-        return response;
+        return cookig;
     }
 
 

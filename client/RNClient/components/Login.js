@@ -23,7 +23,19 @@ export default class Login extends Component {
 
     onClickListener = (viewId) => {
         Alert.alert("Alert", "Button pressed " + viewId);
-        LoginGrpc.check("one","two");
+
+        LoginGrpc.check(
+            "one",
+            "two", 
+        (msg) => {
+            Alert.alert(msg);
+          },
+          (x) => {
+            Alert.alert("26"+x,x);
+
+          },
+        );
+        
     }
 
     render() {

@@ -23,13 +23,13 @@ type server struct {
 }
 
 // SayHello implements helloworld.GreeterServerUserResponse
-func (s *server) Check(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
+func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 	log.Printf("Received: %v %v", in.GetEmail(), in.GetHashPassword())
 
 	return &pb.UserResponse{IsUser: false, Cookie: "cookie"}, nil
 }
 
-func (s *server) Create(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
+func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
 	return &pb.UserResponse{IsUser: false, Cookie: "cookie"}, nil
 }

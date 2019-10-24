@@ -11,20 +11,20 @@ option objc_class_prefix = "RPC";
 
 service UserAuthentication{
 
-    rpc Check(UserData) returns (LoginResponse);
-    rpc Create(UserData) returns (LoginResponse);
+    rpc CheckUser(UserRequest) returns (UserResponse);
+    rpc Create(UserRequest) returns (UserResponse);
     
 
 }
 
-message UserData{
+message UserRequest{
     string email = 1;
     string hashPassword = 2;
     string name = 3;
 
 }
 
-message LoginResponse{
+message UserResponse{
      bool IsUser = 1;
      string cookie = 2;
 }

@@ -5,6 +5,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.wcity.grpc.HelloWorldClient;
 import com.wcity.grpc.LoginClient;
+import io.grpc.wcity.login.UserResponse;
+
+import com.facebook.react.bridge.Callback;
 
 public class LoginModule  extends ReactContextBaseJavaModule {
 
@@ -24,9 +27,21 @@ public class LoginModule  extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void check(String email,String password) {
+    public void check(String email,String password,Callback errorCallback,
+    Callback successCallback) {
         LoginClient client = new LoginClient("192.168.43.221", 50051);
-
-        client.Check(email,password);
+       
+        String msg ="not null";
+         String res = client.Check(email,password);
+        if(res==null) msg="null";
+        else msg = res;
+     
+        try {
+           // measureLayout(tag, ancestorTag, mMeasureBuffer);
+          
+            successCallback.invoke(msg);
+          } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+          }
     }
 }
