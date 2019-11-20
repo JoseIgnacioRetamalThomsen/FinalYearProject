@@ -1,13 +1,19 @@
 package main
 // root pass = oass
 import (
-	
+	//"os"
+//	"bytes"
 	"fmt"
 	 "github.com/ziutek/mymysql/mysql"
 	_"github.com/ziutek/mymysql/native" // Native engine
 	// _ "github.com/ziutek/mymysql/thrsafe" // Thread safe engine
 )
  	
+const Coneection_type = "tcp"
+const MySQL_socket = "127.0.0.1:3306"
+const MySQL_user = "test"
+const MySQL_pass = "newpassword"
+const MySQL_db = "user_login"
 
 type user struct {
 	id int
@@ -29,17 +35,27 @@ func NewUser(email string,username string, hashedPassword []byte, salt []byte) *
 	}
 	
 
+func NewUserId(id int,email string,username string, hashedPassword []byte, salt []byte) *user {
 
+		
+	
+	u := user{id : id,email : email,username: username,hashedPassword: hashedPassword,
+	salt:salt}
+	
+	return &u
+}
+
+	
 func main() {
 
 	//db := mysql.New("tcp", "", "127.0.0.1:3306", "root", "", "test")
 
 
 	fmt.Println("working")
-  u := NewUser("ema8il@gmail.com","name",[]byte("Here is a string...."),[]byte("Here is a string...."))
+  //u := NewUser("ema8il@gmail.com","name",[]byte("Here is a string...."),[]byte("Here is a string...."))
   //AddUser(*u)
-  GetPassSalt(u)
-  fmt.Println(u.salt)
+  //GetPassSalt(u)
+  fmt.Println(GetUser("email9").email)
 }
 
 func AddUser(u user){
@@ -70,6 +86,67 @@ func AddUser(u user){
 
 }
 
+func GetUser(email string) user{
+	db := mysql.New(Coneection_type, "", MySQL_socket, MySQL_user, MySQL_pass, MySQL_db)	
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+		
+	}
+	rows, res,err := db.Query("select * from users where email = '%s'", email)
+	if err != nil {
+		panic(err)
+		
+	}
+	res=res
+	/*
+	fmt.Print(rows[0].Int(0))
+	fmt.Print(rows[0].Str(1))
+	fmt.Print(rows[0].Str(2))
+	var t = rows[0][3].([]byte)
+	fmt.Print(t)
+	fmt.Print(bytes.NewBuffer(t).String())
+	var t1 = rows[0][4].([]byte)
+	fmt.Print(t1)
+	fmt.Print(bytes.NewBuffer(t1).String())
+	res=res
+//	fmt.Print(res)
+	fmt.Println()
+	fmt.Println()
+	*/
+	uu := NewUserId(rows[0].Int(0),rows[0].Str(1),rows[0].Str(2),rows[0][3].([]byte),rows[0][4].([]byte))
+//	var  u user 
+/*
+for rows.Next(){
+		err = rows.Scan(&u.id, &u.email,&u.username,&u.hashedPassword,&u.salt)
+		if err != nil {
+			panic(err)
+			
+		}
+}
+*/
+		/*
+	for{
+	   row,err := res.GetRow()
+	   if err != nil {
+		panic(err)
+		
+	}
+	if row ==nil{
+		break
+	}
+	for _,col:= range row{
+		if col ==nil {
+			fmt.Print("<NULL>")	fmt.Println()
+		fmt.Print(" ")
+	}
+		fmt.Println()
+	}
+*/
+
+	return *uu
+}
+
 func GetPassSalt(u *user){
 	db := mysql.New("tcp", "", "127.0.0.1:3306", "test", "newpassword", "user_login")	
 	err := db.Connect()
@@ -97,3 +174,4 @@ func GetPassSalt(u *user){
 	//u.salt = []byte("12")
 
 }
+
