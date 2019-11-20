@@ -55,7 +55,8 @@ func main() {
   //u := NewUser("ema8il@gmail.com","name",[]byte("Here is a string...."),[]byte("Here is a string...."))
   //AddUser(*u)
   //GetPassSalt(u)
-  fmt.Println(GetUser("email9").email)
+ // fmt.Println(GetUser("email9").email)
+ DelUser("ema8il@gmail.com")
 }
 
 func AddUser(u user){
@@ -84,6 +85,24 @@ func AddUser(u user){
 	defer db.Close()
 
 
+}
+
+func DelUser(email string) {
+	db := mysql.New(Coneection_type, "", MySQL_socket, MySQL_user, MySQL_pass, MySQL_db)	
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+		
+	}
+
+	del,err := db.Prepare("DELETE FROM users WHERE email=?")
+	_,res, err := del.Exec(email)  // OK
+	if err != nil {
+		panic(err)
+		
+	}
+	res=res
+	
 }
 
 func GetUser(email string) user{
