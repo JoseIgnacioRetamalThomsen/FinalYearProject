@@ -9,6 +9,7 @@ CREATE TABLE users(
   username VARCHAR(64),
   hashedPassword BINARY(32),
   salt BINARY(32),
+  isEmail BOOLEAN DEFAULT FALSE,
   PRIMARY KEY(id)
 )Engine=InnoDB;
 
