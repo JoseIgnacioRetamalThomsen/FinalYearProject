@@ -7,7 +7,8 @@ import {
     Image,
     Alert
 } from 'react-native';
-//import { LoginButton } from 'react-native-fbsdk';
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator} from "react-navigation-stack";
 import styles from './Style'
 
 export default class Login extends Component {
@@ -41,7 +42,7 @@ export default class Login extends Component {
                     <TextInput style={styles.inputs}
                         placeholder="Password"
                         secureTextEntry={true}
-                        underlineColorAndroid='transparent'
+                        underlineColorAndroid='transparent'git
                         onChangeText={(password) => this.setState({ password })} />
                 </View>
 
@@ -53,26 +54,9 @@ export default class Login extends Component {
                     <Text>Forgot your password?</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('register')}>
+                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Register')}>
                     <Text>Register</Text>
                 </TouchableHighlight>
-{/* 
-                <View>
-                    <LoginButton
-                        publishPermissions={["email"]}
-                        onLoginFinished={
-                            (error, result) => {
-                                if (error) {
-                                    alert("Login failed with error: " + error.message);
-                                } else if (result.isCancelled) {
-                                    alert("Login was cancelled");
-                                } else {
-                                    alert("Login was successful with permissions: " + result.grantedPermissions)
-                                }
-                            }
-                        }
-                        onLogoutFinished={() => alert("User logged out")} />
-                </View> */}
             </View>
         );
     }
