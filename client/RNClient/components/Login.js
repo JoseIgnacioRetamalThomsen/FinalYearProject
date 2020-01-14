@@ -22,7 +22,19 @@ export default class Login extends Component {
     }
 
     onClickListener = (viewId) => {
-        Alert.alert("Alert", "Button pressed " + viewId);
+        switch(viewId){
+            case 'login':
+                //TODO: CHECK  HERE if login correct
+                this.props.navigation.navigate('HomeScreen');
+                break;
+    
+            case 'restore_password':
+                this.props.navigation.navigate('RestorePassword');
+                break;
+    
+            default:
+                break;
+        }
     }
 
     render() {

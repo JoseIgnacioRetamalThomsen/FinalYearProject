@@ -6,7 +6,8 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator} from "react-navigation-stack";
 import Login from './components/Login';
 import Register from './components/Register';
-
+import HomeScreen from './components/HomeScreen';
+import { logger } from 'react-native-logger'
 
 export default class App extends React.Component {
   render() {
@@ -20,6 +21,9 @@ const AppNavigator = createStackNavigator({
   },
   Register: {
     screen: Register
+  },
+  HomeScreen: {
+    screen: HomeScreen
   }
 });
 
