@@ -4,14 +4,11 @@ import {
     View,
     TextInput,
     TouchableHighlight,
-    Image,
-    Alert
+    Image
 } from 'react-native';
-import { createAppContainer } from "react-navigation";
-import { createStackNavigator} from "react-navigation-stack";
-import styles from './Style'
+import styles from '../../styles/Style'
 
-export default class Login extends Component {
+class Login extends Component {
 
     constructor(props) {
         super(props);
@@ -22,16 +19,16 @@ export default class Login extends Component {
     }
 
     onClickListener = (viewId) => {
-        switch(viewId){
+        switch (viewId) {
             case 'login':
                 //TODO: CHECK  HERE if login correct
-                this.props.navigation.navigate('HomeScreen');
+                this.props.navigation.navigate('app');
                 break;
-    
+
             case 'restore_password':
                 this.props.navigation.navigate('RestorePassword');
                 break;
-    
+
             default:
                 break;
         }
@@ -41,7 +38,7 @@ export default class Login extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon}  source={require('../img/mail.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/mail.png')} />
                     <TextInput style={styles.inputs}
                         placeholder="Email"
                         keyboardType="email-address"
@@ -50,11 +47,11 @@ export default class Login extends Component {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={require('../img/key.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/key.png')} />
                     <TextInput style={styles.inputs}
                         placeholder="Password"
                         secureTextEntry={true}
-                        underlineColorAndroid='transparent'git
+                        underlineColorAndroid='transparent' git
                         onChangeText={(password) => this.setState({ password })} />
                 </View>
 
@@ -73,3 +70,4 @@ export default class Login extends Component {
         );
     }
 }
+export default Login

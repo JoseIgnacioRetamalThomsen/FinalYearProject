@@ -1,39 +1,131 @@
 import React from 'react';
-import HelloWorld from './HelloWorld';
-HelloWorld.sayHello("Hello from native-react");
-import { StyleSheet, Text, View } from 'react-native';
-import { createAppContainer } from "react-navigation";
-import { createStackNavigator} from "react-navigation-stack";
-import Login from './components/Login';
-import Register from './components/Register';
-import HomeScreen from './components/HomeScreen';
-import { logger } from 'react-native-logger'
+import { Image, Dimensions } from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer';
+import { IMAGE } from './src/constants/Image'
 
-export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
+import Feed from './src/component/tabs/feed/Feed'
+import Search from './src/component/tabs/search/Search'
+import FeedDetail from './src/component/tabs/feed/FeedDetail'
+import SearchDetail from './src/component/tabs/search/SearchDetail'
+import SideMenu from './src/component/SideMenu'
+import Profile from './src/component/drawer/Profile'
+import Settings from './src/component/drawer/Settings'
+import Login from './src/component/auth/Login'
+import Register from './src/component/auth/Register'
+import RestorePassword from './src/component/auth/RestorePassword'
+
+const navOptionHandler = (navigation) => ({
+  header: null
+})
+
+const FeedStack = createStackNavigator({
+  Feed: {
+    screen: Feed,
+    navigationOptions: navOptionHandler
+  },
+  FeedDetail: {
+    screen: FeedDetail,
+    navigationOptions: navOptionHandler
+  }
+})
+const SearchStack = createStackNavigator({
+  Search: {
+    screen: Search,
+    navigationOptions: navOptionHandler
+  },
+  SearchDetail: {
+    screen: SearchDetail,
+    navigationOptions: navOptionHandler
+  }
+})
+
+const MainTabs = createBottomTabNavigator({
+  Search: {
+    screen: SearchStack,
+    navigationOptions: {
+      tabBarLabel: 'Search',
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={IMAGE.ICON_SEARCH}
+          resizeMode="contain"
+          style={{ width: 20, height: 20 }}
+        />
+      )
+    }
+  },
+  Feed: {
+    screen: FeedStack,
+    navigationOptions: {
+      tabBarLabel: 'Feed',
+      tabBarIcon: ({ tintColor }) => (
+        <Image
+          source={IMAGE.ICON_FEED}
+          resizeMode="contain"
+          style={{ width: 20, height: 20 }}
+        />
+      )
+    }
+  },
+});
+
+const MainStack = createStackNavigator({
+  Home: {
+    screen: MainTabs,
+    navigationOptions: navOptionHandler
+  },
+  Profile: {
+    screen: Profile,
+    navigationOptions: navOptionHandler
+  },
+  Settings: {
+    screen: Settings,
+    navigationOptions: navOptionHandler
+  },
+}, { initialRouteName: 'Home' })
+
+const appDrawer = createDrawerNavigator({
+  drawer: MainStack,
+},
+  {
+    contentComponent: SideMenu,
+    drawerWidth: Dimensions.get('window').width * 3 / 4
+  }
+)
+
+const authStack = createStackNavigator({
+  Login: {
+    screen: Login,
+    navigationOptions: navOptionHandler
+  },
+
+  Register: {
+    screen: Register,
+    navigationOptions: navOptionHandler
+  },
+  RestorePassword: {
+    screen: RestorePassword,
+    navigationOptions: navOptionHandler
+  },
+
+})
+
+const MyApp = createSwitchNavigator({
+  app: appDrawer,
+  auth: authStack
+},
+  {
+    initialRouteName: 'auth'
+  })
+
+const AppNavigation =  createAppContainer(MyApp);
+
+export default class App extends  React.Component{
+  render(){
+    return(
+        <AppNavigation/>
+    )
   }
 }
-
-const AppNavigator = createStackNavigator({
-  Login: {
-    screen: Login
-  },
-  Register: {
-    screen: Register
-  },
-  HomeScreen: {
-    screen: HomeScreen
-  }
-});
-
-const AppContainer = createAppContainer(AppNavigator);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
