@@ -2,7 +2,7 @@ package main
 
 import (
 	//"os"
-//	"bytes"
+	//	"bytes"
 	"fmt"
 
 	"github.com/joseignacioretamalthomsen/sqlgo/db" // Native engine
@@ -12,49 +12,42 @@ import (
 	"log"
 	"net"
 
+	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
-	pb "github.com/joseignacioretamalthomsen/wcity" 
 )
- 	
-
 
 const (
 	port = ":7777"
 )
 
-
 type server struct {
 	pb.UnimplementedUserLogDBServer
 }
-/*
-int32 id = 1;
-string email = 2;
-bytes hashedPassword = 3;
-bytes salt = 4; 
-AddUser(UserDBRequest) 
-*/
-// SayHello implements helloworld.GreeterServer
+
 func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
 	log.Printf("Received: %v", "Create new user")
-	u := db.NewUser(in.Email,"",in.HashedPassword,in.Salt ,false)
-	db.AddUser(*u)
-	return &pb.UserDBResponse{Id:1,Email:"email"}, nil
+	u := db.NewUser(in.Email, "", in.HashedPassword, in.Salt, false)
+	fmt.Println(db.AddUser(*u))
+	return &pb.UserDBResponse{Id: 10, Email: in.Email, HashedPassword: in.HashedPassword, Salt: in.Salt}, nil
+}
+
+func (s *server) GetUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
+	log.Printf("Received: %v", "Get user")
+	u := db.GetUser(in.Email)
+
+	return &pb.UserDBResponse{Email: u.GetEmail(), HashedPassword: u.GetHashedPassword(), Salt: u.GetSalt()}, nil
+}
+
+func (s *server) UpdateUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
+	log.Printf("Received: %v", "Update user")
+	u := db.NewUser(in.Email, "", in.HashedPassword, in.Salt, false)
+	db.UpdateUser(*u)
+	return &pb.UserDBResponse{Email: u.GetEmail(), HashedPassword: u.GetHashedPassword(), Salt: u.GetSalt()}, nil
 }
 
 func main() {
-
-	//db := mysql.New("tcp", "", "127.0.0.1:3306", "root", "", "test")
-
-
-	fmt.Println("working")
- //u := db.NewUser("ema210il@gmail.com","name1",[]byte("Here is a string...."),[]byte("Here is a string...."),false)
- //fmt.Print( db.AddUser(*u))
-  //GetPassSalt(u)
-//  fmt.Println(GetUser("ema8il@gmail.com").email)
- db.DelUser("ema8il@gmail.com")
-// UpdateUser(*u)
-//ConfirmEmail("ema9il@gmail.com")
-lis, err := net.Listen("tcp", port)
+	fmt.Println("Service Started")
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -64,7 +57,3 @@ lis, err := net.Listen("tcp", port)
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
-
-
-
-
