@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { STYLES } from '../constants/Styles'
 
 export default StyleSheet.create({
     container: {
@@ -44,5 +45,31 @@ export default StyleSheet.create({
     },
     loginText: {
         color: 'white',
+    },
+    content:{
+        flex: 1,
+        alignItems:'center',
+        marginTop:50,
+        paddingLeft:30,
+        paddingRight:30,
+        marginBottom:30
+
+    },
+    btnPressStyle:{
+        backgroundColor: '#0080ff',
+        height:50,
+        width: STYLES.width - 60,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    txtStyle:{
+        color:'#ffffff'
+    },
+    itemImage:{
+        backgroundColor:'#2f455c',
+        height:150,
+        width: STYLES.width-60,
+        borderRadius:8,
+        resizeMode:'contain'
     }
 })

@@ -8,7 +8,7 @@ class SideMenu extends Component {
         return (
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ height: 150, alignItems: 'center', justifyContent: 'center' }}>
-                    <Image source={IMAGE.ICON_USER_DEFAULT} style={{ height: 120, borderRadius: 60 }} />
+                    <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={{ height: 120, width: 120, borderRadius: 60 }} />
                 </View>
                 <ScrollView>
                     <List>
