@@ -114,6 +114,7 @@ func UpdateUser(u user) {
 
 }
 
+
 // If user email exist all data of that user will be wiped out.
 func DelUser(email string) {
 	db := mysql.New(Coneection_type, "", MySQL_socket, MySQL_user, MySQL_pass, MySQL_db)
