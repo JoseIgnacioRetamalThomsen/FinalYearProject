@@ -24,7 +24,7 @@ const (
 
 //first addrs is the master
 var db_addrs = []string{"104.40.206.141:7777"}
-var ps_addrs = []string{"40.118.90.61:5701"}
+var ps_addrs = []string{"52.236.146.149:5701"}
 
 
 type server struct {
