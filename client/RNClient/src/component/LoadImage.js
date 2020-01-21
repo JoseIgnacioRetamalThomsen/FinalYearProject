@@ -53,7 +53,6 @@ export default class LoadImage extends Component {
     }
 
     onClickAddImage = () => {
-        console.log("here")
         const BUTTONS = ['Take Photo', 'Choose Photo from Library', 'Cancel'];
         ActionSheet.show(
             {options: BUTTONS,
