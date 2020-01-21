@@ -1,0 +1,11 @@
+[Unit]
+Description=userMySQl
+
+[Service]
+Type=simple
+Restart=always 
+RestartSec=5s 
+ExecStart=/usr/ser/main
+
+[Install] 
+WantedBy=multi-user.target
