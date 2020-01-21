@@ -4,8 +4,8 @@ export * from './CustomHeader'
 export * from './tabs/feed/Feed'
 export * from './tabs/feed/FeedDetail'
 
-export * from './tabs/search/Search'
-export * from './tabs/search/SearchDetail'
+export * from './tabs/myPosts/MyPosts'
+export * from './tabs/myPosts/PostDetails'
 
 export * from './drawer/Profile'
 export * from './drawer/Setting'

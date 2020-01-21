@@ -7,16 +7,15 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 import { IMAGE } from './src/constants/Image'
 
 import Feed from './src/component/tabs/feed/Feed'
-import Search from './src/component/tabs/search/Search'
+import MyPosts from './src/component/tabs/myPosts/MyPosts'
 import FeedDetail from './src/component/tabs/feed/FeedDetail'
-import SearchDetail from './src/component/tabs/search/SearchDetail'
+import PostDetails from './src/component/tabs/myPosts/PostDetails'
 import SideMenu from './src/component/SideMenu'
 import Profile from './src/component/drawer/Profile'
 import Settings from './src/component/drawer/Settings'
 import Login from './src/component/auth/Login'
 import Register from './src/component/auth/Register'
 import RestorePassword from './src/component/auth/RestorePassword'
-import { Root } from 'native-base';
 import LoadImage from './src/component/LoadImage'
 const navOptionHandler = (navigation) => ({
   header: null
@@ -32,13 +31,13 @@ const FeedStack = createStackNavigator({
     navigationOptions: navOptionHandler
   }
 })
-const SearchStack = createStackNavigator({
-  Search: {
-    screen: Search,
+const MyPostsStack = createStackNavigator({
+  MyPosts: {
+    screen: MyPosts,
     navigationOptions: navOptionHandler
   },
   SearchDetail: {
-    screen: SearchDetail,
+    screen: PostDetails,
     navigationOptions: navOptionHandler
   },
   LoadImage: {
@@ -48,19 +47,6 @@ const SearchStack = createStackNavigator({
 })
 
 const MainTabs = createBottomTabNavigator({
-  Search: {
-    screen: SearchStack,
-    navigationOptions: {
-      tabBarLabel: 'Search',
-      tabBarIcon: ({ tintColor }) => (
-        <Image
-          source={IMAGE.ICON_DEFAULT_PROFILE}
-          resizeMode="contain"
-          style={{ width: 20, height: 20 }}
-        />
-      )
-    }
-  },
   Feed: {
     screen: FeedStack,
     navigationOptions: {
@@ -74,6 +60,19 @@ const MainTabs = createBottomTabNavigator({
       )
     }
   },
+  MyPosts: {
+    screen: MyPostsStack,
+    navigationOptions: {
+      tabBarLabel: 'MyPosts',
+      tabBarIcon: ({ tintColor }) => (
+          <Image
+              source={IMAGE.ICON_DEFAULT_PROFILE}
+              resizeMode="contain"
+              style={{ width: 20, height: 20 }}
+          />
+      )
+    }
+  }
 });
 
 const MainStack = createStackNavigator({
@@ -122,7 +121,7 @@ const MyApp = createSwitchNavigator({
   auth: authStack
 },
   {
-    initialRouteName: 'auth'
+    initialRouteName: 'app'
   })
 
 const AppNavigation =  createAppContainer(MyApp);
@@ -130,10 +129,7 @@ const AppNavigation =  createAppContainer(MyApp);
 export default class App extends  React.Component{
   render(){
     return(
-  // <Root>
   <AppNavigation/>
-
-           // </Root>
     )
   }
 }

@@ -31,7 +31,6 @@ class SideMenu extends Component {
                 </ScrollView>
             </SafeAreaView>
         )
-
     }
 }
 export default SideMenu

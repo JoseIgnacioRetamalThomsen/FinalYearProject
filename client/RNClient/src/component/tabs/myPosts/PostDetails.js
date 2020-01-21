@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Text } from 'native-base';
 import CustomHeader from '../../CustomHeader'
 
-class SearchDetail extends Component {
+class PostDetails extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -15,4 +15,4 @@ class SearchDetail extends Component {
         );
     }
 }
-export default SearchDetail
+export default PostDetails

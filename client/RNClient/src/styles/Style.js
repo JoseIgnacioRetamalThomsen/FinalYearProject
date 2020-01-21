@@ -41,7 +41,7 @@ export default StyleSheet.create({
         borderRadius: 30,
     },
     loginButton: {
-        backgroundColor: "#00b5ec",
+        backgroundColor: "#007AFF",
     },
     loginText: {
         color: 'white',

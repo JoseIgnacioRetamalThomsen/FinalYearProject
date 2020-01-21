@@ -5,15 +5,15 @@ class CustomHeader extends Component {
     render() {
         let { title, isHome } = this.props;
         return (
-            <Header>
+            <Header style ={{backgroundColor:'#007AFF'}}>
                 <Left>
                     {
                         isHome ?
                             <Button transparent onPress={() => this.props.navigation.openDrawer()}>
                                 <Icon name='menu' />
                             </Button> :
-                            <Button transparent>
-                                <Icon name='arrow-back' onPress={() => this.props.navigation.goBack()} />
+                            <Button transparent onPress={() => this.props.navigation.goBack()}>
+                                <Icon name='arrow-back' />
                             </Button>
                     }
                 </Left>

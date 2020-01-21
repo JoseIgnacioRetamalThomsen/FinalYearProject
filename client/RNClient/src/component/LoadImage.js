@@ -52,46 +52,6 @@ export default class LoadImage extends Component {
         });
     }
 
-    // handleChoosePhoto = () => {
-    //     let options = {
-    //         title: 'Select Image',
-    //         customButtons: [
-    //           { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
-    //         ],
-    //         storageOptions: {
-    //           skipBackup: true,
-    //           path: 'images',
-    //         },
-    //       };
-    //
-    //       /**
-    //    * The first arg is the options object for customization (it can also be null or omitted for default options),
-    //    * The second arg is the callback which sends object: response (more info in the API Reference)
-    //    */
-    //   ImagePicker.showImagePicker(options, (response) => {
-    //     console.log('Response = ', response);
-    //
-    //     if (response.didCancel) {
-    //       console.log('User cancelled image picker');
-    //     } else if (response.error) {
-    //       console.log('ImagePicker Error: ', response.error);
-    //     } else if (response.customButton) {
-    //       console.log('User tapped custom button: ', response.customButton);
-    //     } else {
-    //       const source = { uri: response.uri };
-    //
-    //       // You can also display the image using data:
-    //       // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-    //
-    //       this.setState({
-    //        filePath: response,
-    //        fileData: response.data,
-    //        fileUri: response.uri
-    //       });
-    //     }
-    //   });
-    // }
-
     onClickAddImage = () => {
         console.log("here")
         const BUTTONS = ['Take Photo', 'Choose Photo from Library', 'Cancel'];
@@ -134,7 +94,6 @@ return(
                         keyExtractor={(item, index) => index.toString()}
                         extraData={this.state}
                     />
-                    {/*<Button style = {btnPressStyle} title="Choose Photo" onPress={this.onClickAddImage()}> </Button>*/}
                     <TouchableOpacity onPress={this.onClickAddImage} style={btnPressStyle}>
                         <Text style={txtStyle}> Press Add Image</Text>
                     </TouchableOpacity>
@@ -155,7 +114,7 @@ const styles = StyleSheet.create({
 
         },
     btnPressStyle: {
-        backgroundColor: '#0080ff',
+        backgroundColor: '#007AFF',
         height: 50,
         width: width - 60,
         alignItems: 'center',
