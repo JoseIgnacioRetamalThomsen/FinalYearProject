@@ -4,23 +4,20 @@ import {
     View,
     TextInput,
     TouchableHighlight,
-    Image,
-    Alert
+    Image
 } from 'react-native';
-import LoginGrpc from "./LoginGrpc" 
-//import { LoginButton } from 'react-native-fbsdk';
-import styles from './Style'
+import LoginGrpc from "./LoginGrpc"
+import styles from '../../styles/Style'
 
-export default class Login extends Component {
+class Login extends Component {
 
     constructor(props) {
         super(props);
-        state = {
+        this.state = {
             email: '',
             password: '',
         }
     }
-
     onClickListener = (viewId) => {
         Alert.alert("Alert", "Button pressed " + viewId);
 
@@ -35,14 +32,27 @@ export default class Login extends Component {
 
           },
         );
-        
+
+        switch (viewId) {
+            case 'login':
+                //TODO: CHECK  HERE if login correct
+                this.props.navigation.navigate('app');
+                break;
+
+            case 'restore_password':
+                this.props.navigation.navigate('RestorePassword');
+                break;
+
+            default:
+                break;
+        }
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon}  source={require('../img/mail.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/mail.png')} />
                     <TextInput style={styles.inputs}
                         placeholder="Email"
                         keyboardType="email-address"
@@ -51,11 +61,11 @@ export default class Login extends Component {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={require('../img/key.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/key.png')} />
                     <TextInput style={styles.inputs}
                         placeholder="Password"
                         secureTextEntry={true}
-                        underlineColorAndroid='transparent'
+                        underlineColorAndroid='transparent' git
                         onChangeText={(password) => this.setState({ password })} />
                 </View>
 
@@ -67,27 +77,11 @@ export default class Login extends Component {
                     <Text>Forgot your password?</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('register')}>
+                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Register')}>
                     <Text>Register</Text>
                 </TouchableHighlight>
-{/* 
-                <View>
-                    <LoginButton
-                        publishPermissions={["email"]}
-                        onLoginFinished={
-                            (error, result) => {
-                                if (error) {
-                                    alert("Login failed with error: " + error.message);
-                                } else if (result.isCancelled) {
-                                    alert("Login was cancelled");
-                                } else {
-                                    alert("Login was successful with permissions: " + result.grantedPermissions)
-                                }
-                            }
-                        }
-                        onLogoutFinished={() => alert("User logged out")} />
-                </View> */}
             </View>
         );
     }
 }
+export default Login
