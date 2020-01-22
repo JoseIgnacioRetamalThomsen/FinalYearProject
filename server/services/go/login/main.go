@@ -94,6 +94,8 @@ func (s *server) Handler(ctx context.Context, request *Request) (*Response, erro
 // server
 func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
+	fmt.Print("Check user called")
+
 	email, hash , salt ,err := getUser(in.GetEmail())
 	if(err != nil){
 		//user do not exist
@@ -108,6 +110,8 @@ func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRes
 
 // return false if user is updated
 func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
+
+	fmt.Print("create user called user called")
 
 	hash, salt := hash(in.HashPassword)
 
@@ -155,6 +159,8 @@ func main() {
 	//email=email
 	//x,y := hash("12344567")
 	//updateUser("myEmail",x,y)
+
+	fmt.Print("Service started")
 
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
