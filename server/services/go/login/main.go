@@ -8,6 +8,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"google.golang.org/grpc/resolver"
 	"log"
 	"net"
 	"time"
@@ -21,6 +22,14 @@ const (
 
 )
 
+const (
+	exampleScheme      = "example"
+	exampleServiceName = "lb.example.grpc.io"
+)
+
+
+
+
 //first addrs is the master
 var db_addrs = []string{"104.40.206.141:7777"}
 var ps_addrs = []string{"52.236.146.149:5701"}
@@ -29,6 +38,58 @@ var ps_addrs = []string{"52.236.146.149:5701"}
 type server struct {
 	pb.UnimplementedUserAuthenticationServer
 }
+
+//conection
+//https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
+// this type contains state of the server
+type psserverContext struct {
+	// client to GRPC service
+	psClient pb.PasswordServiceClient
+
+	// default timeout
+	timeout time.Duration
+
+	// some other useful objects, like config
+	// or logger (to replace global logging)
+	// (...)
+}
+
+// constructor for server context
+func newClientContext(endpoint string) (*psserverContext, error) {
+	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &psserverContext{
+		psClient: pb.NewPasswordServiceClient(userConn),
+		timeout: time.Second,
+	}
+	return ctx, nil
+}
+
+type serverPass struct {
+	context *psserverContext
+}
+/*
+func (s *server) Handler(ctx context.Context, request *Request) (*Response, error) {
+	clientCtx, cancel := context.WithTimeout(ctx, time.Second)
+	defer cancel()
+	response, err := c.GetUserFromTokenID(
+		clientCtx,
+		&user.GetUserFromTokenRequest{
+			TransactionID: transactionID,
+			OathToken: *oathToken,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	// ...
+}
+
+*/
+
+
 
 // server
 func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
@@ -63,24 +124,34 @@ func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRe
 	return &pb.UserResponse{IsUser: true, Cookie: "cookie"}, nil
 }
 
+var psCon serverPass
+
 func main() {
+
+	// start server pass connection
+	psserverCtx, err := newClientContext(ps_addrs[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+	s1 := &serverPass{psserverCtx}
+	psCon = *s1
 
 	//fmt.Print("helloworld")
 	x,y := hash("helloworld678")
-	//fmt.Print(x)
-	//fmt.Print(y)
+	fmt.Print(x)
+	fmt.Print(y)
 
-	fmt.Print(addUser("myEmail1",x,y))
+	//fmt.Print(addUser("myEmail1",x,y))
 
-	//email,hash,salt,err := getUser("myEmail18")
-	//if(err != nil){
+	email,hash,salt,err := getUser("myEmail1")
+	if(err != nil){
 		//user do not exits
 
-	//}
-	//fmt.Print(email)
-	//hash=hash
-	//salt=salt
-	//fmt.Print(validate("helloworld",hash,salt))
+	}
+	fmt.Print(email)
+	hash=hash
+	salt=salt
+	fmt.Print(validate("helloworld",hash,salt))
 	//email=email
 	//x,y := hash("12344567")
 	//updateUser("myEmail",x,y)
@@ -95,7 +166,7 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
-
+/*
 //hash service
 func validate(pass string, hash []byte,salt []byte) bool{
 	// Set up a connection to the server.
@@ -115,7 +186,21 @@ func validate(pass string, hash []byte,salt []byte) bool{
 
 	return r.Value
 }
+*/
+func validate(pass string, hash []byte,salt []byte) bool{
+	// Set up a connection to the server.
 
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := psCon.context.psClient.Validate(ctx, &pb.ValidateRequest{Password:pass, HasshedPassword: hash , Salt:salt})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+	return r.Value
+}
+/*
 //hash service
 func hash(pass string) ([]byte,[]byte){
 
@@ -133,6 +218,21 @@ func hash(pass string) ([]byte,[]byte){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := c.Hash(ctx, &pb.HashRequest{Password:pass})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+
+	return r.GetHashedPassword(), r.GetSalt()
+}
+*/
+//hash service
+func hash(pass string) ([]byte,[]byte){
+
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := psCon.context.psClient.Hash(ctx, &pb.HashRequest{Password:pass})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
@@ -208,3 +308,41 @@ func updateUser(email string, hash []byte, salt []byte) (string,error) {
 	}
 	return r.Email,nil
 }
+//resolver
+
+type exampleResolverBuilder struct{}
+
+func (*exampleResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOption) (resolver.Resolver, error) {
+	r := &exampleResolver{
+		target: target,
+		cc:     cc,
+		addrsStore: map[string][]string{
+			exampleServiceName: db_addrs,
+		},
+	}
+	r.start()
+	return r, nil
+}
+func (*exampleResolverBuilder) Scheme() string { return exampleScheme }
+
+type exampleResolver struct {
+	target     resolver.Target
+	cc         resolver.ClientConn
+	addrsStore map[string][]string
+}
+
+func (r *exampleResolver) start() {
+	addrStrs := r.addrsStore[r.target.Endpoint]
+	addrs := make([]resolver.Address, len(addrStrs))
+	for i, s := range addrStrs {
+		addrs[i] = resolver.Address{Addr: s}
+	}
+	r.cc.UpdateState(resolver.State{Addresses: addrs})
+}
+func (*exampleResolver) ResolveNow(o resolver.ResolveNowOption) {}
+func (*exampleResolver) Close()                                  {}
+
+func init() {
+	resolver.Register(&exampleResolverBuilder{})
+}
+
