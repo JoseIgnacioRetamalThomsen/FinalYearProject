@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"github.com/ziutek/mymysql/mysql"
 	_ "github.com/ziutek/mymysql/native"
 )
@@ -47,6 +48,10 @@ func NewUserId(id int, email string, username string, hashedPassword []byte, sal
 
 	return &u
 }
+func NewUserEmty() *user{
+	u := user{}
+	return &u
+}
 
 //Should be use for create a user for first time only.
 //Returns true if user is created.
@@ -71,79 +76,81 @@ func AddUser(u user) bool {
 	return created
 }
 
-func ConfirmEmail(email string) {
+func ConfirmEmail(email string) (bool,error){
 	db := mysql.New("tcp", "", "127.0.0.1:3306", "test", "newpassword", "user_login")
 	err := db.Connect()
 	if err != nil {
-		panic(err)
+		return false , errors.New(("can't connect"))
 	}
 	stmt, err := db.Prepare("UPDATE users SET  isEmail = true WHERE email=?")
 	//checkError(err)
 	if err != nil {
-		panic(err)
+		return false , errors.New(("can't confirm"))
 
 	}
 
 	_, res, err := stmt.Exec(email)
 	if err != nil {
-		panic(err)
+		return false , errors.New(("can't confirm"))
 
 	}
 	res = res
+	return true, nil
 }
 
-func UpdateUser(u user) {
+func UpdateUser(u user) (bool,error){
 	db := mysql.New("tcp", "", "127.0.0.1:3306", "test", "newpassword", "user_login")
 	err := db.Connect()
 	if err != nil {
-		panic(err)
+		return false, errors.New("Can't connect")
 	}
 	stmt, err := db.Prepare("UPDATE users SET username = ?, hashedpassword = ?, salt = ? , isEmail = ? WHERE email=?")
 	//checkError(err)
 	if err != nil {
-		panic(err)
+		return false , errors.New(("can't update"))
 
 	}
 
 	_, res, err := stmt.Exec(u.username, u.hashedPassword, u.salt, u.isEmail, u.email)
 	if err != nil {
-		panic(err)
+		return false, errors.New(("can't update"))
 
 	}
 	res = res
-
+	return true,nil
 }
 
 
 // If user email exist all data of that user will be wiped out.
-func DelUser(email string) {
+func DelUser(email string) int64{
 	db := mysql.New(Coneection_type, "", MySQL_socket, MySQL_user, MySQL_pass, MySQL_db)
 	err := db.Connect()
 	if err != nil {
-		panic(err)
+		return -1
 
 	}
 	del, err := db.Prepare("DELETE FROM users WHERE email=?")
 	_, res, err := del.Exec(email) // OK
 	if err != nil {
-		panic(err)
+		return -1
 	}
-	res = res
+
+	return int64(res.InsertId())
 
 }
 
 // Return user data.
-func GetUser(email string) user {
+func GetUser(email string) (user,error) {
 	db := mysql.New(Coneection_type, "", MySQL_socket, MySQL_user, MySQL_pass, MySQL_db)
 	err := db.Connect()
 	if err != nil {
-		panic(err)
+		return *NewUserEmty(),errors.New("Can't connect")
 	}
 	rows, res, err := db.Query("select * from users where email = '%s'", email)
 	if err != nil {
-		panic(err)
+		return *NewUserEmty(),errors.New("user don't exist")
 	}
 	res = res
 	u := NewUserId(rows[0].Int(0), rows[0].Str(1), rows[0].Str(2), rows[0][3].([]byte), rows[0][4].([]byte), rows[0].Bool(5))
-	return *u
+	return *u,nil
 }
