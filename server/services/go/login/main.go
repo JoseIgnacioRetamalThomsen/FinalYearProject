@@ -45,12 +45,21 @@ func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRes
 	return &pb.UserResponse{IsUser: isValid, Cookie: "cookie"}, nil
 }
 
+// return false if user is updated
 func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
 	hash, salt := hash(in.HashPassword)
 
-	AddUser(in.Email,hash,salt)
+	_, err := addUser(in.Email,hash,salt)
 
+	if err!=nil{
+		// if user exist we update
+		_, err := updateUser(in.Email,hash,salt)
+		if err!=nil{
+			return nil, errors.New("Can't create or update.")
+		}
+		return &pb.UserResponse{IsUser: false, Cookie: "cookie"}, nil
+	}
 	return &pb.UserResponse{IsUser: true, Cookie: "cookie"}, nil
 }
 
@@ -61,7 +70,7 @@ func main() {
 	//fmt.Print(x)
 	//fmt.Print(y)
 
-	fmt.Print(AddUser("myEmail1",x,y))
+	fmt.Print(addUser("myEmail1",x,y))
 
 	//email,hash,salt,err := getUser("myEmail18")
 	//if(err != nil){
@@ -134,12 +143,12 @@ func hash(pass string) ([]byte,[]byte){
 
 
 //db
-func AddUser(email string, hashedPassword []byte, salt []byte) string{
+func addUser(email string, hashedPassword []byte, salt []byte) (string,error){
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(db_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		return email, errors.New("Cant connect.")
 	}
 	defer conn.Close()
 	c := pb.NewUserLogDBClient(conn)
@@ -150,10 +159,10 @@ func AddUser(email string, hashedPassword []byte, salt []byte) string{
 	defer cancel()
 	r, err := c.AddUser(ctx, &pb.UserDBRequest{Email: email, HashedPassword: hashedPassword,Salt:salt})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		return r.GetEmail(), errors.New("Cant add.")
 	}
-	return r.GetEmail()
-	//log.Printf("Greeting: %s", r.GetMessage())
+	return r.GetEmail(),nil
+
 }
 
 //db
@@ -180,7 +189,7 @@ func getUser(email string) (string,[]byte,[]byte,error){
 }
 
 //db
-func updateUser(email string, hash []byte, salt []byte) string {
+func updateUser(email string, hash []byte, salt []byte) (string,error) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(db_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -195,7 +204,7 @@ func updateUser(email string, hash []byte, salt []byte) string {
 	defer cancel()
 	r, err := c.UpdateUser(ctx, &pb.UserDBRequest{Email: email,HashedPassword:hash,Salt:salt})
 	if err != nil {
-		log.Fatalf("could not update user: %v", err)
+		return "", errors.New("cant update")
 	}
-	return r.Email
+	return r.Email,nil
 }
