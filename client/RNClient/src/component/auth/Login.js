@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     Text,
     View,
@@ -12,7 +12,7 @@ class Login extends Component {
 
     constructor(props) {
         super(props);
-        state = {
+        this.state = {
             email: '',
             password: '',
         }
@@ -38,36 +38,40 @@ class Login extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={require('../../img/mail.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/mail.png')}/>
                     <TextInput style={styles.inputs}
-                        placeholder="Email"
-                        keyboardType="email-address"
-                        underlineColorAndroid='transparent'
-                        onChangeText={(email) => this.setState({ email })} />
+                               placeholder="Email"
+                               keyboardType="email-address"
+                               underlineColorAndroid='transparent'
+                               onChangeText={(email) => this.setState({email})}/>
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={require('../../img/key.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/key.png')}/>
                     <TextInput style={styles.inputs}
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        underlineColorAndroid='transparent' git
-                        onChangeText={(password) => this.setState({ password })} />
+                               placeholder="Password"
+                               secureTextEntry={true}
+                               underlineColorAndroid='transparent' git
+                               onChangeText={(password) => this.setState({password})}/>
                 </View>
 
-                <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.onClickListener('login')}>
+                <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
+                                    onPress={() => this.onClickListener('login')}>
                     <Text style={styles.loginText}>Login</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('restore_password')}>
+                <TouchableHighlight style={styles.buttonContainer}
+                                    onPress={() => this.onClickListener('restore_password')}>
                     <Text>Forgot your password?</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Register')}>
+                <TouchableHighlight style={styles.buttonContainer}
+                                    onPress={() => this.props.navigation.navigate('Register')}>
                     <Text>Register</Text>
                 </TouchableHighlight>
             </View>
         );
     }
 }
+
 export default Login

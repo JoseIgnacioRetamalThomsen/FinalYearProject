@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, SafeAreaView, ScrollView } from 'react-native';
 import { Text, List, ListItem } from 'native-base';
 import { IMAGE } from '../constants/Image'
+import GeoLoc from "./GeoLoc";
 
 class SideMenu extends Component {
     render() {
@@ -9,6 +10,7 @@ class SideMenu extends Component {
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={{ height: 150, alignItems: 'center', justifyContent: 'center' }}>
                     <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={{ height: 120, width: 120, borderRadius: 60 }} />
+                    <GeoLoc/>
                 </View>
                 <ScrollView>
                     <List>
