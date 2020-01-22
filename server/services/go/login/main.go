@@ -31,15 +31,100 @@ const (
 
 
 //first addrs is the master
-var db_addrs = []string{"104.40.206.141:7777"}
+var db_addrs = []string{"104.40.206.141:7777","40.118.90.61:7777"}
 var ps_addrs = []string{"52.236.146.149:5701"}
 
-
+//grpc server
 type server struct {
 	pb.UnimplementedUserAuthenticationServer
 }
 
 
+// password service client
+type clientPassword struct {
+	context *passClientContext
+}
+
+type clientDB struct {
+	context *dbClientContext
+}
+
+type clientDBLoadBalancing struct {
+	context *dbClientContext
+}
+
+type passClientContext struct {
+	psClient pb.PasswordServiceClient
+	timeout time.Duration
+}
+type dbClientContext struct {
+	dbClient pb.UserLogDBClient
+	timeout time.Duration
+}
+type dbClientContextLoadBalancing struct {
+	dbClient pb.UserLogDBClient
+	timeout time.Duration
+}
+//password service connection
+var psCon clientPassword
+// database connection
+var dbConn clientDB
+var dbConnLB clientDBLoadBalancing
+
+/*
+Init client connections
+*/
+
+//https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
+// this type contains state of the server
+
+// constructor for server context
+func newClientContext(endpoint string) (*passClientContext, error) {
+	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &passClientContext{
+		psClient: pb.NewPasswordServiceClient(userConn),
+		timeout: time.Second,
+	}
+	return ctx, nil
+}
+
+func newDBContext(endpoint string) (*dbClientContext, error) {
+	userConn, err := grpc.Dial(
+		endpoint,
+		grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &dbClientContext{
+		dbClient: pb.NewUserLogDBClient(userConn),
+		timeout:  time.Second,
+	}
+	return ctx, nil
+}
+
+func newDBContextLoadBalancing() (*dbClientContext, error) {
+	userConn, err := grpc.Dial(
+		fmt.Sprintf("%s:///%s", exampleScheme, exampleServiceName),
+		grpc.WithBalancerName("round_robin"), 
+		grpc.WithInsecure(),
+		grpc.WithBlock(),
+		)
+	if err != nil {
+		return nil, err
+	}
+	ctx := &dbClientContext{
+		dbClient: pb.NewUserLogDBClient(userConn),
+		timeout:  time.Second,
+	}
+	return ctx, nil
+}
+
+/*
+Server function
+ */
 
 // server
 func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
@@ -63,6 +148,10 @@ func (s *server) Create(ctx context.Context, in *pb.UserRequest) (*pb.UserRespon
 
 	fmt.Print("create user called user called")
 
+	if(len(in.HashPassword) <=6){
+		return nil, errors.New("Password to short")
+	}
+
 	hash, salt := hash(in.HashPassword)
 
 	_, err := addUser(in.Email,hash,salt)
@@ -78,67 +167,6 @@ func (s *server) Create(ctx context.Context, in *pb.UserRequest) (*pb.UserRespon
 	return &pb.UserResponse{IsUser: true, Cookie: "cookie"}, nil
 }
 
-//conection
-//https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
-// this type contains state of the server
-type psserverContext struct {
-	// client to GRPC service
-	psClient pb.PasswordServiceClient
-
-	// default timeout
-	timeout time.Duration
-
-	// some other useful objects, like config
-	// or logger (to replace global logging)
-	// (...)
-}
-// constructor for server context
-func newClientContext(endpoint string) (*psserverContext, error) {
-	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	ctx := &psserverContext{
-		psClient: pb.NewPasswordServiceClient(userConn),
-		timeout: time.Second,
-	}
-	return ctx, nil
-}
-
-type serverPass struct {
-	context *psserverContext
-}
-var psCon serverPass
-
-type dbserverContext struct {
-	// client to GRPC service
-	psClient pb.UserLogDBClient
-
-	// default timeout
-	timeout time.Duration
-
-	// some other useful objects, like config
-	// or logger (to replace global logging)
-	// (...)
-}
-func newDBContext(endpoint string) (*dbserverContext, error) {
-	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	ctx := &dbserverContext{
-		psClient: pb.NewUserLogDBClient(userConn),
-		timeout: time.Second,
-	}
-	return ctx, nil
-}
-
-type serverDB struct {
-	context *dbserverContext
-}
-
-var dbConn serverDB
-
 func main() {
 
 	// start server pass connection
@@ -146,7 +174,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	s1 := &serverPass{psserverCtx}
+	s1 := &clientPassword{psserverCtx}
 	psCon = *s1
 
 	//start db client
@@ -154,25 +182,44 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	s2 := &serverDB{dbserverCtx}
+	s2 := &clientDB{dbserverCtx}
 	dbConn = *s2
 
+	//start load balance connection
+	dbserverCtxLB, err := newDBContextLoadBalancing()
+	if err != nil {
+		log.Fatal(err)
+	}
+	s3 := &clientDBLoadBalancing{dbserverCtxLB}
+	dbConnLB = *s3
+
 	//fmt.Print("helloworld")
-	x,y := hash("helloworld678")
-	fmt.Print(x)
-	fmt.Print(y)
+	//x,y := hash("helloworld678")
+	//fmt.Print(x)
+	//fmt.Print(y)
 
-	//fmt.Print(addUser("myEmail1",x,y))
-
+	//fmt.Print(addUser("myEmail109",x,y))
 	email,hash,salt,err := getUser("myEmail1")
-	if(err != nil){
+	print(hash)
+	email1,hash1,salt1,err1 :=  getUser("myEmail1")
+	print(hash1)
+	//getUser("myEmail1")
+	print(hash)
+	email = email
+	salt = salt
+	email = email1
+	salt = salt1
+	err1=err1
+
+//	email,hash,salt,err := getUser("myEmail1")
+	//if(err != nil){
 		//user do not exits
 
-	}
-	fmt.Print(email)
-	hash=hash
-	salt=salt
-	fmt.Print(validate("helloworld",hash,salt))
+//	}
+	//fmt.Print(email)
+	//hash=hash
+	//salt=salt
+//	fmt.Print(validate("helloworld",hash,salt))
 	//email=email
 	//x,y := hash("12344567")
 	//updateUser("myEmail",x,y)
@@ -227,7 +274,7 @@ func hash(pass string) ([]byte,[]byte){
 
 //db
 func addUser(email string, hashedPassword []byte, salt []byte) (string,error){
-
+/*
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(db_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -235,12 +282,12 @@ func addUser(email string, hashedPassword []byte, salt []byte) (string,error){
 	}
 	defer conn.Close()
 	c := pb.NewUserLogDBClient(conn)
-
+*/
 	// Contact the server and print out its response.
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.AddUser(ctx, &pb.UserDBRequest{Email: email, HashedPassword: hashedPassword,Salt:salt})
+	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, HashedPassword: hashedPassword,Salt:salt})
 	if err != nil {
 		return r.GetEmail(), errors.New("Cant add.")
 	}
@@ -250,19 +297,10 @@ func addUser(email string, hashedPassword []byte, salt []byte) (string,error){
 
 //db
 func getUser(email string) (string,[]byte,[]byte,error){
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(db_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewUserLogDBClient(conn)
-
-	// Contact the server and print out its response.
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.GetUser(ctx, &pb.UserDBRequest{Email: email})
+	r, err := dbConnLB.context.dbClient.GetUser(ctx, &pb.UserDBRequest{Email: email})
 	if err != nil {
 
 		return "",nil,nil, errors.New("could not get user")
@@ -273,19 +311,10 @@ func getUser(email string) (string,[]byte,[]byte,error){
 
 //db
 func updateUser(email string, hash []byte, salt []byte) (string,error) {
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(db_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewUserLogDBClient(conn)
-
-	// Contact the server and print out its response.
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.UpdateUser(ctx, &pb.UserDBRequest{Email: email,HashedPassword:hash,Salt:salt})
+	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email,HashedPassword:hash,Salt:salt})
 	if err != nil {
 		return "", errors.New("cant update")
 	}
