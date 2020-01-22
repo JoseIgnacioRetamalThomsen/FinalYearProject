@@ -39,56 +39,6 @@ type server struct {
 	pb.UnimplementedUserAuthenticationServer
 }
 
-//conection
-//https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
-// this type contains state of the server
-type psserverContext struct {
-	// client to GRPC service
-	psClient pb.PasswordServiceClient
-
-	// default timeout
-	timeout time.Duration
-
-	// some other useful objects, like config
-	// or logger (to replace global logging)
-	// (...)
-}
-
-// constructor for server context
-func newClientContext(endpoint string) (*psserverContext, error) {
-	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	ctx := &psserverContext{
-		psClient: pb.NewPasswordServiceClient(userConn),
-		timeout: time.Second,
-	}
-	return ctx, nil
-}
-
-type serverPass struct {
-	context *psserverContext
-}
-/*
-func (s *server) Handler(ctx context.Context, request *Request) (*Response, error) {
-	clientCtx, cancel := context.WithTimeout(ctx, time.Second)
-	defer cancel()
-	response, err := c.GetUserFromTokenID(
-		clientCtx,
-		&user.GetUserFromTokenRequest{
-			TransactionID: transactionID,
-			OathToken: *oathToken,
-		},
-	)
-	if err != nil {
-		return nil, err
-	}
-	// ...
-}
-
-*/
-
 
 
 // server
@@ -109,7 +59,7 @@ func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRes
 }
 
 // return false if user is updated
-func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
+func (s *server) Create(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
 	fmt.Print("create user called user called")
 
@@ -128,7 +78,66 @@ func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRe
 	return &pb.UserResponse{IsUser: true, Cookie: "cookie"}, nil
 }
 
+//conection
+//https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
+// this type contains state of the server
+type psserverContext struct {
+	// client to GRPC service
+	psClient pb.PasswordServiceClient
+
+	// default timeout
+	timeout time.Duration
+
+	// some other useful objects, like config
+	// or logger (to replace global logging)
+	// (...)
+}
+// constructor for server context
+func newClientContext(endpoint string) (*psserverContext, error) {
+	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &psserverContext{
+		psClient: pb.NewPasswordServiceClient(userConn),
+		timeout: time.Second,
+	}
+	return ctx, nil
+}
+
+type serverPass struct {
+	context *psserverContext
+}
 var psCon serverPass
+
+type dbserverContext struct {
+	// client to GRPC service
+	psClient pb.UserLogDBClient
+
+	// default timeout
+	timeout time.Duration
+
+	// some other useful objects, like config
+	// or logger (to replace global logging)
+	// (...)
+}
+func newDBContext(endpoint string) (*dbserverContext, error) {
+	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &dbserverContext{
+		psClient: pb.NewUserLogDBClient(userConn),
+		timeout: time.Second,
+	}
+	return ctx, nil
+}
+
+type serverDB struct {
+	context *dbserverContext
+}
+
+var dbConn serverDB
 
 func main() {
 
@@ -139,6 +148,14 @@ func main() {
 	}
 	s1 := &serverPass{psserverCtx}
 	psCon = *s1
+
+	//start db client
+	dbserverCtx, err := newDBContext(db_addrs[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+	s2 := &serverDB{dbserverCtx}
+	dbConn = *s2
 
 	//fmt.Print("helloworld")
 	x,y := hash("helloworld678")
@@ -172,28 +189,13 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
-/*
+
+
 //hash service
-func validate(pass string, hash []byte,salt []byte) bool{
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(ps_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewPasswordServiceClient(conn)
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.Validate(ctx, &pb.ValidateRequest{Password:pass, HasshedPassword: hash , Salt:salt})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
 
-	return r.Value
-}
-*/
-func validate(pass string, hash []byte,salt []byte) bool{
+
+func  validate(pass string, hash []byte,salt []byte) bool{
 	// Set up a connection to the server.
 
 
@@ -206,32 +208,7 @@ func validate(pass string, hash []byte,salt []byte) bool{
 
 	return r.Value
 }
-/*
-//hash service
-func hash(pass string) ([]byte,[]byte){
 
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(ps_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewPasswordServiceClient(conn)
-
-	// Contact the server and print out its response.
-
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.Hash(ctx, &pb.HashRequest{Password:pass})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-
-
-	return r.GetHashedPassword(), r.GetSalt()
-}
-*/
 //hash service
 func hash(pass string) ([]byte,[]byte){
 
@@ -352,3 +329,70 @@ func init() {
 	resolver.Register(&exampleResolverBuilder{})
 }
 
+/*
+//hash service
+func validate(pass string, hash []byte,salt []byte) bool{
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(ps_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewPasswordServiceClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.Validate(ctx, &pb.ValidateRequest{Password:pass, HasshedPassword: hash , Salt:salt})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+	return r.Value
+}
+*/
+
+/*
+//hash service
+func hash(pass string) ([]byte,[]byte){
+
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(ps_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewPasswordServiceClient(conn)
+
+	// Contact the server and print out its response.
+
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.Hash(ctx, &pb.HashRequest{Password:pass})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+
+	return r.GetHashedPassword(), r.GetSalt()
+}
+*/
+
+/*
+func (s *server) Handler(ctx context.Context, request *Request) (*Response, error) {
+	clientCtx, cancel := context.WithTimeout(ctx, time.Second)
+	defer cancel()
+	response, err := c.GetUserFromTokenID(
+		clientCtx,
+		&user.GetUserFromTokenRequest{
+			TransactionID: transactionID,
+			OathToken: *oathToken,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	// ...
+}
+
+*/
