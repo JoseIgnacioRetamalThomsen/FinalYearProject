@@ -17,6 +17,7 @@ import Login from './src/component/auth/Login'
 import Register from './src/component/auth/Register'
 import RestorePassword from './src/component/auth/RestorePassword'
 import LoadImage from './src/component/LoadImage'
+import MapInput from "./src/component/MapInput";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -122,7 +123,7 @@ const MyApp = createSwitchNavigator({
         auth: authStack
     },
     {
-        initialRouteName: 'auth'
+        initialRouteName: 'app'
     })
 
 const AppNavigation = createAppContainer(MyApp);
