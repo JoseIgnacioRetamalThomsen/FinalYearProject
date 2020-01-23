@@ -6,15 +6,15 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	pb "github.com/joseignacioretamalthomsen/wcity"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/resolver"
 	"log"
 	"net"
-	"time"
-
-	pb "github.com/joseignacioretamalthomsen/wcity"
-	"google.golang.org/grpc"
+	"os"
 )
 
 const (
@@ -23,53 +23,25 @@ const (
 )
 
 const (
-	exampleScheme      = "example"
-	exampleServiceName = "lb.example.grpc.io"
+	dbConnectionScheme = "dbConnectionScheme"
+	exampleServiceName = "ie.gmit.wcity.auth"
 )
 
-
+type Configuration struct {
+	Port int64
+	Dbs    []string
+	Pss   []string
+}
 
 
 //first addrs is the master
 var db_addrs = []string{"104.40.206.141:7777","40.118.90.61:7777"}
-var ps_addrs = []string{"52.236.146.149:5701"}
+var ps_addrs = []string{"52.236.146.149:5701","51.124.149.63:5701"}
 
 //grpc server
 type server struct {
 	pb.UnimplementedUserAuthenticationServer
 }
-
-
-// password service client
-type clientPassword struct {
-	context *passClientContext
-}
-
-type clientDB struct {
-	context *dbClientContext
-}
-
-type clientDBLoadBalancing struct {
-	context *dbClientContext
-}
-
-type passClientContext struct {
-	psClient pb.PasswordServiceClient
-	timeout time.Duration
-}
-type dbClientContext struct {
-	dbClient pb.UserLogDBClient
-	timeout time.Duration
-}
-type dbClientContextLoadBalancing struct {
-	dbClient pb.UserLogDBClient
-	timeout time.Duration
-}
-//password service connection
-var psCon clientPassword
-// database connection
-var dbConn clientDB
-var dbConnLB clientDBLoadBalancing
 
 /*
 Init client connections
@@ -78,55 +50,6 @@ Init client connections
 //https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
 // this type contains state of the server
 
-// constructor for server context
-func newClientContext(endpoint string) (*passClientContext, error) {
-	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	ctx := &passClientContext{
-		psClient: pb.NewPasswordServiceClient(userConn),
-		timeout: time.Second,
-	}
-	return ctx, nil
-}
-
-func newDBContext(endpoint string) (*dbClientContext, error) {
-	userConn, err := grpc.Dial(
-		endpoint,
-		grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	ctx := &dbClientContext{
-		dbClient: pb.NewUserLogDBClient(userConn),
-		timeout:  time.Second,
-	}
-	return ctx, nil
-}
-
-func newDBContextLoadBalancing() (*dbClientContext, error) {
-	userConn, err := grpc.Dial(
-		fmt.Sprintf("%s:///%s", exampleScheme, exampleServiceName),
-		grpc.WithBalancerName("round_robin"), 
-		grpc.WithInsecure(),
-		grpc.WithBlock(),
-		)
-	if err != nil {
-		return nil, err
-	}
-	ctx := &dbClientContext{
-		dbClient: pb.NewUserLogDBClient(userConn),
-		timeout:  time.Second,
-	}
-	return ctx, nil
-}
-
-/*
-Server function
- */
-
-// server
 func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
 	fmt.Print("Check user called")
@@ -167,7 +90,23 @@ func (s *server) Create(ctx context.Context, in *pb.UserRequest) (*pb.UserRespon
 	return &pb.UserResponse{IsUser: true, Cookie: "cookie"}, nil
 }
 
+//init resolvers
+func init() {
+	resolver.Register(&databasesResolverBuilder{})
+}
+var configuration Configuration
 func main() {
+
+	file, _ := os.Open("config.json")
+	defer file.Close()
+	decoder := json.NewDecoder(file)
+	configuration = Configuration{}
+	err := decoder.Decode(&configuration)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+	fmt.Println(configuration.Dbs)
+
 
 	// start server pass connection
 	psserverCtx, err := newClientContext(ps_addrs[0])
@@ -178,7 +117,7 @@ func main() {
 	psCon = *s1
 
 	//start db client
-	dbserverCtx, err := newDBContext(db_addrs[0])
+	dbserverCtx, err := newDBContext(configuration.Dbs[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -195,8 +134,8 @@ func main() {
 
 	//fmt.Print("helloworld")
 	//x,y := hash("helloworld678")
-	//fmt.Print(x)
-	//fmt.Print(y)
+
+
 
 	//fmt.Print(addUser("myEmail109",x,y))
 	email,hash,salt,err := getUser("myEmail1")
@@ -238,125 +177,17 @@ func main() {
 }
 
 
-//hash service
 
 
 
-func  validate(pass string, hash []byte,salt []byte) bool{
-	// Set up a connection to the server.
 
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := psCon.context.psClient.Validate(ctx, &pb.ValidateRequest{Password:pass, HasshedPassword: hash , Salt:salt})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-
-	return r.Value
-}
-
-//hash service
-func hash(pass string) ([]byte,[]byte){
-
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := psCon.context.psClient.Hash(ctx, &pb.HashRequest{Password:pass})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-
-
-	return r.GetHashedPassword(), r.GetSalt()
-}
-
-
-//db
-func addUser(email string, hashedPassword []byte, salt []byte) (string,error){
+//resolvers
 /*
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(db_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		return email, errors.New("Cant connect.")
-	}
-	defer conn.Close()
-	c := pb.NewUserLogDBClient(conn)
-*/
-	// Contact the server and print out its response.
+ Database resolver
+ */
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, HashedPassword: hashedPassword,Salt:salt})
-	if err != nil {
-		return r.GetEmail(), errors.New("Cant add.")
-	}
-	return r.GetEmail(),nil
 
-}
-
-//db
-func getUser(email string) (string,[]byte,[]byte,error){
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := dbConnLB.context.dbClient.GetUser(ctx, &pb.UserDBRequest{Email: email})
-	if err != nil {
-
-		return "",nil,nil, errors.New("could not get user")
-	}
-
-	 return r.GetEmail(),r.GetHashedPassword(), r.GetSalt(),nil
-}
-
-//db
-func updateUser(email string, hash []byte, salt []byte) (string,error) {
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email,HashedPassword:hash,Salt:salt})
-	if err != nil {
-		return "", errors.New("cant update")
-	}
-	return r.Email,nil
-}
-//resolver
-
-type exampleResolverBuilder struct{}
-
-func (*exampleResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOption) (resolver.Resolver, error) {
-	r := &exampleResolver{
-		target: target,
-		cc:     cc,
-		addrsStore: map[string][]string{
-			exampleServiceName: db_addrs,
-		},
-	}
-	r.start()
-	return r, nil
-}
-func (*exampleResolverBuilder) Scheme() string { return exampleScheme }
-
-type exampleResolver struct {
-	target     resolver.Target
-	cc         resolver.ClientConn
-	addrsStore map[string][]string
-}
-
-func (r *exampleResolver) start() {
-	addrStrs := r.addrsStore[r.target.Endpoint]
-	addrs := make([]resolver.Address, len(addrStrs))
-	for i, s := range addrStrs {
-		addrs[i] = resolver.Address{Addr: s}
-	}
-	r.cc.UpdateState(resolver.State{Addresses: addrs})
-}
-func (*exampleResolver) ResolveNow(o resolver.ResolveNowOption) {}
-func (*exampleResolver) Close()                                  {}
-
-func init() {
-	resolver.Register(&exampleResolverBuilder{})
-}
 
 /*
 //hash service
