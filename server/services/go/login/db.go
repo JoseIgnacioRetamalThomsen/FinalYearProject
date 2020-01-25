@@ -19,11 +19,11 @@ type clientDBLoadBalancing struct {
 }
 
 type dbClientContext struct {
-	dbClient pb.UserLogDBClient
+	dbClient pb.UserAuthDBClient
 	timeout time.Duration
 }
 type dbClientContextLoadBalancing struct {
-	dbClient pb.UserLogDBClient
+	dbClient pb.UserAuthDBClient
 	timeout time.Duration
 }
 
@@ -36,7 +36,7 @@ func newDBContext(endpoint string) (*dbClientContext, error) {
 		return nil, err
 	}
 	ctx := &dbClientContext{
-		dbClient: pb.NewUserLogDBClient(userConn),
+		dbClient: pb.NewUserAuthDBClient(userConn),
 		timeout:  time.Second,
 	}
 	return ctx, nil
@@ -53,7 +53,7 @@ func newDBContextLoadBalancing() (*dbClientContext, error) {
 		return nil, err
 	}
 	ctx := &dbClientContext{
-		dbClient: pb.NewUserLogDBClient(userConn),
+		dbClient: pb.NewUserAuthDBClient(userConn),
 		timeout:  time.Second,
 	}
 	return ctx, nil
@@ -69,7 +69,7 @@ func getUser(email string) (string,[]byte,[]byte,error){
 		return "",nil,nil, errors.New("could not get user")
 	}
 
-	return r.GetEmail(),r.GetHashedPassword(), r.GetSalt(),nil
+	return r.GetEmail(),r.GetPasswordHash(), r.GetPasswordSalt(),nil
 }
 
 
@@ -78,7 +78,7 @@ func addUser(email string, hashedPassword []byte, salt []byte) (string,error){
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, HashedPassword: hashedPassword,Salt:salt})
+	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hashedPassword,PasswordSalt:salt})
 	if err != nil {
 		return r.GetEmail(), errors.New("Cant add.")
 	}
@@ -90,7 +90,7 @@ func updateUser(email string, hash []byte, salt []byte) (string,error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email,HashedPassword:hash,Salt:salt})
+	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email,PasswordHash:hash,PasswordSalt:salt})
 	if err != nil {
 		return "", errors.New("cant update")
 	}

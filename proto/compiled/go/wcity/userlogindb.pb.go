@@ -27,8 +27,8 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 // The user request.
 type UserDBRequest struct {
 	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	HashedPassword       []byte   `protobuf:"bytes,2,opt,name=hashedPassword,proto3" json:"hashedPassword,omitempty"`
-	Salt                 []byte   `protobuf:"bytes,3,opt,name=salt,proto3" json:"salt,omitempty"`
+	PasswordHash         []byte   `protobuf:"bytes,2,opt,name=passwordHash,proto3" json:"passwordHash,omitempty"`
+	PasswordSalt         []byte   `protobuf:"bytes,3,opt,name=passwordSalt,proto3" json:"passwordSalt,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -66,26 +66,26 @@ func (m *UserDBRequest) GetEmail() string {
 	return ""
 }
 
-func (m *UserDBRequest) GetHashedPassword() []byte {
+func (m *UserDBRequest) GetPasswordHash() []byte {
 	if m != nil {
-		return m.HashedPassword
+		return m.PasswordHash
 	}
 	return nil
 }
 
-func (m *UserDBRequest) GetSalt() []byte {
+func (m *UserDBRequest) GetPasswordSalt() []byte {
 	if m != nil {
-		return m.Salt
+		return m.PasswordSalt
 	}
 	return nil
 }
 
 // the response
 type UserDBResponse struct {
-	Id                   int32    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	HashedPassword       []byte   `protobuf:"bytes,3,opt,name=hashedPassword,proto3" json:"hashedPassword,omitempty"`
-	Salt                 []byte   `protobuf:"bytes,4,opt,name=salt,proto3" json:"salt,omitempty"`
+	PasswordHash         []byte   `protobuf:"bytes,3,opt,name=passwordHash,proto3" json:"passwordHash,omitempty"`
+	PasswordSalt         []byte   `protobuf:"bytes,4,opt,name=passwordSalt,proto3" json:"passwordSalt,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -116,7 +116,7 @@ func (m *UserDBResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UserDBResponse proto.InternalMessageInfo
 
-func (m *UserDBResponse) GetId() int32 {
+func (m *UserDBResponse) GetId() int64 {
 	if m != nil {
 		return m.Id
 	}
@@ -130,45 +130,214 @@ func (m *UserDBResponse) GetEmail() string {
 	return ""
 }
 
-func (m *UserDBResponse) GetHashedPassword() []byte {
+func (m *UserDBResponse) GetPasswordHash() []byte {
 	if m != nil {
-		return m.HashedPassword
+		return m.PasswordHash
 	}
 	return nil
 }
 
-func (m *UserDBResponse) GetSalt() []byte {
+func (m *UserDBResponse) GetPasswordSalt() []byte {
 	if m != nil {
-		return m.Salt
+		return m.PasswordSalt
 	}
 	return nil
+}
+
+type UserSessionRequest struct {
+	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Token                string   `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UserSessionRequest) Reset()         { *m = UserSessionRequest{} }
+func (m *UserSessionRequest) String() string { return proto.CompactTextString(m) }
+func (*UserSessionRequest) ProtoMessage()    {}
+func (*UserSessionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9e0494eb4328d412, []int{2}
+}
+
+func (m *UserSessionRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UserSessionRequest.Unmarshal(m, b)
+}
+func (m *UserSessionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UserSessionRequest.Marshal(b, m, deterministic)
+}
+func (m *UserSessionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UserSessionRequest.Merge(m, src)
+}
+func (m *UserSessionRequest) XXX_Size() int {
+	return xxx_messageInfo_UserSessionRequest.Size(m)
+}
+func (m *UserSessionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UserSessionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UserSessionRequest proto.InternalMessageInfo
+
+func (m *UserSessionRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *UserSessionRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+type UserSessionResponse struct {
+	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Token                string   `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	LoginTime            string   `protobuf:"bytes,3,opt,name=loginTime,proto3" json:"loginTime,omitempty"`
+	LastSeenTime         string   `protobuf:"bytes,4,opt,name=lastSeenTime,proto3" json:"lastSeenTime,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UserSessionResponse) Reset()         { *m = UserSessionResponse{} }
+func (m *UserSessionResponse) String() string { return proto.CompactTextString(m) }
+func (*UserSessionResponse) ProtoMessage()    {}
+func (*UserSessionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9e0494eb4328d412, []int{3}
+}
+
+func (m *UserSessionResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UserSessionResponse.Unmarshal(m, b)
+}
+func (m *UserSessionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UserSessionResponse.Marshal(b, m, deterministic)
+}
+func (m *UserSessionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UserSessionResponse.Merge(m, src)
+}
+func (m *UserSessionResponse) XXX_Size() int {
+	return xxx_messageInfo_UserSessionResponse.Size(m)
+}
+func (m *UserSessionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UserSessionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UserSessionResponse proto.InternalMessageInfo
+
+func (m *UserSessionResponse) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *UserSessionResponse) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *UserSessionResponse) GetLoginTime() string {
+	if m != nil {
+		return m.LoginTime
+	}
+	return ""
+}
+
+func (m *UserSessionResponse) GetLastSeenTime() string {
+	if m != nil {
+		return m.LastSeenTime
+	}
+	return ""
+}
+
+type UserDeleteSessionResponse struct {
+	Success              bool     `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UserDeleteSessionResponse) Reset()         { *m = UserDeleteSessionResponse{} }
+func (m *UserDeleteSessionResponse) String() string { return proto.CompactTextString(m) }
+func (*UserDeleteSessionResponse) ProtoMessage()    {}
+func (*UserDeleteSessionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9e0494eb4328d412, []int{4}
+}
+
+func (m *UserDeleteSessionResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UserDeleteSessionResponse.Unmarshal(m, b)
+}
+func (m *UserDeleteSessionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UserDeleteSessionResponse.Marshal(b, m, deterministic)
+}
+func (m *UserDeleteSessionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UserDeleteSessionResponse.Merge(m, src)
+}
+func (m *UserDeleteSessionResponse) XXX_Size() int {
+	return xxx_messageInfo_UserDeleteSessionResponse.Size(m)
+}
+func (m *UserDeleteSessionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UserDeleteSessionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UserDeleteSessionResponse proto.InternalMessageInfo
+
+func (m *UserDeleteSessionResponse) GetSuccess() bool {
+	if m != nil {
+		return m.Success
+	}
+	return false
+}
+
+func (m *UserDeleteSessionResponse) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
 }
 
 func init() {
 	proto.RegisterType((*UserDBRequest)(nil), "wcity.UserDBRequest")
 	proto.RegisterType((*UserDBResponse)(nil), "wcity.UserDBResponse")
+	proto.RegisterType((*UserSessionRequest)(nil), "wcity.UserSessionRequest")
+	proto.RegisterType((*UserSessionResponse)(nil), "wcity.UserSessionResponse")
+	proto.RegisterType((*UserDeleteSessionResponse)(nil), "wcity.UserDeleteSessionResponse")
 }
 
 func init() { proto.RegisterFile("userlogindb.proto", fileDescriptor_9e0494eb4328d412) }
 
 var fileDescriptor_9e0494eb4328d412 = []byte{
-	// 252 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0x2c, 0x2d, 0x4e, 0x2d,
-	0xca, 0xc9, 0x4f, 0xcf, 0xcc, 0x4b, 0x49, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2d,
-	0x4f, 0xce, 0x2c, 0xa9, 0x54, 0x4a, 0xe4, 0xe2, 0x0d, 0x05, 0xca, 0xb9, 0x38, 0x05, 0xa5, 0x16,
-	0x96, 0xa6, 0x16, 0x97, 0x08, 0x89, 0x70, 0xb1, 0xa6, 0xe6, 0x26, 0x66, 0xe6, 0x48, 0x30, 0x2a,
-	0x30, 0x6a, 0x70, 0x06, 0x41, 0x38, 0x42, 0x6a, 0x5c, 0x7c, 0x19, 0x89, 0xc5, 0x19, 0xa9, 0x29,
-	0x01, 0x89, 0xc5, 0xc5, 0xe5, 0xf9, 0x45, 0x29, 0x12, 0x4c, 0x40, 0x69, 0x9e, 0x20, 0x34, 0x51,
-	0x21, 0x21, 0x2e, 0x96, 0xe2, 0xc4, 0x9c, 0x12, 0x09, 0x66, 0xb0, 0x2c, 0x98, 0xad, 0x54, 0xc4,
-	0xc5, 0x07, 0xb3, 0xa2, 0xb8, 0x20, 0x3f, 0xaf, 0x38, 0x55, 0x88, 0x8f, 0x8b, 0x29, 0x33, 0x05,
-	0x6c, 0x01, 0x6b, 0x10, 0x90, 0x85, 0xb0, 0x93, 0x09, 0xbf, 0x9d, 0xcc, 0x78, 0xed, 0x64, 0x41,
-	0xd8, 0x69, 0xb4, 0x8d, 0x91, 0x8b, 0x13, 0x64, 0xa9, 0x4f, 0x7e, 0xba, 0x8b, 0x93, 0x90, 0x19,
-	0x17, 0xbb, 0x63, 0x4a, 0x0a, 0x88, 0x2f, 0x24, 0xa2, 0x07, 0xf6, 0xb7, 0x1e, 0x8a, 0xa7, 0xa5,
-	0x44, 0xd1, 0x44, 0xa1, 0xee, 0x04, 0xea, 0x73, 0x4f, 0x2d, 0x21, 0x5d, 0x9f, 0x25, 0x17, 0x57,
-	0x68, 0x41, 0x4a, 0x62, 0x49, 0x2a, 0xc9, 0x5a, 0x9d, 0x74, 0xb9, 0x84, 0x33, 0xf3, 0xf5, 0xd2,
-	0x8b, 0x0a, 0x92, 0xa1, 0xf2, 0xe0, 0x58, 0x73, 0xe2, 0x83, 0x7a, 0x26, 0x33, 0x2f, 0x00, 0x14,
-	0x7b, 0x01, 0x8c, 0x8b, 0x98, 0x98, 0x83, 0x02, 0x9c, 0x93, 0xd8, 0xc0, 0x91, 0x69, 0x0c, 0x08,
-	0x00, 0x00, 0xff, 0xff, 0x2f, 0x60, 0x22, 0x8b, 0xe1, 0x01, 0x00, 0x00,
+	// 387 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xa4, 0x53, 0xcf, 0x6a, 0xe2, 0x40,
+	0x1c, 0x26, 0x89, 0xae, 0xeb, 0x6f, 0x55, 0xd8, 0xd1, 0x85, 0x28, 0x7b, 0x90, 0x9c, 0xf6, 0xb2,
+	0x39, 0xec, 0x42, 0xa1, 0xb7, 0x1a, 0x05, 0x0b, 0xf5, 0x20, 0xb1, 0x7d, 0x80, 0x31, 0xf9, 0xa1,
+	0xa1, 0x31, 0x93, 0x66, 0x26, 0x48, 0x2f, 0xbd, 0xf4, 0x15, 0xfa, 0x04, 0x7d, 0xd2, 0xce, 0x8c,
+	0x11, 0x8d, 0x04, 0xa9, 0xf4, 0x36, 0xf3, 0xcd, 0x37, 0xdf, 0xf7, 0xfb, 0x0b, 0x3f, 0x73, 0x8e,
+	0x59, 0xcc, 0x56, 0x51, 0x12, 0x2e, 0xdd, 0x34, 0x63, 0x82, 0x91, 0xfa, 0x36, 0x88, 0xc4, 0xb3,
+	0xb3, 0x81, 0xf6, 0x83, 0x7c, 0x9b, 0x78, 0x3e, 0x3e, 0xe5, 0xc8, 0x05, 0xe9, 0x41, 0x1d, 0x37,
+	0x34, 0x8a, 0x6d, 0x63, 0x68, 0xfc, 0x69, 0xfa, 0xbb, 0x0b, 0x71, 0xa0, 0x95, 0x52, 0xce, 0xb7,
+	0x2c, 0x0b, 0x6f, 0x29, 0x5f, 0xdb, 0xa6, 0x7c, 0x6c, 0xf9, 0x25, 0xec, 0x98, 0xb3, 0xa0, 0xb1,
+	0xb0, 0xad, 0x32, 0x47, 0x61, 0xce, 0x0b, 0x74, 0xf6, 0x76, 0x3c, 0x65, 0x09, 0x47, 0xd2, 0x01,
+	0x33, 0x0a, 0xb5, 0x99, 0xe5, 0xcb, 0xd3, 0xc1, 0xdf, 0x3c, 0xe7, 0x6f, 0x7d, 0xc2, 0xbf, 0x56,
+	0xe1, 0x7f, 0x03, 0x44, 0xf9, 0x2f, 0x90, 0xf3, 0x88, 0x25, 0xe7, 0x73, 0x96, 0xa8, 0x60, 0x8f,
+	0x98, 0xec, 0x23, 0xd1, 0x17, 0xe7, 0xd5, 0x80, 0x6e, 0x49, 0xa2, 0xc8, 0xe3, 0x02, 0x0d, 0xf2,
+	0x1b, 0x9a, 0xba, 0x19, 0xf7, 0xd1, 0x06, 0x75, 0x2a, 0x4d, 0xff, 0x00, 0xa8, 0x3c, 0x62, 0xca,
+	0xc5, 0x02, 0x71, 0x47, 0xa8, 0x69, 0x42, 0x09, 0x73, 0xee, 0xa0, 0xaf, 0xeb, 0x88, 0x31, 0x0a,
+	0x3c, 0x0d, 0xc5, 0x86, 0x06, 0xcf, 0x83, 0x40, 0xa2, 0x3a, 0x98, 0xef, 0xfe, 0xfe, 0x5a, 0x5d,
+	0xdc, 0x7f, 0x6f, 0x16, 0x80, 0x52, 0x1b, 0xe5, 0x62, 0x3d, 0xf1, 0xc8, 0x15, 0x34, 0x46, 0x61,
+	0xa8, 0x00, 0xd2, 0x73, 0xf5, 0x94, 0xb8, 0xa5, 0x11, 0x19, 0xfc, 0x3a, 0x41, 0x0b, 0x5b, 0xf9,
+	0x6f, 0x8a, 0xe2, 0xf2, 0x7f, 0xd7, 0xd2, 0x3d, 0x0d, 0xa9, 0xc0, 0xcb, 0xbf, 0x4e, 0xa1, 0x33,
+	0xce, 0x90, 0xaa, 0x12, 0x50, 0x5d, 0x03, 0xd2, 0x3f, 0x22, 0x96, 0xbb, 0x3c, 0x18, 0x54, 0x3d,
+	0x15, 0x42, 0x13, 0xf8, 0x21, 0x63, 0xff, 0xaa, 0xca, 0x0c, 0xda, 0xa5, 0x8e, 0x9c, 0xd3, 0x19,
+	0x1e, 0x67, 0x54, 0xd5, 0x46, 0xef, 0x2f, 0x74, 0x23, 0xe6, 0xae, 0xb2, 0x34, 0x28, 0xa8, 0x7a,
+	0x44, 0x3c, 0xbd, 0x40, 0x33, 0x75, 0x9c, 0xab, 0x45, 0x9e, 0x1b, 0xef, 0xa6, 0xe5, 0xcf, 0xc7,
+	0xcb, 0x6f, 0x7a, 0xaf, 0xff, 0x7f, 0x04, 0x00, 0x00, 0xff, 0xff, 0x7d, 0x39, 0x09, 0xef, 0xec,
+	0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -179,150 +348,264 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// UserLogDBClient is the client API for UserLogDB service.
+// UserAuthDBClient is the client API for UserAuthDB service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type UserLogDBClient interface {
+type UserAuthDBClient interface {
 	// add new user, response include id
 	AddUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error)
 	// get user details, request should include only the email
 	GetUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error)
 	//update a user.
 	UpdateUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error)
+	//create seassion
+	CreateSeassion(ctx context.Context, in *UserSessionRequest, opts ...grpc.CallOption) (*UserSessionResponse, error)
+	//get session
+	GetSeassion(ctx context.Context, in *UserSessionRequest, opts ...grpc.CallOption) (*UserSessionResponse, error)
+	// delete session
+	DeleteSession(ctx context.Context, in *UserSessionRequest, opts ...grpc.CallOption) (*UserDeleteSessionResponse, error)
 }
 
-type userLogDBClient struct {
+type userAuthDBClient struct {
 	cc *grpc.ClientConn
 }
 
-func NewUserLogDBClient(cc *grpc.ClientConn) UserLogDBClient {
-	return &userLogDBClient{cc}
+func NewUserAuthDBClient(cc *grpc.ClientConn) UserAuthDBClient {
+	return &userAuthDBClient{cc}
 }
 
-func (c *userLogDBClient) AddUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error) {
+func (c *userAuthDBClient) AddUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error) {
 	out := new(UserDBResponse)
-	err := c.cc.Invoke(ctx, "/wcity.UserLogDB/AddUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/wcity.UserAuthDB/AddUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userLogDBClient) GetUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error) {
+func (c *userAuthDBClient) GetUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error) {
 	out := new(UserDBResponse)
-	err := c.cc.Invoke(ctx, "/wcity.UserLogDB/GetUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/wcity.UserAuthDB/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userLogDBClient) UpdateUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error) {
+func (c *userAuthDBClient) UpdateUser(ctx context.Context, in *UserDBRequest, opts ...grpc.CallOption) (*UserDBResponse, error) {
 	out := new(UserDBResponse)
-	err := c.cc.Invoke(ctx, "/wcity.UserLogDB/UpdateUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/wcity.UserAuthDB/UpdateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UserLogDBServer is the server API for UserLogDB service.
-type UserLogDBServer interface {
+func (c *userAuthDBClient) CreateSeassion(ctx context.Context, in *UserSessionRequest, opts ...grpc.CallOption) (*UserSessionResponse, error) {
+	out := new(UserSessionResponse)
+	err := c.cc.Invoke(ctx, "/wcity.UserAuthDB/CreateSeassion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userAuthDBClient) GetSeassion(ctx context.Context, in *UserSessionRequest, opts ...grpc.CallOption) (*UserSessionResponse, error) {
+	out := new(UserSessionResponse)
+	err := c.cc.Invoke(ctx, "/wcity.UserAuthDB/GetSeassion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userAuthDBClient) DeleteSession(ctx context.Context, in *UserSessionRequest, opts ...grpc.CallOption) (*UserDeleteSessionResponse, error) {
+	out := new(UserDeleteSessionResponse)
+	err := c.cc.Invoke(ctx, "/wcity.UserAuthDB/DeleteSession", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UserAuthDBServer is the server API for UserAuthDB service.
+type UserAuthDBServer interface {
 	// add new user, response include id
 	AddUser(context.Context, *UserDBRequest) (*UserDBResponse, error)
 	// get user details, request should include only the email
 	GetUser(context.Context, *UserDBRequest) (*UserDBResponse, error)
 	//update a user.
 	UpdateUser(context.Context, *UserDBRequest) (*UserDBResponse, error)
+	//create seassion
+	CreateSeassion(context.Context, *UserSessionRequest) (*UserSessionResponse, error)
+	//get session
+	GetSeassion(context.Context, *UserSessionRequest) (*UserSessionResponse, error)
+	// delete session
+	DeleteSession(context.Context, *UserSessionRequest) (*UserDeleteSessionResponse, error)
 }
 
-// UnimplementedUserLogDBServer can be embedded to have forward compatible implementations.
-type UnimplementedUserLogDBServer struct {
+// UnimplementedUserAuthDBServer can be embedded to have forward compatible implementations.
+type UnimplementedUserAuthDBServer struct {
 }
 
-func (*UnimplementedUserLogDBServer) AddUser(ctx context.Context, req *UserDBRequest) (*UserDBResponse, error) {
+func (*UnimplementedUserAuthDBServer) AddUser(ctx context.Context, req *UserDBRequest) (*UserDBResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUser not implemented")
 }
-func (*UnimplementedUserLogDBServer) GetUser(ctx context.Context, req *UserDBRequest) (*UserDBResponse, error) {
+func (*UnimplementedUserAuthDBServer) GetUser(ctx context.Context, req *UserDBRequest) (*UserDBResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (*UnimplementedUserLogDBServer) UpdateUser(ctx context.Context, req *UserDBRequest) (*UserDBResponse, error) {
+func (*UnimplementedUserAuthDBServer) UpdateUser(ctx context.Context, req *UserDBRequest) (*UserDBResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-
-func RegisterUserLogDBServer(s *grpc.Server, srv UserLogDBServer) {
-	s.RegisterService(&_UserLogDB_serviceDesc, srv)
+func (*UnimplementedUserAuthDBServer) CreateSeassion(ctx context.Context, req *UserSessionRequest) (*UserSessionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSeassion not implemented")
+}
+func (*UnimplementedUserAuthDBServer) GetSeassion(ctx context.Context, req *UserSessionRequest) (*UserSessionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSeassion not implemented")
+}
+func (*UnimplementedUserAuthDBServer) DeleteSession(ctx context.Context, req *UserSessionRequest) (*UserDeleteSessionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSession not implemented")
 }
 
-func _UserLogDB_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func RegisterUserAuthDBServer(s *grpc.Server, srv UserAuthDBServer) {
+	s.RegisterService(&_UserAuthDB_serviceDesc, srv)
+}
+
+func _UserAuthDB_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserDBRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserLogDBServer).AddUser(ctx, in)
+		return srv.(UserAuthDBServer).AddUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/wcity.UserLogDB/AddUser",
+		FullMethod: "/wcity.UserAuthDB/AddUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserLogDBServer).AddUser(ctx, req.(*UserDBRequest))
+		return srv.(UserAuthDBServer).AddUser(ctx, req.(*UserDBRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserLogDB_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserAuthDB_GetUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserDBRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserLogDBServer).GetUser(ctx, in)
+		return srv.(UserAuthDBServer).GetUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/wcity.UserLogDB/GetUser",
+		FullMethod: "/wcity.UserAuthDB/GetUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserLogDBServer).GetUser(ctx, req.(*UserDBRequest))
+		return srv.(UserAuthDBServer).GetUser(ctx, req.(*UserDBRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserLogDB_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _UserAuthDB_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserDBRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserLogDBServer).UpdateUser(ctx, in)
+		return srv.(UserAuthDBServer).UpdateUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/wcity.UserLogDB/UpdateUser",
+		FullMethod: "/wcity.UserAuthDB/UpdateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserLogDBServer).UpdateUser(ctx, req.(*UserDBRequest))
+		return srv.(UserAuthDBServer).UpdateUser(ctx, req.(*UserDBRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-var _UserLogDB_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "wcity.UserLogDB",
-	HandlerType: (*UserLogDBServer)(nil),
+func _UserAuthDB_CreateSeassion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAuthDBServer).CreateSeassion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.UserAuthDB/CreateSeassion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAuthDBServer).CreateSeassion(ctx, req.(*UserSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserAuthDB_GetSeassion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAuthDBServer).GetSeassion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.UserAuthDB/GetSeassion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAuthDBServer).GetSeassion(ctx, req.(*UserSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserAuthDB_DeleteSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserAuthDBServer).DeleteSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.UserAuthDB/DeleteSession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserAuthDBServer).DeleteSession(ctx, req.(*UserSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _UserAuthDB_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "wcity.UserAuthDB",
+	HandlerType: (*UserAuthDBServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "AddUser",
-			Handler:    _UserLogDB_AddUser_Handler,
+			Handler:    _UserAuthDB_AddUser_Handler,
 		},
 		{
 			MethodName: "GetUser",
-			Handler:    _UserLogDB_GetUser_Handler,
+			Handler:    _UserAuthDB_GetUser_Handler,
 		},
 		{
 			MethodName: "UpdateUser",
-			Handler:    _UserLogDB_UpdateUser_Handler,
+			Handler:    _UserAuthDB_UpdateUser_Handler,
+		},
+		{
+			MethodName: "CreateSeassion",
+			Handler:    _UserAuthDB_CreateSeassion_Handler,
+		},
+		{
+			MethodName: "GetSeassion",
+			Handler:    _UserAuthDB_GetSeassion_Handler,
+		},
+		{
+			MethodName: "DeleteSession",
+			Handler:    _UserAuthDB_DeleteSession_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

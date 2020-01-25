@@ -11,8 +11,8 @@ github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5y
 github.com/golang/protobuf v1.3.2 h1:6nsPYzhq5kReh6QImI3k5qWzO4PEbvbIW2cwSfR/6xs=
 github.com/golang/protobuf v1.3.2/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
-github.com/joseignacioretamalthomsen/wcity v0.1.6 h1:fDNacma3Hau3WnOCkpjg/6xZq20Xra30xmmGL2BHvEk=
-github.com/joseignacioretamalthomsen/wcity v0.1.6/go.mod h1:DTmV5tDE35KqABR1/Dtdv1xSFjmZqTs81nTW+OG03o8=
+github.com/joseignacioretamalthomsen/wcity v0.1.13 h1:wx9AVauCG37Ea1ydF4Cz8YEEM2y4WRKUN2IsHzoN/Rk=
+github.com/joseignacioretamalthomsen/wcity v0.1.13/go.mod h1:DTmV5tDE35KqABR1/Dtdv1xSFjmZqTs81nTW+OG03o8=
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
 github.com/ziutek/mymysql v1.5.4 h1:GB0qdRGsTwQSBVYuVShFBKaXSnSnYYC2d9knnE1LHFs=
 github.com/ziutek/mymysql v1.5.4/go.mod h1:LMSpPZ6DbqWFxNCHW77HeMg9I646SAhApZ/wKdgO/C0=

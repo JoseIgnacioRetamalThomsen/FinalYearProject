@@ -28,7 +28,7 @@ const (
 )
 
 type Configuration struct {
-	Port int64
+	Port string
 	Dbs    []string
 	Pss   []string
 }
@@ -95,9 +95,8 @@ func init() {
 	resolver.Register(&databasesResolverBuilder{})
 }
 var configuration Configuration
-func main() {
-
-	file, _ := os.Open("config.json")
+func readConfig(fileName string){
+	file, _ := os.Open(fileName)
 	defer file.Close()
 	decoder := json.NewDecoder(file)
 	configuration = Configuration{}
@@ -105,6 +104,13 @@ func main() {
 	if err != nil {
 		fmt.Println("error:", err)
 	}
+}
+
+func main() {
+
+	args := os.Args[1]
+	fmt.Print(args)
+	readConfig("t.json")
 	fmt.Println(configuration.Dbs)
 
 

@@ -12,7 +12,7 @@ option objc_class_prefix = "RPC";
 // For acces user Database  
 
 //  The Service definition
-service UserLogDB{
+service UserAuthDB{
 
     // add new user, response include id
     rpc AddUser(UserDBRequest) returns (UserDBResponse);
@@ -22,21 +22,48 @@ service UserLogDB{
 
     //update a user.
     rpc UpdateUser(UserDBRequest) returns (UserDBResponse);
-    
 
+    //create seassion
+    rpc CreateSeassion(UserSessionRequest) returns (UserSessionResponse);
+
+    //get session
+    rpc GetSeassion(UserSessionRequest) returns (UserSessionResponse);
+
+    // delete session
+    rpc DeleteSession(UserSessionRequest) returns (UserDeleteSessionResponse);
+    
 }
 
 // The user request.
 message UserDBRequest{
     string email = 1;
-    bytes hashedPassword = 2;
-    bytes salt = 3; 
+    bytes passwordHash = 2;
+    bytes passwordSalt = 3; 
 }
 
 // the response
 message UserDBResponse{
-    int32 id = 1;
+    int64 id = 1;
     string email = 2;
-    bytes hashedPassword = 3;
-    bytes salt = 4; 
+    bytes passwordHash = 3;
+    bytes passwordSalt = 4; 
 }
+
+message UserSessionRequest{
+    string email = 1;
+    string token = 2;
+}
+
+message UserSessionResponse{
+    string email = 1;
+    string token = 2;
+    string loginTime = 3;
+    string lastSeenTime = 4;
+}
+
+message UserDeleteSessionResponse{
+    bool success = 1;
+    string email = 2;
+}
+
+
