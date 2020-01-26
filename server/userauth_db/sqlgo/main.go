@@ -59,7 +59,7 @@ func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBR
 	u := db.NewUser(in.Email, in.PasswordHash, in.PasswordSalt, false)
 	id,err := db.AddUser(*u)
 	if err!=nil {
-		return nil, errors.New("Can't add")
+		return nil, err
 	}
 	return &pb.UserDBResponse{Id: id, Email: in.Email, PasswordHash: in.PasswordHash, PasswordSalt: in.PasswordSalt}, nil
 }
@@ -133,7 +133,7 @@ func main() {
 	//fmt.Print(key,email,d1,d2)
 
 
-	//user11 := db.NewUser("emailui", []byte("passs1"),[]byte("salt"),false)
+	//user11 := db.NewUser("emailui7y", []byte("passs1"),[]byte("salt"),false)
 	//db.AddUser(*user11)
 	//u1,err := db.GetUser("emailui")
 	//if err!= nil{

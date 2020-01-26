@@ -5,6 +5,7 @@
 package main
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
@@ -16,7 +17,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"context"
 )
 
 const (
@@ -38,7 +38,7 @@ type Configuration struct {
 
 //first addrs is the master
 var db_addrs = []string{"104.40.206.141:7777","40.118.90.61:7777"}
-var ps_addrs = []string{"52.236.146.149:5701","51.124.149.63:5701"}
+var ps_addrs = []string{"40.118.90.61:5701","51.124.149.63:5701"}
 
 //grpc server
 type server struct {
@@ -170,7 +170,7 @@ func main() {
 
 	args := os.Args[1]
 	fmt.Print(args)
-	readConfig("t.json")
+	readConfig("config.json")
 	fmt.Println(configuration.Dbs)
 
 
@@ -201,8 +201,9 @@ func main() {
 
 	//fmt.Print("helloworld")
 	//x,y := hash("helloworld678")
-
-	//addUser("email756",[]byte("pass"),[]byte("salt"))
+//fmt.Print(x,y)
+	//a,b,c := addUser("email75g",x,y)
+	//fmt.Print(a,b,c)
 	//email,pass,salt,err :=getUser("email756")
 	//err=err
 	//fmt.Print(email,pass,salt)

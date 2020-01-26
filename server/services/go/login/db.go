@@ -80,7 +80,7 @@ func addUser(email string, hashedPassword []byte, salt []byte) (string,int64,err
 	defer cancel()
 	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hashedPassword,PasswordSalt:salt})
 	if err != nil {
-		return email,-1, errors.New("Cant add.")
+		return email,-1, err
 	}
 	return r.GetEmail(),r.GetId(),nil
 
