@@ -17,7 +17,11 @@ import Login from './src/component/auth/Login'
 import Register from './src/component/auth/Register'
 import RestorePassword from './src/component/auth/RestorePassword'
 import LoadImage from './src/component/LoadImage'
+import WritePost from "./src/component/WritePost";
+import Post from "./src/component/Post";
+import MapContainer from "./src/component/MapContainer";
 import MapInput from "./src/component/MapInput";
+
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -42,10 +46,26 @@ const MyPostsStack = createStackNavigator({
         screen: PostDetails,
         navigationOptions: navOptionHandler
     },
+    WritePost:{
+        screen: WritePost,
+        navigationOptions: navOptionHandler
+    },
+     MapInput:{
+         screen: MapInput,
+         navigationOptions:navOptionHandler
+     },
+     MapContainer:{
+         screen: MapContainer,
+         navigationOptions:navOptionHandler
+     },
+    Post:{
+        screen:Post,
+        navigationOptions:navOptionHandler
+    },
     LoadImage: {
         screen: LoadImage,
         navigationOptions: navOptionHandler
-    }
+    },
 })
 
 const MainTabs = createBottomTabNavigator({

@@ -3,6 +3,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 
 export default class MapInput extends React.Component {
     render() {
+
         return (
             <GooglePlacesAutocomplete
                 placeholder='Search'
@@ -28,15 +29,4 @@ export default class MapInput extends React.Component {
             />
         );
     }
-}
-
-export const getLocation = () => {
-    return new Promise(
-        (resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(
-                (data) => resolve(data.coords),
-                (err) => reject(err)
-            )
-        }
-    )
 }

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { STYLES } from '../constants/Styles'
+import { OtherConstants } from '../constants/OtherConstants'
 
 export default StyleSheet.create({
     container: {
@@ -58,7 +58,7 @@ export default StyleSheet.create({
     btnPressStyle:{
         backgroundColor: '#0080ff',
         height:50,
-        width: STYLES.width - 60,
+        width: OtherConstants.width - 60,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -68,7 +68,7 @@ export default StyleSheet.create({
     itemImage:{
         backgroundColor:'#2f455c',
         height:150,
-        width: STYLES.width-60,
+        width: OtherConstants.width-60,
         borderRadius:8,
         resizeMode:'contain'
     }
