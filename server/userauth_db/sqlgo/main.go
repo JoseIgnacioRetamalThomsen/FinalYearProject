@@ -1,13 +1,7 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
-	"os"
-
-	//"os"
-	//	"bytes"
-	"fmt"
 
 	"github.com/joseignacioretamalthomsen/sqlgo/db" // Native engine
 	// _ "github.com/ziutek/mymysql/thrsafe" // Thread safe engine
@@ -24,8 +18,8 @@ const (
 	port = ":7777"
     Coneection_type = "tcp"
      MySQL_socket = "127.0.0.1:3306"
-     MySQL_user = "goland"
-    MySQL_pass = "fg453ty#2334Mx"
+     MySQL_user = "golandAcces"
+    MySQL_pass = "supedPss"
      MySQL_db = "UserAuth"
 )
 
@@ -39,7 +33,7 @@ type Configuration struct {
 }
 
 var configuration Configuration
-func readConfig(fileName string){
+func readConfig(fileName string){/*
 	file, _ := os.Open(fileName)
 	defer file.Close()
 	decoder := json.NewDecoder(file)
@@ -47,7 +41,13 @@ func readConfig(fileName string){
 	err := decoder.Decode(&configuration)
 	if err != nil {
 		fmt.Println("error:", err)
-	}
+	}*/
+configuration.Port = port
+configuration.MySQL_db = MySQL_db
+configuration.Coneection_type = Coneection_type
+configuration.MySQL_socket = MySQL_socket
+configuration.MySQL_user = MySQL_user
+configuration.MySQL_pass = MySQL_pass
 }
 
 type server struct {
