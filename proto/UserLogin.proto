@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 
-
 package wcity;
 
 option java_multiple_files = true;
@@ -11,8 +10,16 @@ option objc_class_prefix = "RPC";
 
 service UserAuthentication{
 
-    rpc CheckUser(UserRequest) returns (UserResponse);
-    rpc Create(UserRequest) returns (UserResponse);
+    // created user and return login token
+    rpc CreateUser(UserRequest) returns (UserResponse); 
+    //update user
+    rpc UpdateUser(UserRequest) returns (UserResponse);   
+    // used for login 
+    rpc LoginUser(UserRequest) returns (UserResponse);
+      // check if user is logged
+    rpc CheckToken(LogRequest) returns (LogResponse);
+    // for logout
+    rpc Logout(LogRequest) returns (LogResponse);
     
 
 }
@@ -25,6 +32,15 @@ message UserRequest{
 }
 
 message UserResponse{
-     bool IsUser = 1;
-     string cookie = 2;
+     bool isUser = 1;
+     string token = 2;
+}
+
+message LogRequest{
+        string token = 1;
+        string email =2;
+}
+
+message LogResponse{
+     bool sucess = 1; 
 }

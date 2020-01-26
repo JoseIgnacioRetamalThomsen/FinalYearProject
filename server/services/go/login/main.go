@@ -5,7 +5,7 @@
 package main
 
 import (
-	"context"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -15,6 +15,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"context"
 )
 
 const (
@@ -49,46 +50,104 @@ Init client connections
 
 //https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
 // this type contains state of the server
+/**
+*  End Points
+ */
+func (s *server) LoginUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
-func (s *server) CheckUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
-	fmt.Print("Check user called")
-
+	log.Printf("Received: %v", "LoginUser  called")
 	email, hash , salt ,err := getUser(in.GetEmail())
 	if(err != nil){
 		//user do not exist
-		return &pb.UserResponse{IsUser: false}, errors.New("could not get user")
-
+		return &pb.UserResponse{IsUser: false}, err
 	}
 	email= email
-
 	isValid := validate(in.HashPassword,hash,salt)
-	return &pb.UserResponse{IsUser: isValid, Cookie: "cookie"}, nil
+	if isValid {
+		token := GenerateSecureToken(32)
+		is, err := CreateSession(in.Email, token)
+		if err != nil {
+			return nil, err
+		}
+
+		return &pb.UserResponse{IsUser : is ,Token:token},nil
+	}
+	return &pb.UserResponse{IsUser: false, Token: ""}, nil
 }
 
 // return false if user is updated
-func (s *server) Create(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
+func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
-	fmt.Print("create user called user called")
 
+	log.Printf("Received: %v", "create user")
 	if(len(in.HashPassword) <=6){
 		return nil, errors.New("Password to short")
 	}
-
 	hash, salt := hash(in.HashPassword)
 
-	_, err := addUser(in.Email,hash,salt)
-
+	email,id, err := addUser(in.Email,hash,salt)
+	email =email
+	id = id
 	if err!=nil{
-		// if user exist we update
-		_, err := updateUser(in.Email,hash,salt)
-		if err!=nil{
-			return nil, errors.New("Can't create or update.")
-		}
-		return &pb.UserResponse{IsUser: false, Cookie: "cookie"}, nil
+		return nil, err
 	}
-	return &pb.UserResponse{IsUser: true, Cookie: "cookie"}, nil
+	token := GenerateSecureToken(32)
+	is, err := CreateSession(in.Email, token)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UserResponse{ IsUser: is, Token: token}, nil
 }
+
+func (s *server) UpdateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error){
+	log.Printf("Received: %v", "Update user")
+	hash, salt := hash(in.HashPassword)
+	// if user exist we update
+	email,pass,salt, err := updateUser(in.Email,hash,salt)
+
+	pass =pass
+	salt =salt
+	if err!=nil{
+		return nil, errors.New("Can't create or update.")
+	}
+	token := GenerateSecureToken(32)
+	is, err := CreateSession(email, token)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UserResponse{IsUser: is, Token: token}, nil
+}
+
+func (s *server) CheckToken (ctx context.Context, in *pb.LogRequest) (*pb.LogResponse, error){
+	log.Printf("Received: %v", "Check token")
+	is,err := CheckToken(in.Email,in.Token)
+	if err !=nil{
+		return &pb.LogResponse{Sucess:false},nil
+	}
+	return &pb.LogResponse{Sucess:is},nil
+}
+
+func (s *server) Logout(ctx context.Context, in *pb.LogRequest) (*pb.LogResponse, error) {
+	log.Printf("Received: %v", "Logout")
+    suc,err := DeleteToken(in.Email,in.Token)
+    if err != nil{
+    	return nil,err
+	}
+	return &pb.LogResponse{Sucess:suc},nil
+}
+
+func GenerateSecureToken(length int) string {
+	b := make([]byte, length)
+	if _, err := rand.Read(b); err != nil {
+		return ""
+	}
+	return hex.EncodeToString(b)
+}
+
+
 
 //init resolvers
 func init() {
@@ -112,6 +171,7 @@ func main() {
 	fmt.Print(args)
 	readConfig("t.json")
 	fmt.Println(configuration.Dbs)
+
 
 
 	// start server pass connection
@@ -141,20 +201,14 @@ func main() {
 	//fmt.Print("helloworld")
 	//x,y := hash("helloworld678")
 
+	//addUser("email756",[]byte("pass"),[]byte("salt"))
+	//email,pass,salt,err :=getUser("email756")
+	//err=err
+	//fmt.Print(email,pass,salt)
 
 
-	//fmt.Print(addUser("myEmail109",x,y))
-	email,hash,salt,err := getUser("myEmail1")
-	print(hash)
-	email1,hash1,salt1,err1 :=  getUser("myEmail1")
-	print(hash1)
-	//getUser("myEmail1")
-	print(hash)
-	email = email
-	salt = salt
-	email = email1
-	salt = salt1
-	err1=err1
+
+
 
 //	email,hash,salt,err := getUser("myEmail1")
 	//if(err != nil){
@@ -167,9 +221,9 @@ func main() {
 //	fmt.Print(validate("helloworld",hash,salt))
 	//email=email
 	//x,y := hash("12344567")
-	//updateUser("myEmail",x,y)
+	//updateUser("Emailu3i",x,y)
 
-	fmt.Print("Service started")
+	//fmt.Print("Service started")
 
 	lis, err := net.Listen("tcp", port)
 	if err != nil {

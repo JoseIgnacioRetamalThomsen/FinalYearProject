@@ -74,29 +74,63 @@ func getUser(email string) (string,[]byte,[]byte,error){
 
 
 
-func addUser(email string, hashedPassword []byte, salt []byte) (string,error){
+func addUser(email string, hashedPassword []byte, salt []byte) (string,int64,error){
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hashedPassword,PasswordSalt:salt})
 	if err != nil {
-		return r.GetEmail(), errors.New("Cant add.")
+		return email,-1, errors.New("Cant add.")
 	}
-	return r.GetEmail(),nil
+	return r.GetEmail(),r.GetId(),nil
 
 }
 
-func updateUser(email string, hash []byte, salt []byte) (string,error) {
+func updateUser(email string, hash []byte, salt []byte) (string,[]byte,[]byte,error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email,PasswordHash:hash,PasswordSalt:salt})
 	if err != nil {
-		return "", errors.New("cant update")
+		return "", nil,nil,err
 	}
-	return r.Email,nil
+	return r.Email,r.PasswordHash,r.PasswordSalt,nil
 }
 
+func CreateSession(email string, token string) (bool, error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	_, err := dbConn.context.dbClient.CreateSeassion(ctx,&pb.UserSessionRequest{Email:email,Token:token})
+	if err != nil{
+       return false,err
+	}
+
+    return true,nil
+
+}
+
+func CheckToken(email string, token string) (bool,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	res,err := dbConn.context.dbClient.GetSeassion(ctx, &pb.UserSessionRequest{Email:email,Token:token})
+	if err!=nil{
+		return false,err
+	}
+	if res.Token == token{
+		return true,nil
+	}
+	return false, nil
+}
+
+func DeleteToken(email string,token string) (bool,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	res,err := dbConn.context.dbClient.DeleteSession(ctx, &pb.UserSessionRequest{Email:email,Token:token})
+	if err !=nil{
+		return false, err
+	}
+	return res.Success , nil
+}
 
 //resolver
 type databasesResolverBuilder struct{}
