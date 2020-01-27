@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     Text,
     View,
@@ -75,12 +75,12 @@ class Login extends Component {
                     <TextInput style={styles.inputs}
                                placeholder="Password"
                                secureTextEntry={true}
-                               underlineColorAndroid='transparent' git
+                               underlineColorAndroid='transparent'
                                onChangeText={(password) => this.setState({password})}/>
                 </View>
 
                 <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
-                                    onPress={() => this.onClickListenerLogin('login')}>
+                                    onPress={() => this.onClickListenerLogin()}>
                     <Text style={styles.loginText}>Login</Text>
                 </TouchableHighlight>
 
@@ -97,5 +97,4 @@ class Login extends Component {
         );
     }
 }
-
 export default Login

@@ -1,6 +1,6 @@
 import {Dimensions} from "react-native";
 
-const STYLES = {
+const OtherConstants = {
     width: Dimensions.get('window').width
 }
-export {STYLES}
+export {OtherConstants}
