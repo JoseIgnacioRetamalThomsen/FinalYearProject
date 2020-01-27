@@ -107,7 +107,6 @@ func GetUser(email string) (user, error) {
 
 	rows, res, err := db.Query("select * from Users where Email = '%s'", email)
 	if err != nil {
-		panic(err)
 		return *NewUserEmty(),err
 	}
 	res = res
@@ -116,22 +115,17 @@ func GetUser(email string) (user, error) {
 }
 
 func ConfirmEmail(email string) (int64, error) {
-	//db := mysql.New("tcp", "", "127.0.0.1:3306", "test", "newpassword", "user_login")
-	//err := db.Connect()
-	//if err != nil {
-	//	return false , errors.New(("can't connect"))
-	//}
+
 	stmt, err := db.Prepare("UPDATE Users SET  IsEmail = true WHERE email=?")
 	//checkError(err)
 	if err != nil {
-		panic(err)
+
 		return -1, errors.New(("can't confirm"))
 
 	}
-
 	_, res, err := stmt.Exec(email)
 	if err != nil {
-		panic(err)
+
 		return -1, errors.New(("can't confirm"))
 
 	}
@@ -215,7 +209,7 @@ func DeleteSession(key string) (int64, error) {
 	stmtStr := fmt.Sprintf("DELETE FROM %s WHERE %s = ?", tableSession, rowSessionKey)
 	del, err := db.Prepare(stmtStr)
 	if err != nil {
-		panic(err)
+		return -1, err
 	}
 	_, res, err := del.Exec(key)
 	if err != nil {
@@ -229,7 +223,7 @@ func DeleteAllSession(email string) (int64,error){
 	stmtStr := fmt.Sprintf("DELETE FROM %s WHERE %s = ?", tableSession, rowEmail)
 	del, err := db.Prepare(stmtStr)
 	if err != nil {
-		panic(err)
+
 	}
 	_, res, err := del.Exec(email)
 	if err != nil {
