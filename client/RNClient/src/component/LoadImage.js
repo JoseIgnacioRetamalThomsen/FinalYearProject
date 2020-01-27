@@ -96,9 +96,6 @@ render()
     return (
         <Root>
             <View>
-                <View>
-                    <CustomHeader title='Post' isHome={false} navigation={this.props.navigation}/>
-                </View>
                 <View style={content}>
                     <FlatList
                         data={fileList}
@@ -109,9 +106,9 @@ render()
                     <TouchableOpacity onPress={this.onClickAddImage} style={btnPressStyle}>
                         <Text style={txtStyle}> Press Add Image</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.submit} style={btnPressStyle}>
-                        <Text style={txtStyle}>Submit</Text>
-                    </TouchableOpacity>
+                    {/*<TouchableOpacity onPress={this.submit} style={btnPressStyle}>*/}
+                    {/*    <Text style={txtStyle}>Submit</Text>*/}
+                    {/*</TouchableOpacity>*/}
                 </View>
             </View>
         </Root>

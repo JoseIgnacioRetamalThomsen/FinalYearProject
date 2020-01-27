@@ -6,8 +6,8 @@ import MapInput from "../../MapInput";
 
 class Feed extends Component {
     onClickEvent(){
-        // this.props.navigation.navigate('Post')
-        alert("called")
+         //this.props.navigation.navigate('Post')
+        //alert("called")
     }
     render() {
         return (

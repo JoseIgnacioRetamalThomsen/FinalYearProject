@@ -5,9 +5,10 @@ import {
     TextInput,
     TouchableHighlight
 } from 'react-native';
-import styles from '../styles/Style'
-import CustomHeader from "./CustomHeader";
-import LoadImage from "./LoadImage";
+import styles from '../../../styles/Style'
+import CustomHeader from "../../CustomHeader";
+import LoadImage from "../../LoadImage";
+import {Root} from "native-base";
 
 export default class Post extends Component {
 
@@ -25,9 +26,9 @@ export default class Post extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <View>
-                    <CustomHeader title= 'Write a post' isHome={false} navigation={this.props.navigation}/>
+            <Root>
+                <View style={{flex: 1}}>
+                    <CustomHeader title="Post" isHome={false} navigation={this.props.navigation}/>
                 </View>
                 <View>
                     <TextInput
@@ -35,15 +36,16 @@ export default class Post extends Component {
                         underlineColorAndroid='transparent'
                         onChangeText={(text) => this.setState({ text })} />
                 </View>
-                <View>
+
                     <LoadImage/>
-                </View>
-                <View>
+
+                <View >
                     <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.onClickListener()}>
-                        <Text style={styles.loginText}>Add Post</Text>
+                        <Text style={styles.loginText}> Post</Text>
                     </TouchableHighlight>
                 </View>
-            </View>
-        );
+
+            </Root>
+        )
     }
 }

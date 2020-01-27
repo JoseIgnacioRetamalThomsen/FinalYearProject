@@ -17,9 +17,9 @@ import Login from './src/component/auth/Login'
 import Register from './src/component/auth/Register'
 import RestorePassword from './src/component/auth/RestorePassword'
 import LoadImage from './src/component/LoadImage'
-import WritePost from "./src/component/WritePost";
-import Post from "./src/component/Post";
-import MapContainer from "./src/component/MapContainer";
+import WritePost from "./src/component/tabs/myPosts/WritePost";
+import Post from "./src/component/tabs/myPosts/Post";
+import SplashScreen from "./src/component/SplashScreen";
 import MapInput from "./src/component/MapInput";
 
 
@@ -46,21 +46,17 @@ const MyPostsStack = createStackNavigator({
         screen: PostDetails,
         navigationOptions: navOptionHandler
     },
-    WritePost:{
-        screen: WritePost,
-        navigationOptions: navOptionHandler
-    },
      MapInput:{
          screen: MapInput,
-         navigationOptions:navOptionHandler
-     },
-     MapContainer:{
-         screen: MapContainer,
          navigationOptions:navOptionHandler
      },
     Post:{
         screen:Post,
         navigationOptions:navOptionHandler
+    },
+    WritePost:{
+        screen: WritePost,
+        navigationOptions: navOptionHandler
     },
     LoadImage: {
         screen: LoadImage,
@@ -139,10 +135,14 @@ const authStack = createStackNavigator({
 })
 
 const MyApp = createSwitchNavigator({
+        loading: {
+            screen: SplashScreen
+        },
         app: appDrawer,
         auth: authStack
     },
     {
+        //change back to loading
         initialRouteName: 'app'
     })
 
