@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"os"
 
 	"github.com/joseignacioretamalthomsen/sqlgo/db" // Native engine
 	// _ "github.com/ziutek/mymysql/thrsafe" // Thread safe engine
@@ -33,7 +36,7 @@ type Configuration struct {
 }
 
 var configuration Configuration
-func readConfig(fileName string){/*
+func readConfig(fileName string){
 	file, _ := os.Open(fileName)
 	defer file.Close()
 	decoder := json.NewDecoder(file)
@@ -41,13 +44,14 @@ func readConfig(fileName string){/*
 	err := decoder.Decode(&configuration)
 	if err != nil {
 		fmt.Println("error:", err)
-	}*/
+	}
+/*
 configuration.Port = port
 configuration.MySQL_db = MySQL_db
 configuration.Coneection_type = Coneection_type
 configuration.MySQL_socket = MySQL_socket
 configuration.MySQL_user = MySQL_user
-configuration.MySQL_pass = MySQL_pass
+configuration.MySQL_pass = MySQL_pass*/
 }
 
 type server struct {
@@ -59,6 +63,7 @@ func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBR
 	u := db.NewUser(in.Email, in.PasswordHash, in.PasswordSalt, false)
 	id,err := db.AddUser(*u)
 	if err!=nil {
+		log.Printf("Error: %v", err)
 		return nil, err
 	}
 	return &pb.UserDBResponse{Id: id, Email: in.Email, PasswordHash: in.PasswordHash, PasswordSalt: in.PasswordSalt}, nil
@@ -69,6 +74,7 @@ func (s *server) GetUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBR
 	u, err := db.GetUser(in.Email)
 
 	if err != nil {
+		log.Printf("Error: %v", err)
 		return nil, errors.New("Can't get user")
 	}
 	return &pb.UserDBResponse{Id: u.GetId(),Email: u.GetEmail(), PasswordHash: u.GetHashedPassword(), PasswordSalt: u.GetSalt()}, nil
@@ -79,6 +85,7 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.UserDBRequest) (*pb.User
 	u := db.NewUser(in.Email, in.PasswordHash, in.PasswordSalt, false)
 	isUpdated, err := db.UpdateUser(*u)
 	if(err!= nil){
+		log.Printf("Error: %v", err)
 		return nil, errors.New("cant update")
 	}
 	isUpdated = isUpdated
@@ -88,6 +95,7 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.UserDBRequest) (*pb.User
 func (s *server) CreateSeassion(ctx context.Context,in *pb.UserSessionRequest)  (*pb.UserSessionResponse,error){
 	key,email,d1,d2,err :=db.CreateSession(in.Token,in.Email)
 	if err!= nil{
+		log.Printf("Error: %v", err)
 		return nil, err
 	}
 	return &pb.UserSessionResponse{Email:email,Token:key,LoginTime:d1,LastSeenTime:d2},nil
@@ -96,9 +104,11 @@ func (s *server) CreateSeassion(ctx context.Context,in *pb.UserSessionRequest)  
 func (s *server) GetSeassion(ctx context.Context,in *pb.UserSessionRequest)  (*pb.UserSessionResponse,error){
 	is,se,err := db.GetSession(in.Token)
 	if err!= nil{
+		log.Printf("Error: %v", err)
 		return nil, err
 	}
 	if is == false{
+		log.Printf("Error: %v", "Token do not exists")
 		return nil, errors.New("Token do not exist")
 	}
 	return &pb.UserSessionResponse{Token:se.SessionKey,Email:se.Email,LoginTime:se.LoginTime,LastSeenTime:se.LastSeemTime}, nil
@@ -107,6 +117,7 @@ func (s *server) GetSeassion(ctx context.Context,in *pb.UserSessionRequest)  (*p
 func (s *server) DeleteSession(ctx context.Context,in *pb.UserSessionRequest)  (*pb.UserDeleteSessionResponse,error){
 	res,err := db.DeleteSession(in.Token)
 	if err!=nil{
+		log.Printf("Error: %v", err)
 		return &pb.UserDeleteSessionResponse{Success:false},err
 	}
 	if res<=0{
@@ -115,16 +126,21 @@ func (s *server) DeleteSession(ctx context.Context,in *pb.UserSessionRequest)  (
 	return &pb.UserDeleteSessionResponse{Success:true},nil
 }
 
+
+
 func main() {
 
-	readConfig("config.json")
+	//read config file name from console input
+	args := os.Args[1]
+	readConfig(args)
+
+
 
 	db.SetupConnection(configuration.Coneection_type,
-		configuration.MySQL_socket,
-		configuration.MySQL_user,
-		configuration.MySQL_pass,
-		configuration.MySQL_db)
-
+	configuration.MySQL_socket,
+	configuration.MySQL_user,
+	configuration.MySQL_pass,
+	configuration.MySQL_db)
 	log.Print("Starting Service")
 
 	//key,email,d1,d2,err :=db.CreateSession("adefadbf23ffeg","email31")

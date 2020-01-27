@@ -200,10 +200,10 @@ func main() {
 	dbConnLB = *s3
 
 	//fmt.Print("helloworld")
-	//x,y := hash("helloworld678")
+	x,y := hash("helloworld678")
 //fmt.Print(x,y)
-	//a,b,c := addUser("email75g",x,y)
-	//fmt.Print(a,b,c)
+	a,b,c := addUser("email75g",x,y)
+	fmt.Print(a,b,c)
 	//email,pass,salt,err :=getUser("email756")
 	//err=err
 	//fmt.Print(email,pass,salt)
