@@ -4,26 +4,50 @@ import {
     View,
     TextInput,
     TouchableHighlight,
-    Image
+    Image,
 } from 'react-native';
 import styles from '../../styles/Style'
+// import LoginGrpc from './LoginGrpc'
+import { NativeModules } from 'react-native';
 
 class Login extends Component {
 
     constructor(props) {
         super(props);
-        state = {
+        this.state = {
             email: '',
             password: '',
         }
     }
 
+    onClickListenerLogin = () => {
+        NativeModules.LoginModule.loginUser(
+            "email",
+            "password",
+            (msg) => {
+                alert(msg);
+            },
+            (x) => {
+                alert("Login message " + x)
+            }
+        )
+    }
     onClickListener = (viewId) => {
         switch (viewId) {
-            case 'login':
-                //TODO: CHECK  HERE if login correct
-                this.props.navigation.navigate('app');
-                break;
+            // case 'login':
+            //     //TODO: CHECK  HERE if login correct
+            //     NativeModules.LoginModule.check(
+            //         "email",
+            //         "password",
+            //         (msg) => {
+            //           // Alert.alert(msg);
+            // },
+            //     (x) => {
+            //             //Alert.alert(" !!! ", + x, x)
+            //     }
+            //     )
+            //     this.props.navigation.navigate('app');
+            //     break;
 
             case 'restore_password':
                 this.props.navigation.navigate('RestorePassword');
@@ -38,36 +62,40 @@ class Login extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={require('../../img/mail.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/mail.png')}/>
                     <TextInput style={styles.inputs}
-                        placeholder="Email"
-                        keyboardType="email-address"
-                        underlineColorAndroid='transparent'
-                        onChangeText={(email) => this.setState({ email })} />
+                               placeholder="Email"
+                               keyboardType="email-address"
+                               underlineColorAndroid='transparent'
+                               onChangeText={(email) => this.setState({email})}/>
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={require('../../img/key.png')} />
+                    <Image style={styles.inputIcon} source={require('../../img/key.png')}/>
                     <TextInput style={styles.inputs}
-                        placeholder="Password"
-                        secureTextEntry={true}
-                        underlineColorAndroid='transparent' git
-                        onChangeText={(password) => this.setState({ password })} />
+                               placeholder="Password"
+                               secureTextEntry={true}
+                               underlineColorAndroid='transparent' git
+                               onChangeText={(password) => this.setState({password})}/>
                 </View>
 
-                <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.onClickListener('login')}>
+                <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
+                                    onPress={() => this.onClickListenerLogin('login')}>
                     <Text style={styles.loginText}>Login</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.onClickListener('restore_password')}>
+                <TouchableHighlight style={styles.buttonContainer}
+                                    onPress={() => this.onClickListener('restore_password')}>
                     <Text>Forgot your password?</Text>
                 </TouchableHighlight>
 
-                <TouchableHighlight style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Register')}>
+                <TouchableHighlight style={styles.buttonContainer}
+                                    onPress={() => this.props.navigation.navigate('Register')}>
                     <Text>Register</Text>
                 </TouchableHighlight>
             </View>
         );
     }
 }
+
 export default Login

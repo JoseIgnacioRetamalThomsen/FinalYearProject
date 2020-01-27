@@ -21,6 +21,7 @@
     "react": "16.9.0",
     "react-native": "^0.61.2",
     "react-native-action-button": "^2.8.5",
+    "react-native-flash-message": "^0.1.15",
     "react-native-gesture-handler": "^1.5.3",
     "react-native-google-autocomplete": "^0.1.8",
     "react-native-google-places-autocomplete": "^1.4.0",
