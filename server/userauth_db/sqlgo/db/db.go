@@ -105,11 +105,14 @@ func AddUser(u user) (int64, error) {
 // Return user data.
 func GetUser(email string) (user, error) {
 
-	rows, res, err := db.Query("select * from Users where Email = '%s'", email)
+	rows, _, err := db.Query("select * from Users where Email = '%s'", email)
 	if err != nil {
 		return *NewUserEmty(),err
 	}
-	res = res
+	if len(rows) <=0 {
+		return *NewUserEmty(),err
+	}
+
 	u := NewUserId(rows[0].Int64(0), rows[0].Str(1), rows[0][2].([]byte), rows[0][3].([]byte), rows[0].Bool(4))
 	return *u, nil
 }
