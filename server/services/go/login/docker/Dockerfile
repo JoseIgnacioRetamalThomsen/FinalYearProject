@@ -1,9 +1,9 @@
 FROM golang:latest
 
-WORKDIR /go/src/app
-COPY . . 
+COPY . /usr/src/myapp
+WORKDIR /usr/src/myapp
 
-RUN go get 
-RUN go build -o main
+EXPOSE 50051
 
-CMD ["./main"]
+ENTRYPOINT ["./main", "config.json"]
+

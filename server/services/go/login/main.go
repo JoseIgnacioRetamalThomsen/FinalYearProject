@@ -37,9 +37,10 @@ type Configuration struct {
 
 
 //first addrs is the master
-var db_addrs = []string{"104.40.206.141:7777","40.118.90.61:7777"}
-var ps_addrs = []string{"40.118.90.61:5701","51.124.149.63:5701"}
+//var db_addrs = []string{"104.40.206.141:7777","40.118.90.61:7777"}
+//var ps_addrs = []string{"40.118.90.61:5701","51.124.149.63:5701"}
 
+//var ps_addrs = []string{"35.197.216.42:5701","localhost:5701"}
 //grpc server
 type server struct {
 	pb.UnimplementedUserAuthenticationServer
@@ -170,13 +171,11 @@ func main() {
 
 	args := os.Args[1]
 	fmt.Print(args)
-	readConfig("config.json")
-	fmt.Println(configuration.Dbs)
-
-
+	readConfig(args)
+	fmt.Println(configuration.Pss)
 
 	// start server pass connection
-	psserverCtx, err := newClientContext(ps_addrs[0])
+	psserverCtx, err := newClientContext(configuration.Pss[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -200,10 +199,10 @@ func main() {
 	dbConnLB = *s3
 
 	//fmt.Print("helloworld")
-	x,y := hash("helloworld678")
-//fmt.Print(x,y)
-	a,b,c := addUser("email75g",x,y)
-	fmt.Print(a,b,c)
+	//x,y := hash("helloworld678")
+     //fmt.Print(x,y)
+	//a,b,c := addUser("7777",x,y)
+	//fmt.Print(a,b,c)
 	//email,pass,salt,err :=getUser("email756")
 	//err=err
 	//fmt.Print(email,pass,salt)
@@ -241,80 +240,3 @@ func main() {
 
 
 
-
-
-
-//resolvers
-/*
- Database resolver
- */
-
-
-
-/*
-//hash service
-func validate(pass string, hash []byte,salt []byte) bool{
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(ps_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewPasswordServiceClient(conn)
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.Validate(ctx, &pb.ValidateRequest{Password:pass, HasshedPassword: hash , Salt:salt})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-
-	return r.Value
-}
-*/
-
-/*
-//hash service
-func hash(pass string) ([]byte,[]byte){
-
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(ps_addrs[0], grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewPasswordServiceClient(conn)
-
-	// Contact the server and print out its response.
-
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.Hash(ctx, &pb.HashRequest{Password:pass})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
-	}
-
-
-	return r.GetHashedPassword(), r.GetSalt()
-}
-*/
-
-/*
-func (s *server) Handler(ctx context.Context, request *Request) (*Response, error) {
-	clientCtx, cancel := context.WithTimeout(ctx, time.Second)
-	defer cancel()
-	response, err := c.GetUserFromTokenID(
-		clientCtx,
-		&user.GetUserFromTokenRequest{
-			TransactionID: transactionID,
-			OathToken: *oathToken,
-		},
-	)
-	if err != nil {
-		return nil, err
-	}
-	// ...
-}
-
-*/
