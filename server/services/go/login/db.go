@@ -15,7 +15,7 @@ type clientDB struct {
 }
 
 type clientDBLoadBalancing struct {
-	context *dbClientContext
+	context *dbClientContextLoadBalancing
 }
 
 type dbClientContext struct {
@@ -42,7 +42,7 @@ func newDBContext(endpoint string) (*dbClientContext, error) {
 	return ctx, nil
 }
 
-func newDBContextLoadBalancing() (*dbClientContext, error) {
+func newDBContextLoadBalancing() (*dbClientContextLoadBalancing, error) {
 	userConn, err := grpc.Dial(
 		fmt.Sprintf("%s:///%s", dbConnectionScheme, exampleServiceName),
 		grpc.WithBalancerName("round_robin"),
@@ -52,7 +52,7 @@ func newDBContextLoadBalancing() (*dbClientContext, error) {
 	if err != nil {
 		return nil, err
 	}
-	ctx := &dbClientContext{
+	ctx := &dbClientContextLoadBalancing{
 		dbClient: pb.NewUserAuthDBClient(userConn),
 		timeout:  time.Second,
 	}
