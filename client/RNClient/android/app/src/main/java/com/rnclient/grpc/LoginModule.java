@@ -1,4 +1,3 @@
-//LoginModule
 package com.rnclient.grpc;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -16,7 +15,7 @@ public class LoginModule  extends ReactContextBaseJavaModule {
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
     private static final int PORT_NUMBER = 50051;
-    private static final String IP_ADDRESS = "104.40.206.141";
+    private static final String IP_ADDRESS = "35.197.216.42";
     private static LoginClient client;
 
    public  LoginModule(ReactApplicationContext context) {
@@ -33,15 +32,14 @@ public class LoginModule  extends ReactContextBaseJavaModule {
      @ReactMethod
         public void createUser(String email,String password,Callback errorCallback,
         Callback successCallback) {
-        LoginClient client = new LoginClient("104.40.206.141", 50051);
-            String token;
-            String res = client.createUser(email,password);
-
+        LoginClient client = new LoginClient("35.197.216.42", 50051);
+            String token = "";
+            String response = client.createUser(email,password);
             try {
-                if(res == null) {
+                if(response == null) {
                    token = "User has been already created";
                     errorCallback.invoke(token);
-                     } else token = res;
+                     } else token = response;
                 successCallback.invoke(token);
               } catch (Exception e) {
                 errorCallback.invoke(e.getMessage());
@@ -50,7 +48,7 @@ public class LoginModule  extends ReactContextBaseJavaModule {
         /*@ReactMethod
             public void updateUser(String email,String password,Callback errorCallback,
             Callback successCallback) {
-                LoginClient client = new LoginClient("104.40.206.141", 50051);
+                LoginClient client = new LoginClient("35.197.216.42", 50051);
 
                 String msg;
                  String res = client.updateUser(email,password);
@@ -66,30 +64,30 @@ public class LoginModule  extends ReactContextBaseJavaModule {
 
             @ReactMethod
             public void loginUser(String email,String password,Callback errorCallback,
-            Callback successCallback) {
-            LoginClient client = new LoginClient("104.40.206.141", 50051);
-                String token;
-                String res = client.loginUser(email,password);
+                     Callback successCallback) {
+            LoginClient client = new LoginClient("35.197.216.42", 50051);
+
+                boolean res = client.loginUser(email,password);
 
                 try {
-                    if(res == null) {
-                       token = "User is already created";
-                        errorCallback.invoke(token);
-                         } else token = res;
-                    successCallback.invoke(token);
+                    if(res == false) {
+                        errorCallback.invoke(false);
+                         } else res = true;
+                    successCallback.invoke(res);
                   } catch (Exception e) {
-                    errorCallback.invoke(e.getMessage());
+                    //doesnt catch an exc
+                    errorCallback.invoke(false);
                   }
             }
-/*
-                    @ReactMethod
-                    public void checkToken(String token,String email,Callback errorCallback,
-                    Callback successCallback) {
-                    LoginClient client = new LoginClient("104.40.206.141", 50051);
-                    boolean result = client.checkToken(token, email);
-                    }
 
-                    @ReactMethod
+            @ReactMethod
+            public void checkToken(String token,String email,Callback errorCallback,
+                Callback successCallback) {
+                LoginClient client = new LoginClient("35.197.216.42", 50051);
+                boolean result = client.checkToken(token, email);
+            }
+
+                 /*   @ReactMethod
                     public void logout(String token,String email,Callback errorCallback,
                     Callback successCallback) {
                     LoginClient client = new LoginClient("104.40.206.141", 50051);

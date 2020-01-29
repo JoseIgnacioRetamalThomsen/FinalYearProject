@@ -9,14 +9,14 @@ import io.grpc.wcity.helloworld.GreeterGrpc;
 
 import io.grpc.wcity.login.UserResponse;
 import io.grpc.wcity.login.UserRequest;
+import io.grpc.wcity.login.LogResponse;
+import io.grpc.wcity.login.LogRequest;
 import io.grpc.wcity.login.UserAuthenticationGrpc;
-
 
 public class LoginClient {
 
     private final ManagedChannel channel;
     private final UserAuthenticationGrpc.UserAuthenticationBlockingStub stub;
-
 
     public LoginClient(String host, int port) {
         this.channel = ManagedChannelBuilder.forAddress(host, port)
@@ -31,21 +31,39 @@ public class LoginClient {
         channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
     }
 
- public String createUser(String email, String password) {
-        UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
-        UserResponse response = null;
+     public String createUser(String email, String password) {
+            UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
+            UserResponse response = null;
+            String token = "";
+            try {
+                response = stub.createUser(userData);
+                token = response.getToken();
+            }
+            catch (StatusRuntimeException e) {
+                return e.toString();
+            }
+            catch (Exception e) {
+                return e.toString();
+            }
+            return token;
+      }
 
-        try {
-            response = stub.createUser(userData);
-            boolean isLoggedIn = response.getIsUser();
-        } catch (StatusRuntimeException e) {
-           return null;
-        }
-        response.getIsUser();
-        return response.getToken();
-    }
+     public boolean loginUser(String email, String password) {
+            UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
+            UserResponse response = null;
+            boolean isUser = false;
+            try {
+                response = stub.loginUser(userData);
+                isUser = response.getIsUser();
+            }
+            catch (Exception e) {
+               //isUser = response.getIsUser();
+               //return false;
+            }
+            return isUser;
+      }
 
-   /* public String updateUser(String email, String password) {
+ /* public String updateUser(String email, String password) {
             UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
             UserResponse response = null;
             boolean isUser = false;
@@ -58,36 +76,23 @@ public class LoginClient {
             }
             return isUser;
         }*/
-         public String loginUser(String email, String password) {
-                UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
-                UserResponse response = null;
-                boolean isUser = false;
-
-                try {
-                    response = stub.loginUser(userData);
-                    isUser = response.getIsUser();
-                } catch (StatusRuntimeException e) {
-                   return e.toString();
-                }
-                return response.getToken();
-            }
-
-       /*public String checkToken(String token, String email) {
-                    UserRequest userData = UserRequest.newBuilder().setToken(token).setEmail(email).build();
-                    UserResponse response = null;
-                    boolean success = false;
+       public boolean checkToken(String token, String email) {
+                    LogRequest userData = LogRequest.newBuilder().setToken(token).setEmail(email).build();
+                    LogResponse response = null;
+                    boolean isSuccess = false;
 
                     try {
                         response = stub.checkToken(userData);
-                        success = response.getSuccess();
+                        isSuccess = response.getSuccess();
                     } catch (StatusRuntimeException e) {
-                       return e.toString();
+                       return false;
                     }
-                    return success;
+                    return isSuccess;
                 }
+                /*
                 public String logout (String token, String email) {
-                                    UserRequest userData = UserRequest.newBuilder().setToken(token).setEmail(email).build();
-                                    UserResponse response = null;
+                                    LogRequest userData = LogRequest.newBuilder().setToken(token).setEmail(email).build();
+                                    LogResponse response = null;
                                     boolean success = false;
 
                                     try {

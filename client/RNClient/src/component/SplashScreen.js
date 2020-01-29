@@ -1,39 +1,52 @@
-import React, { Component } from 'react';
-import {
-    Platform,
-    ActivityIndicator,
-    StyleSheet,
-    Text,
-    View,
-    StatusBar, default as AsyncStorage
-} from 'react-native';
+import React from 'react';
+import {View, Text, default as AsyncStorage} from 'react-native';
 
-export default class SplashScreen extends Component {
-    constructor() {
-        super();
-        this.bootstrapAsync();
+class SplashScreen extends React.Component {
+    performTimeConsumingTask = async() => {
+        return new Promise((resolve) =>
+            setTimeout(
+                () => { resolve('result') },
+                2000
+            )
+        )
     }
-    bootstrapAsync = async () => {
-        const userToken = await AsyncStorage.getItem('userToken');
-        // This will switch to the App screen or Auth screen and this loading
-        // screen will be unmounted and thrown away.
-        this.props.navigation.navigate(userToken ? 'app' : 'auth');
-    };
+
+    async componentDidMount() {
+        AsyncStorage.getItem("token", token).then(value => {
+            if(value===null){
+                AsyncStorage.setItem("token", true).then(() => {
+                    this.props.navigation.replace('app')
+                })
+            }
+            else{
+                this.props.navigation.replace('auth')
+            }
+        })
+    }
+
     render() {
         return (
-            <View style={styles.container}>
-                <ActivityIndicator />
-                <StatusBar barStyle="default" />
+            <View style={styles.viewStyles}>
+                <Text style={styles.textStyles}>
+                    Blitz Reading
+                </Text>
             </View>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
+const styles = {
+    viewStyles: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#4F6D7A',
+        justifyContent: 'center',
+        backgroundColor: 'orange'
+    },
+    textStyles: {
+        color: 'white',
+        fontSize: 40,
+        fontWeight: 'bold'
     }
-});
+}
+
+export default SplashScreen;

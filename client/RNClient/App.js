@@ -1,3 +1,7 @@
+import SplashScreen from "./src/component/SplashScreen";
+
+console.disableYellowBox = true
+
 import React from 'react';
 import {Image, Dimensions, View} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
@@ -19,9 +23,8 @@ import RestorePassword from './src/component/auth/RestorePassword'
 import LoadImage from './src/component/LoadImage'
 import WritePost from "./src/component/tabs/myPosts/WritePost";
 import Post from "./src/component/tabs/myPosts/Post";
-import SplashScreen from "./src/component/SplashScreen";
+import { LoadingScreen } from "./src/component/LoadingScreen";
 import MapInput from "./src/component/MapInput";
-
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -137,14 +140,14 @@ const authStack = createStackNavigator({
 const MyApp = createSwitchNavigator({
 
         loading: {
-            screen: SplashScreen
+            screen: LoadingScreen
         },
         app: appDrawer,
         auth: authStack
     },
     {
         //change back to loading
-        initialRouteName: 'app'
+        initialRouteName: 'auth'
     })
 
 const AppNavigation = createAppContainer(MyApp);

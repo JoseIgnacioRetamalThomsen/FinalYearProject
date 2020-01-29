@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {
+    AsyncStorage,
     Text,
     View,
     TextInput,
     TouchableHighlight,
     Image,
+    NativeModules
 } from 'react-native';
 import styles from '../../styles/Style'
-// import LoginGrpc from './LoginGrpc'
-import { NativeModules } from 'react-native';
 
 class Login extends Component {
 
@@ -17,50 +17,37 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
+            message: '',
+            isUser: false
         }
     }
 
-    onClickListenerLogin = () => {
+    async onClickListenerLogin() {//is it async?
         NativeModules.LoginModule.loginUser(
-            "email",
-            "password",
-            (msg) => {
-                alert(msg);
+            this.state.email,
+            this.state.password,
+            (err) => {
+                this.setState({isUser: err})
+                alert('err ' + err)
+                this.setState({message: 'Incorrect email or password'})
+                this.props.navigation.navigate('Register')
             },
-            (x) => {
-                alert("Login message " + x)
+            (isUser) => {
+                alert('isUser ' + isUser)
+                this.setState({message: 'Success'})
+                this.props.navigation.navigate('RestorePassword')
             }
         )
-    }
-    onClickListener = (viewId) => {
-        switch (viewId) {
-            // case 'login':
-            //     //TODO: CHECK  HERE if login correct
-            //     NativeModules.LoginModule.check(
-            //         "email",
-            //         "password",
-            //         (msg) => {
-            //           // Alert.alert(msg);
-            // },
-            //     (x) => {
-            //             //Alert.alert(" !!! ", + x, x)
-            //     }
-            //     )
-            //     this.props.navigation.navigate('app');
-            //     break;
-
-            case 'restore_password':
-                this.props.navigation.navigate('RestorePassword');
-                break;
-
-            default:
-                break;
-        }
     }
 
     render() {
         return (
             <View style={styles.container}>
+                {/*<View>*/}
+                <Text style={styles.container}>
+                    {this.state.message}
+                </Text>
+                {/*</View>*/}
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={require('../../img/mail.png')}/>
                     <TextInput style={styles.inputs}
@@ -85,7 +72,7 @@ class Login extends Component {
                 </TouchableHighlight>
 
                 <TouchableHighlight style={styles.buttonContainer}
-                                    onPress={() => this.onClickListener('restore_password')}>
+                                    onPress={() => this.props.navigation.navigate('restore_password')}>
                     <Text>Forgot your password?</Text>
                 </TouchableHighlight>
 
@@ -94,7 +81,8 @@ class Login extends Component {
                     <Text>Register</Text>
                 </TouchableHighlight>
             </View>
-        );
+        )
     }
 }
+
 export default Login

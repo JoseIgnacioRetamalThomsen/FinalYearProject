@@ -5,7 +5,8 @@ import {
     TextInput,
     TouchableHighlight,
     Image,
-    Alert, NativeModules
+    NativeModules,
+    AsyncStorage
 } from 'react-native';
 import styles from '../../styles/Style'
 
@@ -17,13 +18,19 @@ export default class Register extends Component {
             email: '',
             password: '',
             cpassword: '',
-            token: ''
         }
     }
 
-    validateFields = () => {
+    storeToken = async (token) => {
+        try {
+            await AsyncStorage.setItem('userToken', token)
+            alert('storeToken() token is ' + token)
+        } catch (error) {
+            console.log("inside storeToken")
+        }
     }
-    onClickListener = () => {
+
+    async onClickListener  ()  {
         let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
         let isCorrectEmail = emailRegex.test(this.state.email)
 
@@ -48,27 +55,31 @@ export default class Register extends Component {
                 this.state.email,
                 this.state.password,
                 (err) => {
-                    // this.setState({message: err})
+                    alert("err"+err)
                 },
                 (token) => {
-                    this.props.navigation.navigate('app');
+                   alert("token"+token)
+                    if(token.includes("Duplicate")){
+                        this.setState({message: 'Email is already registered'})
+                    }else{
+                        //await AsyncStorage.setItem(this.state.email, token)
+                        this.setState({message: 'Success'})
+                        this.props.navigation.navigate('RestorePassword')
+                    }
                 }
             )
-           // this.setState({message: "You are logged in"})
 
-            return true;
         }
-
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <View>
-                    <Text>
+                {/*<View>*/}
+                    <Text style={styles.container}>
                         {this.state.message}
                     </Text>
-                </View>
+                {/*</View>*/}
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={require('../../img/mail.png')}/>
                     <TextInput style={styles.inputs}
