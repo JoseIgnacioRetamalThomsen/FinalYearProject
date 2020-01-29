@@ -56,9 +56,9 @@ public class LoginClient {
                 response = stub.loginUser(userData);
                 isUser = response.getIsUser();
             }
+            catch (StatusRuntimeException e) {
+            }
             catch (Exception e) {
-               //isUser = response.getIsUser();
-               //return false;
             }
             return isUser;
       }

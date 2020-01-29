@@ -65,19 +65,12 @@ public class LoginModule  extends ReactContextBaseJavaModule {
             @ReactMethod
             public void loginUser(String email,String password,Callback errorCallback,
                      Callback successCallback) {
-            LoginClient client = new LoginClient("35.197.216.42", 50051);
-
+                LoginClient client = new LoginClient("35.197.216.42", 50051);
                 boolean res = client.loginUser(email,password);
 
-                try {
-                    if(res == false) {
-                        errorCallback.invoke(false);
-                         } else res = true;
-                    successCallback.invoke(res);
-                  } catch (Exception e) {
-                    //doesnt catch an exc
+                if(res == false) {
                     errorCallback.invoke(false);
-                  }
+                 } else successCallback.invoke(true);
             }
 
             @ReactMethod
