@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+
+package wcity;
+
+option java_multiple_files = true;
+option java_package = "io.grpc.wcity.profilesDB";
+option java_outer_classname = "ProfilesDBProto";
+option objc_class_prefix = "RPC";
+
+service ProfilesDB{
+
+    // created user and return login token
+  //  rpc CreateUser(UserRequest) returns (UserResponse); 
+    //update user
+ //   rpc UpdateUser(UserRequest) returns (UserResponse);   
+    // used for login 
+  //  rpc LoginUser(UserRequest) returns (UserResponse);
+      // check if user is logged
+  //  rpc CheckToken(LogRequest) returns (LogResponse);
+    // for logout
+  //  rpc Logout(LogRequest) returns (LogResponse);
+    
+
+}
+
+message UserRequest{
+    string token = 1;
+    string email = 2;
+   
+}
+
+message UserResponse{
+     string email = 1;
+     string name = 2;
+     string description =3;
+     repeated CityMin visiteds = 4;
+     repeated PlaceMin visiteds = 5;
+     
+}
+
+message CityMin{
+    string name = 1;
+    string country = 2;
+    string creatorEmail = 3;
+}
+
+message PlaceMin{
+    string name = 1;
+    string cityID = 2;// composo of city name and city country
+    string creatorEmail = 4;
+}
+
+message UpdatedUserRequest{
+    string token = 1;
+    string email = 2;
+    string name = 3;
+    string description =4; 
+}
