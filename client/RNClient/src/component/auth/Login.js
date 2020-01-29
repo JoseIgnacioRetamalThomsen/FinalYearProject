@@ -28,14 +28,13 @@ class Login extends Component {
             this.state.password,
             (err) => {
                 this.setState({isUser: err})
-                alert('err ' + err)
+                //alert('err ' + err)
                 this.setState({message: 'Incorrect email or password'})
-                this.props.navigation.navigate('Register')
             },
             (isUser) => {
-                alert('isUser ' + isUser)
+               // alert('isUser ' + isUser)
                 this.setState({message: 'Success'})
-                this.props.navigation.navigate('RestorePassword')
+                this.props.navigation.navigate('app')
             }
         )
     }

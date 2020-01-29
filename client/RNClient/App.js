@@ -147,7 +147,7 @@ const MyApp = createSwitchNavigator({
     },
     {
         //change back to loading
-        initialRouteName: 'auth'
+        initialRouteName: 'loading'
     })
 
 const AppNavigation = createAppContainer(MyApp);

@@ -26,7 +26,7 @@ export default class Register extends Component {
             await AsyncStorage.setItem('userToken', token)
             alert('storeToken() token is ' + token)
         } catch (error) {
-            console.log("inside storeToken")
+            console.log("error inside storeToken")
         }
     }
 
@@ -57,14 +57,20 @@ export default class Register extends Component {
                 (err) => {
                     alert("err"+err)
                 },
-                (token) => {
-                   alert("token"+token)
+                async (token) => {
+                   //alert("token "+token)
                     if(token.includes("Duplicate")){
                         this.setState({message: 'Email is already registered'})
                     }else{
-                        //await AsyncStorage.setItem(this.state.email, token)
+                        await AsyncStorage.setItem(JSON.stringify(this.state.email), token)
+                            .then(() => console.log('saved email successfully'))
+                            .catch(err => console.error('something went wrong', err));
+                        alert("result "+this.state.email +  token)
+                        // alert("asyncstorage " + AsyncStorage.setItem(this.state.email, token))
+                        //
+                        //alert("asyncstorage "+AsyncStorage.getItem(this.state.email, token))
                         this.setState({message: 'Success'})
-                        this.props.navigation.navigate('RestorePassword')
+                        this.props.navigation.navigate('app')
                     }
                 }
             )
@@ -107,7 +113,7 @@ export default class Register extends Component {
                 </View>
 
                 <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
-                                    onPress={() => this.onClickListener('register')}>
+                                    onPress={() => this.onClickListener()}>
                     <Text style={styles.loginText}>Create Account</Text>
                 </TouchableHighlight>
 
