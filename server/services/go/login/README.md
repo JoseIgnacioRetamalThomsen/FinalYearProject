@@ -24,6 +24,13 @@ sudo docker image build -t joseretamal/auth-service:1.0 .
 ``
  sudo docker container run --publish 50051:50051 --detach --name as joseretamal/auth-service:1.0
 ``
+better for auto restart
+
+`
+docker run -d -p 5701:5701 --restart always --name hs joseretamal/hash-service:1.0
+`
+
+
 
 # stop docker image
 ``
