@@ -45,6 +45,29 @@ public class LoginModule  extends ReactContextBaseJavaModule {
                 errorCallback.invoke(e.getMessage());
               }
         }
+
+        @ReactMethod
+        public void loginUser(String email,String password,Callback errorCallback,
+                 Callback successCallback) {
+            LoginClient client = new LoginClient("35.197.216.42", 50051);
+            boolean res = client.loginUser(email,password);
+
+            if(res == false) {
+                errorCallback.invoke(false);
+             } else successCallback.invoke(true);
+        }
+
+        @ReactMethod
+        public void checkToken(String token,String email,Callback errorCallback,
+            Callback successCallback) {
+            LoginClient client = new LoginClient("35.197.216.42", 50051);
+            boolean result = client.checkToken(token, email);
+
+            if(result == false) {
+                errorCallback.invoke(false);
+            } else successCallback.invoke(true);
+        }
+
         /*@ReactMethod
             public void updateUser(String email,String password,Callback errorCallback,
             Callback successCallback) {
@@ -61,29 +84,13 @@ public class LoginModule  extends ReactContextBaseJavaModule {
                     errorCallback.invoke(e.getMessage());
                   }
             }*/
-
-            @ReactMethod
-            public void loginUser(String email,String password,Callback errorCallback,
-                     Callback successCallback) {
-                LoginClient client = new LoginClient("35.197.216.42", 50051);
-                boolean res = client.loginUser(email,password);
-
-                if(res == false) {
-                    errorCallback.invoke(false);
-                 } else successCallback.invoke(true);
-            }
-
-            @ReactMethod
-            public void checkToken(String token,String email,Callback errorCallback,
-                Callback successCallback) {
-                LoginClient client = new LoginClient("35.197.216.42", 50051);
-                boolean result = client.checkToken(token, email);
-            }
-
                  /*   @ReactMethod
                     public void logout(String token,String email,Callback errorCallback,
                     Callback successCallback) {
                     LoginClient client = new LoginClient("104.40.206.141", 50051);
                     boolean result = client.logout(token, email);
+                     if(result == false) {
+                        errorCallback.invoke(false);
+                    } else successCallback.invoke(true);
                     }*/
 }

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-    AsyncStorage,
     Text,
     View,
     TextInput,
@@ -9,6 +8,7 @@ import {
     NativeModules
 } from 'react-native';
 import styles from '../../styles/Style'
+import AsyncStorage from '@react-native-community/async-storage'
 
 class Login extends Component {
 
@@ -31,8 +31,13 @@ class Login extends Component {
                 //alert('err ' + err)
                 this.setState({message: 'Incorrect email or password'})
             },
-            (isUser) => {
+            async (isUser) => {
                // alert('isUser ' + isUser)
+                try {
+                    await AsyncStorage.setItem(this.state.email, isUser)
+                } catch (e) {
+                    console.log("Error ", e);
+                }
                 this.setState({message: 'Success'})
                 this.props.navigation.navigate('app')
             }
@@ -43,7 +48,7 @@ class Login extends Component {
         return (
             <View style={styles.container}>
                 {/*<View>*/}
-                <Text style={styles.container}>
+                <Text>
                     {this.state.message}
                 </Text>
                 {/*</View>*/}

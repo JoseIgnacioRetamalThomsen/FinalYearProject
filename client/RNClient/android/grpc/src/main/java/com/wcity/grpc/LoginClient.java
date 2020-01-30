@@ -63,32 +63,33 @@ public class LoginClient {
             return isUser;
       }
 
- /* public String updateUser(String email, String password) {
-            UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
-            UserResponse response = null;
-            boolean isUser = false;
+       public boolean checkToken(String token, String email) {
+            LogRequest userData = LogRequest.newBuilder().setToken(token).setEmail(email).build();
+            LogResponse response = null;
+            boolean isSuccess = false;
 
             try {
-                response = stub.updateUser(userData);
-                isUser = response.getIsUser();
+                response = stub.checkToken(userData);
+                isSuccess = response.getSuccess();
             } catch (StatusRuntimeException e) {
-               return e.toString();
+               return false;
             }
-            return isUser;
-        }*/
-       public boolean checkToken(String token, String email) {
-                    LogRequest userData = LogRequest.newBuilder().setToken(token).setEmail(email).build();
-                    LogResponse response = null;
-                    boolean isSuccess = false;
+            return isSuccess;
+        }
+
+        /* public String updateUser(String email, String password) {
+                    UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
+                    UserResponse response = null;
+                    boolean isUser = false;
 
                     try {
-                        response = stub.checkToken(userData);
-                        isSuccess = response.getSuccess();
+                        response = stub.updateUser(userData);
+                        isUser = response.getIsUser();
                     } catch (StatusRuntimeException e) {
-                       return false;
+                       return e.toString();
                     }
-                    return isSuccess;
-                }
+                    return isUser;
+                }*/
                 /*
                 public String logout (String token, String email) {
                                     LogRequest userData = LogRequest.newBuilder().setToken(token).setEmail(email).build();

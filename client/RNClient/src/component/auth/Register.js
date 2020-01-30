@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     Text,
     View,
     TextInput,
     TouchableHighlight,
     Image,
-    NativeModules,
-    AsyncStorage
-} from 'react-native';
+    NativeModules
+} from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import styles from '../../styles/Style'
 
 export default class Register extends Component {
@@ -21,16 +21,7 @@ export default class Register extends Component {
         }
     }
 
-    storeToken = async (token) => {
-        try {
-            await AsyncStorage.setItem('userToken', token)
-            alert('storeToken() token is ' + token)
-        } catch (error) {
-            console.log("error inside storeToken")
-        }
-    }
-
-    async onClickListener  ()  {
+    async onClickListener() {
         let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
         let isCorrectEmail = emailRegex.test(this.state.email)
 
@@ -55,20 +46,29 @@ export default class Register extends Component {
                 this.state.email,
                 this.state.password,
                 (err) => {
-                    alert("err"+err)
+                    alert("err" + err)
                 },
                 async (token) => {
-                   //alert("token "+token)
-                    if(token.includes("Duplicate")){
+                    let value
+                    if (token.includes("Duplicate")) {
                         this.setState({message: 'Email is already registered'})
-                    }else{
-                        await AsyncStorage.setItem(JSON.stringify(this.state.email), token)
-                            .then(() => console.log('saved email successfully'))
-                            .catch(err => console.error('something went wrong', err));
-                        alert("result "+this.state.email +  token)
-                        // alert("asyncstorage " + AsyncStorage.setItem(this.state.email, token))
-                        //
-                        //alert("asyncstorage "+AsyncStorage.getItem(this.state.email, token))
+                    } else {
+                        try {
+                            await AsyncStorage.setItem(this.state.email, token)
+                        } catch (e) {
+                            console.log("Error ", e);
+                        }
+
+                        try {
+                            value = await AsyncStorage.getItem(this.state.email)
+                            alert("value is " + value)
+                        } catch(e) {
+                            // read error
+                        }
+                        console.log('Done.')
+
+                        alert("asyncstorage " + await AsyncStorage.getItem(this.state.email))
+                        alert("value "+value)
                         this.setState({message: 'Success'})
                         this.props.navigation.navigate('app')
                     }
@@ -82,9 +82,9 @@ export default class Register extends Component {
         return (
             <View style={styles.container}>
                 {/*<View>*/}
-                    <Text style={styles.container}>
-                        {this.state.message}
-                    </Text>
+                <Text style={styles.container}>
+                    {this.state.message}
+                </Text>
                 {/*</View>*/}
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={require('../../img/mail.png')}/>
