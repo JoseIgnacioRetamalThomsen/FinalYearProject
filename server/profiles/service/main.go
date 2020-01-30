@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
 	"log"
@@ -53,13 +54,17 @@ func main(){
 	s2 := &neo4jDB{dbserverCtx}
 	dbConn = *s2
 
-	CreateUser("one","two","three")
+	res , errr := CreateUser("one","two","three")
+	if errr != nil {
+		panic(errr)
+	}
+	fmt.Print(res)
 }
 
 func CreateUser(email string,name string, description string) (bool,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.CreateUser(ctx, &pb.CreateUserRequest{Email: email, Name: name,Description:description})
+	r, err := dbConn.context.dbClient.CreateUser(ctx, &pb.CreateUserRequestPDB{Email: email, Name: name,Description:description})
 	if err != nil {
 		return false, err
 	}

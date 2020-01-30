@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 
 import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
-import io.grpc.wcity.profilesDB.CreateUserRequest;
-import io.grpc.wcity.profilesDB.CreateUserResponse;
+import io.grpc.wcity.profilesDB.CreateUserRequestPDB;
+import io.grpc.wcity.profilesDB.CreateUserResponsePDB;
 import io.grpc.wcity.profilesDB.ProfilesDBGrpc.ProfilesDBImplBase;
 
 public class ProfileDBImp extends ProfilesDBImplBase {
@@ -20,7 +20,7 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 
 	private static final Logger logger = Logger.getLogger(ProfileDBImp.class.getName());
 	
-	public void CreateUser(CreateUserRequest request, StreamObserver<CreateUserResponse> response) {
+	public void createUser(CreateUserRequestPDB request, StreamObserver<CreateUserResponsePDB> response) {
 		logger.info("Create user request.");
 		try {
 			Context context = Context.current();
@@ -28,9 +28,10 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 			
 			dao.AddUser(request.getEmail(), request.getName(), request.getDescription());
 			
-			response.onNext( CreateUserResponse.newBuilder().setEmail(request.getEmail()).
+			response.onNext( CreateUserResponsePDB.newBuilder().setEmail(request.getEmail()).
 					setValied("true")
 					.build());
+			 response.onCompleted();
 		}catch(Exception e) {
 			response.onError(e);
 			

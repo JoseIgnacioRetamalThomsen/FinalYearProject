@@ -9,16 +9,17 @@ option java_outer_classname = "ProfilesDBProto";
 option objc_class_prefix = "RPC";
 
 service ProfilesDB{
-    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
-    rpc GetUser(GetUserRequest) returns (UserResponse);
-    rpc CreateCity(City) returns (CityResponse);
-    rpc CreatePlaceRequest(Place) returns (PlaceResponse);
-    rpc GetCity(CityRequest) returns (CityResponse);
-    rpc GetPlace(PlaceRequest) returns (PlaceResponse);
-    rpc VisitCity(VisitCityRequest) returns (VisitCityResponse);
-    rpc VisitPlace(VisitPlaceRequest) returns (VisitPlaceResponse);
-    rpc GetVisitedCitys(VisitedCitysRequest) returns (VisitedCitysResponse);
-    rpc GetVisitedPlaces(VisitedPlacesRequest) returns (VisitedPlacesResponse);
+    rpc CreateUser(CreateUserRequestPDB) returns (CreateUserResponsePDB);
+    rpc GetUser(GetUserRequestPDB) returns (UserResponsePDB);
+    rpc CreateCity(CityPDB) returns (CityResponsePDB);
+    rpc CreatePlaceRequest(PlacePDB) returns (PlaceResponsePDB);
+    rpc GetCity(CityRequestPDB) returns (CityResponsePDB);
+    rpc GetPlace(PlaceRequestPDB) returns (PlaceResponsePDB);
+    rpc VisitCity(VisitCityRequestPDB) returns (VisitCityResponsePDB);
+    rpc VisitPlace(VisitPlaceRequestPDB) returns (VisitPlaceResponsePDB);
+    rpc GetVisitedCitys(VisitedCitysRequestPDB) returns (VisitedCitysResponsePDB);
+    rpc GetVisitedPlaces(VisitedPlacesRequestPDB) returns (VisitedPlacesResponsePDB);
+    rpc UpdateUserRequest(CreateUserRequestPDB) returns (CreateUserResponsePDB);
 }
 message CreateUserRequestPDB{
      string email = 1;
@@ -36,8 +37,8 @@ message UserResponsePDB{
      string email = 1;
      string name = 2;
      string description =3;
-     repeated CityMin visitedCitys = 4;
-     repeated PlaceMin visitedPlaces = 5;
+     repeated CityMinPDB visitedCitys = 4;
+     repeated PlaceMinPDB visitedPlaces = 5;
 }
 message CityMinPDB{
     string name = 1;
@@ -48,9 +49,9 @@ message CityPDB{
     string name = 1;
     string country = 2;
     string creatorEmail = 3;
-    Geolocation location = 4;
+    GeolocationPDB location = 4;
     string description = 5;
-    repeated PlaceMin places = 6;
+    repeated PlaceMinPDB places = 6;
 }
 message CityRequestPDB{
     string name = 1;
@@ -60,7 +61,7 @@ message CityResponsePDB{
     string name = 1;
     string country = 2;
     bool valid = 3;
-    City city = 4;
+    CityPDB city = 4;
 }
 message GeolocationPDB{
     float lon = 1;
@@ -75,7 +76,7 @@ message PlacePDB{
     string name = 1;
     string cityID = 2;// composo of city name and city country
     string creatorEmail = 3;
-    Geolocation location = 4;
+    GeolocationPDB location = 4;
     string description = 5;
 } 
 message PlaceRequestPDB{
@@ -86,7 +87,7 @@ message PlaceResponsePDB{
     string name =1;
     string cityID =2;
     bool valid = 3;
-    Place place =4;
+    PlacePDB place =4;
 
 }
 message UpdatedUserRequestPDB{
@@ -100,7 +101,7 @@ message VisitedCitysRequestPDB{
 
 message VisitedCitysResponsePDB{
     string email = 1;
-    repeated City citys= 2;
+    repeated CityPDB citys= 2;
 }
 message VisitCityRequestPDB{
     string email = 1;
@@ -121,7 +122,7 @@ message CityPlacesResponsePDB{
     string cityName = 1;
     string cityCountry = 2;
     bool valid = 3;
-    repeated Place places = 4;
+    repeated PlacePDB places = 4;
 }
 message VisitPlaceRequestPDB{
     string email = 1;
@@ -139,5 +140,5 @@ message VisitedPlacesRequestPDB{
 }
 message VisitedPlacesResponsePDB{
     string email = 1;
-    repeated Place places =2;
+    repeated PlacePDB places =2;
 }
