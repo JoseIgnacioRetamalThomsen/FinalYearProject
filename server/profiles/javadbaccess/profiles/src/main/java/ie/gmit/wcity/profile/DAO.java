@@ -27,7 +27,7 @@ public class DAO  implements AutoCloseable {
 					session.writeTransaction(new TransactionWork<String>() {
 				@Override
 				public String execute(Transaction tx) {
-					Result result = tx.run("CREATE (a:User) " + "SET a.name = $name "  
+					Result result = tx.run("Create (a:User) " + "SET a.name = $name "  
 							+ "SET a.email = $email " + "SET a.description = $description " 
 							+ "RETURN a.name + ', from node ' + id(a)", parameters("name", name,"email",email,"description",description));
 					return result.single().get(0).asString();
@@ -39,7 +39,7 @@ public class DAO  implements AutoCloseable {
 
 	public static void main(String... args) throws Exception {
 	try (DAO dao = new DAO("bolt://0.0.0.0:7687", "neo4j", "test")) {
-		dao.AddUser("email","name","description");
+		dao.AddUser("email1","name1","description1");
 	}
 }
 

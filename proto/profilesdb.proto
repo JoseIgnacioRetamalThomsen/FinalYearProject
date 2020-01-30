@@ -20,31 +20,31 @@ service ProfilesDB{
     rpc GetVisitedCitys(VisitedCitysRequest) returns (VisitedCitysResponse);
     rpc GetVisitedPlaces(VisitedPlacesRequest) returns (VisitedPlacesResponse);
 }
-message CreateUserRequest{
+message CreateUserRequestPDB{
      string email = 1;
      string name = 2;
      string description =3;
 }
-message CreateUserResponse{
+message CreateUserResponsePDB{
     string email =1 ;
     string valied = 2;
 }
-message GetUserRequest{
+message GetUserRequestPDB{
     string email = 2;
 }
-message UserResponse{
+message UserResponsePDB{
      string email = 1;
      string name = 2;
      string description =3;
      repeated CityMin visitedCitys = 4;
      repeated PlaceMin visitedPlaces = 5;
 }
-message CityMin{
+message CityMinPDB{
     string name = 1;
     string country = 2;
     string creatorEmail = 3;
 }
-message City{
+message CityPDB{
     string name = 1;
     string country = 2;
     string creatorEmail = 3;
@@ -52,92 +52,92 @@ message City{
     string description = 5;
     repeated PlaceMin places = 6;
 }
-message CityRequest{
+message CityRequestPDB{
     string name = 1;
     string country = 2;
 }
-message CityResponse{
+message CityResponsePDB{
     string name = 1;
     string country = 2;
     bool valid = 3;
     City city = 4;
 }
-message Geolocation{
+message GeolocationPDB{
     float lon = 1;
     float lat = 2;
 }
-message PlaceMin{
+message PlaceMinPDB{
     string name = 1;
     string cityID = 2;// composo of city name and city country
     string creatorEmail = 3;
 }
-message Place{
+message PlacePDB{
     string name = 1;
     string cityID = 2;// composo of city name and city country
     string creatorEmail = 3;
     Geolocation location = 4;
     string description = 5;
 } 
-message PlaceRequest{
+message PlaceRequestPDB{
     string name = 1;
     string cityID = 2;
 }
-message PlaceResponse{
+message PlaceResponsePDB{
     string name =1;
     string cityID =2;
     bool valid = 3;
     Place place =4;
 
 }
-message UpdatedUserRequest{
+message UpdatedUserRequestPDB{
     string email = 1;
     string name = 2;
     string description = 3; 
 }
-message VisitedCitysRequest{
+message VisitedCitysRequestPDB{
     string email = 1;
 }
 
-message VisitedCitysResponse{
+message VisitedCitysResponsePDB{
     string email = 1;
     repeated City citys= 2;
 }
-message VisitCityRequest{
+message VisitCityRequestPDB{
     string email = 1;
     string cityName = 2;
     string cityCountry =3;
 }
-message VisitCityResponse{
+message VisitCityResponsePDB{
     string email = 1;
     string cityName = 2;
     string cityCountry =3;
     bool valid = 4;
 }
-message CityPlacesRequest{
+message CityPlacesRequestPDB{
     string cityName = 1;
     string cityCountry = 2;
 }
-message CityPlacesResponse{
+message CityPlacesResponsePDB{
     string cityName = 1;
     string cityCountry = 2;
     bool valid = 3;
     repeated Place places = 4;
 }
-message VisitPlaceRequest{
+message VisitPlaceRequestPDB{
     string email = 1;
     string placeName =2;
     string placeCity =3;
 }
-message VisitPlaceResponse{
+message VisitPlaceResponsePDB{
  string email = 1;
     string placeName =2;
     string placeCity =3;
     bool valid = 4;
 }
-message VisitedPlacesRequest{
+message VisitedPlacesRequestPDB{
     string email =1;
 }
-message VisitedPlacesResponse{
+message VisitedPlacesResponsePDB{
     string email = 1;
     repeated Place places =2;
 }

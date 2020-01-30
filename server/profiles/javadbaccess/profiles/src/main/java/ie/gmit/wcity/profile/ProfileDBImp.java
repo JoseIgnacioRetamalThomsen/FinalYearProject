@@ -28,8 +28,11 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 			
 			dao.AddUser(request.getEmail(), request.getName(), request.getDescription());
 			
-			
+			response.onNext( CreateUserResponse.newBuilder().setEmail(request.getEmail()).
+					setValied("true")
+					.build());
 		}catch(Exception e) {
+			response.onError(e);
 			
 		}
 	}
