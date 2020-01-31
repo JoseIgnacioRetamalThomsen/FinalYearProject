@@ -42,25 +42,26 @@ public class LoginClient {
             catch (StatusRuntimeException e) {
                 return e.toString();
             }
-            catch (Exception e) {
-                return e.toString();
-            }
             return token;
       }
 
-     public boolean loginUser(String email, String password) {
+     public String loginUser(String email, String password) {
             UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
             UserResponse response = null;
             boolean isUser = false;
+            String token = "";
             try {
                 response = stub.loginUser(userData);
                 isUser = response.getIsUser();
+                if (isUser) {
+                    token = response.getToken();
+                } else token = null;
             }
             catch (StatusRuntimeException e) {
             }
             catch (Exception e) {
             }
-            return isUser;
+            return token;
       }
 
        public boolean checkToken(String token, String email) {

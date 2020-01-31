@@ -28,18 +28,25 @@ class Login extends Component {
             this.state.password,
             (err) => {
                 this.setState({isUser: err})
-                //alert('err ' + err)
+                alert('err ' + err)
                 this.setState({message: 'Incorrect email or password'})
             },
-            async (isUser) => {
-               // alert('isUser ' + isUser)
-                try {
-                    await AsyncStorage.setItem(this.state.email, isUser)
-                } catch (e) {
-                    console.log("Error ", e);
+            async (token) => {
+                alert('token is  ' + token)
+                if (token === "") {
+                    this.setState({message: 'Email is not registered'})
+                    alert("token!!!" + token)
+                } else {
+                    this.setState({message: 'Success'})
+                    this.props.navigation.navigate('app')
                 }
-                this.setState({message: 'Success'})
-                this.props.navigation.navigate('app')
+                //NativeModules.LoginModule.loginUser()
+                // try {
+                //     await AsyncStorage.setItem(this.state.email, isUser)
+                // } catch (e) {
+                //     console.log("Error ", e);
+                // }
+
             }
         )
     }

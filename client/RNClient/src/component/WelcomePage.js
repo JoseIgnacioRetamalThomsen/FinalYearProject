@@ -24,9 +24,9 @@ export default class WelcomePage extends Component{
         //SplashScreen.hide();
         // this.setState({isLoaded: true}, () => { SplashScreen.hide(); })
         setTimeout(() => {
-            this.getSavedToken().then(r => alert(r));
+            //this.getSavedToken().then(r => alert(r));
             SplashScreen.hide();
-           // this.props.navigation.replace("app");
+            this.props.navigation.navigate("auth");
         }, 1000);
     }
 
