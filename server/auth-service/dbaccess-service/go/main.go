@@ -1,20 +1,20 @@
 package main
 
+/**
+*  access interface : userlogindb.proto  -> UserAuthDB
+ */
+
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
-
-	"github.com/joseignacioretamalthomsen/sqlgo/db" // Native engine
-	// _ "github.com/ziutek/mymysql/thrsafe" // Thread safe engine
-
-	"context"
-	"log"
-	"net"
-
+	"github.com/joseignacioretamalthomsen/sqlgo/db"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
+	"log"
+	"net"
+	"os"
 )
 
 const (
@@ -58,8 +58,11 @@ type server struct {
 	pb.UnimplementedUserAuthDBServer
 }
 
+/**
+*  END POINTS
+ */
 func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
-	log.Printf("Received: %v", "Create new user")
+	log.Printf("Received: %v, %v", "Create new user",in.String())
 	u := db.NewUser(in.Email, in.PasswordHash, in.PasswordSalt, false)
 	id,err := db.AddUser(*u)
 	if err!=nil {
@@ -126,15 +129,14 @@ func (s *server) DeleteSession(ctx context.Context,in *pb.UserSessionRequest)  (
 	return &pb.UserDeleteSessionResponse{Success:true},nil
 }
 
-
+/*
+* MAIN
+ */
 
 func main() {
-
 	//read config file name from console input
 	args := os.Args[1]
 	readConfig(args)
-
-
 
 	db.SetupConnection(configuration.Coneection_type,
 	configuration.MySQL_socket,
