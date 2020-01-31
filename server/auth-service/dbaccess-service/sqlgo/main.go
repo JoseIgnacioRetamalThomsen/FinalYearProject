@@ -149,8 +149,10 @@ func main() {
 	//fmt.Print(key,email,d1,d2)
 
 
-	//user11 := db.NewUser("emailui7y", []byte("passs1"),[]byte("salt"),false)
-	//db.AddUser(*user11)
+	user11 := db.NewUser("emailui7y", []byte("passs1"),[]byte("salt"),false)
+	db.AddUser(*user11)
+	user12 := db.NewUser("emailui7ydd", []byte("passs1"),[]byte("salt"),false)
+	db.AddUser(*user12)
 	//u1,err := db.GetUser("emailui")
 	//if err!= nil{
 	//	panic(err)

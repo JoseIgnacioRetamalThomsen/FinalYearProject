@@ -79,10 +79,7 @@ func NewSeassion(sessionKey string, email string, loginTime string, lastSeemtime
 // create connection to database
 func SetupConnection(connectionType string, socket string, user string, pass string, database string) (bool, error) {
 	db = mysql.New(connectionType, "", socket, user, pass, database)
-	err := db.Connect()
-	if err != nil {
-		return false, errors.New("cant connect")
-	}
+
 	return true, nil
 }
 
@@ -90,6 +87,13 @@ func SetupConnection(connectionType string, socket string, user string, pass str
 //Returns true if user is created.
 //Auto id and isEmail false.
 func AddUser(u user) (int64, error) {
+	err := db.Connect()
+	if err != nil {
+		return -1, errors.New("cant connect")
+	}
+
+	defer db.Close()
+
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s, %s ) values (?,?,?)", tableUsers, rowEmail, rowPasswordHash, rowPasswordSalt)
 	stmt, err := db.Prepare(stmtStr)
 	if err != nil {

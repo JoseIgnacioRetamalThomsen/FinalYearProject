@@ -20,9 +20,7 @@ type passClientContext struct {
 
 //password service connection
 var psCon clientPassword
-// database connection
-var dbConn clientDB
-var dbConnLB clientDBLoadBalancing
+
 
 func newClientContext(endpoint string) (*passClientContext, error) {
 	userConn, err := grpc.Dial(endpoint, grpc.WithInsecure())

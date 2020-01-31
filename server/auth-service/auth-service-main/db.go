@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+// database connection
+var dbConn clientDB
+var dbConnLB clientDBLoadBalancing
+
 type clientDB struct {
 	context *dbClientContext
 }
