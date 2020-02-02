@@ -7,44 +7,33 @@ import AsyncStorage from "@react-native-community/async-storage";
 import {logger} from 'react-native-logger'
 
 class SideMenu extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            token: '',
-            email: ''
-        }
-    }
-
     async logout() {
-        NativeModules.LoginModule.logout(
-            this.state.token,
-            this.state.email,
-            async (err) => {
-                this.props.navigation.navigate('auth')
-                await AsyncStorage.clear()
-                logger.log(err)
-            },
-            async (isSuccess) => {
-                isSuccess ? this.props.navigation.navigate('auth') : this.props.navigation.navigate('app')
-                await AsyncStorage.clear()
-            })
-
         try {
             AsyncStorage.getAllKeys((err, keys) => {
                 AsyncStorage.multiGet(keys, (err, stores) => {
                     stores.map((result, i, store) => {
                         let key = store[i][0];
-                        this.setState({email: key})
                         let value = store[i][1]
-                        this.setState({token: value})
-                    });
-                });
-            });
+                        NativeModules.LoginModule.logout(
+                            value,
+                            key,
+                            async (err) => {
+                                this.props.navigation.navigate('auth')
+                                await AsyncStorage.clear()
+                                logger.log(err)
+                                console.log(key, value)
+                            },
+                            async (isSuccess) => {
+                                isSuccess ? this.props.navigation.navigate('auth') : this.props.navigation.navigate('app')
+                                await AsyncStorage.clear()
+                            })
+                    })
+                })
+            })
         } catch (e) {
-            logger.log(e.message);
+            logger.log(e.message)
         }
-
-        // this.props.navigation.navigate('auth')
+        this.props.navigation.navigate('auth')
     }
 
     render() {

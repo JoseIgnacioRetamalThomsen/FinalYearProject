@@ -9,15 +9,6 @@ import AsyncStorage from '@react-native-community/async-storage'
 import {logger} from 'react-native-logger'
 
 export default class WelcomePage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            token: ''
-        }
-        this.compare = this.compare.bind(this);
-    }
-
     componentDidMount() {
         this.getSavedToken().then(r => logger.log(r))
         SplashScreen.hide();
@@ -46,12 +37,27 @@ export default class WelcomePage extends Component {
                     stores.map((result, i, store) => {
                         // get at each store's key/value so you can work with it
                         let key = store[i][0];
-                        this.setState({email: key})
+                        this.setState({email: key}, () => {
+                            console.log(this.state.email)
+                        })
                         let value = store[i][1]
                         this.setState({token: value})
-                        console.log("key/value "+ key+value)
+                        console.log("key/value " + key + value)
                         if (value !== null) {
-                            this.compare()
+                            //this.compare()
+                            NativeModules.LoginModule.checkToken(
+                                value,
+                                key,
+                                (err) => {
+                                    logger.log(err)
+                                    console.log("this.token, this.email " + key, value)
+                                    this.props.navigation.navigate('auth')
+                                },
+                                (isSuccess) => {
+                                    isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
+                                    logger.log(isSuccess)
+                                }
+                            )
                         } else {
                             this.props.navigation.navigate("auth")
                         }
