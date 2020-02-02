@@ -52,25 +52,21 @@ export default class Register extends Component {
                     let value
                     if (token.includes("Duplicate")) {
                         this.setState({message: 'Email is already registered'})
-                        alert("token!!!" + token)
                     } else {
-                        // try {
-                        //     await AsyncStorage.setItem(this.state.email, token)
-                        // } catch (e) {
-                        //     console.log("Error ", e);
-                        // }
 
-                       // try {
-                           // value = await AsyncStorage.getItem(this.state.email)
-                           // alert("value is " + value)
-                       // } catch(e) {
-                            // read error
-                       // }
-                       // console.log('Done.')
+                        try {
+                            await AsyncStorage.setItem(this.state.email, token)
+                        } catch (e) {
+                            console.log("Error ", e);
+                        }
 
-                        // alert("asyncstorage " + await AsyncStorage.getItem(this.state.email))
-                        // alert("value "+value)
-                        alert("token"+token)
+                        try {
+                            value = await AsyncStorage.getItem(this.state.email)
+                        } catch (e) {
+                        }
+                        console.log("asyncstorage " + await AsyncStorage.getItem(this.state.email))
+                        console.log("value " + value)
+                        console.log("token" + token)
                         this.setState({message: 'Success'})
                         this.props.navigation.navigate('app')
                     }

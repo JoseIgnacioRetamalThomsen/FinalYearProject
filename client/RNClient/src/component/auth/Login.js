@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import {
     Text,
     View,
@@ -6,47 +6,49 @@ import {
     TouchableHighlight,
     Image,
     NativeModules
-} from 'react-native';
+} from 'react-native'
 import styles from '../../styles/Style'
 import AsyncStorage from '@react-native-community/async-storage'
+import {logger} from "react-native-logger"
 
 class Login extends Component {
-
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             email: '',
             password: '',
             message: '',
-            isUser: false
+            token: ''
         }
     }
 
-    async onClickListenerLogin() {//is it async?
+    async onClickListenerLogin() {
         NativeModules.LoginModule.loginUser(
             this.state.email,
             this.state.password,
             (err) => {
-                this.setState({isUser: err})
-                alert('err ' + err)
+                logger.log(err.message())
                 this.setState({message: 'Incorrect email or password'})
             },
             async (token) => {
-                alert('token is  ' + token)
+                let value
                 if (token === "") {
                     this.setState({message: 'Email is not registered'})
-                    alert("token!!!" + token)
                 } else {
+                    try {
+                        await AsyncStorage.setItem(this.state.email, token)
+                    } catch (e) {
+                        logger.log(e)
+                    }
+                    try {
+                        value = await AsyncStorage.getItem(this.state.email)
+                    } catch (e) {
+                    }
+                    this.setState({token: value})
+                    console.log("token " + token)
                     this.setState({message: 'Success'})
                     this.props.navigation.navigate('app')
                 }
-                //NativeModules.LoginModule.loginUser()
-                // try {
-                //     await AsyncStorage.setItem(this.state.email, isUser)
-                // } catch (e) {
-                //     console.log("Error ", e);
-                // }
-
             }
         )
     }
@@ -54,11 +56,9 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {/*<View>*/}
                 <Text>
                     {this.state.message}
                 </Text>
-                {/*</View>*/}
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={require('../../img/mail.png')}/>
                     <TextInput style={styles.inputs}

@@ -44,7 +44,23 @@ public class LoginClient {
             }
             return token;
       }
-
+ public String updateUser(String email, String password) {
+            UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
+             UserResponse response = null;
+                boolean isUser = false;
+                String token = "";
+                try {
+                    response = stub.updateUser(userData);
+                    isUser = response.getIsUser();
+                    if (isUser) {
+                        token = response.getToken();
+                    } else token = null;
+                }
+                catch (StatusRuntimeException e) {
+                    return e.toString();
+                }
+                return token;
+        }
      public String loginUser(String email, String password) {
             UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
             UserResponse response = null;
@@ -58,8 +74,7 @@ public class LoginClient {
                 } else token = null;
             }
             catch (StatusRuntimeException e) {
-            }
-            catch (Exception e) {
+                return e.toString();
             }
             return token;
       }
@@ -78,31 +93,18 @@ public class LoginClient {
             return isSuccess;
         }
 
-        /* public String updateUser(String email, String password) {
-                    UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
-                    UserResponse response = null;
-                    boolean isUser = false;
 
-                    try {
-                        response = stub.updateUser(userData);
-                        isUser = response.getIsUser();
-                    } catch (StatusRuntimeException e) {
-                       return e.toString();
-                    }
-                    return isUser;
-                }*/
-                /*
-                public String logout (String token, String email) {
-                                    LogRequest userData = LogRequest.newBuilder().setToken(token).setEmail(email).build();
-                                    LogResponse response = null;
-                                    boolean success = false;
+         public boolean logout (String token, String email) {
+            LogRequest userData = LogRequest.newBuilder().setToken(token).setEmail(email).build();
+            LogResponse response = null;
+            boolean isSuccess = false;
 
-                                    try {
-                                        response = stub.logout(userData);
-                                        success = response.getSuccess();
-                                    } catch (StatusRuntimeException e) {
-                                       return e.toString();
-                                    }
-                                    return success;
-                                }*/
+            try {
+                response = stub.logout(userData);
+                isSuccess = response.getSuccess();
+            } catch (StatusRuntimeException e) {
+               return false;
+            }
+            return isSuccess;
+        }
 }

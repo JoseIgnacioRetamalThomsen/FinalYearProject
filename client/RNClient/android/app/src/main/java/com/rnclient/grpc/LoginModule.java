@@ -14,8 +14,8 @@ public class LoginModule  extends ReactContextBaseJavaModule {
 
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
-    private static final int PORT_NUMBER = 50051;
     private static final String IP_ADDRESS = "35.197.216.42";
+    private static final int PORT_NUMBER = 50051;
     private static LoginClient client;
 
    public  LoginModule(ReactApplicationContext context) {
@@ -46,14 +46,30 @@ public class LoginModule  extends ReactContextBaseJavaModule {
               }
         }
 
+         @ReactMethod
+                    public void updateUser(String email,String password,Callback errorCallback,
+                    Callback successCallback) {
+                        LoginClient client = new LoginClient("35.197.216.42", 50051);
+
+                        String msg;
+                         String res = client.updateUser(email,password);
+                        if (res==null) msg="null";
+                        else msg = res;
+
+                        try {
+                           successCallback.invoke(msg);
+                          } catch (Exception e) {
+                            errorCallback.invoke(e.getMessage());
+                          }
+                    }
+
         @ReactMethod
         public void loginUser(String email,String password,Callback errorCallback,
                  Callback successCallback) {
             LoginClient client = new LoginClient("35.197.216.42", 50051);
-            //boolean res = client.loginUser(email,password);
             String token = client.loginUser(email,password);
             if(token == null) {
-                errorCallback.invoke(null);
+                errorCallback.invoke(token);
              } else successCallback.invoke(token);
         }
 
@@ -68,29 +84,14 @@ public class LoginModule  extends ReactContextBaseJavaModule {
             } else successCallback.invoke(true);
         }
 
-        /*@ReactMethod
-            public void updateUser(String email,String password,Callback errorCallback,
+
+            @ReactMethod
+            public void logout(String token, String email, Callback errorCallback,
             Callback successCallback) {
-                LoginClient client = new LoginClient("35.197.216.42", 50051);
+           boolean result = client.logout(token, email);
 
-                String msg;
-                 String res = client.updateUser(email,password);
-                if (res==null) msg="null";
-                else msg = res;
-
-                try {
-                   successCallback.invoke(msg);
-                  } catch (Exception e) {
-                    errorCallback.invoke(e.getMessage());
-                  }
-            }*/
-                 /*   @ReactMethod
-                    public void logout(String token,String email,Callback errorCallback,
-                    Callback successCallback) {
-                    LoginClient client = new LoginClient("104.40.206.141", 50051);
-                    boolean result = client.logout(token, email);
-                     if(result == false) {
-                        errorCallback.invoke(false);
-                    } else successCallback.invoke(true);
-                    }*/
+                       if(result == false) {
+                           errorCallback.invoke(false);
+                       } else successCallback.invoke(true);
+                   }
 }

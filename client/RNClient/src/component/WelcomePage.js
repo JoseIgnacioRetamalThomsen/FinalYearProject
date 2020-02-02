@@ -6,62 +6,62 @@ import {
     Text,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage'
+import {logger} from 'react-native-logger'
 
-export default class WelcomePage extends Component{
+export default class WelcomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoaded: false,
             email: '',
             token: ''
         }
-        //this.compare = this.compare.bind(this);
+        this.compare = this.compare.bind(this);
     }
 
     componentDidMount() {
-        // do stuff while splash screen is shown
-        // After having done stuff (such as async tasks) hide the splash screen
-        //SplashScreen.hide();
-        // this.setState({isLoaded: true}, () => { SplashScreen.hide(); })
-        setTimeout(() => {
-            //this.getSavedToken().then(r => alert(r));
-            SplashScreen.hide();
-            this.props.navigation.navigate("auth");
-        }, 1000);
+        this.getSavedToken().then(r => logger.log(r))
+        SplashScreen.hide();
     }
 
-    // async compare(savedToken) {
-    //     NativeModules.LoginModule.checkToken(
-    //         this.state.email,
-    //         this.state.token,
-    //         (err) => {
-    //             alert(err)
-    //         },
-    //         (isSuccess) => {
-    //             isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
-    //         }
-    //     )
-    // }
+    async compare() {
+        NativeModules.LoginModule.checkToken(
+            this.state.token,
+            this.state.email,
+            (err) => {
+                logger.log(err)
+                console.log("this.token, this.email " + this.state.token, this.state.email)//TODO: undefinied
+                this.props.navigation.navigate('auth')
+            },
+            (isSuccess) => {
+                isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
+                logger.log(isSuccess)
+            }
+        )
+    }
 
     getSavedToken = async () => {
         try {
-            const value = await AsyncStorage.getItem('isUser')
-            const email = await AsyncStorage.getItem('email')
-
-            if (value !== null) {
-                // We have data!!
-                console.log(value);
-                if (value == "true") {
-                    this.props.navigation.navigate("app", {email: email});
-                } else {
-                    this.props.navigation.navigate("auth");
-                }
-            } else {
-                this.props.navigation.navigate("auth");
-            }
+            AsyncStorage.getAllKeys((err, keys) => {
+                AsyncStorage.multiGet(keys, (err, stores) => {
+                    stores.map((result, i, store) => {
+                        // get at each store's key/value so you can work with it
+                        let key = store[i][0];
+                        this.setState({email: key})
+                        let value = store[i][1]
+                        this.setState({token: value})
+                        console.log("key/value "+ key+value)
+                        if (value !== null) {
+                            this.compare()
+                        } else {
+                            this.props.navigation.navigate("auth")
+                        }
+                    });
+                });
+            });
         } catch (error) {
-            // Error retrieving data
+            logger.log(error)
         }
+        this.props.navigation.navigate("auth")
     }
 
     render() {
