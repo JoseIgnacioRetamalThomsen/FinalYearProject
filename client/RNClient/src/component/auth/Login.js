@@ -18,40 +18,57 @@ class Login extends Component {
             email: '',
             password: '',
             message: '',
-            token: ''
+            token: '',
+            isUser: false,
         }
     }
 
     async onClickListenerLogin() {
-        NativeModules.LoginModule.loginUser(
-            this.state.email,
-            this.state.password,
-            (err) => {
-                logger.log(err.message())
-                this.setState({message: 'Incorrect email or password'})
-            },
-            async (token) => {
-                let value
-                if (token === "") {
-                    this.setState({message: 'Email is not registered'})
-                } else {
-                    try {
-                        await AsyncStorage.setItem(this.state.email, token)
-                    } catch (e) {
-                        logger.log(e)
+       //  let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+       //  let isCorrectEmail = emailRegex.test(this.state.email)
+       //
+       //  let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/i
+       //  let isCorrectPassword = passwordRegex.test(this.state.password)
+       //
+       //  if (isCorrectEmail === false)
+       //      this.setState({message: 'Email is not correct'})
+       //  else if (isCorrectPassword === false)
+       //      this.setState({
+       //          message: "Password has to be at least 6 characters long, " +
+       //              "contain at least 1 lowercase, 1 uppercase alphabetical character, " +
+       //              "1 numeric character and 1 special symbol"
+       //      })
+       // else {
+            NativeModules.LoginModule.loginUser(
+                this.state.email,
+                this.state.password,
+                (err) => {
+                    logger.log(err.message())
+                    this.setState({message: 'Incorrect email or password'})
+                },
+                async (token) => {
+                    let value
+                    if (token === "") {
+                        this.setState({message: 'Email is not registered'})
+                    } else {
+                        try {
+                            await AsyncStorage.setItem(this.state.email, token)
+                        } catch (e) {
+                            logger.log(e)
+                        }
+                        try {
+                            value = await AsyncStorage.getItem(this.state.email)
+                        } catch (e) {
+                        }
+                        this.setState({token: value})
+                        console.log("token " + token)
+                        this.setState({message: 'Success'})
+                        this.props.navigation.navigate('app')
                     }
-                    try {
-                        value = await AsyncStorage.getItem(this.state.email)
-                    } catch (e) {
-                    }
-                    this.setState({token: value})
-                    console.log("token " + token)
-                    this.setState({message: 'Success'})
-                    this.props.navigation.navigate('app')
                 }
-            }
-        )
-    }
+            )
+        }
+   // }
 
     render() {
         return (

@@ -47,21 +47,27 @@ export default class Register extends Component {
                 this.state.password,
                 (err) => {
                     alert("err" + err)
+                    this.setState({message: err})
                 },
                 async (token) => {
                     let value
                     if (token.includes("Duplicate")) {
                         this.setState({message: 'Email is already registered'})
-                    } else {
-
+                    } else if (token.includes("Exception")){
+                        this.setState({message: 'Email is already registered'})
+                    }
+                    else {
+                        console.log("token here " + token)
                         try {
                             await AsyncStorage.setItem(this.state.email, token)
+                            console.log("this.state.email, token"+this.state.email, token)
                         } catch (e) {
                             console.log("Error ", e);
                         }
 
                         try {
                             value = await AsyncStorage.getItem(this.state.email)
+                            console.log("value in get" + value)
                         } catch (e) {
                         }
                         console.log("asyncstorage " + await AsyncStorage.getItem(this.state.email))

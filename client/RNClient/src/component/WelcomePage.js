@@ -14,21 +14,21 @@ export default class WelcomePage extends Component {
         SplashScreen.hide();
     }
 
-    async compare() {
-        NativeModules.LoginModule.checkToken(
-            this.state.token,
-            this.state.email,
-            (err) => {
-                logger.log(err)
-                console.log("this.token, this.email " + this.state.token, this.state.email)//TODO: undefinied
-                this.props.navigation.navigate('auth')
-            },
-            (isSuccess) => {
-                isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
-                logger.log(isSuccess)
-            }
-        )
-    }
+    // async compare() {
+    //     NativeModules.LoginModule.checkToken(
+    //         this.state.token,
+    //         this.state.email,
+    //         (err) => {
+    //             logger.log(err)
+    //             console.log("this.token, this.email " + this.state.token, this.state.email)
+    //             this.props.navigation.navigate('auth')
+    //         },
+    //         (isSuccess) => {
+    //             isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
+    //             logger.log(isSuccess)
+    //         }
+    //     )
+    // }
 
     getSavedToken = async () => {
         try {
@@ -37,11 +37,11 @@ export default class WelcomePage extends Component {
                     stores.map((result, i, store) => {
                         // get at each store's key/value so you can work with it
                         let key = store[i][0];
-                        this.setState({email: key}, () => {
-                            console.log(this.state.email)
-                        })
+                        // this.setState({email: key}, () => {
+                        //     console.log(this.state.email)
+                        // })
                         let value = store[i][1]
-                        this.setState({token: value})
+                        // this.setState({token: value})
                         console.log("key/value " + key + value)
                         if (value !== null) {
                             //this.compare()
@@ -57,14 +57,14 @@ export default class WelcomePage extends Component {
                                     isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
                                     logger.log(isSuccess)
                                 }
-                            )
+                             )
                         } else {
                             this.props.navigation.navigate("auth")
                         }
                     });
                 });
             });
-        } catch (error) {
+        } catch (error) {//catch StatusRunTimeException here?
             logger.log(error)
         }
         this.props.navigation.navigate("auth")

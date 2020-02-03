@@ -40,11 +40,11 @@ public class LoginClient {
                 token = response.getToken();
             }
             catch (StatusRuntimeException e) {
-                return e.toString();
+                token = null;
             }
             return token;
       }
- public String updateUser(String email, String password) {
+ /*public String updateUser(String email, String password) {
             UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
              UserResponse response = null;
                 boolean isUser = false;
@@ -60,7 +60,7 @@ public class LoginClient {
                     return e.toString();
                 }
                 return token;
-        }
+        }*/
      public String loginUser(String email, String password) {
             UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
             UserResponse response = null;
@@ -74,7 +74,8 @@ public class LoginClient {
                 } else token = null;
             }
             catch (StatusRuntimeException e) {
-                return e.toString();
+                token = "";
+
             }
             return token;
       }

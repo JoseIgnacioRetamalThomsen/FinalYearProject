@@ -41,7 +41,7 @@ class SideMenu extends Component {
             <SafeAreaView style={{flex: 1}}>
                 <View style={{height: 150, alignItems: 'center', justifyContent: 'center'}}>
                     <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={{height: 120, width: 120, borderRadius: 60}}/>
-                    <GeoLoc/>
+                    {/*<GeoLoc/>*/}
                 </View>
                 <ScrollView>
                     <List>
