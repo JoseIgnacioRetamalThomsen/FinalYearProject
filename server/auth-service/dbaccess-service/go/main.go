@@ -36,6 +36,7 @@ type Configuration struct {
 }
 
 var configuration Configuration
+
 func readConfig(fileName string){
 	file, _ := os.Open(fileName)
 	defer file.Close()
@@ -62,7 +63,7 @@ type server struct {
 *  END POINTS
  */
 func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
-	log.Printf("Received: %v, %v", "Create new user",in.String())
+	log.Printf("Received: %v , from: %v", "Get user", in.String())
 	u := db.NewUser(in.Email, in.PasswordHash, in.PasswordSalt, false)
 	id,err := db.AddUser(*u)
 	if err!=nil {
@@ -73,9 +74,8 @@ func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBR
 }
 
 func (s *server) GetUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
-	log.Printf("Received: %v", "Get user")
+	log.Printf("Received: %v , from: %v", "Get user", in.String())
 	u, err := db.GetUser(in.Email)
-
 	if err != nil {
 		log.Printf("Error: %v", err)
 		return nil, errors.New("Can't get user")
@@ -96,6 +96,7 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.UserDBRequest) (*pb.User
 }
 
 func (s *server) CreateSeassion(ctx context.Context,in *pb.UserSessionRequest)  (*pb.UserSessionResponse,error){
+
 	key,email,d1,d2,err :=db.CreateSession(in.Token,in.Email)
 	if err!= nil{
 		log.Printf("Error: %v", err)
@@ -151,10 +152,10 @@ func main() {
 	//fmt.Print(key,email,d1,d2)
 
 
-	user11 := db.NewUser("emailui7y", []byte("passs1"),[]byte("salt"),false)
+/*	user11 := db.NewUser("emailui7y", []byte("passs1"),[]byte("salt"),false)
 	db.AddUser(*user11)
 	user12 := db.NewUser("emailui7ydd", []byte("passs1"),[]byte("salt"),false)
-	db.AddUser(*user12)
+	db.AddUser(*user12)*/
 	//u1,err := db.GetUser("emailui")
 	//if err!= nil{
 	//	panic(err)

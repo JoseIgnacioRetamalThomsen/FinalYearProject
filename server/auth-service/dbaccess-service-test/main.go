@@ -8,8 +8,6 @@ import (
 	// _ "github.com/ziutek/mymysql/thrsafe" // Thread safe engine
 
 	"context"
-	"fmt"
-
 	//"net"
 
 	pb "github.com/joseignacioretamalthomsen/wcity"
@@ -20,15 +18,21 @@ import (
 )
 
 const (
-	//address     = "104.40.206.141:7777"
+	address     = "104.40.206.141:7777"
 	//address     = "40.118.90.61:7777"
-	address     = "localhost:7777"
+	//address     = "localhost:7777"
 
 )
 
 func main() {
 
-	fmt.Print(CreateUser("e560", []byte("123456"),[]byte("123346")))
+	//fmt.Print(CreateUser("e5613tfh", []byte("123456"),[]byte("123346")))
+	GetUser("e5613tfh")
+//	UpdateUser("e560",[]byte("12345678"),[]byte("123345678"))
+	//CreateSession("e560","1234556789")
+	//fmt.Print(GetSession("e560","12345567898"))
+	//fmt.Print(DeleteSession("e560","1234556"))
+
 }
 
 func GetUser(email string){
@@ -75,10 +79,71 @@ func CreateUser(email string, passwordHash []byte,passwordSalt []byte)string{
 
 }
 
+func UpdateUser(email string, passwordHash []byte,passwordSalt []byte) string{
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewUserAuthDBClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.UpdateUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: passwordHash,PasswordSalt:passwordSalt})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	return r.Email
+}
 
+func CreateSession(email string,token string)string{
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewUserAuthDBClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.CreateSeassion(ctx, &pb.UserSessionRequest{Email: email, Token:token})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	return r.Token
 
+}
 
+func GetSession(email string,token string)string{
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewUserAuthDBClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.GetSeassion(ctx, &pb.UserSessionRequest{Email: email, Token:token})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	return r.Email
 
+}
+func DeleteSession(email string,token string)bool{
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewUserAuthDBClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := c.DeleteSession(ctx, &pb.UserSessionRequest{Email: email, Token:token})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	return r.Success
+
+}
 /*
 func CreateUser(email string, password string)string{
 

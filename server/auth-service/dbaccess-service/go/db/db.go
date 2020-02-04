@@ -6,8 +6,16 @@ import (
 	"fmt"
 	"github.com/ziutek/mymysql/mysql"
 	_ "github.com/ziutek/mymysql/native"
+	"log"
 )
-
+type Configuration struct {
+	Port string
+	Coneection_type    string
+	MySQL_socket string
+	MySQL_user string
+	MySQL_pass string
+	MySQL_db string
+}
 var db mysql.Conn
 
 const (
@@ -77,9 +85,16 @@ func NewSeassion(sessionKey string, email string, loginTime string, lastSeemtime
 	return &s
 }
 
+var configuration Configuration
 // create connection to database
 func SetupConnection(connectionType string, socket string, user string, pass string, database string) (bool, error) {
-	db = mysql.New(connectionType, "", socket, user, pass, database)
+	configuration.Coneection_type = connectionType
+	configuration.MySQL_socket = socket
+	configuration.MySQL_user = user
+	configuration.MySQL_pass = pass
+	configuration.MySQL_db = database
+	log.Printf("Error: %v", configuration)
+	//db = mysql.New(connectionType, "", socket, user, pass, database)
 
 	return true, nil
 }
@@ -88,11 +103,11 @@ func SetupConnection(connectionType string, socket string, user string, pass str
 //Returns true if user is created.
 //Auto id and isEmail false.
 func AddUser(u user) (int64, error) {
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
 	err := db.Connect()
 	if err != nil {
-		return -1, errors.New("cant connect")
+		panic(err)
 	}
-
 	defer db.Close()
 
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s, %s ) values (?,?,?)", tableUsers, rowEmail, rowPasswordHash, rowPasswordSalt)
@@ -109,6 +124,12 @@ func AddUser(u user) (int64, error) {
 
 // Return user data.
 func GetUser(email string) (user, error) {
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 
 	rows, _, err := db.Query("select * from Users where Email = '%s'", email)
 	if err != nil {
@@ -123,7 +144,12 @@ func GetUser(email string) (user, error) {
 }
 
 func ConfirmEmail(email string) (int64, error) {
-
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 	stmt, err := db.Prepare("UPDATE Users SET  IsEmail = true WHERE email=?")
 	//checkError(err)
 	if err != nil {
@@ -142,7 +168,12 @@ func ConfirmEmail(email string) (int64, error) {
 }
 
 func UpdateUser(u user) (int64, error) {
-
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 	stmtStr := fmt.Sprintf("UPDATE %s SET %s = ?, %s = ?, %s = ?  WHERE %s = ?", tableUsers, rowPasswordHash, rowPasswordSalt, rowIsEmail, rowEmail)
 	stmt, err := db.Prepare(stmtStr)
 		if err != nil {
@@ -157,7 +188,12 @@ func UpdateUser(u user) (int64, error) {
 
 // If user email exist all data of that user will be wiped out.
 func DelUser(email string) int64 {
-
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 	del, err := db.Prepare("DELETE FROM users WHERE email=?")
 	_, res, err := del.Exec(email) // OK
 	if err != nil {
@@ -171,8 +207,13 @@ func DelUser(email string) int64 {
 
 
 func CreateSession(key string, email string) (string,string,string,string,error){
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s ,LoginTime ,LastSeenTime) values (?,?, CURTIME(),CURTIME())", tableSession, rowSessionKey, rowEmail)
-
 	stmt, err := db.Prepare(stmtStr)
 	//checkError(err)
 	if err != nil {
@@ -180,14 +221,12 @@ func CreateSession(key string, email string) (string,string,string,string,error)
 		return "","","","",err
 
 	}
-
 	_, res, err := stmt.Exec(key, email)
 	if err != nil {
 		return "","","","",err
 	}
 	is,sess, err := GetSession(key)
 	res.InsertId()
-
 
 	if is {
 		return sess.SessionKey,sess.Email, sess.LoginTime,sess.LastSeemTime,nil
@@ -197,7 +236,12 @@ func CreateSession(key string, email string) (string,string,string,string,error)
 }
 
 func GetSession(key string) (bool, Session, error) {
-
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 	stmtStr := fmt.Sprintf("select * from %s where %s = '%s'", tableSession, rowSessionKey, key)
 	rows, res, err := db.Query(stmtStr)
 	if err != nil {
@@ -209,11 +253,16 @@ func GetSession(key string) (bool, Session, error) {
 		return false, Session{}, nil
 	}
 		s := NewSeassion(rows[0].Str(0), rows[0].Str(1), rows[0].Str(2), rows[0].Str(3))
-
 	return true, *s, nil
 }
 
 func DeleteSession(key string) (int64, error) {
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 	stmtStr := fmt.Sprintf("DELETE FROM %s WHERE %s = ?", tableSession, rowSessionKey)
 	del, err := db.Prepare(stmtStr)
 	if err != nil {
@@ -228,6 +277,12 @@ func DeleteSession(key string) (int64, error) {
 }
 
 func DeleteAllSession(email string) (int64,error){
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	err := db.Connect()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
 	stmtStr := fmt.Sprintf("DELETE FROM %s WHERE %s = ?", tableSession, rowEmail)
 	del, err := db.Prepare(stmtStr)
 	if err != nil {

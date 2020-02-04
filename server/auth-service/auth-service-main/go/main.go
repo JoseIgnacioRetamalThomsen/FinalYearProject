@@ -59,12 +59,14 @@ func (s *server) LoginUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRes
 
 
 	log.Printf("Received: %v", "LoginUser  called")
+	//get user data from database
 	email, hash , salt ,err := getUser(in.GetEmail())
 	if(err != nil){
 		//user do not exist
 		return &pb.UserResponse{IsUser: false}, err
 	}
 	email= email
+	// user hash service for check password
 	isValid := validate(in.HashPassword,hash,salt)
 	if isValid {
 		token := GenerateSecureToken(32)
