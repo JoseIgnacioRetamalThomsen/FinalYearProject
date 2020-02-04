@@ -1,5 +1,0 @@
-{
-  "Port" : ":50051",
-  "Dbs": ["localhost:7777"],
-  "Pss": ["localhost:5701","localhost:5701"]
-}
