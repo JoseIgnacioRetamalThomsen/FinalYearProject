@@ -2,7 +2,8 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
-			<item value="/home/pepe/Desktop/FinalYearProject/FinalYearProject/server/profiles/javadbaccess/profiles"/>
+			<item value="/home/pepe/Desktop/Profiles/FinalYearProject/server/userauth_hashservice/passwordservice"/>
+			<item value="/home/pepe/Desktop/Profiles/FinalYearProject/server/profiles/javadbaccess/profiles"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>

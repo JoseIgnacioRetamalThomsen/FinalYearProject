@@ -1,2 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="io.grpc.Server"/>
+<fullyQualifiedTypeName name="io.netty.handler.ssl.SslContextBuilder"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="io.netty.handler.ssl.ClientAuth"/>
+<fullyQualifiedTypeName name="io.grpc.netty.GrpcSslContexts"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="io.grpc.netty.NettyServerBuilder"/>
+<fullyQualifiedTypeName name="java.util.concurrent.ExecutorService"/>
+<fullyQualifiedTypeName name="java.util.concurrent.Executors"/>
+<fullyQualifiedTypeName name="java.util.logging.Logger"/>
+<fullyQualifiedTypeName name="io.grpc.wcity.profilesDB.ProfilesDBGrpc.ProfilesDBImplBase"/>
+<fullyQualifiedTypeName name="io.grpc.wcity.profilesDB.CreateUserRequest"/>
+<fullyQualifiedTypeName name="io.grpc.stub.StreamObserver"/>
+<fullyQualifiedTypeName name="io.grpc.wcity.profilesDB.CreateUserResponse"/>
+<fullyQualifiedTypeName name="io.grpc.Context"/>
+<fullyQualifiedTypeName name="io.grpc.wcity.profilesDB.CreateUserRequestPDB"/>
+<fullyQualifiedTypeName name="io.grpc.wcity.profilesDB.CreateUserResponsePDB"/>
+</qualifiedTypeNameHistroy>
