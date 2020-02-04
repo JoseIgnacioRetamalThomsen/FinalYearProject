@@ -1,4 +1,4 @@
-CREATE (jaedcom:User {email:'j@e.com',name: 'John', description : ' max 160 characters', picture: 'the picture address'})
+CREATE UNIQUE (jaedcom:User {email:'j@e.com',name: 'John', description : ' max 160 characters', picture: 'the picture address'})
 CREATE (maedcom:User {email:'m@e.com',name: 'Manuel', description : ' max 160 characters', picture: 'the picture address'})
 CREATE (galway:City {userEmail:'m@e.com',name: 'Galway', country :'Ireland' , rating : 0 , lat: 5, lon :5 ,description : ' max 160 characters', picture: 'the picture addresses'})
 CREATE (rome:City {userEmail:'j@e.com',name: 'Rome', country :'Italy' , rating : 0 , lat: 51, lon :35 ,description : ' max 160 characters', picture: 'the picture addresses'})
