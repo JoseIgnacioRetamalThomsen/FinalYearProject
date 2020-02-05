@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workingSetManager>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1580335484824_0" label="Java Main Sources" name="Java Main Sources">
+<item elementID="=profiles/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=profiles/target\/generated-sources\/protobuf\/java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=profiles/src\/main\/proto" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=profiles/target\/generated-sources\/protobuf\/grpc-java" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=joseretamal-ds-project-part1/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=joseretamal-ds-project-part1/target\/generated-sources\/protobuf\/java=/optional=/true=/=/maven.pomderived=/true=/" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=joseretamal-ds-project-part1/target\/generated-sources\/protobuf\/grpc-java=/optional=/true=/=/maven.pomderived=/true=/" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=joseretamal-ds-project-part1/src\/main\/proto=/maven.pomderived=/true=/" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSet>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1580335484838_1" label="Java Test Sources" name="Java Test Sources">
+<item elementID="=joseretamal-ds-project-part1/src\/test\/java=/test=/true=/=/optional=/true=/=/maven.pomderived=/true=/" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1580335485573_2" label="Window Working Set" name="Aggregate for window 1580335485573"/>
+</workingSetManager>

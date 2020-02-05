@@ -1,0 +1,43 @@
+CREATE UNIQUE (jaedcom:User {email:'j@e.com',name: 'John', description : ' max 160 characters', picture: 'the picture address'})
+CREATE (maedcom:User {email:'m@e.com',name: 'Manuel', description : ' max 160 characters', picture: 'the picture address'})
+CREATE (galway:City {userEmail:'m@e.com',name: 'Galway', country :'Ireland' , rating : 0 , lat: 5, lon :5 ,description : ' max 160 characters', picture: 'the picture addresses'})
+CREATE (rome:City {userEmail:'j@e.com',name: 'Rome', country :'Italy' , rating : 0 , lat: 51, lon :35 ,description : ' max 160 characters', picture: 'the picture addresses'})
+CREATE (gmit:Place {userEmail:'j@e.com',name: 'GMIT', city :'Galway' , rating : 0 , lat: 51, lon :35 ,description : ' max 160 characters', picture: 'the picture addresses'})
+CREATE (fontana_di_trevi:Place {userEmail:'m@e.com',name: 'Fontana di trevi', city :'rome' , rating : 0 , lat: 51, lon :35 ,description : ' max 160 characters', picture: 'the picture addresses'})
+
+# Realations
+MATCH (a:User),(b:City)
+WHERE a.email = "j@e.com" AND b.name = "Galway"
+CREATE (a)-[r:VISIT]->(b)
+RETURN r
+
+MATCH (a:User),(b:Place)
+WHERE a.email = "j@e.com" AND b.name = "GMIT"
+CREATE (a)-[r:VISIT]->(b)
+RETURN r
+
+MATCH (a:City),(b:Place)
+WHERE a.name = "Galway" AND b.name = "GMIT"
+CREATE (a)-[r:ISIN]->(b)
+RETURN r
+
+
+# find a user
+
+MATCH (a:User) 
+where a.email = "j@e.com"
+return a
+
+
+#all visit
+MATCH (a:User) -[r:VISIT]-> (b) 
+where a.email = "j@e.com"
+return a, b
+
+
+MATCH (a:User) -[r:VISIT]-> (b:City) 
+where a.email = "j@e.com"
+return a, b
+
+
+
