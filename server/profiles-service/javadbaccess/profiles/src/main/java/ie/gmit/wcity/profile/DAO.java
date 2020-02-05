@@ -36,6 +36,10 @@ public class DAO implements AutoCloseable {
 
 		}
 	}
+	
+	public void GetUser(final String email) {
+		
+	}
 	/*
 	 * public static void main(String... args) throws Exception { try (DAO dao = new
 	 * DAO("bolt://192.168.43.58:7687", "neo4j", "test")) {
