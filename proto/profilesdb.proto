@@ -13,8 +13,8 @@ service ProfilesDB{
     rpc GetUser(GetUserRequestPDB) returns (UserResponsePDB);
     rpc CreateCity(CityPDB) returns (CityResponsePDB);
     rpc CreatePlaceRequest(PlacePDB) returns (PlaceResponsePDB);
-    rpc GetCity(CityRequestPDB) returns (CityResponsePDB);
-    rpc GetPlace(PlaceRequestPDB) returns (PlaceResponsePDB);
+    rpc GetCity(CityRequestPDB) returns (CityPDB);
+    rpc GetPlace(PlaceRequestPDB) returns (PlacePDB);
     rpc VisitCity(VisitCityRequestPDB) returns (VisitCityResponsePDB);
     rpc VisitPlace(VisitPlaceRequestPDB) returns (VisitPlaceResponsePDB);
     rpc GetVisitedCitys(VisitedCitysRequestPDB) returns (VisitedCitysResponsePDB);

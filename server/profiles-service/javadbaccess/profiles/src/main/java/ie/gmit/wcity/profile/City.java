@@ -101,4 +101,11 @@ public class City {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		return "City [name=" + name + ", country=" + country + ", creatorEmail=" + creatorEmail + ", geolocation="
+				+ geolocation + ", description=" + description + ", picture=" + picture + ", places=" + places + "]";
+	}
+
+	
 }

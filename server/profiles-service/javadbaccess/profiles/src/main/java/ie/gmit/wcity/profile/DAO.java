@@ -91,20 +91,55 @@ public class DAO implements AutoCloseable {
 
 		}
 	}
+	
+	public City getCity(String name, String country) {
+		City city = null;
+		try (Session session = driver.session()) {
+			city = session.writeTransaction(new TransactionWork<City>() {
+				@Override
+				public City execute(Transaction tx) {
+					Result result = tx.run("MATCH (a:City) " + 
+				"where a.name = $name " + " AND " +
+				" a.country = $country " +
+							"RETURN a",
+					parameters("name", name,"country",country));
+					Record r = result.next();
+					City c = new City()
+							.setName(r.get(0).get("name").asString())
+							.setCountry(r.get(0).get("country").asString())
+							.setCreatorEmail(r.get(0).get("creatorEmail").asString())
+							.setDescription(r.get(0).get("description").asString())
+							.setGeolocation(
+									new Geolocation( r.get(0).get("lat").asFloat(),r.get(0).get("lon").asFloat()));
+							
+					
+				
+					//Record r = result.next();
+				//	u.setName(r.get(0).get("name").asString());
+					//u.setDescription(result.single().get(0).get("name").asString());
+					
+					//u.setDescription(r.get(0).get("description").asString());
+					return c;
+				}
+			});
+		}
+		
+		return city;
+	}
 
 	public static void main(String... args) throws Exception {
 		try (DAO dao = new DAO("bolt://192.168.43.58:7687", "neo4j", "test")) {
 			//dao.AddUser("email1", "name1", "description1");
 			//User u = dao.getUser("one");
 			//System.out.println(u);
-			City t = new City();
-			t.setCreatorEmail("creator");
-			t.setName("name");
-			t.setDescription("description");
-			t.setCountry("country");
-			t.setPicture("picture");
-			t.setGeolocation(new Geolocation(3,3));
-			dao.createCity(t);
+			/*
+			 * City t = new City(); t.setCreatorEmail("creator"); t.setName("name");
+			 * t.setDescription("description"); t.setCountry("country");
+			 * t.setPicture("picture"); t.setGeolocation(new Geolocation(3,3));
+			 * dao.createCity(t);
+			 */
+			//System.out.println(dao.getCity("galway", "ireland"));
+			
 		}
 	}
 

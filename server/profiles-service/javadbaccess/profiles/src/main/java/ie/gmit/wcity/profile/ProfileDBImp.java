@@ -7,9 +7,11 @@ import java.util.logging.Logger;
 import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 import io.grpc.wcity.profilesDB.CityPDB;
+import io.grpc.wcity.profilesDB.CityRequestPDB;
 import io.grpc.wcity.profilesDB.CityResponsePDB;
 import io.grpc.wcity.profilesDB.CreateUserRequestPDB;
 import io.grpc.wcity.profilesDB.CreateUserResponsePDB;
+import io.grpc.wcity.profilesDB.GeolocationPDB;
 import io.grpc.wcity.profilesDB.GetUserRequestPDB;
 import io.grpc.wcity.profilesDB.ProfilesDBGrpc.ProfilesDBImplBase;
 import io.grpc.wcity.profilesDB.UserResponsePDB;
@@ -83,6 +85,30 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 					.setCountry(request.getCountry())		
 					.build());
 					
+			 response.onCompleted();
+		}catch(Exception e) {
+			response.onError(e);
+			
+		}
+	}
+	
+	public void getCity(CityRequestPDB request, StreamObserver<CityPDB> response) {
+		logger.info("Get city request.");
+		try {
+			Context context = Context.current();
+			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+			
+			City u = dao.getCity(request.getName(),request.getCountry());
+			
+			response.onNext( CityPDB.newBuilder()
+					.setName(u.getName())
+					.setCountry(u.getCountry())
+					.setDescription(u.getDescription())
+					.setCreatorEmail(u.getCreatorEmail())
+					.setLocation(GeolocationPDB.newBuilder()
+							.setLat(u.getGeolocation().getLat())
+							.setLon(u.getGeolocation().getLon()))
+					.build());
 			 response.onCompleted();
 		}catch(Exception e) {
 			response.onError(e);

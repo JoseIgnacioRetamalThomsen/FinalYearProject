@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	//"errors"
@@ -80,15 +81,32 @@ func main(){
 	//fmt.Print(n +"\n")
 	//fmt.Print(e +"\n")
 	//fmt.Print(d +"\n")
-	a,b,err :=CreateCity(cityName,cityCountry,cityUserEmail,cityLat,cityLon,cityDescription)
-	fmt.Print(a)
-	fmt.Print(b)
+	//a,b,err :=CreateCity(cityName,cityCountry,cityUserEmail,cityLat,cityLon,cityDescription)
+	//fmt.Print(a)
+	//fmt.Print(b)
+	r,err := GetCity(cityName,cityCountry);
+	fmt.Print(r.Country + "\n" +r.Name +"\n" +r.GetCreatorEmail() +"\n" +r.Description)
+	fmt.Println(r.GetLocation())
+}
+
+func GetCity(name string, country string)(pb.CityPDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := dbConn.context.dbClient.GetCity(ctx,&pb.CityRequestPDB{Name:name,Country:country})
+	if err != nil {
+		panic(err)
+	}
+	return *r,nil
 }
 
 func CreateCity(name string, country string, creatorEmail string, lat float32,lon float32, description string) (string,string,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.CreateCity(ctx, &pb.CityPDB{ Name: name,Country:country,CreatorEmail:creatorEmail,Description:description,Location:&pb.GeolocationPDB{Lat:lat,Lon:lon}})
+	r, err := dbConn.context.dbClient.CreateCity(ctx, &pb.CityPDB{ Name: strings.ToLower(name),
+		Country:strings.ToLower(country),
+		CreatorEmail:strings.ToLower(creatorEmail),
+		Description:strings.ToLower(description),
+		Location:&pb.GeolocationPDB{Lat:lat,Lon:lon}})
 	if err != nil {
 		panic(err)
 	}
@@ -98,7 +116,9 @@ func CreateCity(name string, country string, creatorEmail string, lat float32,lo
 func CreateUser(email string,name string, description string) (bool,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.CreateUser(ctx, &pb.CreateUserRequestPDB{Email: email, Name: name,Description:description})
+	r, err := dbConn.context.dbClient.CreateUser(ctx, &pb.CreateUserRequestPDB{Email: strings.ToLower(email),
+		Name: strings.ToLower(name),
+	Description:strings.ToLower(description)})
 	if err != nil {
 		return false, err
 	}
@@ -111,7 +131,7 @@ func GetUser(email string)(string,string,string,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	r, err := dbConn.context.dbClient.GetUser(ctx, &pb.GetUserRequestPDB{Email: email})
+	r, err := dbConn.context.dbClient.GetUser(ctx, &pb.GetUserRequestPDB{Email: strings.ToLower(email)})
 	if err != nil {
 		panic(err)
 	}

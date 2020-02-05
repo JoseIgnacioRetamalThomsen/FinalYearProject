@@ -4,7 +4,7 @@ public class Geolocation {
 	private float lon;
 	private float lat;
 
-	public Geolocation(float lon, float lat) {
+	public Geolocation(float lat, float lon) {
 		super();
 		this.lon = lon;
 		this.lat = lat;
@@ -26,4 +26,10 @@ public class Geolocation {
 		this.lat = lat;
 	}
 
+	@Override
+	public String toString() {
+		return "Geolocation [lon=" + lon + ", lat=" + lat + "]";
+	}
+
+	
 }
