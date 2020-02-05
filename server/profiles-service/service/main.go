@@ -56,11 +56,15 @@ func main(){
 	s2 := &neo4jDB{dbserverCtx}
 	dbConn = *s2
 
-	res , errr := CreateUser("one","new4","three")
-	if errr != nil {
-		panic(errr)
-	}
-	fmt.Print(res)
+	//res , errr := CreateUser("one","new4","three")
+	//if errr != nil {
+	//	panic(errr)
+//	}
+	//fmt.Print(res)
+	n,e,d,err := GetUser("one")
+	fmt.Print(n +"\n")
+	fmt.Print(e +"\n")
+	fmt.Print(d +"\n")
 }
 
 func CreateUser(email string,name string, description string) (bool,error){
@@ -73,4 +77,15 @@ func CreateUser(email string,name string, description string) (bool,error){
 	res, err := strconv.ParseBool(r.Valied)
 
 	return res,nil
+}
+
+func GetUser(email string)(string,string,string,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	r, err := dbConn.context.dbClient.GetUser(ctx, &pb.GetUserRequestPDB{Email: email})
+	if err != nil {
+		panic(err)
+	}
+	return r.Email, r.Name,r.Description,nil
 }

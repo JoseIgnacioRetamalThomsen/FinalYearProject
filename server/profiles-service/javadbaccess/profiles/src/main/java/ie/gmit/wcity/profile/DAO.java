@@ -5,6 +5,7 @@ import static org.neo4j.driver.Values.parameters;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
+import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
@@ -20,10 +21,9 @@ public class DAO implements AutoCloseable {
 		driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
 	}
 
-	public void AddUser(final String email, final String name, final String description) {
+	public String AddUser(final String email, final String name, final String description) {
 		try (Session session = driver.session()) {
-			// String greeting =
-			session.writeTransaction(new TransactionWork<String>() {
+			String result = session.writeTransaction(new TransactionWork<String>() {
 				@Override
 				public String execute(Transaction tx) {
 					Result result = tx.run(
@@ -33,18 +33,42 @@ public class DAO implements AutoCloseable {
 					return result.single().get(0).asString();
 				}
 			});
+			return result;
 
 		}
 	}
-	
-	public void GetUser(final String email) {
-		
+
+	public User GetUser(final String email) {
+		User user = null;
+
+		try (Session session = driver.session()) {
+			user = session.writeTransaction(new TransactionWork<User>() {
+				@Override
+				public User execute(Transaction tx) {
+					Result result = tx.run("MATCH (a:User) " + "where a.email = $email " + "RETURN a",
+							parameters("email", email));
+					User u = new User();
+					u.setEmail(email);
+				
+					Record r = result.next();
+					u.setName(r.get(0).get("name").asString());
+					//u.setDescription(result.single().get(0).get("name").asString());
+					
+					u.setDescription(r.get(0).get("description").asString());
+					return u;
+				}
+			});
+		}
+		return user;
 	}
-	/*
-	 * public static void main(String... args) throws Exception { try (DAO dao = new
-	 * DAO("bolt://192.168.43.58:7687", "neo4j", "test")) {
-	 * dao.AddUser("email1","name1","description1"); } }
-	 */
+
+	public static void main(String... args) throws Exception {
+		try (DAO dao = new DAO("bolt://192.168.43.58:7687", "neo4j", "test")) {
+			//dao.AddUser("email1", "name1", "description1");
+			User u = dao.GetUser("one");
+			System.out.println(u);
+		}
+	}
 
 	@Override
 	public void close() throws Exception {
