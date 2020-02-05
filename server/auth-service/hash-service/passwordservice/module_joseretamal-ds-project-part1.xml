@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_joseretamal-ds-project-part1" default="compile.module.joseretamal-ds-project-part1">
+  <dirname property="module.joseretamal-ds-project-part1.basedir" file="${ant.file.module_joseretamal-ds-project-part1}"/>
+  
+  <property name="module.jdk.home.joseretamal-ds-project-part1" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.joseretamal-ds-project-part1" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.joseretamal-ds-project-part1" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.joseretamal-ds-project-part1" value="-encoding UTF-8 -source 12 -target 1.7 ${compiler.args}"/>
+  
+  <property name="joseretamal-ds-project-part1.output.dir" value="${module.joseretamal-ds-project-part1.basedir}/target/classes"/>
+  <property name="joseretamal-ds-project-part1.testoutput.dir" value="${module.joseretamal-ds-project-part1.basedir}/target/test-classes"/>
+  
+  <path id="joseretamal-ds-project-part1.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="joseretamal-ds-project-part1.module.production.classpath">
+    <path refid="${module.jdk.classpath.joseretamal-ds-project-part1}"/>
+    <path refid="library.maven:_javax.annotation:javax.annotation-api:1.3.2.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-api:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-context:1.23.0.classpath"/>
+    <path refid="library.maven:_com.google.errorprone:error_prone_annotations:2.3.2.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:3.0.2.classpath"/>
+    <path refid="library.maven:_org.codehaus.mojo:animal-sniffer-annotations:1.17.classpath"/>
+    <path refid="library.maven:_com.google.protobuf:protobuf-java:3.9.0.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:26.0-android.classpath"/>
+    <path refid="library.maven:_org.checkerframework:checker-compat-qual:2.5.2.classpath"/>
+    <path refid="library.maven:_com.google.j2objc:j2objc-annotations:1.1.classpath"/>
+    <path refid="library.maven:_com.google.api.grpc:proto-google-common-protos:1.12.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf-lite:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-stub:1.23.0.classpath"/>
+    <pathelement location="${basedir}/lib/Passwords.jar"/>
+  </path>
+  
+  <path id="joseretamal-ds-project-part1.runtime.production.module.classpath">
+    <pathelement location="${joseretamal-ds-project-part1.output.dir}"/>
+    <path refid="library.maven:_javax.annotation:javax.annotation-api:1.3.2.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-netty-shaded:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-core:1.23.0.classpath"/>
+    <path refid="library.maven:_com.google.code.gson:gson:2.7.classpath"/>
+    <path refid="library.maven:_com.google.android:annotations:4.1.1.4.classpath"/>
+    <path refid="library.maven:_io.perfmark:perfmark-api:0.17.0.classpath"/>
+    <path refid="library.maven:_io.opencensus:opencensus-api:0.21.0.classpath"/>
+    <path refid="library.maven:_io.opencensus:opencensus-contrib-grpc-metrics:0.21.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-api:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-context:1.23.0.classpath"/>
+    <path refid="library.maven:_com.google.errorprone:error_prone_annotations:2.3.2.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:3.0.2.classpath"/>
+    <path refid="library.maven:_org.codehaus.mojo:animal-sniffer-annotations:1.17.classpath"/>
+    <path refid="library.maven:_com.google.protobuf:protobuf-java:3.9.0.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:26.0-android.classpath"/>
+    <path refid="library.maven:_org.checkerframework:checker-compat-qual:2.5.2.classpath"/>
+    <path refid="library.maven:_com.google.j2objc:j2objc-annotations:1.1.classpath"/>
+    <path refid="library.maven:_com.google.api.grpc:proto-google-common-protos:1.12.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf-lite:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-stub:1.23.0.classpath"/>
+    <pathelement location="${basedir}/lib/Passwords.jar"/>
+  </path>
+  
+  <path id="joseretamal-ds-project-part1.module.classpath">
+    <path refid="${module.jdk.classpath.joseretamal-ds-project-part1}"/>
+    <pathelement location="${joseretamal-ds-project-part1.output.dir}"/>
+    <path refid="library.maven:_javax.annotation:javax.annotation-api:1.3.2.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-netty-shaded:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-core:1.23.0.classpath"/>
+    <path refid="library.maven:_com.google.code.gson:gson:2.7.classpath"/>
+    <path refid="library.maven:_com.google.android:annotations:4.1.1.4.classpath"/>
+    <path refid="library.maven:_io.perfmark:perfmark-api:0.17.0.classpath"/>
+    <path refid="library.maven:_io.opencensus:opencensus-api:0.21.0.classpath"/>
+    <path refid="library.maven:_io.opencensus:opencensus-contrib-grpc-metrics:0.21.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-api:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-context:1.23.0.classpath"/>
+    <path refid="library.maven:_com.google.errorprone:error_prone_annotations:2.3.2.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:3.0.2.classpath"/>
+    <path refid="library.maven:_org.codehaus.mojo:animal-sniffer-annotations:1.17.classpath"/>
+    <path refid="library.maven:_com.google.protobuf:protobuf-java:3.9.0.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:26.0-android.classpath"/>
+    <path refid="library.maven:_org.checkerframework:checker-compat-qual:2.5.2.classpath"/>
+    <path refid="library.maven:_com.google.j2objc:j2objc-annotations:1.1.classpath"/>
+    <path refid="library.maven:_com.google.api.grpc:proto-google-common-protos:1.12.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf-lite:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-stub:1.23.0.classpath"/>
+    <pathelement location="${basedir}/lib/Passwords.jar"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+  </path>
+  
+  <path id="joseretamal-ds-project-part1.runtime.module.classpath">
+    <pathelement location="${joseretamal-ds-project-part1.testoutput.dir}"/>
+    <pathelement location="${joseretamal-ds-project-part1.output.dir}"/>
+    <path refid="library.maven:_javax.annotation:javax.annotation-api:1.3.2.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-netty-shaded:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-core:1.23.0.classpath"/>
+    <path refid="library.maven:_com.google.code.gson:gson:2.7.classpath"/>
+    <path refid="library.maven:_com.google.android:annotations:4.1.1.4.classpath"/>
+    <path refid="library.maven:_io.perfmark:perfmark-api:0.17.0.classpath"/>
+    <path refid="library.maven:_io.opencensus:opencensus-api:0.21.0.classpath"/>
+    <path refid="library.maven:_io.opencensus:opencensus-contrib-grpc-metrics:0.21.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-api:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-context:1.23.0.classpath"/>
+    <path refid="library.maven:_com.google.errorprone:error_prone_annotations:2.3.2.classpath"/>
+    <path refid="library.maven:_com.google.code.findbugs:jsr305:3.0.2.classpath"/>
+    <path refid="library.maven:_org.codehaus.mojo:animal-sniffer-annotations:1.17.classpath"/>
+    <path refid="library.maven:_com.google.protobuf:protobuf-java:3.9.0.classpath"/>
+    <path refid="library.maven:_com.google.guava:guava:26.0-android.classpath"/>
+    <path refid="library.maven:_org.checkerframework:checker-compat-qual:2.5.2.classpath"/>
+    <path refid="library.maven:_com.google.j2objc:j2objc-annotations:1.1.classpath"/>
+    <path refid="library.maven:_com.google.api.grpc:proto-google-common-protos:1.12.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-protobuf-lite:1.23.0.classpath"/>
+    <path refid="library.maven:_io.grpc:grpc-stub:1.23.0.classpath"/>
+    <pathelement location="${basedir}/lib/Passwords.jar"/>
+    <path refid="library.maven:_junit:junit:4.12.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.joseretamal-ds-project-part1">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.joseretamal-ds-project-part1">
+    <patternset refid="excluded.from.module.joseretamal-ds-project-part1"/>
+  </patternset>
+  
+  <path id="joseretamal-ds-project-part1.module.sourcepath">
+    <dirset dir="${module.joseretamal-ds-project-part1.basedir}">
+      <include name="src/main/java"/>
+      <include name="target/generated-sources/protobuf/grpc-java"/>
+      <include name="target/generated-sources/protobuf/java"/>
+    </dirset>
+  </path>
+  
+  <path id="joseretamal-ds-project-part1.module.test.sourcepath">
+    <dirset dir="${module.joseretamal-ds-project-part1.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.joseretamal-ds-project-part1" depends="compile.module.joseretamal-ds-project-part1.production,compile.module.joseretamal-ds-project-part1.tests" description="Compile module joseretamal-ds-project-part1"/>
+  
+  <target name="compile.module.joseretamal-ds-project-part1.production" depends="register.custom.compilers" description="Compile module joseretamal-ds-project-part1; production classes">
+    <mkdir dir="${joseretamal-ds-project-part1.output.dir}"/>
+    <javac2 destdir="${joseretamal-ds-project-part1.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.joseretamal-ds-project-part1}/javac">
+      <compilerarg line="${compiler.args.joseretamal-ds-project-part1}"/>
+      <bootclasspath refid="joseretamal-ds-project-part1.module.bootclasspath"/>
+      <classpath refid="joseretamal-ds-project-part1.module.production.classpath"/>
+      <src refid="joseretamal-ds-project-part1.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.joseretamal-ds-project-part1"/>
+    </javac2>
+    
+    <copy todir="${joseretamal-ds-project-part1.output.dir}">
+      <fileset dir="${module.joseretamal-ds-project-part1.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.joseretamal-ds-project-part1.basedir}/target/generated-sources/protobuf/grpc-java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.joseretamal-ds-project-part1.basedir}/target/generated-sources/protobuf/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.joseretamal-ds-project-part1.tests" depends="register.custom.compilers,compile.module.joseretamal-ds-project-part1.production" description="compile module joseretamal-ds-project-part1; test classes" unless="skip.tests">
+    <mkdir dir="${joseretamal-ds-project-part1.testoutput.dir}"/>
+    <javac2 destdir="${joseretamal-ds-project-part1.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.joseretamal-ds-project-part1}/javac">
+      <compilerarg line="${compiler.args.joseretamal-ds-project-part1}"/>
+      <bootclasspath refid="joseretamal-ds-project-part1.module.bootclasspath"/>
+      <classpath refid="joseretamal-ds-project-part1.module.classpath"/>
+      <src refid="joseretamal-ds-project-part1.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.joseretamal-ds-project-part1"/>
+    </javac2>
+    
+    <copy todir="${joseretamal-ds-project-part1.testoutput.dir}">
+      <fileset dir="${module.joseretamal-ds-project-part1.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.joseretamal-ds-project-part1" description="cleanup module">
+    <delete dir="${joseretamal-ds-project-part1.output.dir}"/>
+    <delete dir="${joseretamal-ds-project-part1.testoutput.dir}"/>
+  </target>
+</project>

@@ -30,7 +30,7 @@ public class HelloWorldModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void sayHello(String message) {
-       HelloWorldClient client = new HelloWorldClient("13.81.50.83", 7776);
+       HelloWorldClient client = new HelloWorldClient("192.168.43.221", 7776);
 
         client.greet(message);
     }

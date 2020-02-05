@@ -3,7 +3,9 @@ package com.wcity.grpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
+
 import io.grpc.wcity.helloworld.GreeterGrpc;
+
 import io.grpc.wcity.helloworld.HelloReply;
 import io.grpc.wcity.helloworld.HelloRequest;
 

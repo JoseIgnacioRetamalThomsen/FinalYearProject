@@ -1,0 +1,12 @@
+[Unit]
+Description=userMySQl
+
+[Service]
+Type=simple
+Restart=always 
+RestartSec=5s 
+ExecStart=/usr/ser/main /home/pepe/dbser.config.json
+
+
+[Install] 
+WantedBy=multi-user.target
