@@ -17,7 +17,9 @@ import (
 	//"time"
 )
 const(
-	url = "0.0.0.0:5777"
+	//url = "0.0.0.0:5777"
+	//url="localhost:5777";
+	url = "35.234.146.99:5777"
 )
 
 type neo4jDB struct {
@@ -54,7 +56,7 @@ func main(){
 	s2 := &neo4jDB{dbserverCtx}
 	dbConn = *s2
 
-	res , errr := CreateUser("one","two","three")
+	res , errr := CreateUser("one","new4","three")
 	if errr != nil {
 		panic(errr)
 	}

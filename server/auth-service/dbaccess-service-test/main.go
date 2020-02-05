@@ -18,9 +18,9 @@ import (
 )
 
 const (
-	address     = "104.40.206.141:7777"
+	//address     = "35.197.216.42:7777"
 	//address     = "40.118.90.61:7777"
-	//address     = "localhost:7777"
+	address     = "localhost:7777"
 
 )
 

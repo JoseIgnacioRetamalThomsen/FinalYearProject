@@ -35,10 +35,10 @@ public class Test implements AutoCloseable {
 			System.out.println(greeting);
 		}
 	}
-
+/*
 	public static void main(String... args) throws Exception {
 		try (Test greeter = new Test("bolt://35.234.146.99:7687", "neo4j", "test")) {
 			greeter.printGreeting("hello, world");
 		}
-	}
+	}*/
 }
