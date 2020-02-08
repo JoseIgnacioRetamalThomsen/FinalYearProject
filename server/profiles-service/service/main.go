@@ -62,6 +62,14 @@ const(
 	cityCountry = "Ireland"
 	cityPicture = "pic"
 	cityDescription =" a small city"
+
+	placeName = "GMIT"
+	placeCity =cityName
+	placeCountry = cityCountry
+	placeDescription = "Institute of technologies"
+	placeLon = 2
+	placeLat =1
+	placeCreatorEmail = email
 )
 
 func main(){
@@ -72,11 +80,11 @@ func main(){
 	s2 := &neo4jDB{dbserverCtx}
 	dbConn = *s2
 
-//	res , errr := CreateUser(email,name,description)
-	//if errr != nil {
-	//	panic(errr)
-	//}
-	//fmt.Print(res)
+	res , errr := CreateUser(email,name,description)
+	if errr != nil {
+		panic(errr)
+	}
+	fmt.Print(res)
 	//n,e,d,err := GetUser(email)
 	//fmt.Print(n +"\n")
 	//fmt.Print(e +"\n")
@@ -84,9 +92,44 @@ func main(){
 	//a,b,err :=CreateCity(cityName,cityCountry,cityUserEmail,cityLat,cityLon,cityDescription)
 	//fmt.Print(a)
 	//fmt.Print(b)
-	r,err := GetCity(cityName,cityCountry);
-	fmt.Print(r.Country + "\n" +r.Name +"\n" +r.GetCreatorEmail() +"\n" +r.Description)
-	fmt.Println(r.GetLocation())
+	//r,err := GetCity(cityName,cityCountry);
+	//fmt.Print(r.Country + "\n" +r.Name +"\n" +r.GetCreatorEmail() +"\n" +r.Description)
+	//fmt.Println(r.GetLocation())
+	//r,err := CreatePlace(placeName,placeCity,placeCountry,placeDescription,placeCreatorEmail,placeLat,placeLon)
+	//fmt.Println(r)
+	//r,err := GetPlace(placeName,placeCity,placeCountry)
+	//fmt.Println(r)
+}
+
+func GetPlace(name string, city string,country string)(pb.PlacePDB,error){
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := dbConn.context.dbClient.GetPlace(ctx,&pb.PlaceRequestPDB{
+		Name:strings.ToLower(name),
+		City:strings.ToLower(city),
+		Country:strings.ToLower(country)})
+	if err != nil {
+		panic(err)
+	}
+
+   return *r,nil
+}
+
+func CreatePlace(name string, city string, country string, description string, creatorEmail string, lat float32, lon float32)(string,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := dbConn.context.dbClient.CreatePlaceRequest(ctx,&pb.PlacePDB{
+		Name:strings.ToLower(name),
+		City:strings.ToLower(city),
+		Country:strings.ToLower(country),
+		Description:description,
+		CreatorEmail:strings.ToLower(creatorEmail),
+		Location: &pb.GeolocationPDB{Lat:lat,Lon:lon}})
+	if err != nil {
+		panic(err)
+	}
+	return r.GetName() , nil
 }
 
 func GetCity(name string, country string)(pb.CityPDB,error){
@@ -105,7 +148,7 @@ func CreateCity(name string, country string, creatorEmail string, lat float32,lo
 	r, err := dbConn.context.dbClient.CreateCity(ctx, &pb.CityPDB{ Name: strings.ToLower(name),
 		Country:strings.ToLower(country),
 		CreatorEmail:strings.ToLower(creatorEmail),
-		Description:strings.ToLower(description),
+		Description:description,
 		Location:&pb.GeolocationPDB{Lat:lat,Lon:lon}})
 	if err != nil {
 		panic(err)
@@ -118,7 +161,7 @@ func CreateUser(email string,name string, description string) (bool,error){
 	defer cancel()
 	r, err := dbConn.context.dbClient.CreateUser(ctx, &pb.CreateUserRequestPDB{Email: strings.ToLower(email),
 		Name: strings.ToLower(name),
-	Description:strings.ToLower(description)})
+	Description:description})
 	if err != nil {
 		return false, err
 	}

@@ -69,25 +69,29 @@ message GeolocationPDB{
 }
 message PlaceMinPDB{
     string name = 1;
-    string cityID = 2;// composo of city name and city country
-    string creatorEmail = 3;
+    string city = 2; 
+    string country = 3; 
+    string creatorEmail = 4;
 }
 message PlacePDB{
     string name = 1;
-    string cityID = 2;// composo of city name and city country
-    string creatorEmail = 3;
-    GeolocationPDB location = 4;
-    string description = 5;
+    string city = 2;
+    string country = 3;
+    string creatorEmail = 4;
+    GeolocationPDB location = 5;
+    string description = 6;
 } 
 message PlaceRequestPDB{
     string name = 1;
-    string cityID = 2;
+    string city = 2;
+    string country = 3;
 }
 message PlaceResponsePDB{
     string name =1;
-    string cityID =2;
-    bool valid = 3;
-    PlacePDB place =4;
+    string city =2;
+    string country =3;
+    bool valid = 4;
+    PlacePDB place =5;
 
 }
 message UpdatedUserRequestPDB{
@@ -126,14 +130,16 @@ message CityPlacesResponsePDB{
 }
 message VisitPlaceRequestPDB{
     string email = 1;
-    string placeName =2;
-    string placeCity =3;
+    string placeName = 2;
+    string placeCity = 3;
+    string placeCountry = 4
 }
 message VisitPlaceResponsePDB{
  string email = 1;
     string placeName =2;
     string placeCity =3;
-    bool valid = 4;
+    string placeCountry = 4;
+    bool valid = 5;
 }
 message VisitedPlacesRequestPDB{
     string email =1;

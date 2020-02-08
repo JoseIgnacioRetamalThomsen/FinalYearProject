@@ -26,48 +26,61 @@ public class Place {
 		return Description;
 	}
 
-	public void setDescription(String description) {
+	public Place setDescription(String description) {
 		Description = description;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Place setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getCityName() {
 		return cityName;
 	}
 
-	public void setCityName(String cityName) {
+	public Place setCityName(String cityName) {
 		this.cityName = cityName;
+		return this;
 	}
 
 	public String getCityCountry() {
 		return cityCountry;
 	}
 
-	public void setCityCountry(String cityCountry) {
+	public Place setCityCountry(String cityCountry) {
 		this.cityCountry = cityCountry;
+		return this;
 	}
 
 	public String getCreatorEmail() {
 		return creatorEmail;
 	}
 
-	public void setCreatorEmail(String creatorEmail) {
+	public Place setCreatorEmail(String creatorEmail) {
 		this.creatorEmail = creatorEmail;
+		return this;
 	}
 
 	public Geolocation getGeolocation() {
 		return geolocation;
 	}
 
-	public void setGeolocation(Geolocation geolocation) {
+	public Place setGeolocation(Geolocation geolocation) {
 		this.geolocation = geolocation;
+		return this;
 	}
 
+	@Override
+	public String toString() {
+		return "Place [name=" + name + ", cityName=" + cityName + ", cityCountry=" + cityCountry + ", creatorEmail="
+				+ creatorEmail + ", Description=" + Description + ", geolocation=" + geolocation + "]";
+	}
+
+	
 }
