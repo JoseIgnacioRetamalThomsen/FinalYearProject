@@ -28,12 +28,23 @@ WHERE b.name = "gmit"
 CREATE (a)-[r:VISIT]->(b)
 RETURN r
 
+// visit place
 MATCH (a:User)
 WHERE a.email = "user1@email.com" 
 MATCH (b:Place)
-WHERE b.name = "gmit" 
+WHERE b.name = "gmit"  AND b.city = "galway" AND b.country= "ireland"
 CREATE (a)-[r:VISIT{date:date()}]->(b)
 RETURN r
+
+//visit city
+MATCH (a:User)
+WHERE a.email = "user1@email.com" 
+MATCH (b:City)
+WHERE b.name = "gmit"  AND b.city = "galway" AND b.country= "ireland"
+CREATE (a)-[r:VISIT{date:date()}]->(b)
+RETURN r
+
+
 
 MATCH (a:City),(b:Place)
 WHERE a.name = "Galway" AND b.name = "GMIT"
@@ -54,9 +65,9 @@ where a.email = "j@e.com"
 return a, b
 
 
-MATCH (a:User) -[r:VISIT]-> (b:City) 
-where a.email = "j@e.com"
-return a, b
+MATCH (a:User) -[r:VISIT]-> (b:Place) 
+where a.email = "user1@email.com"
+return  b
 
 
 # find city

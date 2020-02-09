@@ -20,6 +20,10 @@ service ProfilesDB{
     rpc GetVisitedCitys(VisitedCitysRequestPDB) returns (VisitedCitysResponsePDB);
     rpc GetVisitedPlaces(VisitedPlacesRequestPDB) returns (VisitedPlacesResponsePDB);
     rpc UpdateUserRequest(CreateUserRequestPDB) returns (CreateUserResponsePDB);
+    rpc UpdateCityRequest(CityPDB) returns (CityResponsePDB);
+    rpc UpdatePlaceRequest(PlacePDB) returns (PlaceResponsePDB);
+    rpc GetCityPlaces(CityRequestPDB) returns (VisitedPlacesResponsePDB);
+    
 }
 message CreateUserRequestPDB{
      string email = 1;
@@ -130,14 +134,16 @@ message CityPlacesResponsePDB{
 }
 message VisitPlaceRequestPDB{
     string email = 1;
-    string placeName =2;
-    string placeCity =3;
+    string placeName = 2;
+    string placeCity = 3;
+    string placeCountry = 4;
 }
 message VisitPlaceResponsePDB{
  string email = 1;
     string placeName =2;
     string placeCity =3;
-    bool valid = 4;
+    string placeCountry = 4;
+    bool valid = 5;
 }
 message VisitedPlacesRequestPDB{
     string email =1;
