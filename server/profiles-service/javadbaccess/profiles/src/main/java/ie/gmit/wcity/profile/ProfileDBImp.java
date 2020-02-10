@@ -1,3 +1,8 @@
+/**
+ * Jose I. Retamal
+ * GMIT - 2020
+ */
+
 package ie.gmit.wcity.profile;
 
 import java.util.List;
@@ -28,10 +33,16 @@ import io.grpc.wcity.profilesDB.VisitedCitysResponsePDB;
 import io.grpc.wcity.profilesDB.VisitedPlacesRequestPDB;
 import io.grpc.wcity.profilesDB.VisitedPlacesResponsePDB;
 
+/**
+ * Provide end points for access neo4j database.
+ * 
+ * @author Jose Retamal
+ *
+ */
 public class ProfileDBImp extends ProfilesDBImplBase {
 
-  // private final static String URL = "bolt://10.154.0.6:7687";
-  private final static String URL = "bolt://0.0.0.0:7687";
+   private final static String URL = "bolt://10.154.0.6:7687";
+  //private final static String URL = "bolt://0.0.0.0:7687";
   private final static String USER_NAME = "neo4j";
   private final static String PASSWORD = "test";
 
@@ -41,6 +52,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
   private static final Logger logger = Logger
       .getLogger(ProfileDBImp.class.getName());
 
+  /**
+   * Create a new user
+   */
   public void createUser(CreateUserRequestPDB request,
       StreamObserver<CreateUserResponsePDB> response) {
     logger.info("Create user request.");
@@ -56,10 +70,12 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
-
     }
   }
 
+  /**
+   * Get user from database
+   */
   public void getUser(GetUserRequestPDB request,
       StreamObserver<UserResponsePDB> response) {
     logger.info("Get user request.");
@@ -80,6 +96,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     }
   }
 
+  /**
+   * Create a new city
+   */
   public void createCity(CityPDB request,
       StreamObserver<CityResponsePDB> response) {
     logger.info("Create city request.");
@@ -100,19 +119,19 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
-
     }
   }
 
+  /**
+   * Get city data
+   */
   public void getCity(CityRequestPDB request,
       StreamObserver<CityPDB> response) {
     logger.info("Get city request.");
     try {
       Context context = Context.current();
       DAO dao = new DAO(URL, USER_NAME, PASSWORD);
-
       City u = dao.getCity(request.getName(), request.getCountry());
-
       response
           .onNext(CityPDB.newBuilder().setName(u.getName())
               .setCountry(u.getCountry()).setDescription(u.getDescription())
@@ -124,10 +143,12 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
-
     }
   }
 
+  /**
+   * Get place data
+   */
   public void getPlace(PlaceRequestPDB request,
       StreamObserver<PlacePDB> response) {
     logger.info("Get place request.");
@@ -149,10 +170,12 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
-
     }
   }
 
+  /**
+   * Create a new place
+   */
   public void createPlaceRequest(PlacePDB request,
       StreamObserver<PlaceResponsePDB> response) {
     logger.info("Create place request.");
@@ -167,10 +190,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
           .setGeolocation(new Geolocation(request.getLocation().getLat(),
               request.getLocation().getLon())));
 
-      response.onNext(PlaceResponsePDB.newBuilder().setName(request.getName())
-
-          .build());
-
+      response.onNext(
+          PlaceResponsePDB.newBuilder().setName(request.getName()).build());
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
@@ -178,6 +199,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     }
   }
 
+  /**
+   * Mark a place as visit for a user
+   */
   public void visitPlace(VisitPlaceRequestPDB request,
       StreamObserver<VisitPlaceResponsePDB> response) {
     logger.info("Visit place request.");
@@ -200,6 +224,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     }
   }
 
+  /**
+   * Get all visited places for a user
+   */
   public void getVisitedPlaces(VisitedPlacesRequestPDB request,
       StreamObserver<VisitedPlacesResponsePDB> response) {
     logger.info("Get Visited place request.");
@@ -219,6 +246,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     }
   }
 
+  /**
+   * Mark a city as visited for a user
+   */
   public void visitCity(VisitCityRequestPDB request,
       StreamObserver<VisitCityResponsePDB> response) {
     logger.info("Visit city request.");
@@ -241,6 +271,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     }
   }
 
+  /**
+   * Get all visited places for a user
+   */
   public void getVisitedCitys(VisitedCitysRequestPDB request,
       StreamObserver<VisitedCitysResponsePDB> response) {
     logger.info("Get Visited city request.");
@@ -260,6 +293,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     }
   }
 
+ /**
+  * Update user
+  */
   public void updateUserRequest(CreateUserRequestPDB request,
       StreamObserver<CreateUserResponsePDB> response) {
     logger.info("Update user request.");
@@ -275,10 +311,12 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
-
     }
   }
 
+  /**
+   * Update city
+   */
   public void updateCityRequest(CityPDB request,
       StreamObserver<CityResponsePDB> response) {
     logger.info("Update city request.");
@@ -298,6 +336,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 
   }
 
+  /**
+   * Update place
+   */
   public void updatePlaceRequest(PlacePDB request,
       StreamObserver<PlaceResponsePDB> response) {
     logger.info("Update place request.");
@@ -317,6 +358,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     }
   }
 
+  /**
+   * Get all places from a city
+   */
   public void getCityPlaces(CityRequestPDB request,
       StreamObserver<VisitedPlacesResponsePDB> response) {
     logger.info("Get places city request.");
@@ -333,8 +377,6 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
-
     }
   }
-
 }

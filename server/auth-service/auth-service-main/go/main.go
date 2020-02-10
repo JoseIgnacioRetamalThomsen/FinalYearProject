@@ -158,6 +158,7 @@ func init() {
 	resolver.Register(&databasesResolverBuilder{})
 }
 var configuration Configuration
+
 func readConfig(fileName string){
 	file, _ := os.Open(fileName)
 	defer file.Close()

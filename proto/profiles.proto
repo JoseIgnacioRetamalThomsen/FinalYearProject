@@ -10,53 +10,110 @@ option objc_class_prefix = "RPC";
 
 service Profiles{
 
-    // created user and return login token
-  //  rpc CreateUser(UserRequest) returns (UserResponse); 
-    //update user
- //   rpc UpdateUser(UserRequest) returns (UserResponse);   
-    // used for login 
-  //  rpc LoginUser(UserRequest) returns (UserResponse);
-      // check if user is logged
-  //  rpc CheckToken(LogRequest) returns (LogResponse);
-    // for logout
-  //  rpc Logout(LogRequest) returns (LogResponse);
-    
+    rpc CreateUser(UserRequestP) returns (UserResponseP);
+    rpc GetUser(UserRequestP) returns (UserResponseP);
+    rpc UpdateUser(UserRequestP) returns (UserResponseP);
+    rpc CreateCity(CityRequestP) returns  (CityResponseP);
+    rpc CreatePlace(PlaceRequestP) returns (PlaceResponseP);
+    rpc UpdateCity(CityRequestP) returns (CityResponseP);
+    rpc UpdatePlace(PlaceRequestP) returns (CityResponseP);
+    rpc GetCity(CityRequestP) returns (CityResponseP);
+    rpc GetPlace(PlaceRequestP) returns (PlaceResponseP);
+    rpc VisitCity(VisitCityRequestP) returns (VisitCityResponseP);
+    rpc VisitPlace(VisitPlaceRequestP) returns (VisitPlaceResponseP);
+    rpc GetVisitedCitys(VisitedRequestP) returns (VisitedCitysResponseP);
+    rpc GetVisitedPlaces(VisitedRequestP) returns (VisitedPlacesResponseP);
+    rpc GetCityPlaces(CityRequestP) returns (VisitedPlacesResponseP); 
+
 
 }
-
-message UserRequest{
-    string token = 1;
-    string email = 2;
-   
+message GeolocationP{
+    float lon = 1;
+    float lat = 2;
 }
-
-message UserResponse{
-     string email = 1;
-     string name = 2;
-     string description =3;
-     repeated CityMin visiteds = 4;
-     repeated PlaceMin visiteds = 5;
-     
+message UserRequestP{
+  string token = 1;
+  string email = 2;
+  string name = 3;
+  string description = 4;
 }
-
-message CityMin{
-    string name = 1;
-    string country = 2;
-    string creatorEmail = 3;
+message UserResponseP{
+  bool valid = 1;
+  string email = 2;
+  string name = 3;
+  string description = 4;
 }
-
-message PlaceMin{
-    string name = 1;
-    string cityID = 2;// composo of city name and city country
-    string creatorEmail = 4;
+message CityRequestP{
+  string token =1;
+  string name = 2;
+  string country =3;
+  string creatorEmail = 4;
+  string description = 5;
+  GeolocationP location =6;
 }
-
-message UpdatedUserRequest{
-    string token = 1;
-    string email = 2;
-    string name = 3;
-    string description =4; 
+message CityResponseP{
+  bool valid =1;
+  string name = 2;
+  string country =3;
+  string creatorEmail = 4;
+  string description = 5;
+  GeolocationP location =6;
 }
-
-
-
+message PlaceRequestP{
+  string token  = 1;
+  string name = 2;
+  string city = 3;
+  string country =4;
+  string creatorEmail =5;
+  string description =6;
+  GeolocationP location =7;
+}
+message PlaceResponseP{
+  bool valid  = 1;
+  string name = 2;
+  string city = 3;
+  string country =4;
+  string creatorEmail =5;
+  string description =6;
+  GeolocationP location =7;
+}
+message VisitCityRequestP{
+  string token = 1;
+  string email = 2;
+  string cityName = 3;
+  string cityCountry = 4;
+}
+message VisitCityResponseP{
+  bool valid = 1;
+  string email = 2;
+  string cityName = 3;
+  string cityCountry = 4;
+}
+message VisitPlaceRequestP{
+  string token = 1;
+  string email = 2;
+  string placeName = 3;
+  string placeCity = 4;
+  string placeCountry = 5;
+}
+message VisitPlaceResponseP{
+  bool  valid = 1;
+  string email = 2;
+  string placeName = 3;
+  string placeCity = 4;
+  string placeCountry = 5;
+}
+message VisitedRequestP{
+  string token = 1;
+  string email =2;
+}
+message VisitedCitysResponseP{
+  bool valid =1;
+  string email = 2;
+  repeated CityResponseP citys = 3;
+}
+message VisitedPlacesResponseP{
+  bool valid =1;
+  string email =2;
+  repeated PlaceResponseP places =3;
+}

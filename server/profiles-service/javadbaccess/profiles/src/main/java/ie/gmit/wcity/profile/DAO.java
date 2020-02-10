@@ -1,3 +1,8 @@
+/**
+ * Jose I. Retamal
+ * GMIT - 2020
+ */
+
 package ie.gmit.wcity.profile;
 
 import static org.neo4j.driver.Values.parameters;
@@ -22,6 +27,12 @@ import io.grpc.wcity.profilesDB.PlacePDB;
 import io.grpc.wcity.profilesDB.VisitCityRequestPDB;
 import profiles.Test;
 
+/**
+ * Provide access to neo4j database
+ * 
+ * @author Jose I. Retamal
+ *
+ */
 public class DAO implements AutoCloseable {
 
   private final Driver driver;
@@ -30,6 +41,14 @@ public class DAO implements AutoCloseable {
     driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
   }
 
+  /**
+   * Create a new user
+   * 
+   * @param email       user email
+   * @param name        user name
+   * @param description user description
+   * @return true if is created
+   */
   public String createUser(final String email, final String name,
       final String description) {
     try (Session session = driver.session()) {
@@ -49,6 +68,12 @@ public class DAO implements AutoCloseable {
     }
   }
 
+  /**
+   * Get user data
+   * 
+   * @param email user email
+   * @return user data
+   */
   public User getUser(final String email) {
     User user = null;
 
@@ -64,8 +89,6 @@ public class DAO implements AutoCloseable {
 
           Record r = result.next();
           u.setName(r.get(0).get("name").asString());
-          // u.setDescription(result.single().get(0).get("name").asString());
-
           u.setDescription(r.get(0).get("description").asString());
           return u;
         }
@@ -74,6 +97,12 @@ public class DAO implements AutoCloseable {
     return user;
   }
 
+  /**
+   * Create a new city
+   * 
+   * @param city the new city
+   * @return true if created
+   */
   public String createCity(City city) {
     try (Session session = driver.session()) {
       String result = session.writeTransaction(new TransactionWork<String>() {
@@ -100,6 +129,13 @@ public class DAO implements AutoCloseable {
     }
   }
 
+  /**
+   * Get city data
+   * 
+   * @param name    city name
+   * @param country city country
+   * @return city data
+   */
   public City getCity(String name, String country) {
     City city = null;
     try (Session session = driver.session()) {
@@ -118,19 +154,19 @@ public class DAO implements AutoCloseable {
               .setGeolocation(new Geolocation(r.get(0).get("lat").asFloat(),
                   r.get(0).get("lon").asFloat()));
 
-          // Record r = result.next();
-          // u.setName(r.get(0).get("name").asString());
-          // u.setDescription(result.single().get(0).get("name").asString());
-
-          // u.setDescription(r.get(0).get("description").asString());
           return c;
         }
       });
     }
-
     return city;
   }
 
+  /**
+   * Create a new place
+   * 
+   * @param place the new place
+   * @return true if created
+   */
   public String createPlace(Place place) {
     try (Session session = driver.session()) {
       String result = session.writeTransaction(new TransactionWork<String>() {
@@ -162,9 +198,20 @@ public class DAO implements AutoCloseable {
       });
       return result;
 
+    }catch(Exception e) {
+      e.printStackTrace();
+      return null;
     }
   }
 
+  /**
+   * Get a place
+   * 
+   * @param name    the place name
+   * @param city    the place city
+   * @param country the place country
+   * @return the place data
+   */
   public Place getPlace(String name, String city, String country) {
     Place place = null;
     try (Session session = driver.session()) {
@@ -184,20 +231,25 @@ public class DAO implements AutoCloseable {
               .setDescription(r.get(0).get("description").asString())
               .setGeolocation(new Geolocation(r.get(0).get("lat").asFloat(),
                   r.get(0).get("lon").asFloat()));
-
-          // Record r = result.next();
-          // u.setName(r.get(0).get("name").asString());
-          // u.setDescription(result.single().get(0).get("name").asString());
-
-          // u.setDescription(r.get(0).get("description").asString());
           return p;
         }
       });
+    } catch (Exception e) {
+      e.printStackTrace();
+      return place;
     }
-
     return place;
   }
 
+  /**
+   * Mark a place as visited
+   * 
+   * @param userEmail    the user email
+   * @param placeName    the place name
+   * @param placeCity    the place city
+   * @param placeCountry the place country
+   * @return true if sucess
+   */
   public List<Record> visitPlace(String userEmail, String placeName,
       String placeCity, String placeCountry) {
     try (Session session = driver.session()) {
@@ -218,11 +270,18 @@ public class DAO implements AutoCloseable {
             }
           });
       return result;
-
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
     }
-
   }
 
+  /**
+   * Return a list of all visited places
+   * 
+   * @param userEmail the user email
+   * @return list with all visited places
+   */
   public List<PlacePDB> getVisitedPlaces(String userEmail) {
     List<PlacePDB> places = new ArrayList<>();
     try (Session session = driver.session()) {
@@ -252,12 +311,18 @@ public class DAO implements AutoCloseable {
         }
       });
       return places;
-
+    } catch (Exception e) {
+      e.printStackTrace();
+      return places;
     }
-
-    // return null;
   }
 
+  /**
+   * MArk a city as visited
+   * 
+   * @param request the user request
+   * @return list with all visited city's
+   */
   public boolean visitCity(VisitCityRequestPDB request) {
     try (Session session = driver.session()) {
       List<Record> result = session
@@ -276,12 +341,18 @@ public class DAO implements AutoCloseable {
             }
           });
       return true;
-
     } catch (Exception e) {
+      e.printStackTrace();
       return false;
     }
   }
 
+  /**
+   * Returns all visited city;s for a user
+   * 
+   * @param userEmail the user email
+   * @return list with all visited citys
+   */
   public List<CityPDB> getVisitedCitys(String userEmail) {
     List<CityPDB> citys = new ArrayList<>();
     try (Session session = driver.session()) {
@@ -311,9 +382,18 @@ public class DAO implements AutoCloseable {
       });
       return citys;
 
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
     }
   }
 
+  /**
+   * Update user
+   * 
+   * @param request user data
+   * @return true if success
+   */
   public boolean updateUser(CreateUserRequestPDB request) {
     try (Session session = driver.session()) {
       String result = session.writeTransaction(new TransactionWork<String>() {
@@ -337,6 +417,12 @@ public class DAO implements AutoCloseable {
 
   }
 
+  /**
+   * Update a city
+   * 
+   * @param request city data
+   * @return true if success
+   */
   public boolean updateCity(CityPDB request) {
     try (Session session = driver.session()) {
       String result = session.writeTransaction(new TransactionWork<String>() {
@@ -358,13 +444,18 @@ public class DAO implements AutoCloseable {
         }
       });
       return true;
-
     } catch (Exception e) {
       e.printStackTrace();
       return false;
     }
   }
 
+  /**
+   * Update a place
+   * 
+   * @param request place data
+   * @return true if sucess
+   */
   public boolean updatePlace(PlacePDB request) {
     try (Session session = driver.session()) {
       String result = session.writeTransaction(new TransactionWork<String>() {
@@ -383,13 +474,18 @@ public class DAO implements AutoCloseable {
         }
       });
       return true;
-
     } catch (Exception e) {
       e.printStackTrace();
       return false;
     }
   }
 
+  /**
+   * Returns all places from a city
+   * 
+   * @param request city request
+   * @return list with places of the city
+   */
   public List<PlacePDB> getPlacesInCity(CityRequestPDB request) {
     List<PlacePDB> places = new ArrayList<>();
     try (Session session = driver.session()) {
@@ -416,7 +512,6 @@ public class DAO implements AutoCloseable {
                     .setLat(r.get(0).get("lat").asFloat())
                     .setLon(r.get(0).get("lon").asFloat()).build())
                 .build());
-
           }
           return true;
         }
@@ -424,9 +519,9 @@ public class DAO implements AutoCloseable {
       return places;
 
     } catch (Exception e) {
+      e.printStackTrace();
       return null;
     }
-
   }
 
   public static void main(String... args) throws Exception {
@@ -487,4 +582,3 @@ public class DAO implements AutoCloseable {
 
   }
 }
-//CREATE (jaedcom:User {email:'j@e.com',name: 'John', description : ' max 160 characters', picture: 'the picture address'})

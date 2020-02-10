@@ -1,0 +1,179 @@
+package main
+
+import (
+	"context"
+	"fmt"
+
+	//"fmt"
+	pb "github.com/joseignacioretamalthomsen/wcity"
+	"google.golang.org/grpc"
+	"log"
+	//"strconv"
+	//"strings"
+
+	//	"net"
+	"time"
+
+	//"errors"
+	//"fmt"
+	//pb "github.com/joseignacioretamalthomsen/wcity"
+	//"google.golang.org/grpc"
+	//"google.golang.org/grpc/resolver"
+	//"time"
+)
+
+const (
+	port = ":60051"
+
+)
+const(
+	//url = "0.0.0.0:5777"
+	url="35.197.216.42:60051";
+	//url = "35.234.146.99:5777"
+	token ="fafcd86b7538c740e84a5869df1c838853ada4c79c99aaef9373cee4339af01c"
+	tokenEmail ="G00341964@gmit.ie"
+)
+
+type profileServer struct {
+	context *profileServiceContext
+}
+
+type profileServiceContext struct {
+	dbClient pb.ProfilesClient
+	timeout time.Duration
+}
+var profSerConn profileServer
+
+// create connection
+func newProfilesServiceContext(endpoint string) (*profileServiceContext, error) {
+	userConn, err := grpc.Dial(
+		endpoint,
+		grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &profileServiceContext{
+		dbClient: pb.NewProfilesClient(userConn),
+		timeout:  time.Second,
+	}
+	return ctx, nil
+}
+
+
+func main(){
+	//conect to server
+	dbserverCtx, err := newProfilesServiceContext(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+	s2 := &profileServer{dbserverCtx}
+	profSerConn = *s2
+
+	fmt.Println(CreateUser("email7","namef","description4",token))
+	//fmt.Println(GetUser(tokenEmail,token))
+	//fmt.Println(UpdateUser(tokenEmail,"updated","updated",token))
+	//fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
+	//fmt.Println(GetCity(tokenEmail,token,"San Pedro" , "Chile"))
+	fmt.Println(CreatePlace(tokenEmail,token,"plaza","san pedro","chile","nada",3,3))
+}
+
+
+func CreateUser(email string,name string, description string,token string) (bool,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.CreateUser(ctx,&pb.UserRequestP{
+		Token:                token,
+		Email:                email,
+		Name:                 name,
+		Description:          description,
+
+	})
+	if err != nil{
+		panic(err)
+	}
+
+	return r.Valid,nil
+}
+
+func GetUser(email string,token string)(pb.UserResponseP,error){
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.GetUser(ctx,&pb.UserRequestP{Email: email,Token:token})
+	if err != nil{
+		panic(err)
+	}
+	return *r,nil
+}
+
+
+func UpdateUser(email string,name string, description string, token string)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.UpdateUser(ctx, &pb.UserRequestP{
+		Token:                token,
+		Email:                email,
+		Name:                 name,
+		Description:          description,
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	return r.Valid
+}
+
+func CreateCity(email string,token string,cityName string,cityCountry string,cityDescription string,lat float32,lon float32)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.CreateCity(ctx,&pb.CityRequestP{
+		Token:                token,
+		Name:                 cityName,
+		Country:              cityCountry,
+		CreatorEmail:         email,
+		Description:          cityDescription,
+		Location:             &pb.GeolocationP{Lat:lat,Lon:lon},
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	return r.Valid
+}
+
+func GetCity(email string,token string,cityName string, cityCounty string )bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.GetCity(ctx,&pb.CityRequestP{
+		Token:                token,
+		Name:                 cityName,
+		Country:              cityCounty,
+		CreatorEmail:         email,
+		})
+
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+func CreatePlace(email string, token string, name string, city string,country string,description string, lat float32, lon float32)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.CreatePlace(ctx,&pb.PlaceRequestP{
+		Token:                token,
+		Name:                 name,
+		City:                 city,
+		Country:              country,
+		CreatorEmail:         email,
+		Description:          description,
+		Location:             &pb.GeolocationP{Lat:lat, Lon:lon},
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}

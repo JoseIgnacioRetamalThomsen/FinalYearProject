@@ -17,7 +17,7 @@ cd docker
 ``
 
 ``
-sudo docker image build -t joseretamal/auth-service:1.0 .
+sudo docker image build -t joseretamal/auth-service:1.1 .
 ``
 
 # run docker image
@@ -27,7 +27,7 @@ sudo docker image build -t joseretamal/auth-service:1.0 .
 better for auto restart
 
 `
-docker run -d -p 5701:5701 --restart always --name hs joseretamal/hash-service:1.0
+docker run -d -p 50051:50051 --restart always --name as joseretamal/hash-service:1.1
 `
 
 
@@ -43,7 +43,7 @@ docker login
 ``
 
 ``
-sudo docker push joseretamal/auth-service:1.0
+sudo docker push joseretamal/auth-service:1.1
 ``
 
 # Check logs
