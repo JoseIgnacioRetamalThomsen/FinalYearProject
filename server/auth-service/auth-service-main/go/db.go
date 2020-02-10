@@ -63,6 +63,7 @@ func newDBContextLoadBalancing() (*dbClientContextLoadBalancing, error) {
 	return ctx, nil
 }
 
+// load balancing
 func getUser(email string) (string,[]byte,[]byte,error){
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -113,10 +114,11 @@ func CreateSession(email string, token string) (bool, error){
 
 }
 
+//load balancib
 func CheckToken(email string, token string) (bool,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	res,err := dbConn.context.dbClient.GetSeassion(ctx, &pb.UserSessionRequest{Email:email,Token:token})
+	res,err := dbConnLB.context.dbClient.GetSeassion(ctx, &pb.UserSessionRequest{Email:email,Token:token})
 	if err!=nil{
 		return false,err
 	}

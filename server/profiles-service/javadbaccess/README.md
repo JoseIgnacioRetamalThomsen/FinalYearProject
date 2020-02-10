@@ -12,7 +12,7 @@ sudo docker image build -t joseretamal/profiles-dba:1.0 .
 
 # run docker image
 ``
- sudo docker  run -d -p  5077:5077 --restart always --name na joseretamal/profiles-dba:1.0
+ sudo docker  run -d -p  5777:5777 --restart always --name na joseretamal/profiles-dba:1.0
 ``
 
 # stop docker image
