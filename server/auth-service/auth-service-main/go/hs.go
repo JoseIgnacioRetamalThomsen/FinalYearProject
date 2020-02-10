@@ -44,7 +44,8 @@ func  validate(pass string, hash []byte,salt []byte) bool{
 	defer cancel()
 	r, err := psCon.context.psClient.Validate(ctx, &pb.ValidateRequest{Password:pass, HasshedPassword: hash , Salt:salt})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("Not valid: %v", err)
+		return false
 	}
 
 	return r.Value

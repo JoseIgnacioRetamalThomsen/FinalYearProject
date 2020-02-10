@@ -9,11 +9,12 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/resolver"
+	"google.golang.org/grpc/status"
 	"log"
 	"net"
 	"os"
@@ -33,6 +34,7 @@ type Configuration struct {
 	Port string
 	Dbs    []string
 	Pss   []string
+	Prof [] string
 }
 
 
@@ -63,7 +65,7 @@ func (s *server) LoginUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRes
 	email, hash , salt ,err := getUser(in.GetEmail())
 	if(err != nil){
 		//user do not exist
-		return &pb.UserResponse{IsUser: false}, err
+		return &pb.UserResponse{IsUser: false}, status.Error(codes.NotFound,"user not found")
 	}
 	email= email
 	// user hash service for check password
@@ -72,7 +74,7 @@ func (s *server) LoginUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRes
 		token := GenerateSecureToken(32)
 		is, err := CreateSession(in.Email, token)
 		if err != nil {
-			return nil, err
+			return nil, status.Error(codes.Internal,"db problem")
 		}
 
 		return &pb.UserResponse{IsUser : is ,Token:token},nil
@@ -86,21 +88,29 @@ func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRe
 
 	log.Printf("Received: %v", "create user")
 	if(len(in.HashPassword) <=6){
-		return nil, errors.New("Password to short")
+		return nil, status.Error(codes.InvalidArgument,"Invalid password")
 	}
 	hash, salt := hash(in.HashPassword)
 
 	email,id, err := addUser(in.Email,hash,salt)
-	email =email
+
 	id = id
 	if err!=nil{
-		return nil, err
+		return nil, status.Error(codes.Internal,"database problem")
 	}
 	token := GenerateSecureToken(32)
 	is, err := CreateSession(in.Email, token)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal,"db problem")
 	}
+
+	// add to profiles db
+	 CreateUser(email,token,"Plese input your name","Your description")
+	/*if res == false{
+		log.Printf("can create: %v", err)
+		return nil,status.Error(codes.Internal,"cant create")
+	}
+*/
 
 	return &pb.UserResponse{ IsUser: is, Token: token}, nil
 }
@@ -114,12 +124,12 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserRe
 	pass =pass
 	salt =salt
 	if err!=nil{
-		return nil, errors.New("Can't create or update.")
+		return nil, status.Error(codes.InvalidArgument,"Can't create or update.")
 	}
 	token := GenerateSecureToken(32)
 	is, err := CreateSession(email, token)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal,"database problem")
 	}
 
 	return &pb.UserResponse{IsUser: is, Token: token}, nil
@@ -201,6 +211,14 @@ func main() {
 	s3 := &clientDBLoadBalancing{dbserverCtxLB}
 	dbConnLB = *s3
 
+	// conect to profiles
+
+	profilesCtx, err := newProfilesServiceContext(configuration.Prof[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+	s4 := &profileServer{profilesCtx}
+	profSerConn = *s4
 	//fmt.Print("helloworld")
 	//x,y := hash("helloworld678")
      //fmt.Print(x,y)
@@ -228,6 +246,7 @@ func main() {
 	//updateUser("Emailu3i",x,y)
 
 	//fmt.Print("Service started")
+	log.Printf("Started: %v", " service")
 
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
