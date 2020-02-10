@@ -12,11 +12,11 @@ sudo docker image build -t joseretamal/profiles-dba:1.1 .
 
 # run docker image
 ``
-<<<<<<< HEAD
+
  sudo docker  run -d -p  5777:5777 --restart always --name na joseretamal/profiles-dba:1.1
-=======
- sudo docker  run -d -p  5777:5777 --restart always --name na joseretamal/profiles-dba:1.0
->>>>>>> Loginfeatur_grpc
+
+
+
 ``
 
 # stop docker image
@@ -28,7 +28,7 @@ sudo docker container rm --force na
 
 `
 sudo docker push joseretamal/profiles-dba:1.1
-` 
+`
 
 
 # run neo4j service on docker
