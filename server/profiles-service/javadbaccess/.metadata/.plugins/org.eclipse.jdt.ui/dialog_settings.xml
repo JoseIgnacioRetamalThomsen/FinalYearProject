@@ -39,6 +39,22 @@
 	<section name="ClasspathContainerSelectionPage">
 		<item key="index" value="0"/>
 	</section>
+<<<<<<< HEAD
+	<section name="FatJarPackageWizard">
+		<item key="FatJarPackageWizardPage.ANTSCRIPT_SAVE" value="false"/>
+		<item key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION" value="/home/pepe/Desktop/FinalYearProject/FinalYearProject/server/profiles-service/javadbaccess"/>
+		<item key="FatJarPackageWizardPage.LIBRARY_HANDLING" value="1"/>
+		<item key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME" value="ProfileDBServer - profiles"/>
+		<item key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION" value="/home/pepe/Desktop/FinalYearProject/FinalYearProject/server/profiles-service/javadbaccess/docker/profilesdba.jar"/>
+		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="/home/pepe/Desktop/FinalYearProject/FinalYearProject/server/profiles-service/javadbaccess/docker/profilesdba.jar"/>
+		</list>
+		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="/home/pepe/Desktop/FinalYearProject/FinalYearProject/server/profiles-service/javadbaccess.xml"/>
+			<item value=".xml"/>
+		</list>
+	</section>
+=======
 	<section name="SourceActionDialog.constructors">
 		<item key="VisibilityModifier" value="1"/>
 		<item key="FinalModifier" value="false"/>
@@ -104,4 +120,5 @@
 	</section>
 	<section name="BreadcrumbItemDropDown">
 	</section>
+>>>>>>> origin
 </section>
