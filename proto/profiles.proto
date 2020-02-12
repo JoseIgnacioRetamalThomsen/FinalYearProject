@@ -18,11 +18,13 @@ service Profiles{
     rpc UpdateCity(CityRequestP) returns (CityResponseP);
     rpc UpdatePlace(PlaceRequestP) returns (PlaceResponseP);
     rpc GetCity(CityRequestP) returns (CityResponseP);
+    //  request only need : email, token,name,city and country in request
     rpc GetPlace(PlaceRequestP) returns (PlaceResponseP);
     rpc VisitCity(VisitCityRequestP) returns (VisitCityResponseP);
     rpc VisitPlace(VisitPlaceRequestP) returns (VisitPlaceResponseP);
     rpc GetVisitedCitys(VisitedRequestP) returns (VisitedCitysResponseP);
     rpc GetVisitedPlaces(VisitedRequestP) returns (VisitedPlacesResponseP);
+    // reques only need email,tokem, city name and city coutry
     rpc GetCityPlaces(CityRequestP) returns (VisitedPlacesResponseP); 
 
 
