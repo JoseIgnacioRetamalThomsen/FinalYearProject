@@ -41,8 +41,8 @@ import io.grpc.wcity.profilesDB.VisitedPlacesResponsePDB;
  */
 public class ProfileDBImp extends ProfilesDBImplBase {
 
-   private final static String URL = "bolt://10.154.0.6:7687";
-  //private final static String URL = "bolt://0.0.0.0:7687";
+  // private final static String URL = "bolt://10.154.0.6:7687";
+  private final static String URL = "bolt://0.0.0.0:7687";
   private final static String USER_NAME = "neo4j";
   private final static String PASSWORD = "test";
 

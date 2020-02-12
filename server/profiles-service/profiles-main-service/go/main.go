@@ -227,6 +227,220 @@ func (s *server) CreatePlace(ctx context.Context, in *pb.PlaceRequestP) (*pb.Pla
 	},nil
 }
 
+func (s *server) UpdateCity(ctx context.Context, in *pb.CityRequestP) (*pb.CityResponseP, error) {
+	log.Printf("Received: %v", "update city")
+
+	//check token
+	isToken := CheckToken(in.CreatorEmail,in.Token)
+
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+
+	res, err := UpdateCity(in.Name,in.Country,in.CreatorEmail,in.Description,in.Location.Lat,in.Location.Lon)
+	if err!= nil{
+		panic(err)
+	}
+
+	return &pb.CityResponseP{
+		Valid:                res,
+		Name:                 in.Name,
+		Country:              in.Country,
+		CreatorEmail:         in.CreatorEmail,
+		Description:          in.Description,
+		Location:             &pb.GeolocationP{
+			Lon:                  in.Location.Lon,
+			Lat:                  in.Location.Lat,
+
+		},
+	},nil
+}
+
+func (s *server) UpdatePlace(ctx context.Context, in *pb.PlaceRequestP) (*pb.PlaceResponseP, error) {
+	log.Printf("Received: %v", "Update place")
+	//check token
+	isToken := CheckToken(in.CreatorEmail,in.Token)
+
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+
+	res, err := UpdatePlace(in.Name, in.City,in.Country,in.CreatorEmail,in.Description,in.Location.GetLat(),in.Location.GetLon())
+	if err!= nil{
+		panic(err)
+	}
+
+	return &pb.PlaceResponseP{
+		Valid:                res,
+		Name:                 in.Name,
+		City:                 in.City,
+		Country:              in.Country,
+		CreatorEmail:         in.CreatorEmail,
+		Description:          in.Description,
+		Location:             &pb.GeolocationP{Lat:in.Location.GetLat(),Lon:in.Location.GetLon()},
+	},nil
+}
+
+
+
+func (s *server) GetPlace(ctx context.Context, in *pb.PlaceRequestP) (*pb.PlaceResponseP, error) {
+	log.Printf("Received: %v", "Get place")
+	//check token
+	isToken := CheckToken(in.CreatorEmail,in.Token)
+
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+
+	res, err := GetPlace(in.Name,in.City,in.Country)
+	if err!= nil{
+		panic(err)
+	}
+
+	return &pb.PlaceResponseP{
+		Valid:                true,
+		Name:                 res.Name,
+		City:                 res.City,
+		Country:              res.Country,
+		CreatorEmail:         res.CreatorEmail,
+		Description:          res.Description,
+		Location:             &pb.GeolocationP{Lat:res.Location.GetLat(),Lon:res.Location.GetLon()},
+	},nil
+}
+
+func (s *server) VisitCity(ctx context.Context, in *pb.VisitCityRequestP) (*pb.VisitCityResponseP, error) {
+	log.Printf("Received: %v: %v", "Visir city", in.CityName)
+	//check token
+	isToken := CheckToken(in.Email,in.Token)
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+		res,err := VisitCity(in.Email,in.CityName,in.CityCountry)
+	if err!= nil{
+		panic(err)
+	}
+		return &pb.VisitCityResponseP{
+		Valid:                res.Valid,
+		Email:                res.Email,
+		CityName:             res.CityName,
+		CityCountry:          res.CityCountry,
+		},nil
+}
+
+func (s *server) VisitPlace(ctx context.Context, in *pb.VisitPlaceRequestP) (*pb.VisitPlaceResponseP, error) {
+	log.Printf("Received: %v: %v", "Visir city", in.PlaceName)
+	//check token
+	isToken := CheckToken(in.Email, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res,err := VisitPlace(in.Email,in.PlaceName,in.PlaceCity,in.PlaceCountry)
+	if err!= nil{
+		panic(err)
+	}
+	return &pb.VisitPlaceResponseP{
+		Valid:                res.Valid,
+		Email:                res.Email,
+		PlaceName:            res.PlaceName,
+		PlaceCity:            res.PlaceCity,
+		PlaceCountry:         res.PlaceCountry,
+		},nil
+}
+
+
+func (s *server) GetVisitedCitys(ctx context.Context, in *pb.VisitedRequestP) (*pb.VisitedCitysResponseP, error) {
+	log.Printf("Received: %v: %v", "Visited city's", in.Email)
+	//check token'
+	isToken := CheckToken(in.Email, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res,err := GetVisitedCitys(in.Email)
+	if err!= nil{
+		panic(err)
+	}
+	var a []*pb.CityResponseP
+	for _,e := range res.Citys{
+		a =append(a, &pb.CityResponseP{
+			Valid:                true,
+			Name:                 e.Name,
+			Country:              e.Country,
+			CreatorEmail:         e.CreatorEmail,
+			Description:          e.Description,
+			Location:             &pb.GeolocationP{Lat:e.Location.Lat,Lon:e.Location.Lon},
+
+		})
+	}
+	return &pb.VisitedCitysResponseP{
+		Valid:                true,
+		Email:                res.Email,
+		Citys:                a,
+		},nil
+}
+
+func (s *server) GetVisitedPlaces(ctx context.Context, in *pb.VisitedRequestP) (*pb.VisitedPlacesResponseP, error) {
+	log.Printf("Received: %v: %v", "Visited place's", in.Email)
+	//check token'
+	isToken := CheckToken(in.Email, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+	res, err := GetVisitedPlaces(in.Email)
+	if err != nil {
+		panic(err)
+	}
+	var a []*pb.PlaceResponseP
+	for _,e := range res.Places{
+		a = append(a,&pb.PlaceResponseP{
+			Valid:                true,
+			Name:                 e.Name,
+			City:                 e.City,
+			Country:              e.Country,
+			CreatorEmail:         e.CreatorEmail,
+			Description:          e.Description,
+			Location:             &pb.GeolocationP{Lat:e.Location.Lat,Lon:e.Location.Lon},
+		})
+	}
+	return &pb.VisitedPlacesResponseP{
+		Valid:                true,
+		Email:                in.Email,
+		Places:               a,
+	},nil
+}
+
+func (s *server) GetCityPlaces(ctx context.Context, in *pb.CityRequestP) (*pb.VisitedPlacesResponseP, error) {
+	log.Printf("Received: %v: %v", "Visited place's", in.CreatorEmail)
+	//check token'
+	isToken := CheckToken(in.CreatorEmail, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res,err := GetPlacesCity(in.Name,in.Country)
+	if err != nil {
+		panic(err)
+	}
+	var a []*pb.PlaceResponseP
+	for _,e := range res.Places{
+		a = append(a,&pb.PlaceResponseP{
+			Valid:                true,
+			Name:                 e.Name,
+			City:                 e.City,
+			Country:              e.Country,
+			CreatorEmail:         e.CreatorEmail,
+			Description:          e.Description,
+			Location:             &pb.GeolocationP{Lat:e.Location.Lat,Lon:e.Location.Lon},
+		})
+	}
+	return &pb.VisitedPlacesResponseP{
+		Valid:                true,
+		Email:                in.CreatorEmail,
+		Places:               a,
+	},nil
+}
+
 func main(){
 	//conect to neo4j db
 	dbserverCtx, err := newNeo4jDBContext(url)

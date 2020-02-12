@@ -27,11 +27,11 @@ const (
 
 )
 const(
-	//url = "0.0.0.0:5777"
-	url="35.197.216.42:60051";
+	url = "0.0.0.0:60051"
+	//url="35.197.216.42:60051";
 	//url = "35.234.146.99:5777"
-	token ="fafcd86b7538c740e84a5869df1c838853ada4c79c99aaef9373cee4339af01c"
-	tokenEmail ="G00341964@gmit.ie"
+	token ="c1ce3461b81275c72c7dd7bbe6372bfcf099d83fb383ade531935ca4610cb4b6"
+	tokenEmail ="a@a.com"
 )
 
 type profileServer struct {
@@ -69,12 +69,20 @@ func main(){
 	s2 := &profileServer{dbserverCtx}
 	profSerConn = *s2
 
-	fmt.Println(CreateUser("email7","namef","description4",token))
+	//fmt.Println(CreateUser("email7","namef","description4",token))
 	//fmt.Println(GetUser(tokenEmail,token))
-	//fmt.Println(UpdateUser(tokenEmail,"updated","updated",token))
+	//fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
 	//fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
 	//fmt.Println(GetCity(tokenEmail,token,"San Pedro" , "Chile"))
-	fmt.Println(CreatePlace(tokenEmail,token,"plaza","san pedro","chile","nada",3,3))
+	//fmt.Println(CreatePlace(tokenEmail,token,"plaza","san pedro","chile","nada",3,3))
+	//fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
+	//fmt.Println(UpdatePlace(tokenEmail,token,"plaza","san pedro","chile","Algo",3,3))
+	//fmt.Println(GetPlace(tokenEmail,token, "plaza","San Pedro", "chile"))
+//	fmt.Println(VisitCity(tokenEmail,token,"San Pedro","Chile"))
+//fmt.Println(VisitPlace(tokenEmail,token,"plaza","san pedro","chile"))
+//fmt.Println(GetVisitedCity(tokenEmail,token))
+//fmt.Println(GetVisitedPlaces(tokenEmail,token))
+fmt.Println(GetCityPlaces(tokenEmail,token,"san Pedro","chile"))
 }
 
 
@@ -171,6 +179,142 @@ func CreatePlace(email string, token string, name string, city string,country st
 		Location:             &pb.GeolocationP{Lat:lat, Lon:lon},
 
 	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+func UpdateCity(email string,token string,cityName string,cityCountry string,cityDescription string,lat float32,lon float32)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.UpdateCity(ctx,&pb.CityRequestP{
+		Token:                token,
+		Name:                 cityName,
+		Country:              cityCountry,
+		CreatorEmail:         email,
+		Description:          cityDescription,
+		Location:             &pb.GeolocationP{Lat:lat,Lon:lon},
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	return r.Valid
+}
+
+func UpdatePlace(email string, token string, name string, city string,country string,description string, lat float32, lon float32)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.UpdatePlace(ctx,&pb.PlaceRequestP{
+		Token:                token,
+		Name:                 name,
+		City:                 city,
+		Country:              country,
+		CreatorEmail:         email,
+		Description:          description,
+		Location:             &pb.GeolocationP{Lat:lat, Lon:lon},
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+func GetPlace(email string, token string, name string, city string,country string)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.GetPlace(ctx,&pb.PlaceRequestP{
+		Token:                token,
+		Name:                name,
+		City:                 city,
+		Country:              country,
+		CreatorEmail:         email,
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+func VisitCity(email string, token string, name string,country string)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.VisitCity(ctx,&pb.VisitCityRequestP{
+		Token:       token,
+		Email:       email,
+		CityName:    name,
+		CityCountry: country,
+	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+func VisitPlace(email string, token string, name string,city string,country string)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.VisitPlace(ctx,&pb.VisitPlaceRequestP{
+		Token:                token,
+		Email:                email,
+		PlaceName:            name,
+		PlaceCity:            city,
+		PlaceCountry:         country,
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+
+func GetVisitedCity(email string, token string)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.GetVisitedCitys(ctx,&pb.VisitedRequestP{
+		Token:                token,
+		Email:                email,
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+func GetVisitedPlaces(email string, token string)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.GetVisitedPlaces(ctx,&pb.VisitedRequestP{
+		Token:                token,
+		Email:                email,
+
+	})
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+func GetCityPlaces(email string, token string, cityName string, cityCountry string)bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.GetCityPlaces(ctx,&pb.CityRequestP{
+		Token:                token,
+		Name:                 cityName,
+		Country:              cityCountry,
+		})
 	if err != nil{
 		panic(err)
 	}

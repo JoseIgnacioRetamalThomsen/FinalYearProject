@@ -16,7 +16,7 @@ service Profiles{
     rpc CreateCity(CityRequestP) returns  (CityResponseP);
     rpc CreatePlace(PlaceRequestP) returns (PlaceResponseP);
     rpc UpdateCity(CityRequestP) returns (CityResponseP);
-    rpc UpdatePlace(PlaceRequestP) returns (CityResponseP);
+    rpc UpdatePlace(PlaceRequestP) returns (PlaceResponseP);
     rpc GetCity(CityRequestP) returns (CityResponseP);
     rpc GetPlace(PlaceRequestP) returns (PlaceResponseP);
     rpc VisitCity(VisitCityRequestP) returns (VisitCityResponseP);

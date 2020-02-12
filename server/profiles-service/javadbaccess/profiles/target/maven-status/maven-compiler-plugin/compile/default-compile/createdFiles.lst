@@ -20,6 +20,7 @@ io/grpc/wcity/profilesDB/VisitPlaceRequestPDBOrBuilder.class
 io/grpc/wcity/profilesDB/VisitedPlacesRequestPDB$Builder.class
 io/grpc/wcity/profilesDB/VisitCityResponsePDB.class
 io/grpc/wcity/profilesDB/CityPDBOrBuilder.class
+ie/gmit/wcity/profile/DAO$12.class
 io/grpc/wcity/profilesDB/ProfilesDBGrpc$ProfilesDBBlockingStub.class
 io/grpc/wcity/profilesDB/UserResponsePDB$Builder.class
 io/grpc/wcity/profilesDB/VisitPlaceResponsePDB$1.class
@@ -61,6 +62,7 @@ io/grpc/wcity/profilesDB/UserResponsePDB.class
 io/grpc/wcity/profilesDB/UpdatedUserRequestPDB$1.class
 ie/gmit/wcity/profile/DAO$11.class
 io/grpc/wcity/profilesDB/ProfilesDBGrpc$ProfilesDBImplBase.class
+ie/gmit/wcity/profile/DAO$14.class
 io/grpc/wcity/profilesDB/CityMinPDB$Builder.class
 io/grpc/wcity/profilesDB/VisitedPlacesRequestPDB$1.class
 io/grpc/wcity/profilesDB/VisitedCitysResponsePDBOrBuilder.class
@@ -81,6 +83,7 @@ io/grpc/wcity/profilesDB/UpdatedUserRequestPDB.class
 io/grpc/wcity/profilesDB/CreateUserResponsePDB.class
 io/grpc/wcity/profilesDB/GeolocationPDBOrBuilder.class
 io/grpc/wcity/profilesDB/VisitCityRequestPDB$1.class
+ie/gmit/wcity/profile/DAO$13.class
 io/grpc/wcity/profilesDB/CreateUserResponsePDBOrBuilder.class
 ie/gmit/wcity/profile/DAO$9.class
 io/grpc/wcity/profilesDB/CityRequestPDB$Builder.class

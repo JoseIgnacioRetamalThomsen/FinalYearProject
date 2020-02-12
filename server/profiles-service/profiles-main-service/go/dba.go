@@ -55,7 +55,7 @@ func UpdateCity(name string, country string, creatorEmail string, description st
 
 	})
 	if err != nil {
-		panic(err)
+		return false,nil
 	}
 	return r.Valid,nil
 
