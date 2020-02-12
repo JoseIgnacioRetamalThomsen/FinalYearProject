@@ -71,11 +71,10 @@ public class LoginClient {
                 isUser = response.getIsUser();
                 if (isUser) {
                     token = response.getToken();
-                } else token = null;
+                } else token = "User is not registered";
             }
             catch (StatusRuntimeException e) {
-                token = "";
-
+                token = "StatusRuntimeException";
             }
             return token;
       }

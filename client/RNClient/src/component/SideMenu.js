@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import {View, Image, SafeAreaView, ScrollView, NativeModules} from 'react-native';
-import {Text, List, ListItem} from 'native-base';
+import {Animated, View, Image, SafeAreaView, ScrollView, NativeModules} from 'react-native';
+import {Text, List, ListItem, Root, ActionSheet} from 'native-base';
 import {IMAGE} from '../constants/Image'
 import GeoLoc from "./GeoLoc";
-import AsyncStorage from "@react-native-community/async-storage";
-import {logger} from 'react-native-logger'
+import AsyncStorage from '@react-native-community/async-storage'
+import PhotoUpload from 'react-native-photo-upload'
 
 class SideMenu extends Component {
+
     async logout() {
         try {
             AsyncStorage.getAllKeys((err, keys) => {
@@ -38,11 +39,18 @@ class SideMenu extends Component {
 
     render() {
         return (
+            <Root>
             <SafeAreaView style={{flex: 1}}>
-                <View style={{height: 150, alignItems: 'center', justifyContent: 'center'}}>
-                    <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={{height: 120, width: 120, borderRadius: 60}}/>
+                <Animated.View style={{height: 150, alignItems: 'center', justifyContent: 'center'}}>
+                    <PhotoUpload onPhotoSelect={avatar => {
+                        if (avatar) {
+                            console.log('Image base64 string: ', avatar)
+                        }
+                    }}>
+                       <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={{height: 120, width: 120, borderRadius: 60,  resizeMode:'cover'}}/>
+                        </PhotoUpload>
                     {/*<GeoLoc/>*/}
-                </View>
+                </Animated.View>
                 <ScrollView>
                     <List>
                         <ListItem onPress={() => this.props.navigation.navigate('Profile')}>
@@ -63,6 +71,7 @@ class SideMenu extends Component {
                     </List>
                 </ScrollView>
             </SafeAreaView>
+            </Root>
         )
     }
 }

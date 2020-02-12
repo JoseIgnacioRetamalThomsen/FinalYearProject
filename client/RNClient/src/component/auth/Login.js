@@ -5,8 +5,9 @@ import {
     TextInput,
     TouchableHighlight,
     Image,
-    NativeModules
+    TouchableOpacity
 } from 'react-native'
+import LoginModule from '../Modules'
 import styles from '../../styles/Style'
 import AsyncStorage from '@react-native-community/async-storage'
 import {logger} from "react-native-logger"
@@ -20,36 +21,41 @@ class Login extends Component {
             message: '',
             token: '',
             isUser: false,
+            hidePassword: true
         }
+    }
+    setPasswordVisibility = () => {
+        this.setState({ hidePassword: !this.state.hidePassword });
     }
 
     async onClickListenerLogin() {
-       //  let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-       //  let isCorrectEmail = emailRegex.test(this.state.email)
-       //
-       //  let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/i
-       //  let isCorrectPassword = passwordRegex.test(this.state.password)
-       //
-       //  if (isCorrectEmail === false)
-       //      this.setState({message: 'Email is not correct'})
-       //  else if (isCorrectPassword === false)
-       //      this.setState({
-       //          message: "Password has to be at least 6 characters long, " +
-       //              "contain at least 1 lowercase, 1 uppercase alphabetical character, " +
-       //              "1 numeric character and 1 special symbol"
-       //      })
-       // else {
-            NativeModules.LoginModule.loginUser(
+        let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+        let isCorrectEmail = emailRegex.test(this.state.email)
+
+        let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/i
+        let isCorrectPassword = passwordRegex.test(this.state.password)
+
+        if (isCorrectEmail === false)
+            this.setState({message: 'Email is not correct'})
+        else if (isCorrectPassword === false)
+            this.setState({
+                message: "Password has to be at least 6 characters long, " +
+                    "contain at least 1 lowercase, 1 uppercase alphabetical character, " +
+                    "1 numeric character and 1 special symbol"
+            })
+        else {
+            LoginModule.loginUser(
                 this.state.email,
                 this.state.password,
                 (err) => {
-                    logger.log(err.message())
-                    this.setState({message: 'Incorrect email or password'})
+                    this.setState({message: 'Incorrect email or password' + err})
                 },
                 async (token) => {
                     let value
-                    if (token === "") {
-                        this.setState({message: 'Email is not registered'})
+                    if (token === "StatusRuntimeException") {
+                        this.setState({message: 'Server is unavailable'})
+                    } else  if (token === "User is not registered") {
+                        this.setState({message: 'User is not registered'})
                     } else {
                         try {
                             await AsyncStorage.setItem(this.state.email, token)
@@ -64,12 +70,11 @@ class Login extends Component {
                         console.log("token " + token)
                         this.setState({message: 'Success'})
                         this.props.navigation.navigate('app')
-                    }
+                   }
                 }
             )
         }
-   // }
-
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -87,9 +92,12 @@ class Login extends Component {
 
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={require('../../img/key.png')}/>
+                    <TouchableOpacity activeOpacity={0.8} style={styles.touchableButton} onPress={this.setPasswordVisibility}>
+                        <Image source={(this.state.hidePassword) ? require('../../img/hide.png') : require('../../img/key.png')} style={styles.buttonImage} />
+                    </TouchableOpacity>
                     <TextInput style={styles.inputs}
                                placeholder="Password"
-                               secureTextEntry={true}
+                               secureTextEntry={this.state.hidePassword}
                                underlineColorAndroid='transparent'
                                onChangeText={(password) => this.setState({password})}/>
                 </View>
@@ -114,3 +122,4 @@ class Login extends Component {
 }
 
 export default Login
+

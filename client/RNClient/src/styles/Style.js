@@ -71,5 +71,17 @@ export default StyleSheet.create({
         width: OtherConstants.width-60,
         borderRadius:8,
         resizeMode:'contain'
+    },
+    touchableButton: {
+        position: 'absolute',
+        right: 3,
+        height: 40,
+        width: 35,
+        padding: 2
+    },
+    buttonImage: {
+        resizeMode: 'contain',
+        height: '100%',
+        width: '100%',
     }
 })

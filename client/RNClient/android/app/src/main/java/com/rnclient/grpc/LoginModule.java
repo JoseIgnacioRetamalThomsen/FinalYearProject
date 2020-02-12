@@ -32,22 +32,17 @@ public class LoginModule  extends ReactContextBaseJavaModule {
      @ReactMethod
         public void createUser(String email,String password,Callback errorCallback,
         Callback successCallback) {
-        LoginClient client = new LoginClient("35.197.216.42", 50051);
             String token = "";
             String response = client.createUser(email,password);
             try {
                 if(response == null) {
                    token = "StatusRuntimeException";
-                   // errorCallback.invoke(e.getMessage());
+                    //errorCallback.invoke(token);
                      } else token = response;
                 successCallback.invoke(token);
               } catch (Exception e) {
                 errorCallback.invoke(e.getMessage());
               }
-/*
-                          if(token == "") {
-                              errorCallback.invoke(token);
-                           } else successCallback.invoke(token);*/
         }
 
         /* @ReactMethod
@@ -70,32 +65,25 @@ public class LoginModule  extends ReactContextBaseJavaModule {
         @ReactMethod
         public void loginUser(String email,String password,Callback errorCallback,
                  Callback successCallback) {
-            LoginClient client = new LoginClient("35.197.216.42", 50051);
-           /* String token = client.loginUser(email,password);
-            if(token == null) {
-                errorCallback.invoke("");
-             } else successCallback.invoke(token);*/
-             String msg;
-             String res = client.loginUser(email,password);
-             if (res==null) {
-             msg="null";
-              errorCallback.invoke(msg);
-             }
-             else msg = res;
 
-             try {
-                successCallback.invoke(msg);
-               } catch (Exception e) {
-                 errorCallback.invoke(msg);
-               }
+                 String token = "";
+                           String response = client.loginUser(email,password);
+                           try {
+                               if(response == null) {
+                                  token = "User is not registered";
+                                  //errorCallback.invoke(token);
+                                    } else token = response;
+                               successCallback.invoke(token);
+                             } catch (Exception e) {
+                               errorCallback.invoke(e.getMessage());
+                             }
         }
 
         @ReactMethod
         public void checkToken(String token,String email,Callback errorCallback,
             Callback successCallback) {
-            LoginClient client = new LoginClient("35.197.216.42", 50051);
-            boolean result = client.checkToken(token, email);
 
+            boolean result = client.checkToken(token, email);
 
             if(result == false) {
                 errorCallback.invoke(false);

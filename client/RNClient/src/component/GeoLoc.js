@@ -57,7 +57,7 @@ export default class GeoLoc extends Component {
         if (this.state.error) {
             text = this.state.error;
         } else if (this.state.Address) {
-            text = JSON.stringify(this.state.Address);
+            text = this.state.Address
         }
         return (
             <View>
