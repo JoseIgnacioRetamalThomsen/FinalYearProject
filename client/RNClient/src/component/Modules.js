@@ -1,4 +1,5 @@
 import {NativeModules} from 'react-native';
 module.exports = NativeModules.LoginModule,
-                 NativeModules.ProfilesModule;
+                 NativeModules.ProfilesModule,
+                 NativeModules.PhotosModule;
 

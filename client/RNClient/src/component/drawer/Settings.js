@@ -3,7 +3,7 @@ import {Button, NativeModules, TextInput, View} from 'react-native';
 import CustomHeader from '../CustomHeader'
 import styles from "../../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
-import ProfilesModule from '../Modules'
+import Modules from '../Modules'
 
 class Settings extends Component {
     constructor(props) {

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+
+package wcity;
+
+option java_multiple_files = true;
+option java_package = "io.grpc.wcity.photo";
+option java_outer_classname = "PhotoProto";
+option objc_class_prefix = "RPC";
+
+service PhotosService{
+    rpc GetProfilePhoto(ProfilePhotoRequestP) returns (ProfilePhotoResponseP);
+}
+
+message ProfilePhotoRequestP{
+    string email = 1;
+    string token = 2;
+}
+
+message ProfilePhotoResponseP{
+    string email = 1;
+    bool valid = 2;
+    string url =3;
+}

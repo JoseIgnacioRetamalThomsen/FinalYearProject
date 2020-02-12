@@ -6,8 +6,7 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
-    TouchableOpacity,
-    NativeModules, TextInput
+    NativeModules,
 } from 'react-native';
 import {Text} from 'native-base';
 import CustomHeader from '../CustomHeader'
@@ -17,7 +16,7 @@ import PhotoUpload from "react-native-photo-upload";
 import {Card, Icon} from 'react-native-elements'
 import Settings from "./Settings";
 import AsyncStorage from "@react-native-community/async-storage";
-//import { Provider } from "react-redux";
+
 let key;
 
 class Profile extends Component {
@@ -52,6 +51,16 @@ class Profile extends Component {
                                 this.setState({description: description})
                                 console.log("successful")
                             })
+                        NativeModules.PhotosModule.getProfilePhoto(
+                            key,
+                            value,
+                            (err) => {
+                                console.log("In profile photo " + err)
+                            },
+                            (avatar_url) => {
+                                this.setState({avatar_url: avatar_url})
+                                console.log("successful photo get() " + avatar_url)
+                            })
                     }
                 })
             })
@@ -59,11 +68,12 @@ class Profile extends Component {
     }
 
     render() {
-        let {
-            name,
-            description,
-        } = this.state;
-
+        // let {
+        //     avatar_url,
+        //     name,
+        //     description
+        // } = this.state;
+//console.log("in render "+avatar_url)
         return (
             <View style={{flex: 1}}>
                 <CustomHeader title="Profile" navigation={this.props.navigation}/>
@@ -83,10 +93,14 @@ class Profile extends Component {
                                         console.log('Image base64 string: ', avatar)
                                     }
                                 }}>
-                                    <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={{
+                                    <Image source={{uri:this.state.avatar_url}}
+
+                                           style={{
                                         height: 120,
                                         width: 120,
                                         borderRadius: 60,
+                                        borderColor: 'black',
+                                        borderWidth: 5,
                                         flex: 0,
                                         resizeMode: 'cover'
                                     }}/>
@@ -99,20 +113,20 @@ class Profile extends Component {
                             <Text>Email {key} </Text>
                             </View>
                             <View>
-                                <Text>Name {name} </Text>
+                                <Text>Name {this.state.name} </Text>
                             </View>
                             <View>
-                                <Text>Description {description} </Text>
+                                <Text>Description {this.state.description} </Text>
                             </View>
                         </View>
                         <Button style={styles.buttonContainer} title="Edit Profile"
                                 onPress={() => this.props.navigation.navigate("Settings")}></Button>
-                        <Icon
-                            name="place"
-                            underlayColor="transparent"
-                            iconStyle={styles.placeIcon}
-                            // onPress={this.onPressPlace}
-                        />
+                        {/*<Icon*/}
+                        {/*    name="place"*/}
+                        {/*    underlayColor="transparent"*/}
+                        {/*    iconStyle={styles.placeIcon}*/}
+                        {/*    // onPress={this.onPressPlace}*/}
+                        {/*/>*/}
                     </View>
 
                 </ScrollView>

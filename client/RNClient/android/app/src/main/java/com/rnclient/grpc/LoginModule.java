@@ -4,11 +4,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.wcity.grpc.LoginClient;
+
 import io.grpc.wcity.login.UserResponse;
 
 import com.facebook.react.bridge.Callback;
 
-public class LoginModule  extends ReactContextBaseJavaModule {
+public class LoginModule extends ReactContextBaseJavaModule {
 
     private static ReactApplicationContext reactContext;
 
@@ -18,7 +19,7 @@ public class LoginModule  extends ReactContextBaseJavaModule {
     private static final int PORT_NUMBER = 50051;
     private static LoginClient client;
 
-   public  LoginModule(ReactApplicationContext context) {
+    public LoginModule(ReactApplicationContext context) {
         super(context);
         reactContext = context;
         client = new LoginClient(IP_ADDRESS, PORT_NUMBER);
@@ -29,21 +30,21 @@ public class LoginModule  extends ReactContextBaseJavaModule {
         return "LoginModule";
     }
 
-     @ReactMethod
-        public void createUser(String email,String password,Callback errorCallback,
-        Callback successCallback) {
-            String token = "";
-            String response = client.createUser(email,password);
-            try {
-                if(response == null) {
-                   token = "StatusRuntimeException";
-                    //errorCallback.invoke(token);
-                     } else token = response;
-                successCallback.invoke(token);
-              } catch (Exception e) {
-                errorCallback.invoke(e.getMessage());
-              }
+    @ReactMethod
+    public void createUser(String email, String password, Callback errorCallback,
+                           Callback successCallback) {
+        String token;
+        String response = client.createUser(email, password);
+        try {
+            if (response == null) {
+                token = "StatusRuntimeException";
+                //errorCallback.invoke(token);
+            } else token = response;
+            successCallback.invoke(token);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
         }
+    }
 
         /* @ReactMethod
         public void updateUser(String email,String password,Callback errorCallback,
@@ -62,42 +63,41 @@ public class LoginModule  extends ReactContextBaseJavaModule {
               }
         }*/
 
-        @ReactMethod
-        public void loginUser(String email,String password,Callback errorCallback,
-                 Callback successCallback) {
+    @ReactMethod
+    public void loginUser(String email, String password, Callback errorCallback,
+                          Callback successCallback) {
 
-                 String token = "";
-                           String response = client.loginUser(email,password);
-                           try {
-                               if(response == null) {
-                                  token = "User is not registered";
-                                  //errorCallback.invoke(token);
-                                    } else token = response;
-                               successCallback.invoke(token);
-                             } catch (Exception e) {
-                               errorCallback.invoke(e.getMessage());
-                             }
+        String token;
+        String response = client.loginUser(email, password);
+        try {
+            if (response == null) {
+                token = "User is not registered";
+                //errorCallback.invoke(token);
+            } else token = response;
+            successCallback.invoke(token);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
         }
+    }
 
-        @ReactMethod
-        public void checkToken(String token,String email,Callback errorCallback,
-            Callback successCallback) {
+    @ReactMethod
+    public void checkToken(String token, String email, Callback errorCallback,
+                           Callback successCallback) {
 
-            boolean result = client.checkToken(token, email);
+        boolean result = client.checkToken(token, email);
 
-            if(result == false) {
-                errorCallback.invoke(false);
-            } else successCallback.invoke(true);
-        }
+        if (result == false) {
+            errorCallback.invoke(false);
+        } else successCallback.invoke(true);
+    }
 
+    @ReactMethod
+    public void logout(String token, String email, Callback errorCallback,
+                       Callback successCallback) {
+        boolean result = client.logout(token, email);
 
-            @ReactMethod
-            public void logout(String token, String email, Callback errorCallback,
-            Callback successCallback) {
-            boolean result = client.logout(token, email);
-
-           if(result == false) {
-               errorCallback.invoke(false);
-           } else successCallback.invoke(true);
-        }
+        if (result == false) {
+            errorCallback.invoke(false);
+        } else successCallback.invoke(true);
+    }
 }
