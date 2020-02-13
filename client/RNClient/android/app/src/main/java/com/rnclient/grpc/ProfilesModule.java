@@ -5,8 +5,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.wcity.grpc.ProfilesClient;
 
-import io.grpc.wcity.profiles.CityResponseP;
-import io.grpc.wcity.profiles.UserResponseP;
 
 import com.facebook.react.bridge.Callback;
 import com.wcity.grpc.User;

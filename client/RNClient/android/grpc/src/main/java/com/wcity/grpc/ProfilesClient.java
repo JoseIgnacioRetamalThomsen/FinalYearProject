@@ -12,6 +12,7 @@ import io.grpc.wcity.profiles.UserResponseP;
 import io.grpc.wcity.profiles.UserRequestP;
 import io.grpc.wcity.profiles.ProfilesGrpc;
 
+
 public class ProfilesClient {
 
     private final ManagedChannel channel;
@@ -54,4 +55,17 @@ public class ProfilesClient {
         }
         return user;
     }
+
+//    public City updateCity(String token, String email, String name, String description) {
+//        CityRequestP cityRequestP = CityRequestP.newBuilder().setToken(token).setEmail(email).setName(name).setDescription(description).build();
+//        UserResponseP response;
+//        City city = null;
+//        try {
+//            response = stub.updateUser(CityRequestP);
+//            city = new City(response.getValid(), response.getName(), response.getDescription());
+//        } catch (StatusRuntimeException e) {
+//            //e.getMessage();
+//        }
+//        return city;
+//    }
 }
