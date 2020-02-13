@@ -3,6 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
+
+	//"fmt"
+	//"io/ioutil"
 
 	//"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
@@ -56,7 +60,17 @@ func newPhotosServiceContext(endpoint string) (*photosServiceContext, error) {
 	return ctx, nil
 }
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+const(
+	email = "a@a.com"
+)
 func main() {
+
+
 	//conect to server
 	dbserverCtx, err := newPhotosServiceContext(url)
 	if err != nil {
@@ -65,7 +79,12 @@ func main() {
 	s2 := &photosServer{dbserverCtx}
 	photoConn = *s2
 
-	fmt.Println(GetProfilePhoto("a@a.com","token"))
+	dat, err := ioutil.ReadFile("img/website.jpg")
+	check(err)
+	dat=dat
+	fmt.Println(SendImage(dat,"d"))
+
+	fmt.Println(GetProfilePhoto("d","token"))
 }
 
 func GetProfilePhoto(email string,token string) (string,error){
@@ -81,4 +100,20 @@ func GetProfilePhoto(email string,token string) (string,error){
 	}
 
 	return r.Url,nil
+}
+
+
+func SendImage(image []byte,email string)string{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := photoConn.context.dbClient.UploadProfilePhoto(ctx,&pb.ProfileUploadRequest{
+		Image : image,
+		Email : email,
+
+	})
+	if err!= nil{
+		panic(err)
+	}
+	return r.Url
+	//fmt.Print(string(image))
 }

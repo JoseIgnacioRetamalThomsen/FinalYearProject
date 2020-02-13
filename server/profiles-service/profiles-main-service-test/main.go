@@ -27,11 +27,11 @@ const (
 
 )
 const(
-	url = "0.0.0.0:60051"
-	//url="35.197.216.42:60051";
+	//url = "0.0.0.0:60051"
+	url="35.197.216.42:60051";
 	//url = "35.234.146.99:5777"
-	token ="c1ce3461b81275c72c7dd7bbe6372bfcf099d83fb383ade531935ca4610cb4b6"
-	tokenEmail ="a@a.com"
+	token ="119b8f15250c9f0f5dad71375e8dd8b06aa42a13500b62e4ec780e50c112bcf4"
+	tokenEmail ="G00341964@gmit.ie"
 )
 
 type profileServer struct {
@@ -70,7 +70,7 @@ func main(){
 	profSerConn = *s2
 
 	//fmt.Println(CreateUser("email7","namef","description4",token))
-	//fmt.Println(GetUser(tokenEmail,token))
+	fmt.Println(GetUser(tokenEmail,token))
 	//fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
 	//fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
 	//fmt.Println(GetCity(tokenEmail,token,"San Pedro" , "Chile"))
@@ -82,7 +82,7 @@ func main(){
 //fmt.Println(VisitPlace(tokenEmail,token,"plaza","san pedro","chile"))
 //fmt.Println(GetVisitedCity(tokenEmail,token))
 //fmt.Println(GetVisitedPlaces(tokenEmail,token))
-fmt.Println(GetCityPlaces(tokenEmail,token,"san Pedro","chile"))
+//fmt.Println(GetCityPlaces(tokenEmail,token,"san Pedro","chile"))
 }
 
 
@@ -111,6 +111,8 @@ func GetUser(email string,token string)(pb.UserResponseP,error){
 	if err != nil{
 		panic(err)
 	}
+	fmt.Println(r.Name)
+	fmt.Println(r.GetDescription())
 	return *r,nil
 }
 

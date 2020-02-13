@@ -24,6 +24,31 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+type PostType int32
+
+const (
+	PostType_CITY  PostType = 0
+	PostType_PLACE PostType = 1
+)
+
+var PostType_name = map[int32]string{
+	0: "CITY",
+	1: "PLACE",
+}
+
+var PostType_value = map[string]int32{
+	"CITY":  0,
+	"PLACE": 1,
+}
+
+func (x PostType) String() string {
+	return proto.EnumName(PostType_name, int32(x))
+}
+
+func (PostType) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{0}
+}
+
 type ProfilePhotoRequestP struct {
 	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	Token                string   `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
@@ -126,29 +151,792 @@ func (m *ProfilePhotoResponseP) GetUrl() string {
 	return ""
 }
 
+type ProfileUploadRequest struct {
+	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Token                string   `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Image                []byte   `protobuf:"bytes,3,opt,name=image,proto3" json:"image,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ProfileUploadRequest) Reset()         { *m = ProfileUploadRequest{} }
+func (m *ProfileUploadRequest) String() string { return proto.CompactTextString(m) }
+func (*ProfileUploadRequest) ProtoMessage()    {}
+func (*ProfileUploadRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{2}
+}
+
+func (m *ProfileUploadRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ProfileUploadRequest.Unmarshal(m, b)
+}
+func (m *ProfileUploadRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ProfileUploadRequest.Marshal(b, m, deterministic)
+}
+func (m *ProfileUploadRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProfileUploadRequest.Merge(m, src)
+}
+func (m *ProfileUploadRequest) XXX_Size() int {
+	return xxx_messageInfo_ProfileUploadRequest.Size(m)
+}
+func (m *ProfileUploadRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProfileUploadRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProfileUploadRequest proto.InternalMessageInfo
+
+func (m *ProfileUploadRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *ProfileUploadRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *ProfileUploadRequest) GetImage() []byte {
+	if m != nil {
+		return m.Image
+	}
+	return nil
+}
+
+type ProfileUploadResponse struct {
+	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Valid                bool     `protobuf:"varint,2,opt,name=valid,proto3" json:"valid,omitempty"`
+	Url                  string   `protobuf:"bytes,3,opt,name=url,proto3" json:"url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ProfileUploadResponse) Reset()         { *m = ProfileUploadResponse{} }
+func (m *ProfileUploadResponse) String() string { return proto.CompactTextString(m) }
+func (*ProfileUploadResponse) ProtoMessage()    {}
+func (*ProfileUploadResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{3}
+}
+
+func (m *ProfileUploadResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ProfileUploadResponse.Unmarshal(m, b)
+}
+func (m *ProfileUploadResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ProfileUploadResponse.Marshal(b, m, deterministic)
+}
+func (m *ProfileUploadResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ProfileUploadResponse.Merge(m, src)
+}
+func (m *ProfileUploadResponse) XXX_Size() int {
+	return xxx_messageInfo_ProfileUploadResponse.Size(m)
+}
+func (m *ProfileUploadResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ProfileUploadResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ProfileUploadResponse proto.InternalMessageInfo
+
+func (m *ProfileUploadResponse) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *ProfileUploadResponse) GetValid() bool {
+	if m != nil {
+		return m.Valid
+	}
+	return false
+}
+
+func (m *ProfileUploadResponse) GetUrl() string {
+	if m != nil {
+		return m.Url
+	}
+	return ""
+}
+
+type CityPhotoRequest struct {
+	Token                string   `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	CityName             string   `protobuf:"bytes,2,opt,name=cityName,proto3" json:"cityName,omitempty"`
+	CityCountry          string   `protobuf:"bytes,3,opt,name=cityCountry,proto3" json:"cityCountry,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CityPhotoRequest) Reset()         { *m = CityPhotoRequest{} }
+func (m *CityPhotoRequest) String() string { return proto.CompactTextString(m) }
+func (*CityPhotoRequest) ProtoMessage()    {}
+func (*CityPhotoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{4}
+}
+
+func (m *CityPhotoRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CityPhotoRequest.Unmarshal(m, b)
+}
+func (m *CityPhotoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CityPhotoRequest.Marshal(b, m, deterministic)
+}
+func (m *CityPhotoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CityPhotoRequest.Merge(m, src)
+}
+func (m *CityPhotoRequest) XXX_Size() int {
+	return xxx_messageInfo_CityPhotoRequest.Size(m)
+}
+func (m *CityPhotoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CityPhotoRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CityPhotoRequest proto.InternalMessageInfo
+
+func (m *CityPhotoRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *CityPhotoRequest) GetCityName() string {
+	if m != nil {
+		return m.CityName
+	}
+	return ""
+}
+
+func (m *CityPhotoRequest) GetCityCountry() string {
+	if m != nil {
+		return m.CityCountry
+	}
+	return ""
+}
+
+type CityUploadRequest struct {
+	Token                string   `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	CityName             string   `protobuf:"bytes,2,opt,name=cityName,proto3" json:"cityName,omitempty"`
+	CityCountry          string   `protobuf:"bytes,3,opt,name=cityCountry,proto3" json:"cityCountry,omitempty"`
+	Image                []byte   `protobuf:"bytes,4,opt,name=image,proto3" json:"image,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CityUploadRequest) Reset()         { *m = CityUploadRequest{} }
+func (m *CityUploadRequest) String() string { return proto.CompactTextString(m) }
+func (*CityUploadRequest) ProtoMessage()    {}
+func (*CityUploadRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{5}
+}
+
+func (m *CityUploadRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CityUploadRequest.Unmarshal(m, b)
+}
+func (m *CityUploadRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CityUploadRequest.Marshal(b, m, deterministic)
+}
+func (m *CityUploadRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CityUploadRequest.Merge(m, src)
+}
+func (m *CityUploadRequest) XXX_Size() int {
+	return xxx_messageInfo_CityUploadRequest.Size(m)
+}
+func (m *CityUploadRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CityUploadRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CityUploadRequest proto.InternalMessageInfo
+
+func (m *CityUploadRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *CityUploadRequest) GetCityName() string {
+	if m != nil {
+		return m.CityName
+	}
+	return ""
+}
+
+func (m *CityUploadRequest) GetCityCountry() string {
+	if m != nil {
+		return m.CityCountry
+	}
+	return ""
+}
+
+func (m *CityUploadRequest) GetImage() []byte {
+	if m != nil {
+		return m.Image
+	}
+	return nil
+}
+
+type CityPhotoResponse struct {
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	CityName             string   `protobuf:"bytes,2,opt,name=cityName,proto3" json:"cityName,omitempty"`
+	CityCountry          string   `protobuf:"bytes,3,opt,name=cityCountry,proto3" json:"cityCountry,omitempty"`
+	Url                  string   `protobuf:"bytes,4,opt,name=url,proto3" json:"url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CityPhotoResponse) Reset()         { *m = CityPhotoResponse{} }
+func (m *CityPhotoResponse) String() string { return proto.CompactTextString(m) }
+func (*CityPhotoResponse) ProtoMessage()    {}
+func (*CityPhotoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{6}
+}
+
+func (m *CityPhotoResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CityPhotoResponse.Unmarshal(m, b)
+}
+func (m *CityPhotoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CityPhotoResponse.Marshal(b, m, deterministic)
+}
+func (m *CityPhotoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CityPhotoResponse.Merge(m, src)
+}
+func (m *CityPhotoResponse) XXX_Size() int {
+	return xxx_messageInfo_CityPhotoResponse.Size(m)
+}
+func (m *CityPhotoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CityPhotoResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CityPhotoResponse proto.InternalMessageInfo
+
+func (m *CityPhotoResponse) GetValid() bool {
+	if m != nil {
+		return m.Valid
+	}
+	return false
+}
+
+func (m *CityPhotoResponse) GetCityName() string {
+	if m != nil {
+		return m.CityName
+	}
+	return ""
+}
+
+func (m *CityPhotoResponse) GetCityCountry() string {
+	if m != nil {
+		return m.CityCountry
+	}
+	return ""
+}
+
+func (m *CityPhotoResponse) GetUrl() string {
+	if m != nil {
+		return m.Url
+	}
+	return ""
+}
+
+type PlacePhotoRequest struct {
+	Token                string   `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	PlaceName            string   `protobuf:"bytes,2,opt,name=placeName,proto3" json:"placeName,omitempty"`
+	PlaceCity            string   `protobuf:"bytes,3,opt,name=placeCity,proto3" json:"placeCity,omitempty"`
+	Placecountry         string   `protobuf:"bytes,4,opt,name=placecountry,proto3" json:"placecountry,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PlacePhotoRequest) Reset()         { *m = PlacePhotoRequest{} }
+func (m *PlacePhotoRequest) String() string { return proto.CompactTextString(m) }
+func (*PlacePhotoRequest) ProtoMessage()    {}
+func (*PlacePhotoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{7}
+}
+
+func (m *PlacePhotoRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PlacePhotoRequest.Unmarshal(m, b)
+}
+func (m *PlacePhotoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PlacePhotoRequest.Marshal(b, m, deterministic)
+}
+func (m *PlacePhotoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PlacePhotoRequest.Merge(m, src)
+}
+func (m *PlacePhotoRequest) XXX_Size() int {
+	return xxx_messageInfo_PlacePhotoRequest.Size(m)
+}
+func (m *PlacePhotoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PlacePhotoRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PlacePhotoRequest proto.InternalMessageInfo
+
+func (m *PlacePhotoRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *PlacePhotoRequest) GetPlaceName() string {
+	if m != nil {
+		return m.PlaceName
+	}
+	return ""
+}
+
+func (m *PlacePhotoRequest) GetPlaceCity() string {
+	if m != nil {
+		return m.PlaceCity
+	}
+	return ""
+}
+
+func (m *PlacePhotoRequest) GetPlacecountry() string {
+	if m != nil {
+		return m.Placecountry
+	}
+	return ""
+}
+
+type PlaceUploadRequest struct {
+	Token                string   `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	PlaceName            string   `protobuf:"bytes,2,opt,name=placeName,proto3" json:"placeName,omitempty"`
+	PlaceCity            string   `protobuf:"bytes,3,opt,name=placeCity,proto3" json:"placeCity,omitempty"`
+	Placecountry         string   `protobuf:"bytes,4,opt,name=placecountry,proto3" json:"placecountry,omitempty"`
+	Image                []byte   `protobuf:"bytes,5,opt,name=image,proto3" json:"image,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PlaceUploadRequest) Reset()         { *m = PlaceUploadRequest{} }
+func (m *PlaceUploadRequest) String() string { return proto.CompactTextString(m) }
+func (*PlaceUploadRequest) ProtoMessage()    {}
+func (*PlaceUploadRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{8}
+}
+
+func (m *PlaceUploadRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PlaceUploadRequest.Unmarshal(m, b)
+}
+func (m *PlaceUploadRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PlaceUploadRequest.Marshal(b, m, deterministic)
+}
+func (m *PlaceUploadRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PlaceUploadRequest.Merge(m, src)
+}
+func (m *PlaceUploadRequest) XXX_Size() int {
+	return xxx_messageInfo_PlaceUploadRequest.Size(m)
+}
+func (m *PlaceUploadRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PlaceUploadRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PlaceUploadRequest proto.InternalMessageInfo
+
+func (m *PlaceUploadRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *PlaceUploadRequest) GetPlaceName() string {
+	if m != nil {
+		return m.PlaceName
+	}
+	return ""
+}
+
+func (m *PlaceUploadRequest) GetPlaceCity() string {
+	if m != nil {
+		return m.PlaceCity
+	}
+	return ""
+}
+
+func (m *PlaceUploadRequest) GetPlacecountry() string {
+	if m != nil {
+		return m.Placecountry
+	}
+	return ""
+}
+
+func (m *PlaceUploadRequest) GetImage() []byte {
+	if m != nil {
+		return m.Image
+	}
+	return nil
+}
+
+type PlacePhotoResponse struct {
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	PlaceName            string   `protobuf:"bytes,2,opt,name=placeName,proto3" json:"placeName,omitempty"`
+	PlaceCity            string   `protobuf:"bytes,3,opt,name=placeCity,proto3" json:"placeCity,omitempty"`
+	Placecountry         string   `protobuf:"bytes,4,opt,name=placecountry,proto3" json:"placecountry,omitempty"`
+	Url                  string   `protobuf:"bytes,5,opt,name=url,proto3" json:"url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PlacePhotoResponse) Reset()         { *m = PlacePhotoResponse{} }
+func (m *PlacePhotoResponse) String() string { return proto.CompactTextString(m) }
+func (*PlacePhotoResponse) ProtoMessage()    {}
+func (*PlacePhotoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{9}
+}
+
+func (m *PlacePhotoResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PlacePhotoResponse.Unmarshal(m, b)
+}
+func (m *PlacePhotoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PlacePhotoResponse.Marshal(b, m, deterministic)
+}
+func (m *PlacePhotoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PlacePhotoResponse.Merge(m, src)
+}
+func (m *PlacePhotoResponse) XXX_Size() int {
+	return xxx_messageInfo_PlacePhotoResponse.Size(m)
+}
+func (m *PlacePhotoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_PlacePhotoResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PlacePhotoResponse proto.InternalMessageInfo
+
+func (m *PlacePhotoResponse) GetValid() bool {
+	if m != nil {
+		return m.Valid
+	}
+	return false
+}
+
+func (m *PlacePhotoResponse) GetPlaceName() string {
+	if m != nil {
+		return m.PlaceName
+	}
+	return ""
+}
+
+func (m *PlacePhotoResponse) GetPlaceCity() string {
+	if m != nil {
+		return m.PlaceCity
+	}
+	return ""
+}
+
+func (m *PlacePhotoResponse) GetPlacecountry() string {
+	if m != nil {
+		return m.Placecountry
+	}
+	return ""
+}
+
+func (m *PlacePhotoResponse) GetUrl() string {
+	if m != nil {
+		return m.Url
+	}
+	return ""
+}
+
+//name is city or place name
+type PostPhotoRequest struct {
+	Token                string   `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	PostId               string   `protobuf:"bytes,2,opt,name=postId,proto3" json:"postId,omitempty"`
+	UserEmail            string   `protobuf:"bytes,3,opt,name=userEmail,proto3" json:"userEmail,omitempty"`
+	Type                 PostType `protobuf:"varint,4,opt,name=type,proto3,enum=wcity.PostType" json:"type,omitempty"`
+	Name                 string   `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PostPhotoRequest) Reset()         { *m = PostPhotoRequest{} }
+func (m *PostPhotoRequest) String() string { return proto.CompactTextString(m) }
+func (*PostPhotoRequest) ProtoMessage()    {}
+func (*PostPhotoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{10}
+}
+
+func (m *PostPhotoRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PostPhotoRequest.Unmarshal(m, b)
+}
+func (m *PostPhotoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PostPhotoRequest.Marshal(b, m, deterministic)
+}
+func (m *PostPhotoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PostPhotoRequest.Merge(m, src)
+}
+func (m *PostPhotoRequest) XXX_Size() int {
+	return xxx_messageInfo_PostPhotoRequest.Size(m)
+}
+func (m *PostPhotoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PostPhotoRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PostPhotoRequest proto.InternalMessageInfo
+
+func (m *PostPhotoRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *PostPhotoRequest) GetPostId() string {
+	if m != nil {
+		return m.PostId
+	}
+	return ""
+}
+
+func (m *PostPhotoRequest) GetUserEmail() string {
+	if m != nil {
+		return m.UserEmail
+	}
+	return ""
+}
+
+func (m *PostPhotoRequest) GetType() PostType {
+	if m != nil {
+		return m.Type
+	}
+	return PostType_CITY
+}
+
+func (m *PostPhotoRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type PostUploadRequest struct {
+	Token                string   `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	PostId               string   `protobuf:"bytes,2,opt,name=postId,proto3" json:"postId,omitempty"`
+	UserEmail            string   `protobuf:"bytes,3,opt,name=userEmail,proto3" json:"userEmail,omitempty"`
+	Type                 PostType `protobuf:"varint,4,opt,name=type,proto3,enum=wcity.PostType" json:"type,omitempty"`
+	Name                 string   `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Image                []byte   `protobuf:"bytes,6,opt,name=image,proto3" json:"image,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PostUploadRequest) Reset()         { *m = PostUploadRequest{} }
+func (m *PostUploadRequest) String() string { return proto.CompactTextString(m) }
+func (*PostUploadRequest) ProtoMessage()    {}
+func (*PostUploadRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{11}
+}
+
+func (m *PostUploadRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PostUploadRequest.Unmarshal(m, b)
+}
+func (m *PostUploadRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PostUploadRequest.Marshal(b, m, deterministic)
+}
+func (m *PostUploadRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PostUploadRequest.Merge(m, src)
+}
+func (m *PostUploadRequest) XXX_Size() int {
+	return xxx_messageInfo_PostUploadRequest.Size(m)
+}
+func (m *PostUploadRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PostUploadRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PostUploadRequest proto.InternalMessageInfo
+
+func (m *PostUploadRequest) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *PostUploadRequest) GetPostId() string {
+	if m != nil {
+		return m.PostId
+	}
+	return ""
+}
+
+func (m *PostUploadRequest) GetUserEmail() string {
+	if m != nil {
+		return m.UserEmail
+	}
+	return ""
+}
+
+func (m *PostUploadRequest) GetType() PostType {
+	if m != nil {
+		return m.Type
+	}
+	return PostType_CITY
+}
+
+func (m *PostUploadRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *PostUploadRequest) GetImage() []byte {
+	if m != nil {
+		return m.Image
+	}
+	return nil
+}
+
+type PostPhotoResponse struct {
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	PostId               string   `protobuf:"bytes,2,opt,name=postId,proto3" json:"postId,omitempty"`
+	UserEmail            string   `protobuf:"bytes,3,opt,name=userEmail,proto3" json:"userEmail,omitempty"`
+	Type                 PostType `protobuf:"varint,4,opt,name=type,proto3,enum=wcity.PostType" json:"type,omitempty"`
+	Name                 string   `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Url                  string   `protobuf:"bytes,6,opt,name=url,proto3" json:"url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PostPhotoResponse) Reset()         { *m = PostPhotoResponse{} }
+func (m *PostPhotoResponse) String() string { return proto.CompactTextString(m) }
+func (*PostPhotoResponse) ProtoMessage()    {}
+func (*PostPhotoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_81c4daeb186b1364, []int{12}
+}
+
+func (m *PostPhotoResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PostPhotoResponse.Unmarshal(m, b)
+}
+func (m *PostPhotoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PostPhotoResponse.Marshal(b, m, deterministic)
+}
+func (m *PostPhotoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PostPhotoResponse.Merge(m, src)
+}
+func (m *PostPhotoResponse) XXX_Size() int {
+	return xxx_messageInfo_PostPhotoResponse.Size(m)
+}
+func (m *PostPhotoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_PostPhotoResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PostPhotoResponse proto.InternalMessageInfo
+
+func (m *PostPhotoResponse) GetValid() bool {
+	if m != nil {
+		return m.Valid
+	}
+	return false
+}
+
+func (m *PostPhotoResponse) GetPostId() string {
+	if m != nil {
+		return m.PostId
+	}
+	return ""
+}
+
+func (m *PostPhotoResponse) GetUserEmail() string {
+	if m != nil {
+		return m.UserEmail
+	}
+	return ""
+}
+
+func (m *PostPhotoResponse) GetType() PostType {
+	if m != nil {
+		return m.Type
+	}
+	return PostType_CITY
+}
+
+func (m *PostPhotoResponse) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *PostPhotoResponse) GetUrl() string {
+	if m != nil {
+		return m.Url
+	}
+	return ""
+}
+
 func init() {
+	proto.RegisterEnum("wcity.PostType", PostType_name, PostType_value)
 	proto.RegisterType((*ProfilePhotoRequestP)(nil), "wcity.ProfilePhotoRequestP")
 	proto.RegisterType((*ProfilePhotoResponseP)(nil), "wcity.ProfilePhotoResponseP")
+	proto.RegisterType((*ProfileUploadRequest)(nil), "wcity.ProfileUploadRequest")
+	proto.RegisterType((*ProfileUploadResponse)(nil), "wcity.ProfileUploadResponse")
+	proto.RegisterType((*CityPhotoRequest)(nil), "wcity.CityPhotoRequest")
+	proto.RegisterType((*CityUploadRequest)(nil), "wcity.CityUploadRequest")
+	proto.RegisterType((*CityPhotoResponse)(nil), "wcity.CityPhotoResponse")
+	proto.RegisterType((*PlacePhotoRequest)(nil), "wcity.PlacePhotoRequest")
+	proto.RegisterType((*PlaceUploadRequest)(nil), "wcity.PlaceUploadRequest")
+	proto.RegisterType((*PlacePhotoResponse)(nil), "wcity.PlacePhotoResponse")
+	proto.RegisterType((*PostPhotoRequest)(nil), "wcity.PostPhotoRequest")
+	proto.RegisterType((*PostUploadRequest)(nil), "wcity.PostUploadRequest")
+	proto.RegisterType((*PostPhotoResponse)(nil), "wcity.PostPhotoResponse")
 }
 
 func init() { proto.RegisterFile("photos.proto", fileDescriptor_81c4daeb186b1364) }
 
 var fileDescriptor_81c4daeb186b1364 = []byte{
-	// 209 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x29, 0xc8, 0xc8, 0x2f,
-	0xc9, 0x2f, 0xd6, 0x2b, 0x28, 0x02, 0x52, 0x42, 0xac, 0xe5, 0xc9, 0x99, 0x25, 0x95, 0x4a, 0x4e,
-	0x5c, 0x22, 0x01, 0x45, 0xf9, 0x69, 0x99, 0x39, 0xa9, 0x01, 0x20, 0xd9, 0xa0, 0xd4, 0xc2, 0xd2,
-	0xd4, 0xe2, 0x92, 0x00, 0x21, 0x11, 0x2e, 0xd6, 0xd4, 0xdc, 0xc4, 0xcc, 0x1c, 0x09, 0x46, 0x05,
-	0x46, 0x0d, 0xce, 0x20, 0x08, 0x07, 0x24, 0x5a, 0x92, 0x9f, 0x9d, 0x9a, 0x27, 0xc1, 0x04, 0x11,
-	0x05, 0x73, 0x94, 0x42, 0xb9, 0x44, 0x51, 0xcd, 0x28, 0x2e, 0xc8, 0xcf, 0x2b, 0x4e, 0xc5, 0x63,
-	0x48, 0x59, 0x62, 0x4e, 0x66, 0x0a, 0xd8, 0x10, 0x8e, 0x20, 0x08, 0x47, 0x48, 0x80, 0x8b, 0xb9,
-	0xb4, 0x28, 0x47, 0x82, 0x19, 0xac, 0x12, 0xc4, 0x34, 0x8a, 0xe5, 0xe2, 0x05, 0x9b, 0x57, 0x1c,
-	0x9c, 0x5a, 0x54, 0x96, 0x99, 0x9c, 0x2a, 0xe4, 0xc3, 0xc5, 0xef, 0x9e, 0x5a, 0x82, 0x6c, 0x95,
-	0x90, 0xb4, 0x1e, 0xd8, 0x1b, 0x7a, 0xd8, 0xfc, 0x20, 0x25, 0x83, 0x55, 0x12, 0xea, 0x38, 0x27,
-	0x4d, 0x2e, 0xe1, 0xcc, 0x7c, 0xbd, 0xf4, 0xa2, 0x82, 0x64, 0xa8, 0x32, 0x70, 0xf0, 0x38, 0x71,
-	0x81, 0x95, 0x05, 0x80, 0xc2, 0x28, 0x80, 0x71, 0x11, 0x13, 0x73, 0x50, 0x80, 0x73, 0x12, 0x1b,
-	0x38, 0xc8, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0xb3, 0x9d, 0xd8, 0x21, 0x42, 0x01, 0x00,
-	0x00,
+	// 623 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xbc, 0x56, 0x4d, 0x6e, 0xd3, 0x40,
+	0x14, 0xc6, 0x8d, 0x13, 0x25, 0x8f, 0x94, 0xb8, 0x43, 0x81, 0x10, 0x2a, 0x51, 0x99, 0x0d, 0xb0,
+	0xc8, 0xa2, 0x9c, 0xa0, 0x09, 0x11, 0x44, 0xaa, 0xc0, 0x32, 0xad, 0x04, 0x4b, 0x93, 0x4c, 0x8b,
+	0x85, 0x13, 0x1b, 0xdb, 0x29, 0xca, 0x82, 0x03, 0x70, 0x02, 0x36, 0x2c, 0x10, 0x4b, 0x16, 0x1c,
+	0x86, 0x13, 0xe1, 0x37, 0x33, 0x9e, 0x19, 0xc7, 0x21, 0x18, 0x95, 0x76, 0x15, 0xbf, 0x9f, 0x7c,
+	0xef, 0x9b, 0xef, 0xf3, 0x78, 0x06, 0xda, 0xd1, 0xbb, 0x30, 0x0d, 0x93, 0x7e, 0x14, 0x67, 0x3f,
+	0xa4, 0xfe, 0x71, 0xe2, 0xa7, 0x4b, 0x7b, 0x00, 0xbb, 0x4e, 0x1c, 0x9e, 0xfa, 0x01, 0x75, 0xb0,
+	0xea, 0xd2, 0x0f, 0x0b, 0x9a, 0xa4, 0x0e, 0xd9, 0x85, 0x3a, 0x9d, 0x79, 0x7e, 0xd0, 0x35, 0xf6,
+	0x8d, 0x87, 0x2d, 0x97, 0x07, 0x98, 0x4d, 0xc3, 0xf7, 0x74, 0xde, 0xdd, 0xe2, 0x59, 0x16, 0xd8,
+	0x27, 0x70, 0xab, 0x88, 0x91, 0x44, 0xe1, 0x3c, 0xa1, 0x1b, 0x40, 0xce, 0xbd, 0xc0, 0x9f, 0x32,
+	0x90, 0xa6, 0xcb, 0x03, 0x62, 0x41, 0x6d, 0x11, 0x07, 0xdd, 0x1a, 0xeb, 0xc4, 0x47, 0xfb, 0xb5,
+	0xa4, 0x76, 0x12, 0x05, 0xa1, 0x37, 0x15, 0xdc, 0xfe, 0x85, 0x1a, 0x66, 0xfd, 0x99, 0x77, 0x46,
+	0x19, 0x6e, 0xdb, 0xe5, 0x81, 0x46, 0x38, 0x47, 0xe6, 0x8c, 0x2f, 0x48, 0xf8, 0x14, 0xac, 0x61,
+	0xa6, 0xa9, 0x2e, 0xa4, 0xa2, 0x65, 0xe8, 0xb4, 0x7a, 0xd0, 0x44, 0xf5, 0x5f, 0x78, 0x33, 0x2a,
+	0xf8, 0xca, 0x98, 0xec, 0xc3, 0x75, 0x7c, 0x1e, 0x86, 0x8b, 0x79, 0x1a, 0x2f, 0x05, 0xbe, 0x9e,
+	0xb2, 0x3f, 0xc1, 0x0e, 0xce, 0x29, 0xa9, 0xf2, 0xbf, 0x07, 0x29, 0xf5, 0x4c, 0x5d, 0xbd, 0x25,
+	0x1f, 0x5f, 0xf0, 0x5a, 0x69, 0x64, 0xe8, 0x1a, 0x5d, 0x6c, 0xbc, 0x50, 0xd8, 0x54, 0x0a, 0x7f,
+	0x36, 0x60, 0xc7, 0x09, 0xbc, 0x09, 0xad, 0xa0, 0xf1, 0x1e, 0xb4, 0x22, 0x6c, 0xd5, 0x86, 0xab,
+	0x84, 0xac, 0xe2, 0x4a, 0xc4, 0x6c, 0x95, 0x20, 0x76, 0xb6, 0x59, 0x30, 0x98, 0x08, 0x72, 0x9c,
+	0x42, 0x21, 0x67, 0x7f, 0x33, 0x80, 0x30, 0x2e, 0x55, 0x7c, 0xb8, 0x64, 0x32, 0xca, 0xa9, 0xba,
+	0xee, 0xd4, 0xd7, 0x9c, 0x62, 0x15, 0xaf, 0x2e, 0x9b, 0xa2, 0x70, 0xb3, 0xae, 0xdc, 0xfc, 0x62,
+	0x80, 0xe5, 0x84, 0xd9, 0xd7, 0xe6, 0xef, 0x66, 0xde, 0x86, 0x46, 0x94, 0x75, 0x8e, 0xa7, 0x82,
+	0x99, 0x88, 0x90, 0xd6, 0x22, 0xa1, 0xf1, 0x88, 0x6d, 0x5a, 0x41, 0x4b, 0x26, 0xc8, 0x03, 0x30,
+	0xd3, 0x65, 0xc4, 0x5f, 0xdf, 0x1b, 0x07, 0x9d, 0x3e, 0xfb, 0xe4, 0xf5, 0x71, 0xe4, 0x71, 0x96,
+	0x76, 0x59, 0x91, 0x10, 0x30, 0xe7, 0xb8, 0x64, 0x4e, 0x8c, 0x3d, 0xdb, 0x3f, 0xf1, 0x3d, 0xcb,
+	0xda, 0xaa, 0x58, 0x7b, 0xb5, 0xd4, 0x94, 0xd3, 0x0d, 0xdd, 0xe9, 0x1f, 0x82, 0x70, 0x15, 0xa3,
+	0xaf, 0x98, 0xb0, 0xf0, 0xbd, 0x21, 0x7d, 0x7f, 0x7c, 0x1f, 0x9a, 0xf9, 0xff, 0x48, 0x13, 0xcc,
+	0xe1, 0xf8, 0xf8, 0x8d, 0x75, 0x8d, 0xb4, 0xa0, 0xee, 0x1c, 0x1d, 0x0e, 0x47, 0x96, 0x71, 0xf0,
+	0xcb, 0x84, 0x6d, 0xb6, 0x92, 0xe4, 0x15, 0x8d, 0xcf, 0xfd, 0x09, 0x25, 0x47, 0xd0, 0x79, 0x46,
+	0x53, 0xfd, 0x94, 0x21, 0xf7, 0x72, 0x0a, 0x6b, 0x8e, 0xaf, 0xde, 0xde, 0xda, 0x62, 0x7e, 0x2e,
+	0xbd, 0x04, 0xc2, 0x9d, 0xdd, 0x04, 0x58, 0xf0, 0x7e, 0x15, 0x70, 0xe5, 0xdc, 0x38, 0x84, 0x76,
+	0x46, 0x0f, 0xb7, 0xc2, 0x18, 0xed, 0x20, 0x77, 0x44, 0xf7, 0xea, 0x71, 0xd0, 0xeb, 0x96, 0x0b,
+	0x02, 0x62, 0x04, 0x1d, 0x0e, 0x2a, 0x4b, 0x44, 0x6f, 0x2e, 0xb2, 0xf9, 0x33, 0xcc, 0x53, 0xd8,
+	0x46, 0xa1, 0xe4, 0xa6, 0x97, 0x20, 0xa5, 0xcf, 0x66, 0xef, 0xee, 0x9a, 0x8a, 0x40, 0x79, 0x0e,
+	0x96, 0x10, 0x48, 0x01, 0x15, 0xda, 0x8b, 0x74, 0x36, 0x20, 0x71, 0x65, 0xd0, 0xee, 0xa2, 0x32,
+	0xab, 0xfb, 0x5e, 0x2e, 0xa9, 0xfc, 0x16, 0x4b, 0x65, 0x14, 0x8a, 0xde, 0xbc, 0x5e, 0x99, 0x12,
+	0xcc, 0xe0, 0x11, 0xdc, 0xf4, 0xc3, 0xfe, 0x59, 0x1c, 0x4d, 0x44, 0x0b, 0xbb, 0x0e, 0x0d, 0x80,
+	0x75, 0x39, 0x78, 0x27, 0x72, 0x8c, 0xef, 0x5b, 0x35, 0xd7, 0x19, 0xbe, 0x6d, 0xb0, 0x2b, 0xd2,
+	0x93, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x7f, 0xe5, 0xe4, 0x40, 0x32, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -164,6 +952,13 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PhotosServiceClient interface {
 	GetProfilePhoto(ctx context.Context, in *ProfilePhotoRequestP, opts ...grpc.CallOption) (*ProfilePhotoResponseP, error)
+	UploadProfilePhoto(ctx context.Context, in *ProfileUploadRequest, opts ...grpc.CallOption) (*ProfileUploadResponse, error)
+	GetCityImage(ctx context.Context, in *CityPhotoRequest, opts ...grpc.CallOption) (*CityPhotoResponse, error)
+	UploadCityPhoto(ctx context.Context, in *CityUploadRequest, opts ...grpc.CallOption) (*CityPhotoResponse, error)
+	GetPlacePhoto(ctx context.Context, in *PlacePhotoRequest, opts ...grpc.CallOption) (*PlacePhotoResponse, error)
+	UploadPlacePhoto(ctx context.Context, in *PlaceUploadRequest, opts ...grpc.CallOption) (*PlacePhotoResponse, error)
+	GetPostImage(ctx context.Context, in *PostPhotoRequest, opts ...grpc.CallOption) (*PostPhotoResponse, error)
+	UploadPostImage(ctx context.Context, in *PostUploadRequest, opts ...grpc.CallOption) (*PostPhotoResponse, error)
 }
 
 type photosServiceClient struct {
@@ -183,9 +978,79 @@ func (c *photosServiceClient) GetProfilePhoto(ctx context.Context, in *ProfilePh
 	return out, nil
 }
 
+func (c *photosServiceClient) UploadProfilePhoto(ctx context.Context, in *ProfileUploadRequest, opts ...grpc.CallOption) (*ProfileUploadResponse, error) {
+	out := new(ProfileUploadResponse)
+	err := c.cc.Invoke(ctx, "/wcity.PhotosService/UploadProfilePhoto", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *photosServiceClient) GetCityImage(ctx context.Context, in *CityPhotoRequest, opts ...grpc.CallOption) (*CityPhotoResponse, error) {
+	out := new(CityPhotoResponse)
+	err := c.cc.Invoke(ctx, "/wcity.PhotosService/GetCityImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *photosServiceClient) UploadCityPhoto(ctx context.Context, in *CityUploadRequest, opts ...grpc.CallOption) (*CityPhotoResponse, error) {
+	out := new(CityPhotoResponse)
+	err := c.cc.Invoke(ctx, "/wcity.PhotosService/UploadCityPhoto", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *photosServiceClient) GetPlacePhoto(ctx context.Context, in *PlacePhotoRequest, opts ...grpc.CallOption) (*PlacePhotoResponse, error) {
+	out := new(PlacePhotoResponse)
+	err := c.cc.Invoke(ctx, "/wcity.PhotosService/GetPlacePhoto", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *photosServiceClient) UploadPlacePhoto(ctx context.Context, in *PlaceUploadRequest, opts ...grpc.CallOption) (*PlacePhotoResponse, error) {
+	out := new(PlacePhotoResponse)
+	err := c.cc.Invoke(ctx, "/wcity.PhotosService/UploadPlacePhoto", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *photosServiceClient) GetPostImage(ctx context.Context, in *PostPhotoRequest, opts ...grpc.CallOption) (*PostPhotoResponse, error) {
+	out := new(PostPhotoResponse)
+	err := c.cc.Invoke(ctx, "/wcity.PhotosService/GetPostImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *photosServiceClient) UploadPostImage(ctx context.Context, in *PostUploadRequest, opts ...grpc.CallOption) (*PostPhotoResponse, error) {
+	out := new(PostPhotoResponse)
+	err := c.cc.Invoke(ctx, "/wcity.PhotosService/UploadPostImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PhotosServiceServer is the server API for PhotosService service.
 type PhotosServiceServer interface {
 	GetProfilePhoto(context.Context, *ProfilePhotoRequestP) (*ProfilePhotoResponseP, error)
+	UploadProfilePhoto(context.Context, *ProfileUploadRequest) (*ProfileUploadResponse, error)
+	GetCityImage(context.Context, *CityPhotoRequest) (*CityPhotoResponse, error)
+	UploadCityPhoto(context.Context, *CityUploadRequest) (*CityPhotoResponse, error)
+	GetPlacePhoto(context.Context, *PlacePhotoRequest) (*PlacePhotoResponse, error)
+	UploadPlacePhoto(context.Context, *PlaceUploadRequest) (*PlacePhotoResponse, error)
+	GetPostImage(context.Context, *PostPhotoRequest) (*PostPhotoResponse, error)
+	UploadPostImage(context.Context, *PostUploadRequest) (*PostPhotoResponse, error)
 }
 
 // UnimplementedPhotosServiceServer can be embedded to have forward compatible implementations.
@@ -194,6 +1059,27 @@ type UnimplementedPhotosServiceServer struct {
 
 func (*UnimplementedPhotosServiceServer) GetProfilePhoto(ctx context.Context, req *ProfilePhotoRequestP) (*ProfilePhotoResponseP, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProfilePhoto not implemented")
+}
+func (*UnimplementedPhotosServiceServer) UploadProfilePhoto(ctx context.Context, req *ProfileUploadRequest) (*ProfileUploadResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadProfilePhoto not implemented")
+}
+func (*UnimplementedPhotosServiceServer) GetCityImage(ctx context.Context, req *CityPhotoRequest) (*CityPhotoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCityImage not implemented")
+}
+func (*UnimplementedPhotosServiceServer) UploadCityPhoto(ctx context.Context, req *CityUploadRequest) (*CityPhotoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadCityPhoto not implemented")
+}
+func (*UnimplementedPhotosServiceServer) GetPlacePhoto(ctx context.Context, req *PlacePhotoRequest) (*PlacePhotoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPlacePhoto not implemented")
+}
+func (*UnimplementedPhotosServiceServer) UploadPlacePhoto(ctx context.Context, req *PlaceUploadRequest) (*PlacePhotoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadPlacePhoto not implemented")
+}
+func (*UnimplementedPhotosServiceServer) GetPostImage(ctx context.Context, req *PostPhotoRequest) (*PostPhotoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPostImage not implemented")
+}
+func (*UnimplementedPhotosServiceServer) UploadPostImage(ctx context.Context, req *PostUploadRequest) (*PostPhotoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UploadPostImage not implemented")
 }
 
 func RegisterPhotosServiceServer(s *grpc.Server, srv PhotosServiceServer) {
@@ -218,6 +1104,132 @@ func _PhotosService_GetProfilePhoto_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PhotosService_UploadProfilePhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProfileUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhotosServiceServer).UploadProfilePhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.PhotosService/UploadProfilePhoto",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhotosServiceServer).UploadProfilePhoto(ctx, req.(*ProfileUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PhotosService_GetCityImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CityPhotoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhotosServiceServer).GetCityImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.PhotosService/GetCityImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhotosServiceServer).GetCityImage(ctx, req.(*CityPhotoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PhotosService_UploadCityPhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CityUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhotosServiceServer).UploadCityPhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.PhotosService/UploadCityPhoto",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhotosServiceServer).UploadCityPhoto(ctx, req.(*CityUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PhotosService_GetPlacePhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PlacePhotoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhotosServiceServer).GetPlacePhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.PhotosService/GetPlacePhoto",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhotosServiceServer).GetPlacePhoto(ctx, req.(*PlacePhotoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PhotosService_UploadPlacePhoto_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PlaceUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhotosServiceServer).UploadPlacePhoto(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.PhotosService/UploadPlacePhoto",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhotosServiceServer).UploadPlacePhoto(ctx, req.(*PlaceUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PhotosService_GetPostImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPhotoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhotosServiceServer).GetPostImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.PhotosService/GetPostImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhotosServiceServer).GetPostImage(ctx, req.(*PostPhotoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PhotosService_UploadPostImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PhotosServiceServer).UploadPostImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.PhotosService/UploadPostImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PhotosServiceServer).UploadPostImage(ctx, req.(*PostUploadRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _PhotosService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "wcity.PhotosService",
 	HandlerType: (*PhotosServiceServer)(nil),
@@ -225,6 +1237,34 @@ var _PhotosService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProfilePhoto",
 			Handler:    _PhotosService_GetProfilePhoto_Handler,
+		},
+		{
+			MethodName: "UploadProfilePhoto",
+			Handler:    _PhotosService_UploadProfilePhoto_Handler,
+		},
+		{
+			MethodName: "GetCityImage",
+			Handler:    _PhotosService_GetCityImage_Handler,
+		},
+		{
+			MethodName: "UploadCityPhoto",
+			Handler:    _PhotosService_UploadCityPhoto_Handler,
+		},
+		{
+			MethodName: "GetPlacePhoto",
+			Handler:    _PhotosService_GetPlacePhoto_Handler,
+		},
+		{
+			MethodName: "UploadPlacePhoto",
+			Handler:    _PhotosService_UploadPlacePhoto_Handler,
+		},
+		{
+			MethodName: "GetPostImage",
+			Handler:    _PhotosService_GetPostImage_Handler,
+		},
+		{
+			MethodName: "UploadPostImage",
+			Handler:    _PhotosService_UploadPostImage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
