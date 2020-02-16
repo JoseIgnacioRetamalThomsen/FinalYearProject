@@ -60,6 +60,7 @@ message CityResponseP{
   string creatorEmail = 4;
   string description = 5;
   GeolocationP location =6;
+  int32 id =7;
 }
 message PlaceRequestP{
   string token  = 1;
@@ -78,6 +79,7 @@ message PlaceResponseP{
   string creatorEmail =5;
   string description =6;
   GeolocationP location =7;
+  int32 id = 8;
 }
 message VisitCityRequestP{
   string token = 1;

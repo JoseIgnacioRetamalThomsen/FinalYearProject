@@ -106,14 +106,17 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       Context context = Context.current();
       DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
-      String res = dao.createCity(
+      int res = dao.createCity(
           new City().setName(request.getName()).setCountry(request.getCountry())
               .setCreatorEmail(request.getCreatorEmail())
               .setGeolocation(new Geolocation(request.getLocation().getLon(),
                   request.getLocation().getLat()))
               .setDescription(request.getDescription()));
 
-      response.onNext(CityResponsePDB.newBuilder().setName(request.getName())
+      response.onNext(CityResponsePDB.newBuilder()
+    		  .setId(res)
+    		  .setValid(true)
+    		  .setName(request.getName())
           .setCountry(request.getCountry()).build());
 
       response.onCompleted();
@@ -131,15 +134,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
     try {
       Context context = Context.current();
       DAO dao = new DAO(URL, USER_NAME, PASSWORD);
-      City u = dao.getCity(request.getName(), request.getCountry());
+      CityPDB res = dao.getCity(request.getName(), request.getCountry());
       response
-          .onNext(CityPDB.newBuilder().setName(u.getName())
-              .setCountry(u.getCountry()).setDescription(u.getDescription())
-              .setCreatorEmail(u.getCreatorEmail())
-              .setLocation(GeolocationPDB.newBuilder()
-                  .setLat(u.getGeolocation().getLat())
-                  .setLon(u.getGeolocation().getLon()))
-              .build());
+          .onNext(res);
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
@@ -156,17 +153,11 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       Context context = Context.current();
       DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
-      Place u = dao.getPlace(request.getName(), request.getCity(),
+      PlacePDB u = dao.getPlace(request.getName(), request.getCity(),
           request.getCountry());
 
       response
-          .onNext(PlacePDB.newBuilder().setName(u.getName())
-              .setCountry(u.getCityCountry()).setDescription(u.getDescription())
-              .setCreatorEmail(u.getCreatorEmail())
-              .setLocation(GeolocationPDB.newBuilder()
-                  .setLat(u.getGeolocation().getLat())
-                  .setLon(u.getGeolocation().getLon()))
-              .build());
+          .onNext(u);
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);
@@ -183,7 +174,7 @@ public class ProfileDBImp extends ProfilesDBImplBase {
       Context context = Context.current();
       DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
-      String res = dao.createPlace(new Place().setName(request.getName())
+      int res = dao.createPlace(new Place().setName(request.getName())
           .setCityName(request.getCity()).setCityCountry(request.getCountry())
           .setCreatorEmail(request.getCreatorEmail())
           .setDescription(request.getDescription())
@@ -191,7 +182,11 @@ public class ProfileDBImp extends ProfilesDBImplBase {
               request.getLocation().getLon())));
 
       response.onNext(
-          PlaceResponsePDB.newBuilder().setName(request.getName()).build());
+          PlaceResponsePDB.newBuilder()
+          .setValid(true)
+          .setId(res)
+          .setCountry(request.getCountry())
+          .setName(request.getName()).build());
       response.onCompleted();
     } catch (Exception e) {
       response.onError(e);

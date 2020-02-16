@@ -4,12 +4,13 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"net"
 
 	//"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
 	"log"
-	"net"
+
 	"time"
 
 	//"errors"
@@ -25,9 +26,9 @@ const (
 
 )
 const(
-	//url = "0.0.0.0:5777"
+	url = "0.0.0.0:5777"
 	//url="localhost:5777";
-	url = "35.234.146.99:5777"
+	//url = "35.234.146.99:5777"
 )
 
 type neo4jDB struct {
@@ -66,7 +67,7 @@ const(
 	email = "user1@email.com"
 	description = "first user"
 
-	cityName = "galway"
+	cityName = "galway1"
 	cityUserEmail = email
 	cityLon =45
 	cityLat = 54
@@ -182,11 +183,7 @@ func (s *server) GetCity(ctx context.Context, in *pb.CityRequestP) (*pb.CityResp
 	if err != nil {
 		return &pb.CityResponseP{
 			Valid:                false,
-			Name:                 res.Name,
-			Country:             res.Country,
-			CreatorEmail:         res.CreatorEmail,
-			Description:          res.Description,
-			Location:             &pb.GeolocationP{Lat:res.Location.GetLat(),Lon:res.Location.GetLon()},
+
 
 		},nil
 	}
@@ -198,6 +195,7 @@ func (s *server) GetCity(ctx context.Context, in *pb.CityRequestP) (*pb.CityResp
 		CreatorEmail:         res.CreatorEmail,
 		Description:          res.Description,
 		Location:             &pb.GeolocationP{Lat:res.Location.GetLat(),Lon:res.Location.GetLon()},
+		Id :                  res.Id,
 
 	},nil
 }
@@ -216,14 +214,19 @@ func (s *server) CreatePlace(ctx context.Context, in *pb.PlaceRequestP) (*pb.Pla
 		panic(err)
 	}
 
+	if res <=0 {
+		return &pb.PlaceResponseP{
+			Valid:                false,},nil
+	}
 	return &pb.PlaceResponseP{
-		Valid:                res,
+		Valid:                true,
 		Name:                 in.Name,
 		City:                 in.City,
 		Country:              in.Country,
 		CreatorEmail:         in.CreatorEmail,
 		Description:          in.Description,
 		Location:             &pb.GeolocationP{Lat:in.Location.GetLat(),Lon:in.Location.GetLon()},
+		Id:                   res,
 	},nil
 }
 
@@ -297,6 +300,19 @@ func (s *server) GetPlace(ctx context.Context, in *pb.PlaceRequestP) (*pb.PlaceR
 		panic(err)
 	}
 
+	if res.Id ==0 {
+		return &pb.PlaceResponseP{
+			Valid:                false,
+			Name:                 res.Name,
+			City:                 res.City,
+			Country:              res.Country,
+			CreatorEmail:         res.CreatorEmail,
+			Description:          res.Description,
+			Location:             &pb.GeolocationP{Lat:res.Location.GetLat(),Lon:res.Location.GetLon()},
+			Id:                   res.Id,
+		},nil
+	}
+
 	return &pb.PlaceResponseP{
 		Valid:                true,
 		Name:                 res.Name,
@@ -305,6 +321,7 @@ func (s *server) GetPlace(ctx context.Context, in *pb.PlaceRequestP) (*pb.PlaceR
 		CreatorEmail:         res.CreatorEmail,
 		Description:          res.Description,
 		Location:             &pb.GeolocationP{Lat:res.Location.GetLat(),Lon:res.Location.GetLon()},
+		Id:                   res.Id,
 	},nil
 }
 
@@ -370,6 +387,7 @@ func (s *server) GetVisitedCitys(ctx context.Context, in *pb.VisitedRequestP) (*
 			CreatorEmail:         e.CreatorEmail,
 			Description:          e.Description,
 			Location:             &pb.GeolocationP{Lat:e.Location.Lat,Lon:e.Location.Lon},
+			Id:                   e.Id,
 
 		})
 	}
@@ -401,6 +419,7 @@ func (s *server) GetVisitedPlaces(ctx context.Context, in *pb.VisitedRequestP) (
 			CreatorEmail:         e.CreatorEmail,
 			Description:          e.Description,
 			Location:             &pb.GeolocationP{Lat:e.Location.Lat,Lon:e.Location.Lon},
+			Id:                   e.Id,
 		})
 	}
 	return &pb.VisitedPlacesResponseP{
@@ -432,6 +451,7 @@ func (s *server) GetCityPlaces(ctx context.Context, in *pb.CityRequestP) (*pb.Vi
 			CreatorEmail:         e.CreatorEmail,
 			Description:          e.Description,
 			Location:             &pb.GeolocationP{Lat:e.Location.Lat,Lon:e.Location.Lon},
+			Id:                    e.Id,
 		})
 	}
 	return &pb.VisitedPlacesResponseP{
@@ -471,6 +491,9 @@ func main(){
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+
+
+
 	////crete user
 	//res , errr := CreateUser(email,name,description)
 	//if errr != nil {
@@ -478,21 +501,21 @@ func main(){
 	//}
 	//fmt.Print(res)
 	//
-	////get user
+	//get user
 	//n,e,d,err := GetUser(email)
 	//fmt.Print(n +"\n")
 	//fmt.Print(e +"\n")
 	//fmt.Print(d +"\n")
-	//
-	////create city
-	//a,b,err :=CreateCity(cityName,cityCountry,cityUserEmail,cityLat,cityLon,cityDescription)
-	//fmt.Print(a)
-	//fmt.Print(b)
-	//
+
+	//create city
+	//a,err :=CreateCity(cityName,cityCountry,cityUserEmail,cityLat,cityLon,cityDescription)
+	//fmt.Print(a.Id)
+
+
 	////get city
 	//r,err := GetCity(cityName,cityCountry);
 	//fmt.Print(r.Country + "\n" +r.Name +"\n" +r.GetCreatorEmail() +"\n" +r.Description)
-	//fmt.Println(r.GetLocation())
+	//fmt.Println(r.Id)
 	//
 	////create place
 	//r1,err := CreatePlace(placeName,placeCity,placeCountry,placeDescription,placeCreatorEmail,placeLat,placeLon)

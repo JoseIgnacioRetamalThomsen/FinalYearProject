@@ -136,7 +136,7 @@ func GetPlace(name string, city string,country string)(pb.PlacePDB,error){
 	r, err := dbConn.context.dbClient.GetPlace(ctx,&pb.PlaceRequestPDB{
 		Name:strings.ToLower(name),
 		City:strings.ToLower(city),
-		Country:strings.ToLower(country)})
+		Country:strings.ToLower(country),})
 	if err != nil {
 		panic(err)
 	}
@@ -144,7 +144,7 @@ func GetPlace(name string, city string,country string)(pb.PlacePDB,error){
 	return *r,nil
 }
 
-func CreatePlace(name string, city string, country string, description string, creatorEmail string, lat float32, lon float32)(bool,error){
+func CreatePlace(name string, city string, country string, description string, creatorEmail string, lat float32, lon float32)(int32,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.CreatePlaceRequest(ctx,&pb.PlacePDB{
@@ -157,7 +157,7 @@ func CreatePlace(name string, city string, country string, description string, c
 	if err != nil {
 		panic(err)
 	}
-	return r.Valid , nil
+	return r.Id , nil
 }
 
 func GetCity(name string, country string)(pb.CityPDB,error){
@@ -190,6 +190,7 @@ func CreateCity(name string, country string, creatorEmail string, lat float32,lo
 		CreatorEmail:         creatorEmail,
 		Description:          description,
 		Location:             &pb.GeolocationP{Lat:lat,Lon:lon},
+		Id:                   r.Id,
 
 	},nil
 }

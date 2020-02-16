@@ -49,18 +49,18 @@ public class DAO implements AutoCloseable {
    * @param description user description
    * @return true if is created
    */
-  public String createUser(final String email, final String name,
+  public int createUser(final String email, final String name,
       final String description) {
     try (Session session = driver.session()) {
-      String result = session.writeTransaction(new TransactionWork<String>() {
+      Integer result = session.writeTransaction(new TransactionWork<Integer>() {
         @Override
-        public String execute(Transaction tx) {
+        public Integer execute(Transaction tx) {
           Result result = tx.run("Create (a:User) " + "SET a.name = $name "
               + "SET a.email = $email " + "SET a.description = $description "
-              + "RETURN a.name + ', from node ' + id(a)",
+              + "RETURN   id(a)",
               parameters("name", name, "email", email, "description",
                   description));
-          return result.single().get(0).asString();
+          return result.single().get(0).asInt();
         }
       });
       return result;
@@ -103,25 +103,25 @@ public class DAO implements AutoCloseable {
    * @param city the new city
    * @return true if created
    */
-  public String createCity(City city) {
+  public int createCity(City city) {
     try (Session session = driver.session()) {
-      String result = session.writeTransaction(new TransactionWork<String>() {
+      int result = session.writeTransaction(new TransactionWork<Integer>() {
         @Override
-        public String execute(Transaction tx) {
+        public Integer execute(Transaction tx) {
           Result result = tx.run(
               "Create (a:City) " + "SET a.name = $name "
                   + "SET a.creatorEmail = $creatorEmail "
                   + "SET a.description = $description " + "SET a.lat = $lat "
                   + "SET a.lon = $lon " + "SET a.country = $country "
                   + "SET a.picture = $picture "
-                  + "RETURN a.name + ', from node ' + id(a)",
+                  + "RETURN  id(a)",
               parameters("name", city.getName(), "creatorEmail",
                   city.getCreatorEmail(), "description", city.getDescription(),
                   "lat", city.getGeolocation().getLat(), "lon",
                   city.getGeolocation().getLon(), "country", city.getCountry(),
                   "picture", city.getPicture()));
 
-          return result.single().get(0).asString();
+          return result.single().get(0).asInt();
         }
       });
       return result;
@@ -136,25 +136,30 @@ public class DAO implements AutoCloseable {
    * @param country city country
    * @return city data
    */
-  public City getCity(String name, String country) {
-    City city = null;
+  public CityPDB getCity(String name, String country) {
+    CityPDB city = null;
     try (Session session = driver.session()) {
-      city = session.writeTransaction(new TransactionWork<City>() {
+      city = session.writeTransaction(new TransactionWork<CityPDB>() {
         @Override
-        public City execute(Transaction tx) {
+        public CityPDB execute(Transaction tx) {
           Result result = tx.run(
               "MATCH (a:City) " + "where a.name = $name " + " AND "
-                  + " a.country = $country " + "RETURN a",
+                  + " a.country = $country " + "RETURN a,ID(a)",
               parameters("name", name, "country", country));
           Record r = result.next();
-          City c = new City().setName(r.get(0).get("name").asString())
-              .setCountry(r.get(0).get("country").asString())
-              .setCreatorEmail(r.get(0).get("creatorEmail").asString())
-              .setDescription(r.get(0).get("description").asString())
-              .setGeolocation(new Geolocation(r.get(0).get("lat").asFloat(),
-                  r.get(0).get("lon").asFloat()));
-
-          return c;
+   
+          return CityPDB.newBuilder()
+        		  .setName(r.get(0).get("name").asString())
+        		  .setCountry(r.get(0).get("country").asString())
+        		  .setCreatorEmail(r.get(0).get("creatorEmail").asString())
+        		  .setDescription(r.get(0).get("description").asString())
+        		  .setLocation(GeolocationPDB.newBuilder()
+        				  .setLat(r.get(0).get("lat").asFloat())
+        				  .setLon(r.get(0).get("lon").asFloat()))
+        		  .setId(r.get(1).asInt())
+        		  .build();
+        		  
+        
         }
       });
     }
@@ -167,24 +172,26 @@ public class DAO implements AutoCloseable {
    * @param place the new place
    * @return true if created
    */
-  public String createPlace(Place place) {
+  public int createPlace(Place place) {
     try (Session session = driver.session()) {
-      String result = session.writeTransaction(new TransactionWork<String>() {
+      int result = session.writeTransaction(new TransactionWork<Integer>() {
         @Override
-        public String execute(Transaction tx) {
+        public Integer execute(Transaction tx) {
           Result result = tx.run(
               "Create (a:Place) " + "SET a.name = $name "
                   + "SET a.creatorEmail = $creatorEmail "
                   + "SET a.description = $description " + "SET a.lat = $lat "
                   + "SET a.lon = $lon " + "SET a.country = $country "
                   + "SET a.city = $city "
-                  + "RETURN a.name + ', from node ' + id(a)",
+                  + "RETURN id(a)",
               parameters("name", place.getName(), "creatorEmail",
                   place.getCreatorEmail(), "description",
                   place.getDescription(), "lat",
                   place.getGeolocation().getLat(), "lon",
                   place.getGeolocation().getLon(), "country",
                   place.getCityCountry(), "city", place.getCityName()));
+          
+          //add relation
           tx.run("MATCH (a:City),(b:Place) "
               + "WHERE a.name = $cityName AND  a.country = $country "
               + "AND b.name = $placeNane AND b.country =$country AND b.city = $cityName "
@@ -193,14 +200,14 @@ public class DAO implements AutoCloseable {
                   place.getCityCountry(), "placeNane", place.getName(), "city",
                   place.getCityName()));
 
-          return result.single().get(0).asString();
+          return result.single().get(0).asInt();
         }
       });
       return result;
 
     }catch(Exception e) {
       e.printStackTrace();
-      return null;
+      return -1;
     }
   }
 
@@ -212,26 +219,30 @@ public class DAO implements AutoCloseable {
    * @param country the place country
    * @return the place data
    */
-  public Place getPlace(String name, String city, String country) {
-    Place place = null;
+  public PlacePDB getPlace(String name, String city, String country) {
+    PlacePDB place = null;
     try (Session session = driver.session()) {
-      place = session.writeTransaction(new TransactionWork<Place>() {
+      place = session.writeTransaction(new TransactionWork<PlacePDB>() {
         @Override
-        public Place execute(Transaction tx) {
+        public PlacePDB execute(Transaction tx) {
           Result result = tx.run(
               "MATCH (a:Place) " + "where a.name = $name " + " AND "
                   + " a.country = $country " + " AND" + " a.city = $city "
-                  + "RETURN a",
+                  + "RETURN a,ID(a)",
               parameters("name", name, "country", country, "city", city));
           Record r = result.next();
-          Place p = new Place().setName(r.get(0).get("name").asString())
-              .setCityCountry(r.get(0).get("country").asString())
-              .setCityName(r.get(0).get("city").asString())
-              .setCreatorEmail(r.get(0).get("creatorEmail").asString())
-              .setDescription(r.get(0).get("description").asString())
-              .setGeolocation(new Geolocation(r.get(0).get("lat").asFloat(),
-                  r.get(0).get("lon").asFloat()));
-          return p;
+    
+         return PlacePDB.newBuilder()
+        		 .setName(r.get(0).get("name").asString())
+        		 .setCity(r.get(0).get("city").asString())
+        		 .setCountry(r.get(0).get("country").asString())
+        		 .setCreatorEmail(r.get(0).get("creatorEmail").asString())
+        		 .setDescription(r.get(0).get("description").asString())
+        		 .setLocation(GeolocationPDB.newBuilder()
+        				 .setLat(r.get(0).get("lat").asFloat())
+        				 .setLon(r.get(0).get("lon").asFloat()))
+        		 .setId(r.get(1).asInt()).build();
+        		         
         }
       });
     } catch (Exception e) {
@@ -291,7 +302,7 @@ public class DAO implements AutoCloseable {
           Result result = tx.run("Match (a:User) " + " -[r:VISIT]-> "
               + " (b:Place) " + "WHERE a.email = $email " +
 
-              "RETURN b", parameters("email", userEmail));
+              "RETURN b,id(b)", parameters("email", userEmail));
           // return result.single().get(0).asString();
           for (
             Record r : result.list()
@@ -305,6 +316,7 @@ public class DAO implements AutoCloseable {
                 .setLocation(GeolocationPDB.newBuilder()
                     .setLat(r.get(0).get("lat").asFloat())
                     .setLon(r.get(0).get("lon").asFloat()).build())
+                .setId(r.get(1).asInt())
                 .build());
           }
           return true;
@@ -362,7 +374,7 @@ public class DAO implements AutoCloseable {
           Result result = tx.run("Match (a:User) " + " -[r:VISIT]-> "
               + " (b:City) " + "WHERE a.email = $email " +
 
-              "RETURN b", parameters("email", userEmail));
+              "RETURN b,id(b)", parameters("email", userEmail));
           // return result.single().get(0).asString();
           for (
             Record r : result.list()
@@ -374,6 +386,7 @@ public class DAO implements AutoCloseable {
                 .setLocation(GeolocationPDB.newBuilder()
                     .setLat(r.get(0).get("lat").asFloat())
                     .setLon(r.get(0).get("lon").asFloat()).build())
+                .setId(r.get(1).asInt())
                 .build());
 
           }
@@ -495,7 +508,7 @@ public class DAO implements AutoCloseable {
           Result result = tx.run(
               "Match (a:City) " + " -[r:ISIN]-> " + " (b:Place) "
                   + "WHERE a.name= $name AND a.country = $country "
-                  + "RETURN b",
+                  + "RETURN b,id(b)",
               parameters("name", request.getName(), "country",
                   request.getCountry()));
           // return result.single().get(0).asString();
@@ -511,6 +524,7 @@ public class DAO implements AutoCloseable {
                 .setLocation(GeolocationPDB.newBuilder()
                     .setLat(r.get(0).get("lat").asFloat())
                     .setLon(r.get(0).get("lon").asFloat()).build())
+                .setId(r.get(1).asInt())
                 .build());
           }
           return true;
@@ -525,8 +539,8 @@ public class DAO implements AutoCloseable {
   }
 
   public static void main(String... args) throws Exception {
-    try (DAO dao = new DAO("bolt://192.168.43.58:7687", "neo4j", "test")) {
-      // dao.AddUser("email1", "name1", "description1");
+    try (DAO dao = new DAO("bolt://172.17.0.1:7687", "neo4j", "test")) {
+      //    System.out.print(dao.createUser("email16", "name1", "description1"));
       // User u = dao.getUser("one");
       // System.out.println(u);
       /*
@@ -545,7 +559,7 @@ public class DAO implements AutoCloseable {
        * dao.createPlace(p);
        */
 
-      // System.out.println(dao.getPlace("gmit","galway", "ireland"));
+      System.out.println(dao.getPlace("gmit","galway", "ireland"));
       /*
        * List<Record> l = dao.visitPlace("user1@email.com", "gmit", "galway",
        * "ireland"); for(Record r : l) { System.out.println(r.get(0)); }
@@ -565,14 +579,14 @@ public class DAO implements AutoCloseable {
       // .setCountry("ireland")
       // .setDescription("new Description xxx")
       // .setLocation(GeolocationPDB.newBuilder().setLat(7).setLon(5).build()).build());
-
+/*
       List<PlacePDB> res = dao.getPlacesInCity(CityRequestPDB.newBuilder()
           .setName("galway").setCountry("ireland").build());
       for (
         PlacePDB p : res
       ) {
         System.out.println(p.getName());
-      }
+      }*/
     }
   }
 

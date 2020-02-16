@@ -27,10 +27,10 @@ const (
 
 )
 const(
-	//url = "0.0.0.0:60051"
-	url="35.197.216.42:60051";
+	url = "0.0.0.0:60051"
+	//url="35.197.216.42:60051";
 	//url = "35.234.146.99:5777"
-	token ="119b8f15250c9f0f5dad71375e8dd8b06aa42a13500b62e4ec780e50c112bcf4"
+	token ="c9fcd7066aaba76fbe5d786f2464015d14f215280ebb9903067e40ec0a5fbc04"
 	tokenEmail ="G00341964@gmit.ie"
 )
 
@@ -69,20 +69,21 @@ func main(){
 	s2 := &profileServer{dbserverCtx}
 	profSerConn = *s2
 
-	//fmt.Println(CreateUser("email7","namef","description4",token))
-	fmt.Println(GetUser(tokenEmail,token))
-	//fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
-	//fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
-	//fmt.Println(GetCity(tokenEmail,token,"San Pedro" , "Chile"))
-	//fmt.Println(CreatePlace(tokenEmail,token,"plaza","san pedro","chile","nada",3,3))
-	//fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
-	//fmt.Println(UpdatePlace(tokenEmail,token,"plaza","san pedro","chile","Algo",3,3))
-	//fmt.Println(GetPlace(tokenEmail,token, "plaza","San Pedro", "chile"))
+	//fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
+	//fmt.Println(GetUser(tokenEmail,token))
+//	fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
+//	fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
+//	fmt.Println(GetCity(tokenEmail,token,"San Pedro" , "Chile"))
+//	fmt.Println(CreatePlace(tokenEmail,token,"plaza1","san pedro","chile","nada",3,3))
+//	fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
+//	fmt.Println(UpdatePlace(tokenEmail,token,"plaza","san pedro","chile","Algo",3,3))
+//
+//	fmt.Println(GetPlace(tokenEmail,token, "gmit","galway", "ireland"))
 //	fmt.Println(VisitCity(tokenEmail,token,"San Pedro","Chile"))
-//fmt.Println(VisitPlace(tokenEmail,token,"plaza","san pedro","chile"))
+//fmt.Println(VisitPlace(tokenEmail,token,"plaza1","san pedro","chile"))
 //fmt.Println(GetVisitedCity(tokenEmail,token))
 //fmt.Println(GetVisitedPlaces(tokenEmail,token))
-//fmt.Println(GetCityPlaces(tokenEmail,token,"san Pedro","chile"))
+fmt.Println(GetCityPlaces(tokenEmail,token,"san Pedro","chile"))
 }
 
 
@@ -240,7 +241,7 @@ func GetPlace(email string, token string, name string, city string,country strin
 	if err != nil{
 		panic(err)
 	}
-	fmt.Println(r)
+	fmt.Println(r.Id)
 	return r.Valid
 }
 
@@ -305,7 +306,7 @@ func GetVisitedPlaces(email string, token string)bool{
 	if err != nil{
 		panic(err)
 	}
-	fmt.Println(r)
+	fmt.Println(r.Places)
 	return r.Valid
 }
 
