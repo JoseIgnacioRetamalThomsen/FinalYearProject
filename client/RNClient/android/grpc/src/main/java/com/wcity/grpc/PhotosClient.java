@@ -1,40 +1,60 @@
-//package com.wcity.grpc;
-//
-//import java.util.concurrent.TimeUnit;
-//
-//import io.grpc.ManagedChannel;
-//import io.grpc.ManagedChannelBuilder;
-//import io.grpc.StatusRuntimeException;
-//import io.grpc.wcity.photo.PhotosServiceGrpc;
-//
-//import io.grpc.wcity.photo.ProfilePhotoRequestP;
-//import io.grpc.wcity.photo.ProfilePhotoResponseP;
-////import io.grpc.wcity.photo.ProfileUploadRequest;
-////import io.grpc.wcity.photo.ProfileUploadResponse;
-//
-//public class PhotosClient {
-//
-//    private final ManagedChannel channel;
-//    private final PhotosServiceGrpc.PhotosServiceBlockingStub stub;
-//
-//    public PhotosClient(String host, int port) {
-//        this.channel = ManagedChannelBuilder.forAddress(host, port)
-//                .usePlaintext()
-//                .build();
-//        stub = PhotosServiceGrpc.newBlockingStub(channel);
-//    }
-//
-//    public void shutdown() throws InterruptedException {
-//        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-//    }
-//
-//    public String getProfilePhoto(String email, String token) {
-//        ProfilePhotoRequestP userData = ProfilePhotoRequestP.newBuilder().setEmail(email).setToken(token).build();
-//        ProfilePhotoResponseP response;
+package com.wcity.grpc;
+
+import com.google.protobuf.ByteString;
+
+import java.util.concurrent.TimeUnit;
+
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
+import io.grpc.wcity.photo.PhotosServiceGrpc;
+
+import io.grpc.wcity.photo.ProfilePhotoRequestP;
+import io.grpc.wcity.photo.ProfilePhotoResponseP;
+import io.grpc.wcity.photo.ProfileUploadRequest;
+import io.grpc.wcity.photo.ProfileUploadResponse;
+//import io.grpc.wcity.photo.ProfileUploadRequest;
+//import io.grpc.wcity.photo.ProfileUploadResponse;
+
+public class PhotosClient {
+
+    private final ManagedChannel channel;
+    private final PhotosServiceGrpc.PhotosServiceBlockingStub stub;
+
+    public PhotosClient(String host, int port) {
+        this.channel = ManagedChannelBuilder.forAddress(host, port)
+                .usePlaintext()
+                .build();
+        stub = PhotosServiceGrpc.newBlockingStub(channel);
+    }
+
+    public void shutdown() throws InterruptedException {
+        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+    }
+
+    public String getProfilePhoto(String email, String token) {
+        ProfilePhotoRequestP userData = ProfilePhotoRequestP.newBuilder().setEmail(email).setToken(token).build();
+        ProfilePhotoResponseP response;
+        String url = "";
+        boolean isValid;
+        try {
+            response = stub.getProfilePhoto(userData);
+            isValid = response.getValid();
+            if (isValid == true)
+                url = response.getUrl();
+            else url = "";
+        } catch (StatusRuntimeException e) {
+
+        }
+        return url;
+    }
+//    public String uploadProfilePhoto(String email, String token, ByteString image) {
+//        ProfileUploadRequest userData = ProfileUploadRequest.newBuilder().setEmail(email).setToken(token).setImage(image).build();
+//        ProfileUploadResponse response;
 //        String url = "";
 //        boolean isValid;
 //        try {
-//            response = stub.getProfilePhoto(userData);
+//            response = stub.uploadProfilePhoto(userData);
 //            isValid = response.getValid();
 //            if (isValid == true)
 //                url = response.getUrl();
@@ -44,20 +64,4 @@
 //        }
 //        return url;
 //    }
-////    public String UploadProfilePhoto(String email, String token, ByteString image) {
-////        ProfileUploadRequest userData = ProfilePhotoRequestP.newBuilder().setEmail(email).setToken(token).build();
-////        ProfileUploadResponse response;
-////        String url = "";
-////        boolean isValid;
-////        try {
-////            response = stub.getProfilePhoto(userData);
-////            isValid = response.getValid();
-////            if (isValid == true)
-////                url = response.getUrl();
-////            else url = "";
-////        } catch (StatusRuntimeException e) {
-////
-////        }
-////        return url;
-////    }
-//}
+}
