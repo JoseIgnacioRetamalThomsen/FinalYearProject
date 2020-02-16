@@ -143,7 +143,7 @@ const MyApp = createSwitchNavigator({
         auth: authStack
     },
     {
-        initialRouteName: 'loading'
+        initialRouteName: 'loading'//change back to loading
     })
 
 const AppNavigation = createAppContainer(MyApp);

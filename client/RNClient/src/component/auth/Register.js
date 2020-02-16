@@ -46,34 +46,28 @@ export default class Register extends Component {
                 this.state.email,
                 this.state.password,
                 (err) => {
-                    alert("err" + err)
-                    this.setState({message: err})
+                    if (err.includes("Duplicate")) {
+                        this.setState({message: 'Email is already registered'})
+                    } else if (err.includes("Exception")) {
+                        this.setState({message: 'Server is not available. Please try again later'})
+                    } else this.setState({message: 'Email is already registered'})
                 },
                 async (token) => {
-                    let value
-                    if (token.includes("Duplicate")) {
-                        this.setState({message: 'Email is already registered'})
-                    } else if (token.includes("Exception")){
-                        this.setState({message: 'Email is already registered'})
-                    }
-                    else {
-                        console.log("token here " + token)
-                        try {
-                            await AsyncStorage.setItem(this.state.email, token)
-                            console.log("this.state.email, token"+this.state.email, token)
-                        } catch (e) {
-                            console.log("Error ", e);
-                        }
-
-                        try {
-                            value = await AsyncStorage.getItem(this.state.email)
-                            console.log("value in get" + value)
-                        } catch (e) {
-                        }
-                        console.log("asyncstorage " + await AsyncStorage.getItem(this.state.email))
-                        console.log("value " + value)
-                        console.log("token" + token)
-                        this.setState({message: 'Success'})
+                    console.log("token registered " + token)
+                    try {
+                        await AsyncStorage.setItem(this.state.email, token)
+                        console.log("this.state.email, token" + this.state.email, token)
+                    } catch (e) {
+                        console.log("Error ", e);
+                        // try {
+                        //     value = await AsyncStorage.getItem(this.state.email)
+                        //     console.log("value in get" + value)
+                        // } catch (e) {
+                        // }
+                        // console.log("asyncstorage " + await AsyncStorage.getItem(this.state.email))
+                        // console.log("value " + value)
+                        // console.log("token" + token)
+                        //this.setState({message: 'Success'})
                         this.props.navigation.navigate('app')
                     }
                 }
@@ -85,11 +79,9 @@ export default class Register extends Component {
     render() {
         return (
             <View style={styles.container}>
-                {/*<View>*/}
-                <Text style={styles.container}>
+                <Text>
                     {this.state.message}
                 </Text>
-                {/*</View>*/}
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={require('../../img/mail.png')}/>
                     <TextInput style={styles.inputs}

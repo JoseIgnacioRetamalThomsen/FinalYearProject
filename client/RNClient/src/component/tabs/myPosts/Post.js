@@ -3,13 +3,13 @@ import {
     Text,
     View,
     TextInput,
-    TouchableHighlight
+    TouchableHighlight, TouchableOpacity
 } from 'react-native';
 import styles from '../../../styles/Style'
 import CustomHeader from "../../CustomHeader";
 import LoadImage from "../../LoadImage";
 import {Root} from "native-base";
-
+import {onClickAddImage, onSelectedImage} from '../../functions'
 export default class Post extends Component {
 
     constructor(props) {
@@ -17,34 +17,25 @@ export default class Post extends Component {
         this.state = {
             img: '',
             text: '',
+            fileList: []
         }
     }
-
-    onClickListener = (viewId) => {
-        alert("submit post")
-    }
-
     render() {
         return (
             <Root>
                 <View style={{flex: 1}}>
                     <CustomHeader title="Post" isHome={false} navigation={this.props.navigation}/>
                 </View>
-                <View>
-                    <TextInput
-                        placeholder="Start writing your post here.. "
-                        underlineColorAndroid='transparent'
-                        onChangeText={(text) => this.setState({ text })} />
-                </View>
-
-                    <LoadImage/>
-
-                <View >
-                    <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]} onPress={() => this.onClickListener()}>
-                        <Text style={styles.loginText}> Post</Text>
-                    </TouchableHighlight>
-                </View>
-
+                {/*<View>*/}
+                {/*    <TextInput*/}
+                {/*        placeholder="Start writing your post here.. "*/}
+                {/*        underlineColorAndroid='transparent'*/}
+                {/*        onChangeText={(text) => this.setState({ text })} />*/}
+                {/*</View>*/}
+                {/*<TouchableOpacity onPress={onClickAddImage} >*/}
+                {/*    <Text> Press Add Image</Text>*/}
+                {/*</TouchableOpacity>*/}
+                <LoadImage/>
             </Root>
         )
     }

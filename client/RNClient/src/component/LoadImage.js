@@ -1,10 +1,7 @@
 import React, {Component} from 'react'
 import ImagePicker from 'react-native-image-crop-picker'
 import {Text, View, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
-// import styles from '../styles/Style'
 import {ActionSheet, Root} from "native-base";
-import CustomHeader from "./CustomHeader";
-// import {OtherConstants} from "../constants/Styles";
 
 const width = Dimensions.get('window').width
 
@@ -12,7 +9,8 @@ export default class LoadImage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fileList: []
+            fileList: [],
+            defaultImage: true
         }
     }
 
@@ -26,6 +24,7 @@ export default class LoadImage extends Component {
         }
         newDataImg.push(item);
         this.setState({fileList: newDataImg})
+        this.setState({ defaultImage: false })
     }
     takePhoto = () => {
         ImagePicker.openCamera({
@@ -96,7 +95,6 @@ render()
     return (
         <Root>
             <View>
-                <View style={content}>
                     <FlatList
                         data={fileList}
                         renderItem={this.renderItem}
@@ -106,10 +104,6 @@ render()
                     <TouchableOpacity onPress={this.onClickAddImage} style={btnPressStyle}>
                         <Text style={txtStyle}> Press Add Image</Text>
                     </TouchableOpacity>
-                    {/*<TouchableOpacity onPress={this.submit} style={btnPressStyle}>*/}
-                    {/*    <Text style={txtStyle}>Submit</Text>*/}
-                    {/*</TouchableOpacity>*/}
-                </View>
             </View>
         </Root>
     )
@@ -124,7 +118,6 @@ const styles = StyleSheet.create({
             paddingLeft: 30,
             paddingRight: 30,
             marginBottom: 30
-
         },
         btnPressStyle: {
             backgroundColor: '#007AFF',
