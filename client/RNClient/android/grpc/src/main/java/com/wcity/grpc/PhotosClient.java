@@ -1,7 +1,10 @@
 package com.wcity.grpc;
 
+
 import com.google.protobuf.ByteString;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
 import io.grpc.ManagedChannel;
@@ -13,8 +16,6 @@ import io.grpc.wcity.photo.ProfilePhotoRequestP;
 import io.grpc.wcity.photo.ProfilePhotoResponseP;
 import io.grpc.wcity.photo.ProfileUploadRequest;
 import io.grpc.wcity.photo.ProfileUploadResponse;
-//import io.grpc.wcity.photo.ProfileUploadRequest;
-//import io.grpc.wcity.photo.ProfileUploadResponse;
 
 public class PhotosClient {
 
@@ -44,24 +45,26 @@ public class PhotosClient {
                 url = response.getUrl();
             else url = "";
         } catch (StatusRuntimeException e) {
-
+            e.getMessage();
         }
         return url;
     }
-//    public String uploadProfilePhoto(String email, String token, ByteString image) {
-//        ProfileUploadRequest userData = ProfileUploadRequest.newBuilder().setEmail(email).setToken(token).setImage(image).build();
-//        ProfileUploadResponse response;
-//        String url = "";
-//        boolean isValid;
-//        try {
-//            response = stub.uploadProfilePhoto(userData);
-//            isValid = response.getValid();
-//            if (isValid == true)
-//                url = response.getUrl();
-//            else url = "";
-//        } catch (StatusRuntimeException e) {
-//
-//        }
-//        return url;
-//    }
+
+    public String uploadProfilePhoto(String email, String token, String image) {
+        ProfileUploadRequest userData = ProfileUploadRequest.newBuilder().setEmail(email).setToken(token).setImage(ByteString.copyFrom(Base64.getMimeDecoder().decode(image.replaceFirst("^.*;base64,", "")))).build();
+
+        ProfileUploadResponse response;
+        String url = "";
+        boolean isValid;
+        try {
+            response = stub.uploadProfilePhoto(userData);
+            isValid = response.getValid();
+            if (isValid == true)
+                url = response.getUrl();
+            else url = "";
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return url;
+    }
 }

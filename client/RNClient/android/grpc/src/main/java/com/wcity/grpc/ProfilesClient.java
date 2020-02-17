@@ -38,7 +38,7 @@ public class ProfilesClient {
             response = stub.getUser(userRequest);
             user = new User(response.getValid(), response.getName(), response.getDescription());
         } catch (StatusRuntimeException e) {
-            //e.getMessage();
+            e.getMessage();
         }
         return user;
     }
