@@ -34,8 +34,9 @@ async onClickListener(){
                         (name, description) => {
                             this.setState({name: name})
                             this.setState({description: description})
-                            console.log("successful!!!")
+                            console.log("successful!!!" + this.state.name, this.state.description)
                         })
+
                 }
             })
         })

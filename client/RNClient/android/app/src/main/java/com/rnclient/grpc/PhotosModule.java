@@ -43,18 +43,18 @@ public class PhotosModule extends ReactContextBaseJavaModule {
         }
     }
 
-//    @ReactMethod
-//    public void uploadProfilePhoto(String email, String token, ByteString image, Callback errorCallback, Callback successCallback) {
-//
-//        String url = "";
-//        String response = client.uploadProfilePhoto(email, token, image);
-//        try {
-//            if (response == "") {
-//                successCallback.invoke("");
-//            } else url = response;
-//            successCallback.invoke(url);
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
+    @ReactMethod
+    public void uploadProfilePhoto(String email, String token, String image, Callback errorCallback, Callback successCallback) {
+
+        String url = "";
+        String response = client.uploadProfilePhoto(email, token, image);
+        try {
+            if (response == "") {
+                errorCallback.invoke("Invalid user");
+            } else url = response;
+            successCallback.invoke(url);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
 }

@@ -40,7 +40,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
                 successCallback.invoke(user.getName(), user.getDescription());
             //else
         } catch (Exception e) {
-            errorCallback.invoke(user);
+            errorCallback.invoke(e.getMessage());
         }
     }
 
