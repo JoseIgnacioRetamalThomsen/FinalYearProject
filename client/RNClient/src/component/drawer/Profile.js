@@ -17,8 +17,8 @@ import {Card} from 'react-native-elements'
 import Settings from "./Settings"
 import AsyncStorage from "@react-native-community/async-storage"
 
-let key;
 
+let key
 class Profile extends Component {
     constructor(props) {
         super(props);
@@ -26,8 +26,9 @@ class Profile extends Component {
             avatar_url: null,
             image: null,
             email: key,
-            name: 'Default Name',
-            description: 'Default Description',
+            name: '',
+            description: '',
+            message:''
         }
     }
 
@@ -35,11 +36,13 @@ class Profile extends Component {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
-                    key = store[i][0];
+                     key = store[i][0];
                     let value = store[i][1]
-                    console.log("key/value in profile " + key + " " + value)
 
+                    console.log("key/value in profile " + key + " " + value)
+                    //this.setState({email: key})
                     if (value !== null) {
+
                         NativeModules.PhotosModule.getProfilePhoto(
                             key,
                             value,
@@ -48,21 +51,24 @@ class Profile extends Component {
                             },
                             (url) => {
                                 this.setState({avatar_url: url})
-                                console.log("successful photo getsss() " +this.state.avatar_url)
+                                console.log("successful photo get() " +this.state.avatar_url)
                             })
                         NativeModules.ProfilesModule.getUser(
                             value,
                             key,
                             (err) => {
+                                //if(err.includes("Invalid user")){
+                                   // this.setState({message: "Unauthorised user"})
+                                   // console.log("In profile!!! Invalid user ")
+                               // }else
                                 console.log("In profile!!! " + err)
                             },
                             (name, description) => {
-                                if(name!="" || description!=""){
+                                //if(name!="" || description!=""){
                                     this.setState({name: name})
                                     this.setState({description: description})
                                     console.log("successful getUser")
-                                }
-
+                               // }
                                 console.log("null values")
                             })
 

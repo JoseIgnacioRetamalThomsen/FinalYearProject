@@ -3,7 +3,7 @@ import {View, TextArea} from 'react-native';
 import {Button, Text} from 'native-base';
 import CustomHeader from '../../CustomHeader'
 import MapInput from "../../MapInput";
-
+import City from '../../City'
 class Feed extends Component {
     onClickEvent(){
          //this.props.navigation.navigate('Post')
@@ -13,10 +13,12 @@ class Feed extends Component {
         return (
             <View style={{flex: 1}}>
                 <CustomHeader title="Feed" isHome={true} navigation={this.props.navigation}/>
-                <MapInput notifyChange={() => this.onClickEvent()} />
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                </View>
+                {/*<MapInput notifyChange={() => this.onClickEvent()} />*/}
+                {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>*/}
+                {/*</View>*/}
+                <City></City>
             </View>
+
         );
     }
 }

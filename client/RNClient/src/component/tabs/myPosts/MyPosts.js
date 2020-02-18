@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, TextInput} from 'react-native';
 import CustomHeader from '../../CustomHeader'
 import PlusButton from "../../PlusButton";
-
+import Place from '../../Place'
 class MyPosts extends Component {
 
     render() {
@@ -11,10 +11,10 @@ class MyPosts extends Component {
             <View style={{flex: 1}}>
                 <CustomHeader title="My Posts" isHome={true} navigation={this.props.navigation}/>
 
-                <View style={{flex: 1, justifyContent: 'center'}}>
-                    <PlusButton navigation={navigation}/>
-                </View>
-
+                {/*<View style={{flex: 1, justifyContent: 'center'}}>*/}
+                    {/*<PlusButton navigation={navigation}/>*/}
+                {/*</View>*/}
+<Place/>
             </View>
         );
     }

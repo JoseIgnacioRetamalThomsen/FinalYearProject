@@ -24,4 +24,8 @@ public class Geolocation {
     public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
+    public void setLocation(float latitude, float longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }

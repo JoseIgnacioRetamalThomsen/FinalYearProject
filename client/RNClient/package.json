@@ -20,6 +20,7 @@
     "lodash": "^4.17.15",
     "native-base": "^2.13.8",
     "react": "16.9.0",
+    "react-dom": "^16.12.0",
     "react-native": "^0.61.2",
     "react-native-action-button": "^2.8.5",
     "react-native-elements": "^1.2.7",

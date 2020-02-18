@@ -2,17 +2,19 @@ package com.wcity.grpc;
 
 import io.grpc.wcity.profiles.GeolocationP;
 
-public class City {
+public class Place {
     private boolean valid;
     private String name;
+    private String city;
     private String country;
     private String creatorEmail;
     private String description;
     private GeolocationP location;
 
-    public City(boolean valid, String name, String country, String creatorEmail, String description, GeolocationP location) {
+    public Place(boolean valid, String name, String city, String country, String creatorEmail, String description, GeolocationP location) {
         this.valid = valid;
         this.name = name;
+        this.city = city;
         this.country = country;
         this.creatorEmail = creatorEmail;
         this.description = description;
@@ -33,6 +35,14 @@ public class City {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getCountry() {
