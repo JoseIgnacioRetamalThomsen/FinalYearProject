@@ -26,9 +26,9 @@ const (
 
 )
 const(
-	url = "0.0.0.0:5777"
+	//url = "0.0.0.0:5777"
 	//url="localhost:5777";
-	//url = "35.234.146.99:5777"
+	url = "35.197.221.57:5777"
 )
 
 type neo4jDB struct {
