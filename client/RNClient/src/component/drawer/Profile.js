@@ -57,9 +57,13 @@ class Profile extends Component {
                                 console.log("In profile!!! " + err)
                             },
                             (name, description) => {
-                                this.setState({name: name})
-                                this.setState({description: description})
-                                console.log("successful getUser")
+                                if(name!="" || description!=""){
+                                    this.setState({name: name})
+                                    this.setState({description: description})
+                                    console.log("successful getUser")
+                                }
+
+                                console.log("null values")
                             })
 
                     }
@@ -116,25 +120,17 @@ class Profile extends Component {
                                         this.setState({image: avatar})
                                         this.updatePhoto()
                                         console.log('Image base64 string: ', avatar)
-                                    //(image)=>this.updatePhoto()
-
-                                    // image => {
-                                    //     if (image) {
-                                    //         this.updatePhoto();
-                                    //         console.log('Image base64 string: ', image)
-                                    //     }
                                      }}
                                 }>
                                     <Image source={{uri: this.state.avatar_url}}
-                                           /*{this.state.avatar_url ? {uri: this.state.avatar_url } : IMAGE.ICON_DEFAULT_PROFILE}*/
                                            style={{
                                                height: 120,
                                                width: 120,
-                                               borderRadius: 600,
+                                               borderRadius: 60,
                                                borderColor: 'black',
                                                borderWidth: 5,
                                                flex: 0,
-                                               resizeMode: 'contain'
+                                               resizeMode: 'cover'
                                            }}/>
                                 </PhotoUpload>
                                 {/*<GeoLoc></GeoLoc>*/}
@@ -152,7 +148,7 @@ class Profile extends Component {
                             </View>
                         </View>
                         <Button style={styles.buttonContainer} title="Edit Profile"
-                                onPress={() => this.props.navigation.navigate("Settings")}></Button>
+    onPress={() => this.props.navigation.navigate("Settings")}/>
                     </View>
 
                 </ScrollView>
