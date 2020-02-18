@@ -21,11 +21,12 @@ class Login extends Component {
             message: '',
             token: '',
             isUser: false,
-            hidePassword: true
+            hiddenPassword: true,
+            type: 'input'
         }
     }
     setPasswordVisibility = () => {
-        this.setState({ hidePassword: !this.state.hidePassword });
+        this.setState({ hiddenPassword: !this.state.hiddenPassword });
     }
 
     async onClickListenerLogin() {
@@ -92,14 +93,17 @@ class Login extends Component {
 
                 <View style={styles.inputContainer}>
                     <Image style={styles.inputIcon} source={require('../../img/key.png')}/>
-                    <TouchableOpacity activeOpacity={0.8} style={styles.touchableButton} onPress={this.setPasswordVisibility}>
-                        <Image source={(this.state.hidePassword) ? require('../../img/hide.png') : require('../../img/key.png')} style={styles.buttonImage} />
-                    </TouchableOpacity>
+
                     <TextInput style={styles.inputs}
+                               clearTextOnFocus={false}
                                placeholder="Password"
-                               secureTextEntry={this.state.hidePassword}
+                               secureTextEntry={this.state.hiddenPassword}
                                underlineColorAndroid='transparent'
+                               value={this.state.password}
                                onChangeText={(password) => this.setState({password})}/>
+                    <TouchableOpacity activeOpacity={0.8} style={styles.touchableButton} onPress={this.setPasswordVisibility}>
+                        <Image source={(this.state.hiddenPassword) ? require('../../img/hide.png') : require('../../img/show.png')} style={styles.buttonImage} />
+                    </TouchableOpacity>
                 </View>
 
                 <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
