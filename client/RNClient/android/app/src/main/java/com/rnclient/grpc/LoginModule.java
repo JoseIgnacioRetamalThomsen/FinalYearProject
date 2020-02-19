@@ -35,10 +35,17 @@ public class LoginModule extends ReactContextBaseJavaModule {
                            Callback successCallback) {
         String token;
         String response = client.createUser(email, password);
+//        try {
+//            if (response != null) {
+//                token = response;
+//                successCallback.invoke(token);
+//            }
+//        } catch (Exception e) {
+//            errorCallback.invoke(e.getMessage());
+//        }
         try {
             if (response == null) {
-                token = "StatusRuntimeException";
-                //errorCallback.invoke(token);
+                token = null;
             } else token = response;
             successCallback.invoke(token);
         } catch (Exception e) {
@@ -72,8 +79,9 @@ public class LoginModule extends ReactContextBaseJavaModule {
         try {
             if (response == null) {
                 token = "User is not registered";
-                //errorCallback.invoke(token);
-            } else token = response;
+            } else {
+                token = response;
+            }
             successCallback.invoke(token);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());

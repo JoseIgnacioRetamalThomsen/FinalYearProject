@@ -39,7 +39,14 @@ export default class Place extends React.Component {
                             (err) => {
                                 console.log("err in createPlace " + err)
                             },
-                            (name, country, email, description, lat, lon, id) => {
+                            (name, city, country, email, description, lat, lon, id) => {
+                                this.setState({name: name})
+                                this.setState({city: city})
+                                this.setState({country: country})
+                                // this.setState({email: email})
+                                this.setState({description: description})
+                                this.setState({lat: lat})
+                                this.setState({lon: lon})
                                 console.log("name, country, email, description, lat, lon, id in createPlace is " + name, country, email, description, lat, lon, id)
                                 console.log("successfully created a place!!!")
                             })
@@ -48,7 +55,44 @@ export default class Place extends React.Component {
             })
         })
     }
+    updatePlace() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let key = store[i][0];
+                    let value = store[i][1]
+                    console.log("key/value in city " + key + " " + value)
 
+                    if (value !== null) {
+                        NativeModules.ProfilesModule.updatePlace(
+                            value,
+                            this.state.name,
+                            this.state.city,
+                            this.state.country,
+                            key,
+                            this.state.description,
+                            this.state.lat,
+                            this.state.lon,
+
+                            (err) => {
+                                console.log("err in updatePlace " + err)
+                            },
+                            (name, country, email, description, lat, lon, id) => {
+                                this.setState({name: name})
+                                this.setState({country: country})
+                                // this.setState({email: email})
+                                this.setState({description: description})
+                                this.setState({lat: lat})
+                                this.setState({lon: lon})
+                                //this.setState({id: id})
+                                console.log("name, country, email, description, lat, lon, id in createupdatePlace is " + name, country, email, description, lat, lon, id)
+                                console.log("successfully updated a place!!!")
+                            })
+                    }
+                })
+            })
+        })
+    }
     render() {
         return (
             <View style={{flex: 1}}>
@@ -80,8 +124,11 @@ export default class Place extends React.Component {
                         style={styles.inputs}
                         placeholder="Lon"
                         onChangeText={(lon) => this.setState({lon})}/>
-                    <Button title="Add place"
+                    <Button title="Add a new place"
                             onPress={() => this.addPlace()}/>
+
+                    <Button title="Update an existing place"
+                            onPress={() => this.updatePlace()}/>
                 </View>
             </View>
         )

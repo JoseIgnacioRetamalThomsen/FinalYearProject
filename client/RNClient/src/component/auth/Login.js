@@ -25,8 +25,9 @@ class Login extends Component {
             type: 'input'
         }
     }
+
     setPasswordVisibility = () => {
-        this.setState({ hiddenPassword: !this.state.hiddenPassword });
+        this.setState({hiddenPassword: !this.state.hiddenPassword});
     }
 
     async onClickListenerLogin() {
@@ -55,7 +56,7 @@ class Login extends Component {
                     let value
                     if (token === "StatusRuntimeException") {
                         this.setState({message: 'Server is unavailable'})
-                    } else  if (token === "User is not registered") {
+                    } else if (token === "User is not registered") {
                         this.setState({message: 'User is not registered'})
                     } else {
                         try {
@@ -71,11 +72,12 @@ class Login extends Component {
                         console.log("token " + token)
                         this.setState({message: 'Success'})
                         this.props.navigation.navigate('app')
-                   }
+                    }
                 }
             )
         }
     }
+
     render() {
         return (
             <View style={styles.container}>
@@ -101,8 +103,11 @@ class Login extends Component {
                                underlineColorAndroid='transparent'
                                value={this.state.password}
                                onChangeText={(password) => this.setState({password})}/>
-                    <TouchableOpacity activeOpacity={0.8} style={styles.touchableButton} onPress={this.setPasswordVisibility}>
-                        <Image source={(this.state.hiddenPassword) ? require('../../img/hide.png') : require('../../img/show.png')} style={styles.buttonImage} />
+                    <TouchableOpacity activeOpacity={0.8} style={styles.touchableButton}
+                                      onPress={this.setPasswordVisibility}>
+                        <Image
+                            source={(this.state.hiddenPassword) ? require('../../img/hide.png') : require('../../img/show.png')}
+                            style={styles.buttonImage}/>
                     </TouchableOpacity>
                 </View>
 

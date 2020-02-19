@@ -1,7 +1,5 @@
 package com.wcity.grpc;
 
-import io.grpc.wcity.profiles.GeolocationP;
-
 public class Place {
     private boolean valid;
     private String name;

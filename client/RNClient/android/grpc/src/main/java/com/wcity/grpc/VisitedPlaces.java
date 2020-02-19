@@ -1,14 +1,17 @@
 package com.wcity.grpc;
 
+import java.util.ArrayList;
+
+
 public class VisitedPlaces {
+    ArrayList<Place> visitedPlaces;
     private boolean valid;
     private String email;
-    private Place place;
 
-    public VisitedPlaces(boolean valid, String email, Place place) {
+    public VisitedPlaces(boolean valid, String email, ArrayList<Place> visitedPlaces) {
         this.valid = valid;
         this.email = email;
-        this.place = place;
+        this.visitedPlaces = visitedPlaces;
     }
 
     public boolean isValid() {
@@ -27,11 +30,11 @@ public class VisitedPlaces {
         this.email = email;
     }
 
-    public Place getPlace() {
-        return place;
+    public ArrayList<Place> getVisitedPlaces() {
+        return visitedPlaces;
     }
 
-    public void setPlace(Place place) {
-        this.place = place;
+    public void setVisitedPlaces(ArrayList<Place> visitedPlaces) {
+        this.visitedPlaces = visitedPlaces;
     }
 }

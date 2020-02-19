@@ -15,7 +15,11 @@ export default class MapInput extends React.Component {
                 fetchDetails={true}
                 renderDescription={row => row.description} // custom description render
                 onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                    console.log(data, details);
+                   // console.log(data, details);
+                    
+                    console.log(data);
+                    let place = autocomplete.getPlace();
+                    console.log(place.geometry.location.toJSON())
                     this.props.notifyChange(details.geometry.location)
                 }}
                 query={{

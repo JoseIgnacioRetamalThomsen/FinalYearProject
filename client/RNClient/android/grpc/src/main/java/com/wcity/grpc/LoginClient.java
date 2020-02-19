@@ -30,13 +30,14 @@ public class LoginClient {
 
     public String createUser(String email, String password) {
         UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
-        UserResponse response = null;
-        String token;
+        UserResponse response;
+        String token = "";
         try {
             response = stub.createUser(userData);
             token = response.getToken();
+            System.out.println("token in java " + token);
         } catch (StatusRuntimeException e) {
-            token = null;
+            e.getMessage();
         }
         return token;
     }
@@ -48,7 +49,8 @@ public class LoginClient {
 //        String token = "";
 //        try {
 //            response = stub.updateUser(userData);
-//            isUser = response.getIsUser();
+//            isUser = response.ge
+//            tIsUser();
 //            if (isUser) {
 //                token = response.getToken();
 //            } else token = null;
@@ -62,7 +64,7 @@ public class LoginClient {
         UserRequest userData = UserRequest.newBuilder().setEmail(email).setHashPassword(password).build();
         UserResponse response;
         boolean isUser;
-        String token;
+        String token = "";
         try {
             response = stub.loginUser(userData);
             isUser = response.getIsUser();
@@ -70,7 +72,7 @@ public class LoginClient {
                 token = response.getToken();
             } else token = "User is not registered";
         } catch (StatusRuntimeException e) {
-            token = "StatusRuntimeException";
+            e.getMessage();
         }
         return token;
     }

@@ -9,7 +9,6 @@ option java_outer_classname = "ProfilesProto";
 option objc_class_prefix = "RPC";
 
 service Profiles {
-
     rpc CreateUser (UserRequestP) returns (UserResponseP);
     rpc GetUser (UserRequestP) returns (UserResponseP);
     rpc UpdateUser (UserRequestP) returns (UserResponseP);
@@ -26,8 +25,6 @@ service Profiles {
     rpc GetVisitedPlaces (VisitedRequestP) returns (VisitedPlacesResponseP);
     // reques only need email,tokem, city name and city coutry
     rpc GetCityPlaces (CityRequestP) returns (VisitedPlacesResponseP);
-
-
 }
 message GeolocationP {
     float lon = 1;

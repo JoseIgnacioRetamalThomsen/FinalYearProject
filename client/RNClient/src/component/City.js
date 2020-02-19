@@ -16,7 +16,7 @@ export default class City extends React.Component {
         }
     }
 
-    async addCity() {
+    addCity() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -37,7 +37,9 @@ export default class City extends React.Component {
                                 console.log("err in createCity " + err)
                             },
                             (name, country, email, description, lat, lon, id) => {
-                                console.log("name, country, email, description, lat, lon id is " + name, country, email, description, lat, lon, id)
+
+                                console.log("name, country, email, description, lat, lon id is " +
+                                    name, country, email, description, lat, lon, id)
                                 console.log("successfully created a city!!!")
                             })
                     }
@@ -46,7 +48,7 @@ export default class City extends React.Component {
         })
     }
 
-    async getCity() {
+    getCity() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -68,8 +70,16 @@ export default class City extends React.Component {
                                 console.log("err in getCity " + err)
                             },
                             (name, country, email, description, lat, lon) => {
-                                console.log("name, country, email, description, lat, lon  is " + name, country, email, description, lat, lon)
+                                this.setState({name: name})
+                                this.setState({country: country})
+                               // this.setState({email: email})
+                                this.setState({description: description})
+                                this.setState({lat: lat})
+                                this.setState({lon: lon})
+                                console.log("name, country, email, description, lat, lon  is " + name, country, email,
+                                    description, lat, lon)
                                 console.log("successfully got a city!!!")
+                                this.props.navigation.navigate('DisplayCity')
                             })
                     }
                 })
@@ -79,9 +89,9 @@ export default class City extends React.Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
+            // <View style={{flex: 1}}>
 
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
 
                     <TextInput
                         style={styles.inputs}
@@ -96,20 +106,20 @@ export default class City extends React.Component {
                         style={styles.inputs}
                         placeholder="Description"
                         onChangeText={(description) => this.setState({description})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        keyboardType = 'numeric'
-                        placeholder="Lat"
-                        onChangeText={(lat) => this.setState({lat})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        keyboardType = 'numeric'
-                        placeholder="Lon"
-                        onChangeText={(lon) => this.setState({lon})}/>
-                    <Button title="Add city"
+                    {/*<TextInput*/}
+                    {/*    style={styles.inputs}*/}
+                    {/*    keyboardType = 'numeric'*/}
+                    {/*    placeholder="Lat"*/}
+                    {/*    onChangeText={(lat) => this.setState({lat})}/>*/}
+                    {/*<TextInput*/}
+                    {/*    style={styles.inputs}*/}
+                    {/*    keyboardType = 'numeric'*/}
+                    {/*    placeholder="Lon"*/}
+                    {/*    onChangeText={(lon) => this.setState({lon})}/>*/}
+                    <Button title="Add a new city"
                             onPress={() => this.addCity()}/>
                 </View>
-            </View>
+            // </View>
         )
 
     }

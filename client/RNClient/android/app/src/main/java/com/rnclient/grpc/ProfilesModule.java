@@ -15,6 +15,8 @@ import com.wcity.grpc.VisitPlace;
 import com.wcity.grpc.VisitedCities;
 import com.wcity.grpc.VisitedPlaces;
 
+import java.util.ArrayList;
+
 import io.grpc.wcity.profiles.GeolocationP;
 import io.grpc.wcity.profiles.PlaceResponseP;
 
@@ -141,22 +143,23 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
             errorCallback.invoke(e.getMessage());
         }
     }
-//    @ReactMethod
-//    public void getVisitedCities(String token, String email,
-//                           Callback errorCallback,
-//                           Callback successCallback) {
-//        VisitedCities visitedCities = client.getVisitedCities(token, email);
-//        try {
-//            //  if (visitedCities.isValid() == true) {
-//            successCallback.invoke(visitedCities.isValid(), visitedCities.getEmail(),
-//                    visitedCities.getCity());
-//            //            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
+
+    @ReactMethod
+    public void getVisitedCities(String token, String email,
+                                 Callback errorCallback,
+                                 Callback successCallback) {
+        VisitedCities visitedCities = client.getVisitedCities(token, email);
+        try {
+            //  if (visitedCities.isValid() == true) {
+            successCallback.invoke(visitedCities.isValid(), visitedCities.getEmail(),
+                    visitedCities.getVisitedCities());
+            //            } else {
+//                errorCallback.invoke("Invalid user");
+//            }
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
 
     @ReactMethod
     public void createPlace(String token, String name, String city, String country,
@@ -229,39 +232,38 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
             errorCallback.invoke(e.getMessage());
         }
     }
-//    @ReactMethod
-//    public void getVisitedPlaces(String token, String email, PlaceResponseP place,
-//                           Callback errorCallback,
-//                           Callback successCallback) {
-//        VisitedPlaces visitedPlaces = client.getVisitedPlaces(token, email, place);
-//        try {
-//            //  if (visitedPlaces.isValid() == true) {
-//            successCallback.invoke(visitedPlaces.isValid(), visitedPlaces.getEmail(),
-//                    visitedPlaces.getPlace());
-//            //            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
 
-//    @ReactMethod
-//    public void getCityPlaces(String token, String name, String country, String creatorEmail,
-//                              String description, float lat, float lon, Callback errorCallback,
-//                              Callback successCallback) {
-//        City cityPlaces = client.getCityPlaces(token, name, country, creatorEmail, description,
-//                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
-//        try {
-//            // if (city.isValid() == true) {
-//            successCallback.invoke(cityPlaces.isValid(), cityPlaces.getEmail(), cityPlaces.getPlace();
-//                   );
-////            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
+    @ReactMethod
+    public void getVisitedPlaces(String token, String email,
+                                 Callback errorCallback,
+                                 Callback successCallback) {
+        VisitedPlaces visitedPlaces = client.getVisitedPlaces(token, email);
+        try {
+            //  if (visitedPlaces.isValid() == true) {
+            successCallback.invoke(visitedPlaces.isValid(), visitedPlaces.getEmail(), visitedPlaces.getVisitedPlaces());
+            //            } else {
+            errorCallback.invoke("Invalid user");
+//            }
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void getCityPlaces(String token, String name, String country, String creatorEmail,
+                              String description, float lat, float lon, Callback errorCallback,
+                              Callback successCallback) {
+        VisitedPlaces cityPlaces = client.getCityPlaces(token, name, country, creatorEmail, description,
+                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
+        try {
+            // if (city.isValid() == true) {
+            successCallback.invoke(cityPlaces.isValid(), cityPlaces.getEmail(), cityPlaces.getVisitedPlaces());
+//            } else {
+//                errorCallback.invoke("Invalid user");
+//            }
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
 
 }

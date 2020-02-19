@@ -9,8 +9,9 @@ export default class DisplayPlace extends Component {
         this.state = {
             avatar_url: '',
             name: '',
-            city:'',
-            country:'',
+            email:'',
+            city: '',
+            country: '',
             description: '',
             lat: 0,
             lon: 0,
@@ -38,12 +39,13 @@ export default class DisplayPlace extends Component {
                             (err) => {
                                 console.log("error In getPlace " + err)
                             },
-                            (name, city, country, description) => {
+                            (name, city, country, email, description) => {
                                 this.setState({name: name})
                                 this.setState({city: city})
                                 this.setState({country: country})
+                                this.setState({email: email})
                                 this.setState({description: description})
-                                console.log("successful!!!" + this.state.name, this.state.description)
+                                console.log("successful in getPlace values " + this.state.name, this.state.description)
                             })
 
                     }

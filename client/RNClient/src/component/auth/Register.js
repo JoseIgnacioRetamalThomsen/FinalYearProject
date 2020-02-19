@@ -5,7 +5,7 @@ import {
     TextInput,
     TouchableHighlight,
     Image,
-    NativeModules
+    NativeModules, TouchableOpacity
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import styles from '../../styles/Style'
@@ -18,7 +18,15 @@ export default class Register extends Component {
             email: '',
             password: '',
             cpassword: '',
+            token: '',
+            isUser: false,
+            hiddenPassword: true,
+            type: 'input'
         }
+    }
+
+    setPasswordVisibility = () => {
+        this.setState({hiddenPassword: !this.state.hiddenPassword});
     }
 
     async onClickListener() {
@@ -46,32 +54,36 @@ export default class Register extends Component {
                 this.state.email,
                 this.state.password,
                 (err) => {
-                    if (err.includes("Duplicate")) {
-                        this.setState({message: 'Email is already registered'})
-                    } else if (err.includes("Exception")) {
-                        this.setState({message: 'Server is not available. Please try again later'})
-                    } else this.setState({message: 'Email is already registered'})
+                    this.setState({message: err})
                 },
                 async (token) => {
-                    console.log("token registered " + token)
-                    try {
-                        await AsyncStorage.setItem(this.state.email, token)
-                        console.log("this.state.email, token" + this.state.email, token)
-                    } catch (e) {
-                        console.log("Error ", e);
-                        // try {
-                        //     value = await AsyncStorage.getItem(this.state.email)
-                        //     console.log("value in get" + value)
-                        // } catch (e) {
-                        // }
-                        // console.log("asyncstorage " + await AsyncStorage.getItem(this.state.email))
-                        // console.log("value " + value)
-                        // console.log("token" + token)
-                        //this.setState({message: 'Success'})
-                        this.props.navigation.navigate('app')
+                    if (token.includes("Duplicate")) {
+                        this.setState({message: 'Email is already registered'})
+                    } else if (token.includes("Exception")) {
+                        this.setState({message: 'Server unavailable'})
+                    } else {
+                        console.log("token here " + token)
+                        if (token !== "") {
+                            try {
+                                await AsyncStorage.setItem(this.state.email, token)
+                                console.log("this.state.email, token" + this.state.email, token)
+                                this.props.navigation.navigate('app')
+                            } catch (e) {
+                                console.log("Error ", e);
+                                // try {
+                                //     value = await AsyncStorage.getItem(this.state.email)
+                                //     console.log("value in get" + value)
+                                // } catch (e) {
+                                // }
+                                // console.log("asyncstorage " + await AsyncStorage.getItem(this.state.email))
+                                // console.log("value " + value)
+                                // console.log("token" + token)
+                                //this.setState({message: 'Success'})
+                                this.props.navigation.navigate('app')
+                            }
+                        } else this.setState({message: 'Email is already registered'})
                     }
-                }
-            )
+                })
 
         }
     }
@@ -90,20 +102,38 @@ export default class Register extends Component {
                                underlineColorAndroid='transparent'
                                onChangeText={(email) => this.setState({email})}/>
                 </View>
+                <View style={styles.inputContainer}>
+                    <Image style={styles.inputIcon} source={require('../../img/key.png')}/>
+
+                    <TextInput style={styles.inputs}
+                               clearTextOnFocus={false}
+                               placeholder="Password"
+                               secureTextEntry={this.state.hiddenPassword}
+                               underlineColorAndroid='transparent'
+                               value={this.state.password}
+                               onChangeText={(password) => this.setState({password})}/>
+                    <TouchableOpacity activeOpacity={0.8} style={styles.touchableButton}
+                                      onPress={this.setPasswordVisibility}>
+                        <Image
+                            source={(this.state.hiddenPassword) ? require('../../img/hide.png') : require('../../img/show.png')}
+                            style={styles.buttonImage}/>
+                    </TouchableOpacity>
+                </View>
 
                 <View style={styles.inputContainer}>
+                    <TouchableOpacity activeOpacity={0.8} style={styles.touchableButton}
+                                      onPress={this.setPasswordVisibility}>
+                        <Image
+                            source={(this.state.hiddenPassword) ? require('../../img/hide.png') : require('../../img/show.png')}
+                            style={styles.buttonImage}/>
+                    </TouchableOpacity>
+
                     <Image style={styles.inputIcon} source={require('../../img/key.png')}/>
                     <TextInput style={styles.inputs}
-                               placeholder="Password"
-                               secureTextEntry={true}
-                               underlineColorAndroid='transparent'
-                               onChangeText={(password) => this.setState({password})}/>
-                </View>
-                <View style={styles.inputContainer}>
-                    <Image style={styles.inputIcon} source={require('../../img/key.png')}/>
-                    <TextInput style={styles.inputs}
+                               clearTextOnFocus={false}
                                placeholder="Confirm Password"
-                               secureTextEntry={true}
+                               secureTextEntry={this.state.hiddenPassword}
+                               value={this.state.cpassword}
                                underlineColorAndroid='transparent'
                                onChangeText={(cpassword) => this.setState({cpassword})}/>
                 </View>

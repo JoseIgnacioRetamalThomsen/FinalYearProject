@@ -1,5 +1,7 @@
 package com.wcity.grpc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.grpc.ManagedChannel;
@@ -167,24 +169,31 @@ public class ProfilesClient {
         return visitedCity;
     }
 
-//    public VisitedCities getVisitedCities(String token, String email) {
-//        VisitedRequestP visitedRequestP = VisitedRequestP
-//                .newBuilder()
-//                .setToken(token)
-//                .setEmail(email)
-//                .build();
-//        VisitedCitysResponseP response;
-//
-//        VisitedCities visitedCities = null;
-//        try {
-//            response = stub.getVisitedCitys(visitedRequestP);
-//            visitedCities = new VisitedCities(response.getValid(), response.getEmail(),
-//                    response.getCitys().getId());
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return visitedCities;
-//    }
+    public VisitedCities getVisitedCities(String token, String email) {
+        VisitedRequestP visitedRequestP = VisitedRequestP
+                .newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .build();
+        VisitedCitysResponseP response;
+
+        VisitedCities visitedCities = null;
+        try {
+            response = stub.getVisitedCitys(visitedRequestP);
+
+            ArrayList<City> cityList = new ArrayList<>();
+            for (CityResponseP city : response.getCitysList()) {
+                cityList.add(new City(city.getValid(), city.getName(), city.getCountry(),
+                        city.getCreatorEmail(), city.getDescription(), city.getLocation().getLon(),
+                        city.getLocation().getLat(), city.getId()));
+            }
+            visitedCities = new VisitedCities(response.getValid(), response.getEmail(),
+                    cityList);
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return visitedCities;
+    }
 
     public Place createPlace(String token, String name, String city, String country,
                              String creatorEmail, String description, GeolocationP location) {
@@ -288,45 +297,59 @@ public class ProfilesClient {
         }
         return visitPlace;
     }
-//    public VisitedPlaces getVisitedPlaces(String token, String email, PlaceResponseP places) {
-//        VisitedRequestP visitedRequestP = VisitedRequestP
-//                .newBuilder()
-//                .setToken(token)
-//                .setEmail(email)
-//                .set(places)
-//                .build();
-//        VisitedPlacesResponseP response;
-//
-//        VisitedPlaces visitedPlaces = null;
-//        try {
-//            response = stub.getVisitedPlaces(visitedRequestP);
-//            visitedPlaces = new VisitedPlaces(response.getValid(), response.getEmail(),
-//                    response.getPlaces().getId());
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return visitedPlaces;
-//    }
 
-//    public City getCityPlaces(String token, String name, String country, String creatorEmail,
-//                           String description, GeolocationP location) {
-//        CityRequestP cityRequestP = CityRequestP.newBuilder()
-//                .setToken(token)
-//                .setName(name)
-//                .setCountry(country)
-//                .setCreatorEmail(creatorEmail)
-//                .setDescription(description)
-//                .setLocation(location)
-//                .build();
-//        VisitedPlacesResponseP response;
-//
-//        City cityPlaces = null;
-//        try {
-//            response = stub.getCityPlaces(cityRequestP);
-//            cityPlaces = new City(response.getValid(), response.getEmail(), response.getPlaces());
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return cityPlaces;
-//    }
+    public VisitedPlaces getVisitedPlaces(String token, String email) {
+        VisitedRequestP visitedRequestP = VisitedRequestP
+                .newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .build();
+        VisitedPlacesResponseP response;
+        VisitedPlaces visitedPlaces = null;
+
+        try {
+            response = stub.getVisitedPlaces(visitedRequestP);
+
+            ArrayList<Place> placeList = new ArrayList<>();
+            for (PlaceResponseP place : response.getPlacesList()) {
+                placeList.add(new Place(place.getValid(), place.getName(), place.getCity(),
+                        place.getCountry(), place.getCreatorEmail(), place.getDescription(),
+                        place.getLocation().getLat(), place.getLocation().getLon(), place.getId()));
+            }
+            visitedPlaces = new VisitedPlaces(response.getValid(), response.getEmail(),
+                    placeList);
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return visitedPlaces;
+    }
+
+    public VisitedPlaces getCityPlaces(String token, String name, String country, String creatorEmail,
+                                       String description, GeolocationP location) {
+        CityRequestP cityRequestP = CityRequestP.newBuilder()
+                .setToken(token)
+                .setName(name)
+                .setCountry(country)
+                .setCreatorEmail(creatorEmail)
+                .setDescription(description)
+                .setLocation(location)
+                .build();
+        VisitedPlacesResponseP response;
+
+        VisitedPlaces cityPlaces = null;
+
+        try {
+            response = stub.getCityPlaces(cityRequestP);
+            ArrayList<Place> cityPlacesList = new ArrayList<>();
+            for (PlaceResponseP e : response.getPlacesList()) {
+                cityPlacesList.add(new Place(e.getValid(), e.getName(), e.getCity(), e.getCountry(),
+                        e.getCreatorEmail(), e.getDescription(), e.getLocation().getLon(),
+                        e.getLocation().getLat(), e.getId()));
+            }
+            cityPlaces = new VisitedPlaces(response.getValid(), response.getEmail(), cityPlacesList);
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return cityPlaces;
+    }
 }
