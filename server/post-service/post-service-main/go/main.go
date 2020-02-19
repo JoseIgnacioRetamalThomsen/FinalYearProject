@@ -1,251 +1,55 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
 	"log"
-
-	//"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
+	pb "github.com/joseignacioretamalthomsen/wcity"
+	"google.golang.org/grpc"
 )
 
 const(
-	MongoDBURI = "mongodb://172.17.0.1:27017"
-	DatabaseName ="PostDatabase"
-	CollectionName  = "Posts"
+	//url = "0.0.0.0:60051"
+	url="35.197.216.42:60051";
+	//url = "35.234.146.99:5777"
+	token ="a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508"
+	tokenEmail ="a@a.com"
 )
-
-type CityPost struct{
-	IndexId int32
-	CreatorEmail string
-	Name string
-	Country string
-	Title string
-	Body string
-	TimeStamp string
-	Likes[] string
-
+// dba connection
+type postDBA struct {
+	context *postDBAContext
 }
-type PlacePost struct{
-	IndexId int32
-	CreatorEmail string
-	Name string
-	City string
-	Country string
-	Title string
-	Body string
-	TimeStamp string
-	Likes[] string
+
+type postDBAContext struct {
+	dbClient pb.PostsServiceClient
+	timeout time.Duration
 }
+var dbaConn postDBA
+
+// create connection
+func newPostServiceContext(endpoint string) (*postDBAContext, error) {
+	userConn, err := grpc.Dial(
+		endpoint,
+		grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &postDBAContext{
+		dbClient: pb.NewPostsServiceClient(userConn),
+		timeout:  time.Second,
+	}
+	return ctx, nil
+}
+
+
+//server
 
 
 func main(){
-
-	temp := &CityPost{
-		IndexId: 1,
-		CreatorEmail: "one",
-		Name:         "two",
-		Country:      "three",
-		Title:        "four",
-		Body:         "five",
-		TimeStamp:    "six",
-		Likes:        []string{"one","two"},
-	}
-	instid , err :=CreateCityPost(*temp)
-	if err!= nil{
-		panic(err)
-	}
-
-	fmt.Println(instid)
-
-	temp1 := &PlacePost{
-		IndexId:      2,
-		CreatorEmail: "a",
-		Name:         "bv",
-		City:         "c",
-		Country:      "d",
-		Title:        "a",
-		Body:         "f",
-		TimeStamp:    "d",
-		Likes:        []string{"a","b","c"},
-	}
-
-	CreatePlacePost(*temp1)
-
-/*
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://172.17.0.1:27017"))
-if err!= nil {
-	panic(err)
-}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	defer ctx.Done()
-if err != nil{
-	panic(err)
-}
-
-	collection := client.Database(DatabaseName).Collection(CollectionName)
-	//fmt.Println(collection)
-
-
-
-	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
-
-
-
-/*
-	res, err := collection.InsertOne(ctx, bson.M{})
-	if err!=nil{
-		panic(err)
-	}
-	id := res.InsertedID
-	fmt.Println(id)
-
-*//*
-	ctx, _ = context.WithTimeout(context.Background(), 30*time.Second)
-
-
-	cur, err := collection.Find(ctx, bson.M{"cityid":1})
-	if err != nil { log.Fatal(err) }
-	defer cur.Close(ctx)
-	for cur.Next(ctx) {
-		var result bson.M
-		err := cur.Decode(&result)
-		if err != nil { log.Fatal(err) }
-	fmt.Println(result)
-	}
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-*/
-fmt.Println(GetCityPost(1))
-fmt.Println(GetPlacePost(2))
-
-}
-
-
-func CreateCityPost(city CityPost)(interface{},error){
-	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
-	if err!= nil {
-		panic(err)
-	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	defer ctx.Done()
-	if err != nil{
-		panic(err)
-	}
-
-	collection := client.Database(DatabaseName).Collection(CollectionName)
-
-	data, err := bson.Marshal(city)
+	//conect to server
+	dbserverCtx, err := newPostServiceContext(url)
 	if err != nil {
-		panic(err)
-	}
-
-	res, err := collection.InsertOne(ctx,data)
-	if err!=nil{
-		return nil,err
-	}
-	return res.InsertedID,nil
-}
-
-func GetCityPost(IndexId int32)[]CityPost{
-	var posts []CityPost
-	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
-	if err!= nil {
-		panic(err)
-	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	defer ctx.Done()
-	if err != nil{
-		panic(err)
-	}
-
-	collection := client.Database(DatabaseName).Collection(CollectionName)
-
-
-	cur, err := collection.Find(ctx, bson.M{"indexid":1})
-	if err != nil { log.Fatal(err) }
-	defer cur.Close(ctx)
-	for cur.Next(ctx) {
-		//var result bson.M
-		post := &CityPost{}
-		err := cur.Decode(&post)
-		if err != nil { log.Fatal(err) }
-		//fmt.Println(result)
-		posts = append(posts, *post)
-	}
-	if err := cur.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return posts
-}
-
-func CreatePlacePost(place PlacePost)(interface{},error){
-	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
-	if err!= nil {
-		panic(err)
-	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	defer ctx.Done()
-	if err != nil{
-		panic(err)
-	}
-
-	collection := client.Database(DatabaseName).Collection(CollectionName)
-
-	data, err := bson.Marshal(place)
-	if err != nil {
-		panic(err)
-	}
-
-	res, err := collection.InsertOne(ctx,data)
-	if err!=nil{
-		return nil,err
-	}
-	return res.InsertedID,nil
-}
-
-func GetPlacePost(indexId int32)[]PlacePost{
-	var posts []PlacePost
-	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
-	if err!= nil {
-		panic(err)
-	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	defer ctx.Done()
-	if err != nil{
-		panic(err)
-	}
-
-	collection := client.Database(DatabaseName).Collection(CollectionName)
-
-
-	cur, err := collection.Find(ctx, bson.M{"indexid":indexId})
-	if err != nil { log.Fatal(err) }
-	defer cur.Close(ctx)
-	for cur.Next(ctx) {
-		//var result bson.M
-		post := &PlacePost{}
-		err := cur.Decode(&post)
-		if err != nil { log.Fatal(err) }
-		//fmt.Println(result)
-		posts = append(posts, *post)
-	}
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-	return posts
+	s2 := &postDBA{dbserverCtx}
+	dbaConn = *s2
 }
