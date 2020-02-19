@@ -13,7 +13,7 @@ class Feed extends Component {
                 {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>*/}
                 {/*</View>*/}
                 <City/>
-                {/*<DisplayCity/>*/}
+                <DisplayCity/>
             </View>
 
         );

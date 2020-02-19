@@ -111,7 +111,7 @@ public class ProfilesClient {
 
         City city = null;
         try {
-            response = stub.createCity(cityRequestP);
+            response = stub.getCity(cityRequestP);
             city = new City(response.getValid(), response.getName(), response.getCountry(),
                     response.getCreatorEmail(), response.getDescription(), response.getLocation().getLat(), response.getLocation().getLon(), response.getId());
         } catch (StatusRuntimeException e) {

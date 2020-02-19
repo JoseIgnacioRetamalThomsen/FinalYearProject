@@ -1,6 +1,5 @@
 import React from 'react'
 import {Button, TextInput, View, NativeModules} from "react-native";
-import CustomHeader from "./CustomHeader";
 import styles from "../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -12,12 +11,13 @@ export default class Place extends React.Component {
             city: '',
             country: '',
             description: '',
-            lat: '',
-            lon: '',
+            lat: 0,
+            lon: 0,
+            id: 0,
         }
     }
 
-    async addPlace() {
+    addPlace() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -39,41 +39,9 @@ export default class Place extends React.Component {
                             (err) => {
                                 console.log("err in createPlace " + err)
                             },
-                            (name, country, email, description, lat, lon) => {
-                                console.log("name, country, email, description, lat, lon  is " + name, country, email, description, lat, lon)
+                            (name, country, email, description, lat, lon, id) => {
+                                console.log("name, country, email, description, lat, lon, id in createPlace is " + name, country, email, description, lat, lon, id)
                                 console.log("successfully created a place!!!")
-                            })
-                    }
-                })
-            })
-        })
-    }
-
-    async getPlace() {
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                stores.map((result, i, store) => {
-                    let key = store[i][0];
-                    let value = store[i][1]
-                    console.log("key/value in getPlace " + key + " " + value)
-
-                    if (value !== null) {
-                        NativeModules.ProfilesModule.getPlace(
-                            value,
-                            this.state.name,
-                            this.state.city,
-                            this.state.country,
-                            key,
-                            this.state.description,
-                            this.state.lat,
-                            this.state.lon,
-
-                            (err) => {
-                                console.log("err in createPlace " + err)
-                            },
-                            (name, city, country, email, description, lat, lon) => {
-                                console.log("name, city, country, email, description, lat, lon  is " + name, city, country, email, description, lat, lon)
-                                console.log("successfully got a place!!!")
                             })
                     }
                 })

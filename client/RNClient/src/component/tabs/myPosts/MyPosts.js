@@ -3,6 +3,7 @@ import {View, TextInput} from 'react-native';
 import CustomHeader from '../../CustomHeader'
 import PlusButton from "../../PlusButton";
 import Place from '../../Place'
+import DisplayPlace from "../../DisplayPlace";
 class MyPosts extends Component {
 
     render() {
@@ -15,6 +16,7 @@ class MyPosts extends Component {
                     {/*<PlusButton navigation={navigation}/>*/}
                 {/*</View>*/}
 <Place/>
+<DisplayPlace/>
             </View>
         );
     }

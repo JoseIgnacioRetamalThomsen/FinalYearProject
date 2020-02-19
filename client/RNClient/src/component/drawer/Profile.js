@@ -69,7 +69,7 @@ class Profile extends Component {
                                     this.setState({description: description})
                                     console.log("successful getUser")
                                // }
-                                console.log("null values")
+                              //  else console.log("null values")
                             })
 
                     }
