@@ -11,8 +11,8 @@ export default class City extends React.Component {
             name: '',
             country: '',
             description: '',
-            lat: 1,
-            lon: 1,
+            lat: 0,
+            lon: 0,
         }
     }
 
@@ -33,12 +33,11 @@ export default class City extends React.Component {
                             this.state.description,
                             this.state.lat,
                             this.state.lon,
-
                             (err) => {
                                 console.log("err in createCity " + err)
                             },
-                            (name, country, email, description, lat, lon) => {
-                                console.log("name, country, email, description, lat, lon  is " + name, country, email, description, lat, lon)
+                            (name, country, email, description, lat, lon, id) => {
+                                console.log("name, country, email, description, lat, lon id is " + name, country, email, description, lat, lon, id)
                                 console.log("successfully created a city!!!")
                             })
                     }
@@ -99,10 +98,12 @@ export default class City extends React.Component {
                         onChangeText={(description) => this.setState({description})}/>
                     <TextInput
                         style={styles.inputs}
+                        keyboardType = 'numeric'
                         placeholder="Lat"
                         onChangeText={(lat) => this.setState({lat})}/>
                     <TextInput
                         style={styles.inputs}
+                        keyboardType = 'numeric'
                         placeholder="Lon"
                         onChangeText={(lon) => this.setState({lon})}/>
                     <Button title="Add city"

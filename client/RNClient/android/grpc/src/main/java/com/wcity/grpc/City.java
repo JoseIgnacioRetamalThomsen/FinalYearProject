@@ -1,22 +1,25 @@
 package com.wcity.grpc;
 
-import io.grpc.wcity.profiles.GeolocationP;
-
 public class City {
     private boolean valid;
     private String name;
     private String country;
     private String creatorEmail;
     private String description;
-    private GeolocationP location;
+    private float lat;
+    private float lon;
+    private int id;
 
-    public City(boolean valid, String name, String country, String creatorEmail, String description, GeolocationP location) {
+
+    public City(boolean valid, String name, String country, String creatorEmail, String description, float lat, float lon, int id) {
         this.valid = valid;
         this.name = name;
         this.country = country;
         this.creatorEmail = creatorEmail;
         this.description = description;
-        this.location = location;
+        this.lat = lat;
+        this.lon = lon;
+        this.id = id;
     }
 
     public boolean isValid() {
@@ -59,11 +62,27 @@ public class City {
         this.description = description;
     }
 
-    public GeolocationP getLocation() {
-        return location;
+    public int getId() {
+        return id;
     }
 
-    public void setLocation(GeolocationP location) {
-        this.location = location;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public float getLat() {
+        return lat;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public float getLon() {
+        return lon;
+    }
+
+    public void setLon(float lon) {
+        this.lon = lon;
     }
 }

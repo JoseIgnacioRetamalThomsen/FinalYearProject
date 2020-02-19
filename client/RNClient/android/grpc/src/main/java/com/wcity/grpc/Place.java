@@ -9,16 +9,21 @@ public class Place {
     private String country;
     private String creatorEmail;
     private String description;
-    private GeolocationP location;
+    private float lat;
+    private float lon;
+    private int id;
 
-    public Place(boolean valid, String name, String city, String country, String creatorEmail, String description, GeolocationP location) {
+    public Place(boolean valid, String name, String city, String country, String creatorEmail,
+                 String description, float lat, float lon, int id) {
         this.valid = valid;
         this.name = name;
         this.city = city;
         this.country = country;
         this.creatorEmail = creatorEmail;
         this.description = description;
-        this.location = location;
+        this.lat = lat;
+        this.lon = lon;
+        this.id = id;
     }
 
     public boolean isValid() {
@@ -69,11 +74,27 @@ public class Place {
         this.description = description;
     }
 
-    public GeolocationP getLocation() {
-        return location;
+    public float getLat() {
+        return lat;
     }
 
-    public void setLocation(GeolocationP location) {
-        this.location = location;
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public float getLon() {
+        return lon;
+    }
+
+    public void setLon(float lon) {
+        this.lon = lon;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
