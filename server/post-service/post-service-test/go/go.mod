@@ -1,4 +1,4 @@
-module github.com/joseignacioretamalthomsen/post-service-main
+module github.com/joseignacioretamalthomsen/post-service-test
 
 go 1.13
 

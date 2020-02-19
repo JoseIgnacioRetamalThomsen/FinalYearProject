@@ -26,7 +26,7 @@ const(
 )
 
 type server struct {
-	pb.UnimplementedPostsServiceServer
+	pb.UnimplementedPostsServiceDBAServer
 }
 
 type CityPost struct{
@@ -54,6 +54,33 @@ type PlacePost struct{
 	MongoId string
 }
 
+/**
+*  END POINTS
+ */
+func (s *server) CreateCityPost(ctx context.Context, in *pb.CityPostPSDB) (*pb.CreatePostResponsePSDB, error) {
+	log.Printf("Received: %v , from: %v", "Create city post", in.String())
+
+	index,_ :=CreateCityPost(&CityPost{
+		IndexId:      in.IndexId,
+		CreatorEmail: in.CreatorEmail,
+		Name:         in.CityName,
+		Country:      in.CityCountry,
+		Title:        in.Title,
+		Body:         in.Body,
+		TimeStamp:    in.TimeStamp,
+		Likes:        nil,
+		MongoId:      "",
+	})
+	index = index
+	return &pb.CreatePostResponsePSDB{
+		Valied:               true,
+		IndexId:              in.IndexId,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	},nil
+}
+
 
 func main(){
 
@@ -67,7 +94,7 @@ func main(){
 		TimeStamp:    "six",
 		Likes:        []string{"one","two"},
 	}
-	instid , err :=CreateCityPost(*temp)
+	instid , err :=CreateCityPost(temp)
 	if err!= nil{
 		panic(err)
 	}
@@ -141,14 +168,14 @@ if err != nil{
 */
 //fmt.Println(GetCityPost(1))
 //fmt.Println(GetPlacePost(2))
-UpdatePost("5e4d9e2d6c8b79466543aa4b","assssssssssssssssssssssssssssss","ssssssssffffffffffffffffffffffffffffffffffff")
+//UpdatePost("5e4d9e2d6c8b79466543aa4b","assssssssssssssssssssssssssssss","ssssssssffffffffffffffffffffffffffffffffffff")
 
 	lis, err := net.Listen("tcp", Port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterPostsServiceServer(s, &server{})
+	pb.RegisterPostsServiceDBAServer(s, &server{})
 	log.Print("Service Started in port: ", Port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
@@ -157,7 +184,7 @@ UpdatePost("5e4d9e2d6c8b79466543aa4b","assssssssssssssssssssssssssssss","sssssss
 }
 
 
-func CreateCityPost(city CityPost)(interface{},error){
+func CreateCityPost(city *CityPost)(interface{},error){
 	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
 	if err!= nil {
 		panic(err)
@@ -240,7 +267,7 @@ func CreatePlacePost(place PlacePost)(interface{},error){
 
 	res, err := collection.InsertOne(ctx,data)
 	if err!=nil{
-		return nil,err
+		return "",err
 	}
 	return res.InsertedID,nil
 }

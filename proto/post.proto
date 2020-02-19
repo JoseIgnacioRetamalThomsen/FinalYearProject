@@ -4,8 +4,8 @@ syntax = "proto3";
 package wcity;
 
 option java_multiple_files = true;
-option java_package = "io.grpc.wcity.postdb";
-option java_outer_classname = "PostDBProto";
+option java_package = "io.grpc.wcity.postservice";
+option java_outer_classname = "PostProto";
 option objc_class_prefix = "RPC";
 
 service PostsService{
