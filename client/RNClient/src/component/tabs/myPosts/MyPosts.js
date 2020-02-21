@@ -4,6 +4,7 @@ import CustomHeader from '../../CustomHeader'
 import PlusButton from "../../PlusButton";
 import Place from '../../Place'
 import DisplayPlace from "../../DisplayPlace";
+import {ActionSheet, Root} from "native-base";
 class MyPosts extends Component {
 
     render() {
@@ -13,10 +14,10 @@ class MyPosts extends Component {
                 <CustomHeader title="My Posts" isHome={true} navigation={this.props.navigation}/>
 
                 {/*<View style={{flex: 1, justifyContent: 'center'}}>*/}
-                    {/*<PlusButton navigation={navigation}/>*/}
+                {/*<PlusButton navigation={navigation}/>*/}
                 {/*</View>*/}
-<Place/>
-<DisplayPlace/>
+
+                    <Place navigation = {this.props.navigation}/>
             </View>
         );
     }

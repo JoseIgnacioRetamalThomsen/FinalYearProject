@@ -5,18 +5,20 @@ import CustomHeader from '../../CustomHeader'
 import City from '../../City'
 import DisplayCity from '../../DisplayCity'
 import MapInput from "../../MapInput";
+import Test from "../../Test";
 class Feed extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
                 <CustomHeader title="Feed" isHome={true} navigation={this.props.navigation}/>
-                <MapInput notifyChange={() => this.onClickEvent()} />
+                <MapInput notifyChange={() => this.onClickEvent()}/>
                 {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>*/}
-                    <City/>
+                {/*    <City/>*/}
+                    <Test/>
                 {/*</View>*/}
             </View>
 
-        );
+        )
     }
 }
 

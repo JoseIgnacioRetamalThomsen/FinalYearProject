@@ -49,6 +49,7 @@ export default class Place extends React.Component {
                                 this.setState({lon: lon})
                                 console.log("name, country, email, description, lat, lon, id in createPlace is " + name, country, email, description, lat, lon, id)
                                 console.log("successfully created a place!!!")
+                                this.props.navigation.navigate('DisplayPlace')
                             })
                     }
                 })
@@ -95,42 +96,39 @@ export default class Place extends React.Component {
     }
     render() {
         return (
-            <View style={{flex: 1}}>
-
+            // <View style={{flex: 1}}>
 
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <TextInput
+                            style={styles.inputs}
+                            placeholder="Name"
+                            onChangeText={(name) => this.setState({name})}/>
+                        <TextInput
+                            style={styles.inputs}
+                            placeholder="City"
+                            onChangeText={(city) => this.setState({city})}/>
 
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="Name"
-                        onChangeText={(name) => this.setState({name})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="City"
-                        onChangeText={(city) => this.setState({city})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="Country"
-                        onChangeText={(country) => this.setState({country})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="Description"
-                        onChangeText={(description) => this.setState({description})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="Lat"
-                        onChangeText={(lat) => this.setState({lat})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="Lon"
-                        onChangeText={(lon) => this.setState({lon})}/>
-                    <Button title="Add a new place"
-                            onPress={() => this.addPlace()}/>
-
-                    <Button title="Update an existing place"
-                            onPress={() => this.updatePlace()}/>
-                </View>
-            </View>
+                        <TextInput
+                            style={styles.inputs}
+                            placeholder="Country"
+                            onChangeText={(country) => this.setState({country})}/>
+                        <TextInput
+                            style={styles.inputs}
+                            placeholder="Description"
+                            onChangeText={(description) => this.setState({description})}/>
+                        {/*<TextInput*/}
+                        {/*    style={styles.inputs}*/}
+                        {/*    keyboardType = 'numeric'*/}
+                        {/*    placeholder="Lat"*/}
+                        {/*    onChangeText={(lat) => this.setState({lat})}/>*/}
+                        {/*<TextInput*/}
+                        {/*    style={styles.inputs}*/}
+                        {/*    keyboardType = 'numeric'*/}
+                        {/*    placeholder="Lon"*/}
+                        {/*    onChangeText={(lon) => this.setState({lon})}/>*/}
+                        <Button title="Add a new place"
+                                onPress={() => this.addPlace()}/>
+                    </View>
         )
     }
 }

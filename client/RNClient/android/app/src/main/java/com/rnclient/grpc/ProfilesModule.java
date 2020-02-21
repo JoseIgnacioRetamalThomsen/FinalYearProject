@@ -187,7 +187,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
                 GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
         try {
             //  if (place.isValid() == true) {
-            successCallback.invoke(place.getName(), place.getCountry(), place.getCreatorEmail(),
+            successCallback.invoke(place.getName(), place.getCity(), place.getCountry(), place.getCreatorEmail(),
                     place.getDescription(), place.getLat(), place.getLon(), place.getId());
 //            } else {
 //                errorCallback.invoke("Invalid user");

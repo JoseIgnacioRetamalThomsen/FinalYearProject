@@ -7,7 +7,6 @@ export default class DisplayPlace extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatar_url: '',
             name: '',
             email:'',
             city: '',
@@ -39,13 +38,14 @@ export default class DisplayPlace extends Component {
                             (err) => {
                                 console.log("error In getPlace " + err)
                             },
-                            (name, city, country, email, description) => {
+
+                            (isValid, name, city, country, email, description, lat, lng, id) => {
                                 this.setState({name: name})
                                 this.setState({city: city})
                                 this.setState({country: country})
                                 this.setState({email: email})
                                 this.setState({description: description})
-                                console.log("successful in getPlace values " + this.state.name, this.state.description)
+                                console.log("successful in getPlace values " + name, city, country, email, description)
                             })
 
                     }
@@ -73,9 +73,14 @@ export default class DisplayPlace extends Component {
                             <Text>Country {this.state.country} </Text>
                         </View>
                         <View>
+                            <Text>Email {this.state.email} </Text>
+                        </View>
+                        <View>
                             <Text>Description {this.state.description} </Text>
                         </View>
                     </View>
+                    <Button title="Update an existing place"
+                            onPress={() => this.updatePlace()}/>
                 </View>
             </View>
         );

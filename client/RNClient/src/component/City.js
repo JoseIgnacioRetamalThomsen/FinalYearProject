@@ -79,7 +79,7 @@ export default class City extends React.Component {
                                 console.log("name, country, email, description, lat, lon  is " + name, country, email,
                                     description, lat, lon)
                                 console.log("successfully got a city!!!")
-                                this.props.navigation.navigate('DisplayCity')
+                                //this.props.navigation.navigate('DisplayCity')
                             })
                     }
                 })
@@ -91,7 +91,7 @@ export default class City extends React.Component {
         return (
             // <View style={{flex: 1}}>
 
-                <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 
                     <TextInput
                         style={styles.inputs}
