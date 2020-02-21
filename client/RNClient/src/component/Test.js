@@ -2,6 +2,8 @@ import React from 'react'
 import {Button, TextInput, View, NativeModules} from "react-native";
 import styles from "../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
+import TestLocationReducer from "./TestLocationReducer";
+import MapInput from "./MapInput";
 
 export default class Test extends React.Component {
     constructor(props) {
@@ -179,20 +181,21 @@ export default class Test extends React.Component {
     render() {
         return (
             <View>
-                <Button title="Visit this place"
-                        onPress={() => this.visitPlace()}/>
+                {/*<Button title="Visit this place"*/}
+                {/*        onPress={() => this.visitPlace()}/>*/}
 
-                <Button title="Visit this city"
-                        onPress={() => this.visitCity()}/>
+                {/*<Button title="Visit this city"*/}
+                {/*        onPress={() => this.visitCity()}/>*/}
 
-                <Button title="getVisitedCities"
-                        onPress={() => this.getVisitedCities()}/>
+                {/*<Button title="getVisitedCities"*/}
+                {/*        onPress={() => this.getVisitedCities()}/>*/}
 
-                <Button title="getVisitedPlaces"
-                        onPress={() => this.getVisitedPlaces()}/>
+                {/*<Button title="getVisitedPlaces"*/}
+                {/*        onPress={() => this.getVisitedPlaces()}/>*/}
 
-                <Button title="getCityPlaces"
-                        onPress={() => this.getCityPlaces()}/>
+                {/*<Button title="getCityPlaces"*/}
+                {/*        onPress={() => this.getCityPlaces()}/>*/}
+                <TestLocationReducer/>
             </View>
         )
     }

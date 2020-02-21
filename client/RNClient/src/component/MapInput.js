@@ -1,15 +1,29 @@
 import React from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {Button} from "react-native-elements";
+import {Text, View} from "react-native";
+import connect from "react-redux/lib/connect/connect";
+
+// function mapStateToProps(state) {
+//     return {
+//         lat: state.lat,
+//         lng: state.lng,
+//     }
+// }
 
 export default class MapInput extends React.Component {
+
     constructor(props) {
         super(props)
         this.state = {
-            latitude: 0,
-            longitude: 0,
-            lat: 0.3,
-            lng: 0.3
+            lat: 0,
+            lng: 0,
+            city: '',
+            country: '',
         }
+    }
+    sendData = () => {
+        this.props.parentCallback(this.state.lat, this.state.lng, this.state.city, this.state.country)
     }
     render() {
         return (
@@ -28,9 +42,13 @@ export default class MapInput extends React.Component {
                     this.setState({
                         lat: details.geometry.location.lat,
                         lng: details.geometry.location.lng,
+                        city: details.address_components.filter(ac => ~ac.types.indexOf('locality'))[0].long_name,
+                        country: details.address_components.filter(ac => ~ac.types.indexOf('country'))[0].long_name,
                     })
-                    console.log("lat&lng "+ lat + " " + lng)
-                    this.props.notifyChange(details.geometry.location)
+
+                    console.log("lat&lng " + this.state.lat + " " + this.state.lng, this.state.city, this.state.country)
+                    this.sendData()
+                    // this.props.notifyChange(details.geometry.location)
                 }}
                 query={{
                     // available options: https://developers.google.com/places/web-service/autocomplete
@@ -40,8 +58,13 @@ export default class MapInput extends React.Component {
                 }}
                 nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-            />
+            >
 
-        );
+              </GooglePlacesAutocomplete>
+
+
+        )
     }
 }
+
+// export default connect(mapStateToProps)(MapInput)
