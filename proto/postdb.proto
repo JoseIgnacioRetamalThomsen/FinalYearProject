@@ -11,8 +11,8 @@ option objc_class_prefix = "RPC";
 service PostsServiceDBA{
   rpc CreateCityPost(CityPostPSDB) returns (CreatePostResponsePSDB);
   rpc CreatePlacePost(PlacePostPSDB) returns (CreatePostResponsePSDB); 
-  rpc GetPlacePosts(PostsRequestPSDB) returns (CityPostsResponsePSDB);
-  rpc GetCityPosts(PostsRequestPSDB) returns(PlacePostsResponsePSDB);
+  rpc GetPlacePosts(PostsRequestPSDB) returns (PlacePostsResponsePSDB);
+  rpc GetCityPosts(PostsRequestPSDB) returns(CityPostsResponsePSDB);
   rpc UpdatePlacePost(UpdatePostRequestPSDB) returns (UpdatePostResponsePSDB);
   rpc UpdateCityPost(UpdatePostRequestPSDB) returns (UpdatePostResponsePSDB);
 
@@ -28,7 +28,7 @@ message CityPostPSDB{
     string body =6;
     string timeStamp = 7;
     repeated string likes =8;
-    string mongoId = 9;
+    string mongoId = 9 [json_name="_id,omitempty"];
 }
 message PlacePostPSDB{
     int32 indexId =1;
@@ -40,7 +40,7 @@ message PlacePostPSDB{
     string body =7;
     string timeStamp = 8;
     repeated string likes =9;
-    string mongoId = 10;
+    string mongoId = 10  [json_name="_id,omitempty"];
 }
 
 message CreatePostResponsePSDB{

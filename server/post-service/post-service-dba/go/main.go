@@ -3,17 +3,18 @@ package main
 import (
 	"context"
 	"fmt"
+	pb "github.com/joseignacioretamalthomsen/wcity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"log"
 	"net"
-
 	//"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
-	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
+	"time"
 )
 
 const(
@@ -38,7 +39,7 @@ type CityPost struct{
 	Body string
 	TimeStamp string
 	Likes[] string
-	MongoId string
+	MongoId string `bson:"_id,omitempty"`
 
 }
 type PlacePost struct{
@@ -51,7 +52,7 @@ type PlacePost struct{
 	Body string
 	TimeStamp string
 	Likes[] string
-	MongoId string
+	MongoId string `bson:"_id,omitempty"`
 }
 
 /**
@@ -81,9 +82,66 @@ func (s *server) CreateCityPost(ctx context.Context, in *pb.CityPostPSDB) (*pb.C
 	},nil
 }
 
+func (s *server) CreatePlacePost(ctx context.Context, in *pb.PlacePostPSDB) (*pb.CreatePostResponsePSDB, error) {
+	log.Printf("Received: %v , from: %v", "Create place post", in.String())
+
+	index, err := CreatePlacePost(&PlacePost{
+		IndexId:      in.IndexId,
+		CreatorEmail: in.CreatorEmail,
+		Name:         in.PlaceName,
+		City:         in.CityName,
+		Country:      in.CountryName,
+		Title:        in.Title,
+		Body:         in.Body,
+		TimeStamp:    in.TimeStamp,
+		Likes:        nil,
+
+	})
+	index = index
+	if err != nil{
+		return &pb.CreatePostResponsePSDB{
+			Valied:               false,
+			IndexId:              in.IndexId,
+
+		},err
+	}
+
+	return &pb.CreatePostResponsePSDB{
+		Valied:               true,
+		IndexId:              in.IndexId,
+
+	},nil
+}
+
+func (s *server) GetPlacePosts(ctx context.Context, in *pb.PostsRequestPSDB) (*pb.PlacePostsResponsePSDB, error) {
+	log.Printf("Received: %v , from: %v", "Get place posts", in.String())
+
+	temp := GetPlacePost(in.IndexId)
+
+	if temp == nil{
+		return &pb.PlacePostsResponsePSDB{
+			Valid:                false,
+			IndexId:              0,
+			Posts:                nil,
+			XXX_NoUnkeyedLiteral: struct{}{},
+			XXX_unrecognized:     nil,
+			XXX_sizecache:        0,
+		},status.Error(codes.NotFound,"No post found.")
+	}
+
+return &pb.PlacePostsResponsePSDB{
+	Valid:                true,
+	IndexId:              in.IndexId,
+	Posts:                temp,
+	XXX_NoUnkeyedLiteral: struct{}{},
+	XXX_unrecognized:     nil,
+	XXX_sizecache:        0,
+},nil
+
+}
 
 func main(){
-
+/*
 	temp := &CityPost{
 		IndexId: 1,
 		CreatorEmail: "one",
@@ -113,12 +171,15 @@ func main(){
 		Likes:        []string{"a","b","c"},
 	}
 
-	instid , err =	CreatePlacePost(*temp1)
+	instid , err =	CreatePlacePost(temp1)
 	if err!= nil{
 		panic(err)
 	}
 
 	fmt.Println(instid)
+
+
+ */
 /*
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://172.17.0.1:27017"))
 if err!= nil {
@@ -227,16 +288,19 @@ func GetCityPost(IndexId int32)[]CityPost{
 
 	collection := client.Database(DatabaseName).Collection(CollectionName)
 
-
-	cur, err := collection.Find(ctx, bson.M{"indexid":1})
+	cur, err := collection.Find(ctx, bson.M{"indexid":IndexId})
 	if err != nil { log.Fatal(err) }
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
-		//var result bson.M
+
 		post := &CityPost{}
 		err := cur.Decode(&post)
 		if err != nil { log.Fatal(err) }
-		//fmt.Println(result)
+
+		var post1 bson.M
+		err = cur.Decode(&post1)
+
+
 		posts = append(posts, *post)
 	}
 	if err := cur.Err(); err != nil {
@@ -245,7 +309,7 @@ func GetCityPost(IndexId int32)[]CityPost{
 	return posts
 }
 
-func CreatePlacePost(place PlacePost)(interface{},error){
+func CreatePlacePost(place *PlacePost)(interface{},error){
 	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
 	if err!= nil {
 		panic(err)
@@ -272,8 +336,8 @@ func CreatePlacePost(place PlacePost)(interface{},error){
 	return res.InsertedID,nil
 }
 
-func GetPlacePost(indexId int32)[]PlacePost{
-	var posts []PlacePost
+func GetPlacePost(indexId int32)[]*pb.PlacePostPSDB{
+	var posts []*pb.PlacePostPSDB
 	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
 	if err!= nil {
 		panic(err)
@@ -288,21 +352,25 @@ func GetPlacePost(indexId int32)[]PlacePost{
 
 	collection := client.Database(DatabaseName).Collection(CollectionName)
 
-
 	cur, err := collection.Find(ctx, bson.M{"indexid":indexId})
 	if err != nil { log.Fatal(err) }
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
-		//var result bson.M
-		post := &PlacePost{}
+
+		post := &pb.PlacePostPSDB{}
 		err := cur.Decode(&post)
 		if err != nil { log.Fatal(err) }
-		//fmt.Println(result)
-		posts = append(posts, *post)
+
+		var post1 bson.M
+		err = cur.Decode(&post1)
+		fmt.Println(post1["_id"])
+
+		posts = append(posts, post)
 	}
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
 	}
+
 	return posts
 }
 

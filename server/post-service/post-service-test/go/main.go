@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"time"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
+	"log"
+	"time"
 )
 
 const (
@@ -48,7 +48,9 @@ func main(){
 	s2 := &postService{dbserverCtx}
 	serviceConn = *s2
 
-	CreateCityPost()
+	//CreateCityPost()
+	//CreatePlacePost()
+	GetPlacePosts()
 }
 
 func CreateCityPost(){
@@ -69,5 +71,40 @@ func CreateCityPost(){
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(r)
+}
+
+func CreatePlacePost(){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := serviceConn.context.dbClient.CreatePlacePost(ctx,&pb.PlacePost{
+		IndexId:              2,
+		CreatorEmail:         "xxxxxxx",
+		CityName:             "xxxxx",
+		CountryName:          "xxxx",
+		PlaceName:            "xxxxx",
+		Title:                "xxxxx",
+		Body:                 "xxxx",
+
+		Likes:                nil,
+		MongoId:              "",
+
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(r)
+}
+
+func GetPlacePosts(){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := serviceConn.context.dbClient.GetPlacePosts(ctx,&pb.PostsRequest{
+		IndexId:              1,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	})
+	err=err
 	fmt.Println(r)
 }

@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	pb "github.com/joseignacioretamalthomsen/wcity"
+	"google.golang.org/grpc"
 	"log"
 	"net"
 	"time"
-	pb "github.com/joseignacioretamalthomsen/wcity"
-	"google.golang.org/grpc"
 )
 
 const(
@@ -77,6 +77,72 @@ func (s *server) CreateCityPost(ctx context.Context, in *pb.CityPost) (*pb.Creat
 	},nil
 }
 
+func (s *server) CreatePlacePost(ctx context.Context, in *pb.PlacePost) (*pb.CreatePostResponse, error) {
+	log.Printf("Received: %v , from: %v", "Create city post", in.String())
+
+	post := &pb.PlacePostPSDB{
+		IndexId:              in.IndexId,
+		PlaceName:   in.PlaceName,
+		CreatorEmail:         in.CreatorEmail,
+		CityName:             in.CityName,
+		CountryName:          in.CountryName,
+		Title:                in.Title,
+		Body:                 in.Body,
+		TimeStamp:            time.Now().Format("UnixDate"),
+		Likes:                nil,
+		MongoId:              "",
+
+	}
+	result :=CreatePlacePost(*post)
+
+	return &pb.CreatePostResponse{
+		Valied:               result.Valied,
+		IndexId:              result.IndexId,
+
+	},nil
+}
+
+func (s *server) GetPlacePosts(ctx context.Context, in *pb.PostsRequest) (*pb.PlacePostsResponse, error) {
+	log.Printf("Received: %v , from: %v", "all posts", in.String())
+
+	posts,err := GetPlacePosts(pb.PostsRequestPSDB{
+		IndexId:              in.IndexId,
+
+	})
+	if err!= nil{
+		return &pb.PlacePostsResponse{
+			Valid:                false,
+			IndexId:              0,
+			Posts:                nil,
+
+		},err
+	}
+
+	var postsRes []*pb.PlacePost
+
+	for _,value := range posts.Posts{
+		postsRes = append(postsRes,&pb.PlacePost{
+			IndexId:              value.IndexId,
+			CreatorEmail:         value.CreatorEmail,
+			CityName:             value.CityName,
+			CountryName:          value.CountryName,
+			PlaceName:            value.PlaceName,
+			Title:                value.Title,
+			Body:                 value.Body,
+			TimeStamp:            value.TimeStamp,
+			Likes:                value.Likes,
+			MongoId:              value.MongoId,
+
+		})
+	}
+	return &pb.PlacePostsResponse{
+		Valid:                true,
+		IndexId:              in.IndexId,
+		Posts:                postsRes,
+
+	},nil
+}
+
 func main(){
 
 	fmt.Println(time.Now().Format("Mon Jan _2 15:04:05 MST 2006"))
@@ -124,4 +190,33 @@ func CreateCityPost(post pb.CityPostPSDB) pb.CreatePostResponsePSDB{
 	}
 
 	return *r
+}
+
+
+func CreatePlacePost(post pb.PlacePostPSDB) pb.CreatePostResponsePSDB{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := dbaConn.context.dbClient.CreatePlacePost(ctx,&post)
+	if err != nil {
+		panic(err)
+	}
+
+	return *r
+}
+
+
+func GetPlacePosts(request pb.PostsRequestPSDB) (pb.PlacePostsResponsePSDB, error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := dbaConn.context.dbClient.GetPlacePosts(ctx,&request)
+	if err!= nil{
+		return pb.PlacePostsResponsePSDB{
+			Valid:                false,
+			IndexId:              0,
+			Posts:                nil,
+
+		},err
+	}
+
+	return *r, nil
 }

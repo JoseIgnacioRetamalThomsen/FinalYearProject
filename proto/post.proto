@@ -11,8 +11,8 @@ option objc_class_prefix = "RPC";
 service PostsService{
   rpc CreateCityPost(CityPost) returns (CreatePostResponse);
   rpc CreatePlacePost(PlacePost) returns (CreatePostResponse); 
-  rpc GetPlacePosts(PostsRequest) returns (CityPostsResponse);
-  rpc GetCityPosts(PostsRequest) returns(PlacePostsResponse);
+  rpc GetPlacePosts(PostsRequest) returns (PlacePostsResponse);
+  rpc GetCityPosts(PostsRequest) returns(CityPostsResponse);
   rpc UpdatePlacePost(UpdatePostRequest) returns (UpdatePostResponse);
   rpc UpdateCityPost(UpdatePostRequest) returns (UpdatePostResponse);
 
