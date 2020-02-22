@@ -116,9 +116,9 @@ func (s *server) CreatePlacePost(ctx context.Context, in *pb.PlacePostPSDB) (*pb
 func (s *server) GetPlacePosts(ctx context.Context, in *pb.PostsRequestPSDB) (*pb.PlacePostsResponsePSDB, error) {
 	log.Printf("Received: %v , from: %v", "Get place posts", in.String())
 
-	temp := GetPlacePost(in.IndexId)
+	posts := GetPlacePost(in.IndexId)
 
-	if temp == nil{
+	if posts == nil{
 		return &pb.PlacePostsResponsePSDB{
 			Valid:                false,
 			IndexId:              0,
@@ -132,14 +132,34 @@ func (s *server) GetPlacePosts(ctx context.Context, in *pb.PostsRequestPSDB) (*p
 return &pb.PlacePostsResponsePSDB{
 	Valid:                true,
 	IndexId:              in.IndexId,
-	Posts:                temp,
+	Posts:                posts,
 	XXX_NoUnkeyedLiteral: struct{}{},
 	XXX_unrecognized:     nil,
 	XXX_sizecache:        0,
 },nil
 
 }
+func (s *server) GetCityPosts(ctx context.Context, in *pb.PostsRequestPSDB) (*pb.CityPostsResponsePSDB, error) {
+	log.Printf("Received: %v , from: %v", "Get city posts", in.String())
 
+	posts := GetCityPost(in.IndexId)
+
+	if posts == nil{
+		return &pb.CityPostsResponsePSDB{
+			Valid:                false,
+			IndexId:              in.IndexId,
+			Posts:                nil,
+
+		},status.Error(codes.NotFound,"No post found.")
+
+	}
+	return &pb.CityPostsResponsePSDB{
+		Valid:                true,
+		IndexId:              in.IndexId,
+		Posts:                posts,
+
+	},nil
+}
 func main(){
 /*
 	temp := &CityPost{
@@ -272,8 +292,8 @@ func CreateCityPost(city *CityPost)(interface{},error){
 	return res.InsertedID,nil
 }
 
-func GetCityPost(IndexId int32)[]CityPost{
-	var posts []CityPost
+func GetCityPost(IndexId int32)[]*pb.CityPostPSDB{
+	var posts []*pb.CityPostPSDB
 	client, err := mongo.NewClient(options.Client().ApplyURI(MongoDBURI))
 	if err!= nil {
 		panic(err)
@@ -289,19 +309,24 @@ func GetCityPost(IndexId int32)[]CityPost{
 	collection := client.Database(DatabaseName).Collection(CollectionName)
 
 	cur, err := collection.Find(ctx, bson.M{"indexid":IndexId})
-	if err != nil { log.Fatal(err) }
+	if err != nil { log.Fatal(err)
+	  return nil
+	}
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
 
-		post := &CityPost{}
+		post := &pb.CityPostPSDB{}
 		err := cur.Decode(&post)
-		if err != nil { log.Fatal(err) }
+		if err != nil {
+			log.Fatal(err)
+		return nil
+		}
 
 		var post1 bson.M
 		err = cur.Decode(&post1)
 
 
-		posts = append(posts, *post)
+		posts = append(posts, post)
 	}
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
@@ -353,7 +378,10 @@ func GetPlacePost(indexId int32)[]*pb.PlacePostPSDB{
 	collection := client.Database(DatabaseName).Collection(CollectionName)
 
 	cur, err := collection.Find(ctx, bson.M{"indexid":indexId})
-	if err != nil { log.Fatal(err) }
+	if err != nil {
+		log.Fatal(err)
+	return nil
+	}
 	defer cur.Close(ctx)
 	for cur.Next(ctx) {
 
@@ -369,6 +397,7 @@ func GetPlacePost(indexId int32)[]*pb.PlacePostPSDB{
 	}
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
+		return nil
 	}
 
 	return posts

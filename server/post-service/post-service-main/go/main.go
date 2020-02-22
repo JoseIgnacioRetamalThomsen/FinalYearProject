@@ -143,6 +143,46 @@ func (s *server) GetPlacePosts(ctx context.Context, in *pb.PostsRequest) (*pb.Pl
 	},nil
 }
 
+func (s *server) GetCityPosts(ctx context.Context, in *pb.PostsRequest) (*pb.CityPostsResponse, error) {
+	log.Printf("Received: %v , from: %v", "all posts", in.String())
+
+	posts,err  := GetCityPosts(pb.PostsRequestPSDB{
+		IndexId:              in.IndexId,
+
+	})
+	if err != nil{
+		return &pb.CityPostsResponse{
+			Valid:                false,
+			IndexId:              in.IndexId,
+			Posts:                nil,
+
+		},err
+	}
+
+	var postsRes []*pb.CityPost
+
+	for _,value := range posts.Posts{
+		postsRes = append(postsRes,&pb.CityPost{
+			IndexId:              value.IndexId,
+			CreatorEmail:         value.CreatorEmail,
+			CityName:             value.CityName,
+			CityCountry:          value.CityCountry,
+			Title:                value.Title,
+			Body:                 value.Body,
+			TimeStamp:            value.TimeStamp,
+			Likes:                value.Likes,
+			MongoId:              value.MongoId,
+
+		})
+	}
+	return &pb.CityPostsResponse{
+		Valid:                true,
+		IndexId:              in.IndexId,
+		Posts:                postsRes,
+
+	},nil
+}
+
 func main(){
 
 	fmt.Println(time.Now().Format("Mon Jan _2 15:04:05 MST 2006"))
@@ -218,5 +258,20 @@ func GetPlacePosts(request pb.PostsRequestPSDB) (pb.PlacePostsResponsePSDB, erro
 		},err
 	}
 
+	return *r, nil
+}
+
+func GetCityPosts(request pb.PostsRequestPSDB) (pb.CityPostsResponsePSDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := dbaConn.context.dbClient.GetCityPosts(ctx,&request)
+	if err != nil{
+		return pb.CityPostsResponsePSDB{
+			Valid:                false,
+			IndexId:              0,
+			Posts:                nil,
+
+		},err
+	}
 	return *r, nil
 }

@@ -50,7 +50,8 @@ func main(){
 
 	//CreateCityPost()
 	//CreatePlacePost()
-	GetPlacePosts()
+	//GetPlacePosts()
+	GetCityPosts()
 }
 
 func CreateCityPost(){
@@ -104,6 +105,17 @@ func GetPlacePosts(){
 		XXX_NoUnkeyedLiteral: struct{}{},
 		XXX_unrecognized:     nil,
 		XXX_sizecache:        0,
+	})
+	err=err
+	fmt.Println(r)
+}
+
+func GetCityPosts(){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := serviceConn.context.dbClient.GetCityPosts(ctx,&pb.PostsRequest{
+		IndexId:              2,
+
 	})
 	err=err
 	fmt.Println(r)
