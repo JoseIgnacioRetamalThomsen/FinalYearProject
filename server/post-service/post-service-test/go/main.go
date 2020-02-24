@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	url ="0.0.0.0:10051"
+	url ="35.197.216.42:10051"
 )
 
 type postService struct {
@@ -48,10 +48,10 @@ func main(){
 	s2 := &postService{dbserverCtx}
 	serviceConn = *s2
 
-//	CreateCityPost()
+	//CreateCityPost()
 	//CreatePlacePost()
-	GetPlacePosts()
-	//GetCityPosts()
+	//GetPlacePosts()
+	GetCityPosts()
 }
 
 func CreateCityPost(){
