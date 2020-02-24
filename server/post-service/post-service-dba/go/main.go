@@ -6,21 +6,22 @@ import (
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"log"
 	"net"
+
 	//"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"google.golang.org/grpc"
 	"time"
 )
 
 const(
-	//MongoDBURI = "mongodb://172.17.0.1:27017"
-
 	MongoDBURI = "mongodb://127.0.0.1:27017"
+	//MongoDBURI = "mongodb://172.17.0.1:27017"
+	//MongoDBURI = "mongodb://10.154.0.6:27017"
 	DatabaseName ="PostDatabase"
 	CollectionName  = "Posts"
 	Port = ":2787"
@@ -61,7 +62,7 @@ type PlacePost struct{
 func (s *server) CreateCityPost(ctx context.Context, in *pb.CityPostPSDB) (*pb.CreatePostResponsePSDB, error) {
 	log.Printf("Received: %v , from: %v", "Create city post", in.String())
 
-	index,_ :=CreateCityPost(&CityPost{
+	index,err := CreateCityPost(&CityPost{
 		IndexId:      in.IndexId,
 		CreatorEmail: in.CreatorEmail,
 		Name:         in.CityName,
@@ -72,13 +73,14 @@ func (s *server) CreateCityPost(ctx context.Context, in *pb.CityPostPSDB) (*pb.C
 		Likes:        nil,
 		MongoId:      "",
 	})
+	if err != nil{
+		panic (err)
+	}
 	index = index
 	return &pb.CreatePostResponsePSDB{
 		Valied:               true,
 		IndexId:              in.IndexId,
-		XXX_NoUnkeyedLiteral: struct{}{},
-		XXX_unrecognized:     nil,
-		XXX_sizecache:        0,
+
 	},nil
 }
 
@@ -161,95 +163,24 @@ func (s *server) GetCityPosts(ctx context.Context, in *pb.PostsRequestPSDB) (*pb
 	},nil
 }
 func main(){
+	fmt.Println("t")
 /*
-	temp := &CityPost{
-		IndexId: 1,
-		CreatorEmail: "one",
-		Name:         "two",
-		Country:      "three",
-		Title:        "four",
-		Body:         "five",
-		TimeStamp:    "six",
-		Likes:        []string{"one","two"},
-	}
-	instid , err :=CreateCityPost(temp)
-	if err!= nil{
-		panic(err)
-	}
-
-	fmt.Println(instid)
-
-	temp1 := &PlacePost{
-		IndexId:      2,
-		CreatorEmail: "a",
-		Name:         "bv",
-		City:         "c",
+	 _, err := CreateCityPost(&CityPost{
+		IndexId:      0,
+		CreatorEmail: "d",
+		Name:         "d",
 		Country:      "d",
-		Title:        "a",
-		Body:         "f",
-		TimeStamp:    "d",
-		Likes:        []string{"a","b","c"},
-	}
+		Title:        "s",
+		Body:         "d",
+		TimeStamp:    "dsf",
+		Likes:        nil,
+		MongoId:      "cvcvxvxc",
+	})
 
-	instid , err =	CreatePlacePost(temp1)
-	if err!= nil{
-		panic(err)
-	}
-
-	fmt.Println(instid)
-
-
- */
-/*
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://172.17.0.1:27017"))
-if err!= nil {
-	panic(err)
-}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	defer ctx.Done()
-if err != nil{
-	panic(err)
-}
-
-	collection := client.Database(DatabaseName).Collection(CollectionName)
-	//fmt.Println(collection)
-
-
-
-	ctx, _ = context.WithTimeout(context.Background(), 5*time.Second)
-
-
-
-/*
-	res, err := collection.InsertOne(ctx, bson.M{})
-	if err!=nil{
-		panic(err)
-	}
-	id := res.InsertedID
-	fmt.Println(id)
-
-*//*
-	ctx, _ = context.WithTimeout(context.Background(), 30*time.Second)
-
-
-	cur, err := collection.Find(ctx, bson.M{"cityid":1})
-	if err != nil { log.Fatal(err) }
-	defer cur.Close(ctx)
-	for cur.Next(ctx) {
-		var result bson.M
-		err := cur.Decode(&result)
-		if err != nil { log.Fatal(err) }
-	fmt.Println(result)
-	}
-	if err := cur.Err(); err != nil {
-		log.Fatal(err)
-	}
-*/
-//fmt.Println(GetCityPost(1))
-//fmt.Println(GetPlacePost(2))
-//UpdatePost("5e4d9e2d6c8b79466543aa4b","assssssssssssssssssssssssssssss","ssssssssffffffffffffffffffffffffffffffffffff")
+	 if err != nil{
+	 	panic(err)
+	 }*/
+fmt.Println(GetCityPost(1))
 
 	lis, err := net.Listen("tcp", Port)
 	if err != nil {
@@ -287,6 +218,7 @@ func CreateCityPost(city *CityPost)(interface{},error){
 
 	res, err := collection.InsertOne(ctx,data)
 	if err!=nil{
+		fmt.Println("here")
 		return nil,err
 	}
 	return res.InsertedID,nil

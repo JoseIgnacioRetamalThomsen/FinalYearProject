@@ -48,10 +48,10 @@ func main(){
 	s2 := &postService{dbserverCtx}
 	serviceConn = *s2
 
-	//CreateCityPost()
+//	CreateCityPost()
 	//CreatePlacePost()
-	//GetPlacePosts()
-	GetCityPosts()
+	GetPlacePosts()
+	//GetCityPosts()
 }
 
 func CreateCityPost(){
