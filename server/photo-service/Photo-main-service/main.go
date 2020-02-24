@@ -19,6 +19,9 @@ import (
 	"time"
 )
 var m = make(map[string]string)
+var mc = make(map[string][]string)
+var mp = make(map[string][]string)
+var mpo = make (map[string][]string)
 const (
 	port = ":30051"
 
@@ -59,7 +62,7 @@ return &pb.ProfilePhotoResponseP{
 
 }
 
-func (s *server) UploadProfilePhoto(ctx context.Context, in *pb.ProfileUploadRequest) (*pb.ProfileUploadResponse, error) {
+func (s *server) UploadProfilePhoto(ctx context.Context, in *pb.ProfileUploadRequestP) (*pb.ProfileUploadResponseP, error) {
 
 	randonIden1 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
 	randonIden2 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
@@ -67,9 +70,9 @@ func (s *server) UploadProfilePhoto(ctx context.Context, in *pb.ProfileUploadReq
 	url := start_url+ buckets[0]+"/" + fileName
 
 	Write(in.Image,buckets[0],fileName)
-	m[in.GetEmail()] = url
+	m[in.Email] = url
 
-	return &pb.ProfileUploadResponse{
+	return &pb.ProfileUploadResponseP{
 		Email:                "",
 		Valid:                true,
 		Url:                  url,
@@ -79,6 +82,115 @@ func (s *server) UploadProfilePhoto(ctx context.Context, in *pb.ProfileUploadReq
 	},nil
 
 }
+
+func (s *server) UploadCityPhoto(ctx context.Context, in *pb.CityUploadRequestP) (*pb.CityUploadResponseP, error) {
+	randonIden1 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
+	randonIden2 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
+	fileName := cityFolder[0]+ "/"+randonIden1 + "_" +randonIden2+".jpg"
+	url := start_url+ buckets[0]+"/" + fileName
+
+	Write(in.Image,buckets[0],fileName)
+	mc[in.CityId] = append(mc[in.CityId],url)
+
+	return &pb.CityUploadResponseP{
+		Valid:                true,
+		CityID:               in.CityId,
+		Url:                  url,
+
+	},nil
+}
+
+func (s *server) GetCityImage(ctx context.Context, in *pb.CityPhotoRequestP) (*pb.CityPhotoResponseP, error) {
+	//var urls [] string;
+	urls := mc[in.CityId]
+
+	return &pb.CityPhotoResponseP{
+		Valid:                true,
+		CityID:               in.CityId,
+		Url:                  urls,
+		Active:               0,
+
+	},nil
+}
+
+
+func (s *server) UploadPlacePhoto(ctx context.Context, in *pb.PlaceUploadRequestP) (*pb.PaceUploadResponseP, error) {
+	randonIden1 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
+	randonIden2 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
+	fileName := placeFoler[0]+ "/"+randonIden1 + "_" +randonIden2+".jpg"
+	url := start_url+ buckets[0]+"/" + fileName
+
+	Write(in.Image,buckets[0],fileName)
+	mp[in.PlaceId] = append(mp[in.PlaceId],url)
+
+	return &pb.PaceUploadResponseP{
+		Valid:                true,
+		PlaceId:               in.PlaceId,
+		Url:                  url,
+
+	},nil
+}
+
+func (s *server) GetPlacePhoto(ctx context.Context, in *pb.PlacePhotoRequestP) (*pb.PlacePhotoResponseP, error) {
+	//var urls [] string;
+	urls := mp[in.PlaceId]
+
+	return &pb.PlacePhotoResponseP{
+		Valid:                true,
+		PlaceId:              in.PlaceId,
+		Url:                  urls,
+		Active:               0,
+	},nil
+}
+
+func (s *server) UploadPostImage(ctx context.Context, in *pb.PostUploadRequestP) (*pb.PostPhotoResponseP, error) {
+	randonIden1 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
+	randonIden2 := strconv.Itoa(rand.Intn(999999 ) + 1000000)
+	fileName := postFolder[0]+ "/"+randonIden1 + "_" +randonIden2+".jpg"
+	url := start_url+ buckets[0]+"/" + fileName
+
+	Write(in.Image,buckets[0],fileName)
+	mp[in.PostId] = append(mc[in.PostId],url)
+
+	return &pb.PostPhotoResponseP{
+		Valid:                true,
+		PostId:               in.PostId,
+		UserEmail:            in.UserEmail,
+		Type:                 in.Type,
+		Name:                 in.Name,
+		Url:                  url,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	},nil
+}
+
+func (s *server) GetPostImage(ctx context.Context, in *pb.PostPhotoRequestP) (*pb.PostPhotoResponseP, error) {
+
+	var url string
+
+	if len(mpo[in.PostId]) == 0  {
+		url = defaultProfile
+
+	}else{
+		url = mpo[in.PostId][0]
+	}
+	//
+
+	return &pb.PostPhotoResponseP{
+		Valid:                true,
+		PostId:               in.PostId,
+		UserEmail:            in.UserEmail,
+		Type:                 in.Type,
+		Name:                 in.Name,
+		Url:                  url,
+	},nil
+
+}
+
+
+
+
 func Save(){
 	/*
 	ctx := context.Background()
@@ -138,7 +250,9 @@ func main(){
 
 	var buckets = []string{"wcity-images-1"}
 	var profileFolders = []string{"profile-1"}
-
+	var cityFolder = []string{"city-1"}
+	var placeFoler = []string{"place-1"}
+	var postFolder = []string{"post-1"}
 
 
 
