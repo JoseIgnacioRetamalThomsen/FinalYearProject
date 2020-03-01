@@ -1,7 +1,13 @@
+//Jose I. Retamal 
+//GMIT 2020 
+
+//Define interface for connect to main photo service
+
 syntax = "proto3";
 
-
 package wcity;
+
+import "photo_shared.proto";
 
 option java_multiple_files = true;
 option java_package = "io.grpc.wcity.photo";
@@ -18,26 +24,21 @@ service PhotosService{
   rpc GetPostImage(PostPhotoRequestP) returns (PostPhotoResponseP);
   rpc UploadPostImage(PostUploadRequestP) returns (PostPhotoResponseP);
 
-
 }
-
 message ProfilePhotoRequestP{
-    string email = 1;
-    string token = 2;
+  string email = 1;
+  string token = 2;
 }
-
 message ProfilePhotoResponseP{
   string email = 1;
   bool valid = 2;
-  string url =3;
+  repeated ProfilePhoto  = 3;
 }
-
 message ProfileUploadRequestP{
   string email = 1;
   string token =2;
   bytes image =3;
 }
-
 message ProfileUploadResponseP{
   string email = 1;
   bool valid = 2;
@@ -48,12 +49,11 @@ message CityPhotoRequestP{
   string token = 1;
   string email =2;
   string cityId = 3; // neo4j id
-  
 }
 message CityPhotoResponseP{
- bool valid =1;
+  bool valid =1;
   string cityID = 2;
-  repeated string url = 3;
+  repeated CityPhoto photos = 3;
   int32 active = 4;//indicate active photo in the city
 }
 message CityUploadRequestP{
@@ -65,7 +65,7 @@ message CityUploadRequestP{
 message CityUploadResponseP{
   bool valid =1;
   string cityID = 2;
-   string url = 4;
+  string url = 3;
 }
 //request all for a place
 message PlacePhotoRequestP{
@@ -76,7 +76,7 @@ message PlacePhotoRequestP{
  message PlacePhotoResponseP{
   bool valid = 1;
   string placeId =2;
-  repeated string url = 3;
+  repeated PlacePhoto photos = 3;
   int32 active =4;
 }
 message PlaceUploadRequestP{
@@ -90,34 +90,24 @@ message PaceUploadResponseP{
   string placeId = 2;
   string url = 4;
 }
-
 //name is city or place name 
 message PostPhotoRequestP{
   string token =1;
-  string postId= 2;
-  string userEmail = 3;
-  PostType type =4;
-  string name = 5;
-}
+  string userEmail = 2;
+  string postId= 3;
+ }
 message PostUploadRequestP{
-  string token =1;
-  string postId= 2;
+  string token = 1;
+  string postId = 2;
   string userEmail = 3;
-  PostType type =4;
-  string name = 5;
-  bytes image =6;
+  bytes image = 4;
 
 }
 message PostPhotoResponseP{
   bool valid =1;
   string postId= 2;
   string userEmail = 3;
-  PostType type =4;
-  string name = 5;
-  string url =6;
+  repeated PostPhoto photos = 4;
 }
 
- enum PostType {
-    CITY = 0;
-    PLACE = 1;
-  }
+ 

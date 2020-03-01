@@ -1,8 +1,8 @@
 package dba
 
 import (
-	"errors"
-	"fmt"
+	//"errors"
+	//"fmt"
 	"github.com/ziutek/mymysql/mysql"
 	_ "github.com/ziutek/mymysql/native"
 	"log"

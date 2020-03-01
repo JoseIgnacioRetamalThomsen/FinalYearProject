@@ -1,12 +1,9 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/joseignacioretamalthomsen/photos-dba/dba"
-
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
 	"log"
@@ -15,7 +12,7 @@ import (
 )
 
 type server struct {
-
+ pb.UnimplementedPhotosDBAServiceServer
 }
 type Configuration struct {
 	Port string
@@ -37,13 +34,6 @@ func readConfig(fileName string){
 	if err != nil {
 		fmt.Println("error:", err)
 	}
-	/*
-	   configuration.Port = port
-	   configuration.MySQL_db = MySQL_db
-	   configuration.Coneection_type = Coneection_type
-	   configuration.MySQL_socket = MySQL_socket
-	   configuration.MySQL_user = MySQL_user
-	   configuration.MySQL_pass = MySQL_pass*/
 }
 
 
@@ -60,5 +50,16 @@ func main(){
 		configuration.MySQL_db)
 	log.Print("Starting Service")
 
+
+	lis, err := net.Listen("tcp", configuration.Port)
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterPhotosDBAServiceServer(s, &server{})
+	log.Print("Service Started in port: ", configuration.Port)
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 
 }
