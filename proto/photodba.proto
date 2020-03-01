@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+
+package wcity;
+
+option java_multiple_files = true;
+option java_package = "io.grpc.wcity.photo";
+option java_outer_classname = "PhotoDBAProto";
+option objc_class_prefix = "RPC";
+
+service PhotosDBAService{
+  rpc AddProfilePhotoDBA(AddProfilePhotoDBARequest) returns (AddProfilePhotoDBAResponse);
+  rpc AddCityPhotoDBA(AddCityPhotoDBARequest) returns (AddCityPhotoDBAResponse);
+  rpc AddPlacePhotoDBA(AddPlacePhotoDBARequest) returns (AddPlacePhotoDBAResponse);
+  rpc AddPostPhotoDBA(AddPostPhotoDBARequest) returns (AddPostPhotoDBAResponse);
+  rpc GetProfilePhotoDBA(GetProfilePhotosDBARequest) returns (GetProfilePhotosDBAResponse);
+  rpc GetCityPhotoDBA(GetCityPhotosDBARequest) returns (GetCityPhotosDBAResponse);
+  rpc GetPlacePhotoDBA(GetPlacePhotosDBARequest) returns (GetPlacePhotosDBAResponse);
+  rpc GetPostPhotoDBA(GetPostPhotosDBARequest) returns (GetPostPhotosDBAResponse);
+}
+message AddProfilePhotoDBARequest{
+  string UserEmail =1;
+  string Url = 2;
+  bool selected = 3;
+}
+message AddProfilePhotoDBAResponse{
+  bool success = 1;
+  int64 id = 2;
+  string TimeStamp = 3;
+}
+message AddCityPhotoDBARequest{
+    int64 CityId = 1;
+    string Url = 2;
+    bool selected = 3;
+}
+message AddCityPhotoDBAResponse{
+  bool success = 1;
+  int64 id = 2;
+  string TimeStamp = 3;
+}
+message AddPlacePhotoDBARequest{
+  int64 PlaceId = 1;
+  string Url = 2;
+  bool selected = 3;
+}
+message AddPlacePhotoDBAResponse{
+  bool success = 1;
+  int64 id = 2;
+  string TimeStamp = 3;
+}
+message AddPostPhotoDBARequest{
+  string PostId = 1;
+  string url = 2;
+  bool selected = 3;
+}
+message AddPostPhotoDBAResponse{
+  bool sucess = 1;
+  int64 id = 2;
+  string TimeStamp = 3;
+}
+message ProfilePhotoDBA{
+  int64 id = 1;
+  string UserEmail = 2;
+  string Url = 3;
+  string Timestamp = 4;
+  bool selected = 5;
+}
+message GetProfilePhotosDBARequest{
+  string UserEmail = 1;
+}
+message CityPhotoDBA{
+  int64 Id = 1;
+  Int64 CityId = 2;
+  string Url = 3;
+  string Timestamp = 4;
+  bool selected = 5;
+}
+message GetCityPhotosDBARequest{
+  int64 CityId = 1;
+}
+message GetCityPhotosDBAResponse{
+  bool sucess = 1;
+  repeated CityPhotoDBA = 2;
+}
+message PlacePhotoDBA{
+  int64 Id =1; 
+  Int64 PlaceId = 2;
+  string Url = 3;
+  string Timestamp = 4;
+  bool selected = 5;
+}
+message GetPlacePhotosDBARequest{
+  int64 PlaceId = 1;
+}
+message GetPlacePhotosDBAResponse{
+  bool sucess = 1;
+  repeated PlacePhotoDBA = 2;
+}
+message PostPhotoDBA{
+  int64 Id =1; 
+  string PostId = 2;
+  string Url = 3;
+  string Timestamp = 4;
+  bool selected = 5;
+}
+message GetPostPhotosDBARequest{
+  string PlaceId = 1;
+}
+message GetPostPhotosDBAResponse{
+  bool sucess = 1;
+  repeated PostPhotoDBA = 2;
+}
