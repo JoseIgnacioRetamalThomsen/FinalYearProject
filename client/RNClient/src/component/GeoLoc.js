@@ -12,10 +12,13 @@ export default class GeoLoc extends Component {
             latitude: null,
             longitude: null,
             error: null,
-            Address: null
+            city: null,
+            country: null,
         }
     };
-
+    sendData = () => {
+        this.props.parentCallback(this.state.city, this.state.country)
+    }
     async componentDidMount() {
         Geolocation.getCurrentPosition(
             (position) => {
@@ -28,11 +31,16 @@ export default class GeoLoc extends Component {
                         console.log(json);
                         // json.results[0].address_components[1].long_name;//address_components[0] GMIT
                         //var user_city = results[0].address_components.filter(ac=>~ac.types.indexOf('locality'))[0].long_name
-                        let addressComponent = json.results[0].address_components.filter(ac => ~ac.types.indexOf('locality'))[0].long_name
+                        let city = json.results[0].address_components.filter(ac => ~ac.types.indexOf('locality'))[0].long_name
+                        let country = json.results[0].address_components.filter(ac => ~ac.types.indexOf('country'))[0].long_name
                         this.setState({
-                            Address: addressComponent
+                            city: city
                         })
-                        console.log(addressComponent);
+                        this.setState({
+                            country: country
+                        })
+                        console.log(city, country);
+                        this.sendData()
                     })
                     .catch(error => console.warn(error));
             },
@@ -56,14 +64,14 @@ export default class GeoLoc extends Component {
         let text = '';
         if (this.state.error) {
             text = this.state.error;
-        } else if (this.state.Address) {
-            text = this.state.Address
+        } else if (this.state.city) {
+            text = this.state.city
         }
         return (
             <View>
-                <Text>
-                    {text}
-                </Text>
+                {/*<Text>*/}
+                {/*    {text}*/}
+                {/*</Text>*/}
             </View>
         )
     }

@@ -6,7 +6,7 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#DCDCDC',
+        backgroundColor: '#DCDCDC'
     },
     inputContainer: {
         borderBottomColor: '#F5FCFF',

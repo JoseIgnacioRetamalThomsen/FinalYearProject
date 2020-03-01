@@ -1,15 +1,5 @@
 import React from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import {Button} from "react-native-elements";
-import {Text, View} from "react-native";
-import connect from "react-redux/lib/connect/connect";
-
-// function mapStateToProps(state) {
-//     return {
-//         lat: state.lat,
-//         lng: state.lng,
-//     }
-// }
 
 export default class MapInput extends React.Component {
 
@@ -67,4 +57,3 @@ export default class MapInput extends React.Component {
     }
 }
 
-// export default connect(mapStateToProps)(MapInput)

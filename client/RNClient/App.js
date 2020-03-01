@@ -20,6 +20,7 @@ import Register from './src/component/auth/Register'
 import RestorePassword from './src/component/auth/RestorePassword'
 import LoadImage from './src/component/LoadImage'
 import WritePost from "./src/component/tabs/myPosts/WritePost";
+import WriteCityPost from "./src/component/tabs/feed/WriteCityPost";
 import Post from "./src/component/tabs/myPosts/Post";
 import WelcomePage from "./src/component/WelcomePage";
 import MapInput from "./src/component/MapInput";
@@ -33,11 +34,16 @@ const FeedStack = createStackNavigator({
         screen: CityPosts,
         navigationOptions: navOptionHandler
     },
+    WriteCityPost: {
+        screen: WriteCityPost,
+        navigationOptions: navOptionHandler
+    },
     FeedDetail: {
         screen: FeedDetail,
         navigationOptions: navOptionHandler
     }
 })
+
 const MyPostsStack = createStackNavigator({
     MyPosts: {
         screen: MyPosts,

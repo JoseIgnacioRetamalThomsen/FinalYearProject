@@ -4,11 +4,13 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.wcity.grpc.CityPostResponse;
 import com.wcity.grpc.PlacePostResponse;
 import com.wcity.grpc.PostClient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class PostModule extends ReactContextBaseJavaModule {
@@ -34,10 +36,11 @@ public class PostModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void createCityPost(int indexId, String creatorEmail, String cityName, String cityCountry,
-                               String title, String body, String timeStamp, ArrayList <String> likes, String mongoId, Callback errorCallback,
+                               String title, String body, String timeStamp, ReadableArray likes, String mongoId, Callback errorCallback,
                                Callback successCallback) {
         int index;
-        int response = client.createCityPost(indexId, creatorEmail, cityName, cityCountry, title, body, timeStamp, likes, mongoId);
+
+        int response = client.createCityPost(indexId, creatorEmail, cityName, cityCountry, title, body, timeStamp, likes.toArrayList(), mongoId);
         try {
             if (response == 0) {
                 index = -1;
@@ -49,7 +52,7 @@ public class PostModule extends ReactContextBaseJavaModule {
     }
     @ReactMethod
     public void createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
-                                String placeName, String title, String body, String timeStamp, ArrayList <String> likes, String mongoId, Callback errorCallback,
+                                String placeName, String title, String body, String timeStamp, List <String> likes, String mongoId, Callback errorCallback,
                                Callback successCallback) {
         int index;
         int response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body, timeStamp, likes, mongoId);

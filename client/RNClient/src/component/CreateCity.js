@@ -56,33 +56,7 @@ export default class CreateCity extends React.Component {
     render() {
         return (
             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                {/*<TextInput*/}
-                {/*    style={styles.inputs}*/}
-                {/*    placeholder="cityName"*/}
-                {/*    onChangeText={(name) => this.setState({cityName})}/>*/}
-                {/*<TextInput*/}
-                {/*    style={styles.inputs}*/}
-                {/*    placeholder="cityCountry"*/}
-                {/*    onChangeText={(city) => this.setState({cityCountry})}/>*/}
 
-                {/*<TextInput*/}
-                {/*    style={styles.inputs}*/}
-                {/*    placeholder="title"*/}
-                {/*    onChangeText={(country) => this.setState({title})}/>*/}
-                {/*<TextInput*/}
-                {/*    style={styles.inputs}*/}
-                {/*    placeholder="Description"*/}
-                {/*    onChangeText={(description) => this.setState({body})}/>*/}
-                {/*<TextInput*/}
-                {/*    style={styles.inputs}*/}
-                {/*    placeholder="timeStamp"*/}
-                {/*    onChangeText={(description) => this.setState({timeStamp})}/>*/}
-                {/*<TextInput*/}
-                {/*    style={styles.inputs}*/}
-                {/*    placeholder="likes"*/}
-                {/*    onChangeText={(description) => this.setState({likes})}/>*/}
-                {/*    <Button title="Add new city post"*/}
-                {/*        onPress={() => this.addCityPost()}/>*/}
                 <Card>
                     <CardImage
                         source={{uri: 'http://placehold.it/480x270'}}

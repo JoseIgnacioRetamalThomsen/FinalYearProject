@@ -139,7 +139,7 @@ class Profile extends Component {
                                                resizeMode: 'cover'
                                            }}/>
                                 </PhotoUpload>
-                                {/*<GeoLoc></GeoLoc>*/}
+                                <GeoLoc></GeoLoc>
                             </View>
                         </Card>
                         <View>
@@ -156,10 +156,9 @@ class Profile extends Component {
                         <Button style={styles.buttonContainer} title="Edit Profile"
     onPress={() => this.props.navigation.navigate("Settings")}/>
                     </View>
-
                 </ScrollView>
             </View>
-        );
+        )
     }
 }
 

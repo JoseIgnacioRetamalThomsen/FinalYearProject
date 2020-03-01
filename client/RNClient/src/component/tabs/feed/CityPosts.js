@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Image, ScrollView, StyleSheet} from 'react-native';
+import {View, Image, ScrollView, FlatList, StyleSheet, NativeModules} from 'react-native';
 import CustomHeader from '../../CustomHeader'
 import MapInput from "../../MapInput";
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
@@ -8,24 +8,149 @@ import {
     CardItem,
     Text,
     Icon,
-    Left,
     Body,
 } from 'native-base';
 import {CardAction, CardButton, CardTitle} from "react-native-material-cards";
 import ActionButton from "react-native-action-button";
+import AsyncStorage from "@react-native-community/async-storage";
+import {CardList} from 'react-native-card-list';
 
 class CityPosts extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            lat: 0,
-            lng: 0,
-            city: '',
-            country: '',
+            posts: [
+                // {
+                //     valid: true,
+                //     indexId: 0,
+                //     index: 0,
+                //     creatorEmail: '',
+                //     cityName: 'Galway',
+                //     cityCountry: 'Ireland',
+                //     title: '',
+                //     body: 'City in the west',
+                //     img: '../../../img/gmit.jpg',
+                //     timeStamp: '',
+                //     likes: [],
+                //     mongoId: 0,
+                //     lat: 0,
+                //     lon: 0,
+                //     id: 0,
+                // },
+                {
+                    indexId: 0,
+                    city: 'Dublin',
+                    country: 'Ireland',
+                    email: '',
+                    description: 'City in the east',
+                    img: '../../../img/noImage.png',
+                    lat: 0,
+                    lon: 0,
+                    id: 0,
+                },
+                {
+                    indexId: 1,
+                    city: 'Limerick',
+                    country: 'Ireland',
+                    email: '',
+                    description: 'City in the south-west',
+                    img: '../../../img/noImage.png',
+                    lat: 0,
+                    lon: 0,
+                    id: 0,
+                },
+                {
+                    indexId: 1,
+                    city: 'Galway',
+                    country: 'Ireland',
+                    email: '',
+                    description: 'City in the west',
+                    img: '../../../img/noImage.png',
+                    lat: 0,
+                    lon: 0,
+                    id: 0,
+                },
+            ]
+
         }
     }
-    onClickListener = () => {
-        this.props.navigation.navigate('WritePost');
+
+    // componentDidMount() {
+    //     AsyncStorage.getAllKeys((err, keys) => {
+    //         AsyncStorage.multiGet(keys, (err, stores) => {
+    //             stores.map((result, i, store) => {
+    //                 let key = store[i][0];
+    //                 let value = store[i][1]
+    //                 console.log("key/value in displayCity " + key + " " + value)
+    //
+    //                 if (value !== null) {
+    //                     NativeModules.PostModule.getCityPosts(
+    //                         this.state.indexId,
+    //                         (err) => {
+    //                             console.log("error In PostsModule.getCityPosts " + err)
+    //                         },
+    //                         (valid, indexId, index, creatorEmail, cityName, cityCountry, title, body, timeStamp, likes, mongoId) => {
+    //                             //this.setState({valid: valid})
+    //                            // this.setState({indexId: indexId})
+    //                            // this.setState({index: index})
+    //                            // this.setState({creatorEmail: creatorEmail})
+    //                            //  this.setState({cityName: cityName})
+    //                            //  this.setState({cityCountry: cityCountry})
+    //                            //  this.setState({title: title})
+    //                            //  this.setState({body: body})
+    //                            // this.setState({timeStamp: timeStamp})
+    //                            // this.setState({likes: likes})
+    //                            // this.setState({mongoId: mongoId})
+    //                             //console.log("successful values in getCityPosts!!!" + this.state.indexId, this.state.cityName, this.state.cityCountry)
+    //                         })
+    //                 }
+    //                 // else{
+    //                 //     this.setState({city: "City"})
+    //                 //     this.setState({country: "Country"})
+    //                 //     //this.setState({email: email})
+    //                 //     this.setState({description: "description"})
+    //                 //     // this.setState({lat: lat})
+    //                 //     // this.setState({lon: lon})
+    //                 //     // this.setState({id: id})
+    //                 // }
+    //             })
+    //         })
+    //     })
+    // }
+    updateCity() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let key = store[i][0];
+                    let value = store[i][1]
+                    console.log("key/value in updatecity " + key + " " + value)
+
+                    if (value !== null) {
+                        NativeModules.ProfilesModule.updateCity(
+                            value,
+                            this.state.name,
+                            this.state.country,
+                            key,
+                            this.state.description,
+                            this.state.lat,
+                            this.state.lon,
+                            (err) => {
+                                console.log("err in updateCity " + err)
+                            },
+                            (name, country, email, description, lat, lon, id) => {
+                                this.setState({name: name})
+                                this.setState({country: country})
+                                // this.setState({email: email})
+                                this.setState({description: description})
+                                this.setState({lat: lat})
+                                this.setState({lon: lon})
+                                console.log("name, country, email, description, lat, lon id in updateCity is " + name, country, email, description, lat, lon, id)
+                                console.log("successfully updated a city!!!")
+                            })
+                    }
+                })
+            })
+        })
     }
 
     callbackFunction = (lat, lng, city, country) => {
@@ -39,87 +164,49 @@ class CityPosts extends Component {
         return (
             <View style={{flex: 1}}>
                 <CustomHeader title="CityPosts" isHome={true} navigation={this.props.navigation}/>
-                <ScrollView style={{flex:1}}>
-                <View style={{flex: 1}}>
-                    <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
-                              parentCallback={this.callbackFunction}/>
-                </View>
-                {/*<Text> {this.state.lat.toFixed(2)} {this.state.lng.toFixed(2)} {this.state.city} {this.state.country}</Text>*/}
-                {/*<View style={{flex: 1}}>*/}
+                <ScrollView style={{flex: 1}}>
+                    <View style={{flex: 1}}>
+                        <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
+                                  parentCallback={this.callbackFunction}/>
+                    </View>
+                    {this.state.posts.map((item, index) => {
+                        return (
+                            <Card key={this.state.posts.indexId}>
+                                <CardItem>
+                                    <CardTitle
+                                        title={item.city}
+                                        subtitle={item.country}
+                                    />
+                                </CardItem>
 
-                    <Card>
-                        <CardItem>
-                            <CardTitle
-                                title="GMIT"
-                                subtitle="Institute"
-                            />
-                        </CardItem>
-
-                        <CardItem cardBody>
-                            <Image source={require('../../../img/gmit.jpg')}
-                                   style={{height: 200, width: null, flex: 1}}/>
-                        </CardItem>
-                        <CardItem>
-                            <Body>
-                                <Text>Galway-Mayo Institute of Technology (Irish: Institúid Teicneolaíochta na
-                                    Gaillimhe-Maigh Eo)
-                                    is a third level institute of education and is based at five locations in the west
-                                    of
-                                    Ireland. </Text>
-                            </Body>
-                            <CardAction
-                                separator={true}
-                                inColumn={false}>
-                                <CardButton
-                                    onPress={() => {
-                                    }}
-                                    title="More"
-                                    color="blue"
-                                />
-                            </CardAction>
-                        </CardItem>
-                    </Card>
-                    <Card>
-                        <CardItem>
-                            <CardTitle
-                                title="NUIG"
-                                subtitle="University"
-                            />
-                        </CardItem>
-
-                        <CardItem cardBody>
-                            <Image source={require('../../../img/nuig.jpg')}
-                                   style={{height: 200, width: null, flex: 1}}/>
-                        </CardItem>
-                        <CardItem>
-                            <Body>
-                                <Text>The National University of Ireland Galway (NUI Galway; Irish: OÉ Gaillimh) is located in the city of Galway in Ireland.
-                                    A third-level teaching and research institution, the University has been awarded the full five QS stars for excellence,
-                                    and is ranked among the top 1 percent of universities according to the 2018 QS World University Rankings.[3] </Text>
-                            </Body>
-                            <CardAction
-                                separator={true}
-                                inColumn={false}>
-                                <CardButton
-                                    onPress={() => {
-                                    }}
-                                    title="More"
-                                    color="blue"
-                                />
-                            </CardAction>
-                        </CardItem>
-                    </Card>
-
+                                <CardItem cardBody>
+                                    <Image source={require('../../../img/noImage.png')}
+                                           style={{height: 200, width: null, flex: 1}}/>
+                                </CardItem>
+                                <CardItem>
+                                    <Body>
+                                        <Text>{item.description} </Text>
+                                    </Body>
+                                    <CardAction
+                                        separator={true}
+                                        inColumn={false}>
+                                        <CardButton
+                                            onPress={() => this.props.navigation.navigate('FeedDetail')}
+                                            title="More"
+                                            color="blue"
+                                        />
+                                    </CardAction>
+                                </CardItem>
+                            </Card>
+                        )
+                    })}
                 </ScrollView>
-
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Add new post"
-                                       onPress={() => this.onClickListener()}>
+                                       onPress={() => this.props.navigation.navigate('WriteCityPost')}>
                         <Icon name="md-create" style={styles.actionButtonIcon}/>
                     </ActionButton.Item>
                 </ActionButton>
-
-
             </View>
 
         )
@@ -132,6 +219,5 @@ const styles = StyleSheet.create({
         fontSize: 20,
         height: 22,
         color: 'white',
-
     },
 });
