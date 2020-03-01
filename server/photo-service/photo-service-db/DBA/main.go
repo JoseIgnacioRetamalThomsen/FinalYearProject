@@ -50,7 +50,51 @@ func main(){
 		configuration.MySQL_db)
 	log.Print("Starting Service")
 
+//test
+/*
+	dba.AddProfilePhoto(pb.ProfilePhoto{
 
+		UserEmail: "email1",
+		Url:       "url",
+
+		Selected: false,
+	})
+
+	dba.AddCityPhoto(pb.CityPhoto{
+
+		CityId:               6,
+		Url:                  "uel",
+		Selected:             false,
+
+	})
+
+	idp,_ := dba.AddPlacePhoto(pb.PlacePhoto{
+
+		PlaceId:              5,
+		Url:                  "fgsdfg",
+
+		Selected:             false,
+
+	})
+	fmt.Println(idp)
+	idpo,_ := dba.AddPostPhoto(pb.PostPhoto{
+
+		PostId:               "hj6",
+		Url:                  "gfhdgf",
+
+		Selected:             false,
+
+	})
+	fmt.Println(idpo)/*
+	_,err := dba.GetProfilePhotos("email1")
+	if err!= nil{
+		panic(err)
+	}*/
+   _,err:= dba.GetPostPhotos("hj6")
+	if err!= nil{
+		panic(err)
+	}
+	//end test
 	lis, err := net.Listen("tcp", configuration.Port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

@@ -1,4 +1,4 @@
-//Jose I. Retamal 
+//Jose I. Retamal
 //GMIT 2020
 
 //Define shared object for photo service
@@ -12,31 +12,31 @@ option java_package = "io.grpc.wcity.photoShared";
 option java_outer_classname = "PhotoSharedProto";
 option objc_class_prefix = "RPC";
 
-message ProfilePhoto{
-  int32 id = 1;
-  string userEmail = 2;
-  string url = 3;
-  string timestamp = 4;
-  bool selected = 5;
-}
-message CityPhoto{
+message ProfilePhoto {
     int32 id = 1;
-  int32 cityId = 2;
-  string url = 3;
-  string timestamp = 4;
-  bool selected = 5;
+    string userEmail = 2;
+    string url = 3;
+    string timestamp = 4;
+    bool selected = 5;
 }
-message PlacePhoto{
-  int32 id =1; 
-  int32 placeId = 2;
-  string url = 3;
-  string timestamp = 4;
-  bool selected = 5;
+message CityPhoto {
+    int32 id = 1;
+    int32 cityId = 2;
+    string url = 3;
+    string timestamp = 4;
+    bool selected = 5;
 }
-message PostPhoto{
-  int32 id =1; 
-  string postId = 2;
-  string url = 3;
-  string timestamp = 4;
-  bool selected = 5;
+message PlacePhoto {
+    int32 id = 1;
+    int32 placeId = 2;
+    string url = 3;
+    string timestamp = 4;
+    bool selected = 5;
+}
+message PostPhoto {
+    int32 id = 1;
+    string postId = 2;
+    string url = 3;
+    string timestamp = 4;
+    bool selected = 5;
 }

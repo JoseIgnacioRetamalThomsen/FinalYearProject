@@ -1,5 +1,9 @@
-syntax = "proto3";
+//Jose I. Retamal
+//GMIT 2020
 
+//Define interface for connect to post database
+
+syntax = "proto3";
 
 package wcity;
 
@@ -8,67 +12,59 @@ option java_package = "io.grpc.wcity.postdb";
 option java_outer_classname = "PostDBProto";
 option objc_class_prefix = "RPC";
 
-service PostsServiceDBA{
-  rpc CreateCityPost(CityPostPSDB) returns (CreatePostResponsePSDB);
-  rpc CreatePlacePost(PlacePostPSDB) returns (CreatePostResponsePSDB); 
-  rpc GetPlacePosts(PostsRequestPSDB) returns (PlacePostsResponsePSDB);
-  rpc GetCityPosts(PostsRequestPSDB) returns(CityPostsResponsePSDB);
-  rpc UpdatePlacePost(UpdatePostRequestPSDB) returns (UpdatePostResponsePSDB);
-  rpc UpdateCityPost(UpdatePostRequestPSDB) returns (UpdatePostResponsePSDB);
-
-
+service PostsServiceDBA {
+    rpc CreateCityPost (CityPostPSDB) returns (CreatePostResponsePSDB);
+    rpc CreatePlacePost (PlacePostPSDB) returns (CreatePostResponsePSDB);
+    rpc GetPlacePosts (PostsRequestPSDB) returns (PlacePostsResponsePSDB);
+    rpc GetCityPosts (PostsRequestPSDB) returns (CityPostsResponsePSDB);
+    rpc UpdatePlacePost (UpdatePostRequestPSDB) returns (UpdatePostResponsePSDB);
+    rpc UpdateCityPost (UpdatePostRequestPSDB) returns (UpdatePostResponsePSDB);
 }
-
-message CityPostPSDB{
-    int32 indexId =1;
+message CityPostPSDB {
+    int32 indexId = 1;
     string creatorEmail = 2;
     string cityName = 3;
-    string cityCountry =4;
-    string title =5;
-    string body =6;
+    string cityCountry = 4;
+    string title = 5;
+    string body = 6;
     string timeStamp = 7;
-    repeated string likes =8;
-    string mongoId = 9 [json_name="_id,omitempty"];
+    repeated string likes = 8;
+    string mongoId = 9 [json_name = "_id,omitempty"];
 }
-message PlacePostPSDB{
-    int32 indexId =1;
+message PlacePostPSDB {
+    int32 indexId = 1;
     string creatorEmail = 2;
     string cityName = 3;
-    string countryName =4;
-    string placeName =5;
-    string title =6;
-    string body =7;
+    string countryName = 4;
+    string placeName = 5;
+    string title = 6;
+    string body = 7;
     string timeStamp = 8;
-    repeated string likes =9;
-    string mongoId = 10  [json_name="_id,omitempty"];
+    repeated string likes = 9;
+    string mongoId = 10 [json_name = "_id,omitempty"];
 }
-
-message CreatePostResponsePSDB{
-  bool valied =1;
-  int32 indexId = 2;
-  
+message CreatePostResponsePSDB {
+    bool valied = 1;
+    int32 indexId = 2;
 }
-message PostsRequestPSDB{
-  int32 indexId =1;
+message PostsRequestPSDB {
+    int32 indexId = 1;
 }
-message CityPostsResponsePSDB{
-  bool valid = 1;
-  int32 indexId =2;
-  repeated CityPostPSDB posts =3;
+message CityPostsResponsePSDB {
+    bool valid = 1;
+    int32 indexId = 2;
+    repeated CityPostPSDB posts = 3;
 }
-message PlacePostsResponsePSDB{
-    bool valid =1;
-    int32 indexId =2;
-    repeated PlacePostPSDB posts =3;
+message PlacePostsResponsePSDB {
+    bool valid = 1;
+    int32 indexId = 2;
+    repeated PlacePostPSDB posts = 3;
 }
-
-message UpdatePostRequestPSDB{
-  string mongoId = 1;
-  string title = 2;
-  string body = 3;
+message UpdatePostRequestPSDB {
+    string mongoId = 1;
+    string title = 2;
+    string body = 3;
 }
-
-message UpdatePostResponsePSDB{
-   bool valid = 1;
-
+message UpdatePostResponsePSDB {
+    bool valid = 1;
 }

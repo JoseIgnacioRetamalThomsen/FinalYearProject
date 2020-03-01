@@ -1,10 +1,10 @@
-//Jose I. Retamal 
-//GMIT 2020 
+//Jose I. Retamal
+//GMIT 2020
 
 //Define interface for connect to photo database
 syntax = "proto3";
 
-package wcity; 
+package wcity;
 
 import "photo_shared.proto";
 
@@ -13,81 +13,82 @@ option java_package = "io.grpc.wcity.photo";
 option java_outer_classname = "PhotoDBAProto";
 option objc_class_prefix = "RPC";
 
-service PhotosDBAService{
-  rpc AddProfilePhotoDBA(AddProfilePhotoDBARequest) returns (AddProfilePhotoDBAResponse);
-  rpc AddCityPhotoDBA(AddCityPhotoDBARequest) returns (AddCityPhotoDBAResponse);
-  rpc AddPlacePhotoDBA(AddPlacePhotoDBARequest) returns (AddPlacePhotoDBAResponse);
-  rpc AddPostPhotoDBA(AddPostPhotoDBARequest) returns (AddPostPhotoDBAResponse);
-  rpc GetProfilePhotoDBA(GetProfilePhotosDBARequest) returns (GetProfilePhotosDBAResponse);
-  rpc GetCityPhotoDBA(GetCityPhotosDBARequest) returns (GetCityPhotosDBAResponse);
-  rpc GetPlacePhotoDBA(GetPlacePhotosDBARequest) returns (GetPlacePhotosDBAResponse);
-  rpc GetPostPhotoDBA(GetPostPhotosDBARequest) returns (GetPostPhotosDBAResponse);
+//Main service for connecto to dba
+service PhotosDBAService {
+    rpc AddProfilePhotoDBA (AddProfilePhotoDBARequest) returns (AddProfilePhotoDBAResponse);
+    rpc AddCityPhotoDBA (AddCityPhotoDBARequest) returns (AddCityPhotoDBAResponse);
+    rpc AddPlacePhotoDBA (AddPlacePhotoDBARequest) returns (AddPlacePhotoDBAResponse);
+    rpc AddPostPhotoDBA (AddPostPhotoDBARequest) returns (AddPostPhotoDBAResponse);
+    rpc GetProfilePhotoDBA (GetProfilePhotosDBARequest) returns (GetProfilePhotosDBAResponse);
+    rpc GetCityPhotoDBA (GetCityPhotosDBARequest) returns (GetCityPhotosDBAResponse);
+    rpc GetPlacePhotoDBA (GetPlacePhotosDBARequest) returns (GetPlacePhotosDBAResponse);
+    rpc GetPostPhotoDBA (GetPostPhotosDBARequest) returns (GetPostPhotosDBAResponse);
 }
-message AddProfilePhotoDBARequest{
-  string userEmail =1;
-  string url = 2;
-  bool selected = 3;
+message AddProfilePhotoDBARequest {
+    string userEmail = 1;
+    string url = 2;
+    bool selected = 3;
 }
-message AddProfilePhotoDBAResponse{
-  bool success = 1;
-  int32 id = 2;
-  string timeStamp = 3;
+message AddProfilePhotoDBAResponse {
+    bool success = 1;
+    int32 id = 2;
+    string timeStamp = 3;
 }
-message AddCityPhotoDBARequest{
+message AddCityPhotoDBARequest {
     int32 cityId = 1;
     string url = 2;
     bool selected = 3;
 }
-message AddCityPhotoDBAResponse{
-  bool success = 1;
-  int32 id = 2;
-  string TimeStamp = 3;
+message AddCityPhotoDBAResponse {
+    bool success = 1;
+    int32 id = 2;
+    string TimeStamp = 3;
 }
-message AddPlacePhotoDBARequest{
-  int32 placeId = 1;
-  string url = 2;
-  bool selected = 3;
+message AddPlacePhotoDBARequest {
+    int32 placeId = 1;
+    string url = 2;
+    bool selected = 3;
 }
-message AddPlacePhotoDBAResponse{
-  bool success = 1;
-  int32 sd = 2;
-  string timeStamp = 3;
+message AddPlacePhotoDBAResponse {
+    bool success = 1;
+    int32 sd = 2;
+    string timeStamp = 3;
 }
-message AddPostPhotoDBARequest{
-  string postId = 1;
-  string url = 2;
-  bool selected = 3;
+message AddPostPhotoDBARequest {
+    string postId = 1;
+    string url = 2;
+    bool selected = 3;
 }
-message AddPostPhotoDBAResponse{
-  bool sucess = 1;
-  int32 id = 2;
-  string timeStamp = 3;
+message AddPostPhotoDBAResponse {
+    bool sucess = 1;
+    int32 id = 2;
+    string timeStamp = 3;
 }
-message GetProfilePhotosDBARequest{
-  string userEmail = 1;
+message GetProfilePhotosDBARequest {
+    string userEmail = 1;
 }
-message GetProfilePhotosDBAResponse{
-  bool sucess = 1;
-  repeated ProfilePhoto photos = 2;
+message GetProfilePhotosDBAResponse {
+    bool sucess = 1;
+    repeated ProfilePhoto photos = 2;
 }
-message GetCityPhotosDBARequest{
-  int32 cityId = 1;
+message GetCityPhotosDBARequest {
+    int32 cityId = 1;
 }
-message GetCityPhotosDBAResponse{
-  bool sucess = 1;
-  repeated CityPhoto photos= 2;
+message GetCityPhotosDBAResponse {
+    bool sucess = 1;
+    repeated CityPhoto photos = 2;
 }
-message GetPlacePhotosDBARequest{
-  int32 placeId = 1;
+message GetPlacePhotosDBARequest {
+    int32 placeId = 1;
 }
-message GetPlacePhotosDBAResponse{
-  bool sucess = 1;
-  repeated PlacePhoto photos= 2;
+message GetPlacePhotosDBAResponse {
+    bool sucess = 1;
+    repeated PlacePhoto photos = 2;
 }
-message GetPostPhotosDBARequest{
-  string placeId = 1;
+message GetPostPhotosDBARequest {
+    string placeId = 1;
 }
-message GetPostPhotosDBAResponse{
-  bool sucess = 1;
-  repeated PostPhoto photos = 2;
+message GetPostPhotosDBAResponse {
+    bool sucess = 1;
+    repeated PostPhoto photos = 2;
 }
