@@ -7,7 +7,7 @@ class PostDetails extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <CustomHeader title="Feed Detail" navigation={this.props.navigation} />
+                <CustomHeader title="CityPosts Detail" navigation={this.props.navigation} />
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text>SearchDetail!</Text>
                 </View>

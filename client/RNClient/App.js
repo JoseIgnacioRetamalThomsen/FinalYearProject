@@ -8,7 +8,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {IMAGE} from './src/constants/Image'
 
-import Feed from './src/component/tabs/feed/Feed'
+import CityPosts from './src/component/tabs/feed/CityPosts'
 import MyPosts from './src/component/tabs/myPosts/MyPosts'
 import FeedDetail from './src/component/tabs/feed/FeedDetail'
 import PostDetails from './src/component/tabs/myPosts/PostDetails'
@@ -29,8 +29,8 @@ const navOptionHandler = (navigation) => ({
 })
 
 const FeedStack = createStackNavigator({
-    Feed: {
-        screen: Feed,
+    CityPosts: {
+        screen: CityPosts,
         navigationOptions: navOptionHandler
     },
     FeedDetail: {
@@ -69,7 +69,7 @@ const MainTabs = createBottomTabNavigator({
     Feed: {
         screen: FeedStack,
         navigationOptions: {
-            tabBarLabel: 'Feed',
+            tabBarLabel: 'CityPosts',
             tabBarIcon: ({tintColor}) => (
                 <Image
                     source={IMAGE.ICON_FEED}

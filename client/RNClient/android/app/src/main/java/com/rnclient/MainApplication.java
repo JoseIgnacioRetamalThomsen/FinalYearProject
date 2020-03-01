@@ -22,6 +22,7 @@ import java.util.List;
 import com.rnclient.grpc.HelloWorldPackage;
 import com.rnclient.grpc.LoginPackage;
 import com.rnclient.grpc.ProfilesPackage;
+import com.rnclient.grpc.PostPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -41,6 +42,7 @@ public class MainApplication extends Application implements ReactApplication {
                     packages.add(new LoginPackage());
                     packages.add(new ProfilesPackage());
                     packages.add(new PhotosPackage());
+                    packages.add(new PostPackage());
                     return packages;
                 }
 

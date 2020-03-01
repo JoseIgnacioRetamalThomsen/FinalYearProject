@@ -35,14 +35,7 @@ public class LoginModule extends ReactContextBaseJavaModule {
                            Callback successCallback) {
         String token;
         String response = client.createUser(email, password);
-//        try {
-//            if (response != null) {
-//                token = response;
-//                successCallback.invoke(token);
-//            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
+
         try {
             if (response == null) {
                 token = null;
