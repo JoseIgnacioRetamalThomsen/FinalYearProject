@@ -3,12 +3,12 @@ package com.wcity.grpc;
 import java.util.ArrayList;
 
 public class VisitedCities {
-    ArrayList<City> visitedCities;
+    ArrayList<CreateCity> visitedCities;
     private boolean valid;
     private String email;
 
 
-    public VisitedCities(boolean valid, String email, ArrayList<City> visitedCities) {
+    public VisitedCities(boolean valid, String email, ArrayList<CreateCity> visitedCities) {
         this.valid = valid;
         this.email = email;
         this.visitedCities = visitedCities;
@@ -30,11 +30,11 @@ public class VisitedCities {
         this.email = email;
     }
 
-    public ArrayList<City> getVisitedCities() {
+    public ArrayList<CreateCity> getVisitedCities() {
         return visitedCities;
     }
 
-    public void setVisitedCities(ArrayList<City> visitedCities) {
+    public void setVisitedCities(ArrayList<CreateCity> visitedCities) {
         this.visitedCities = visitedCities;
     }
 }

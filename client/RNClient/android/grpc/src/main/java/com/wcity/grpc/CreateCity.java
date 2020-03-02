@@ -1,6 +1,6 @@
 package com.wcity.grpc;
 
-public class City {
+public class CreateCity {
     private boolean valid;
     private String name;
     private String country;
@@ -11,7 +11,7 @@ public class City {
     private int id;
 
 
-    public City(boolean valid, String name, String country, String creatorEmail, String description, float lat, float lon, int id) {
+    public CreateCity(boolean valid, String name, String country, String creatorEmail, String description, float lat, float lon, int id) {
         this.valid = valid;
         this.name = name;
         this.country = country;

@@ -10,6 +10,7 @@ export default class MapInput extends React.Component {
             lng: 0,
             city: '',
             country: '',
+            flag: 'false',
         }
     }
     sendData = () => {
@@ -34,10 +35,12 @@ export default class MapInput extends React.Component {
                         lng: details.geometry.location.lng,
                         city: details.address_components.filter(ac => ~ac.types.indexOf('locality'))[0].long_name,
                         country: details.address_components.filter(ac => ~ac.types.indexOf('country'))[0].long_name,
+                        flag: true,
                     })
 
                     console.log("lat&lng " + this.state.lat + " " + this.state.lng, this.state.city, this.state.country)
                     this.sendData()
+
                     // this.props.notifyChange(details.geometry.location)
                 }}
                 query={{

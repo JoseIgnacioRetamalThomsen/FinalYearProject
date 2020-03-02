@@ -3,7 +3,7 @@ package com.rnclient.grpc;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.wcity.grpc.City;
+import com.wcity.grpc.CreateCity;
 import com.wcity.grpc.Place;
 import com.wcity.grpc.ProfilesClient;
 
@@ -76,11 +76,11 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     public void createCity(String token, String name, String country, String creatorEmail,
                            String description, float lat, float lon, Callback errorCallback,
                            Callback successCallback) {
-        City city = client.createCity(token, name, country, creatorEmail, description,
+        CreateCity city = client.createCity(token, name, country, creatorEmail, description,
                 GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
         try {
             // if (city.isValid() == true) {
-            successCallback.invoke(city.getName(), city.getCountry(),
+            successCallback.invoke(city.isValid(), city.getName(), city.getCountry(),
                     city.getCreatorEmail(), city.getDescription(), city.getLat(), city.getLon(), city.getId());
 //            } else {
 //                errorCallback.invoke("Invalid user");
@@ -94,7 +94,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     public void getCity(String token, String name, String country, String creatorEmail,
                         String description, float lat, float lon, Callback errorCallback,
                         Callback successCallback) {
-        City city = client.getCity(token, name, country, creatorEmail, description,
+        CreateCity city = client.getCity(token, name, country, creatorEmail, description,
                 GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
         try {
             //if (city.isValid() == true) {
@@ -112,7 +112,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     public void updateCity(String token, String name, String country, String creatorEmail,
                            String description, float lat, float lon, Callback errorCallback,
                            Callback successCallback) {
-        City city = client.updateCity(token, name, country, creatorEmail, description,
+        CreateCity city = client.updateCity(token, name, country, creatorEmail, description,
                 GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
         try {
             //if (city.isValid() == true) {

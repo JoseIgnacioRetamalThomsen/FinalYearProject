@@ -105,7 +105,7 @@ export default class Place extends React.Component {
                             onChangeText={(name) => this.setState({name})}/>
                         <TextInput
                             style={styles.inputs}
-                            placeholder="City"
+                            placeholder="CreateCity"
                             onChangeText={(city) => this.setState({city})}/>
 
                         <TextInput

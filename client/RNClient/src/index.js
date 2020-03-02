@@ -1,8 +1,8 @@
 export * from './SideMenu'
 export * from './CustomHeader'
 
-export * from './tabs/feed/CityPosts'
-export * from './tabs/feed/FeedDetail'
+export * from './tabs/feed/DisplayCityPosts'
+export * from './tabs/feed/CityDetail'
 
 export * from './tabs/myPosts/MyPosts'
 export * from './tabs/myPosts/PostDetails'

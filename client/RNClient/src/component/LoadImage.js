@@ -124,19 +124,21 @@ const styles = StyleSheet.create({
             height: 50,
             width: width - 60,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            borderRadius: 30,
         },
         txtStyle: {
-            color: '#ffffff'
+            color: '#ffffff',
         },
         itemImage: {
-            backgroundColor: '#2f455c',
+            backgroundColor: '#ffffff',
             height: 150,
             width: width - 60,
             borderRadius: 8,
-            resizeMode: 'contain'
+            resizeMode: 'center'
         },
         itemViewImage: {
+            resizeMode: 'center',
             alignItems: 'center',
             borderRadius: 8,
             marginTop: 10

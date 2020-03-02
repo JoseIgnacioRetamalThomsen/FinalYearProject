@@ -112,7 +112,7 @@ class PlacePosts extends Component {
     render() {
         return (
             <View style={{flex: 1}}>
-                <CustomHeader title="CityPosts" isHome={true} navigation={this.props.navigation}/>
+                <CustomHeader title="DisplayCityPosts" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex:1}}>
                     <View style={{flex: 1}}>
                         <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}

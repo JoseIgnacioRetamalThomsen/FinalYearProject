@@ -15,9 +15,9 @@ export default class GeoLoc extends Component {
             city: null,
             country: null,
         }
-    };
+    }
     sendData = () => {
-        this.props.parentCallback(this.state.city, this.state.country)
+        this.props.parentCallback(this.state.city, this.state.country, this.state.latitude, this.state.longitude)
     }
     async componentDidMount() {
         Geolocation.getCurrentPosition(

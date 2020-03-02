@@ -5,6 +5,7 @@ import PlusButton from "../../PlusButton";
 import Place from '../../Place'
 import DisplayPlace from "../../DisplayPlace";
 import {ActionSheet, Root} from "native-base";
+import LoadImage from "../../LoadImage";
 class MyPosts extends Component {
 
     render() {
@@ -13,11 +14,14 @@ class MyPosts extends Component {
             <View style={{flex: 1}}>
                 <CustomHeader title="My Posts" isHome={true} navigation={this.props.navigation}/>
 
-                {/*<View style={{flex: 1, justifyContent: 'center'}}>*/}
+                <View style={{flex: 1,  alignItems: 'center', justifyContent: 'center',  bottom:0,
+                    }}>
                 {/*<PlusButton navigation={navigation}/>*/}
-                {/*</View>*/}
+                    <LoadImage></LoadImage>
+                </View>
 
-                    <Place navigation = {this.props.navigation}/>
+                    {/*<Place navigation = {this.props.navigation}/>*/}
+
             </View>
         );
     }

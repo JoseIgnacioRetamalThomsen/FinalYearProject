@@ -15,10 +15,11 @@ import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
 import {CardList} from 'react-native-card-list';
 
-class CityPosts extends Component {
+class DisplayCityPosts extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            flag: 'false',
             posts: [
                 // {
                 //     valid: true,
@@ -28,7 +29,7 @@ class CityPosts extends Component {
                 //     cityName: 'Galway',
                 //     cityCountry: 'Ireland',
                 //     title: '',
-                //     body: 'City in the west',
+                //     body: 'CreateCity in the west',
                 //     img: '../../../img/gmit.jpg',
                 //     timeStamp: '',
                 //     likes: [],
@@ -42,8 +43,8 @@ class CityPosts extends Component {
                     city: 'Dublin',
                     country: 'Ireland',
                     email: '',
-                    description: 'City in the east',
-                    img: '../../../img/noImage.png',
+                    description: 'CreateCity in the east',
+                    img: '../../../img/nuig.jpg',
                     lat: 0,
                     lon: 0,
                     id: 0,
@@ -53,7 +54,10 @@ class CityPosts extends Component {
                     city: 'Limerick',
                     country: 'Ireland',
                     email: '',
-                    description: 'City in the south-west',
+                    description: 'CreateCity in the south-west CreateCity in the south-west CreateCity in the south-west CreateCity in the south-westCity in the south-west CreateCity in the south-west' +
+                        'CreateCity in the south-westCity in the south-westCity in the south-westCity in the south-westCity in the south-westCity in the south-westCity in the south-west' +
+                        'CreateCity in the south-westCity in the south-westCity in the south-westCity in the south-westCity in the south-westCity in the south-west' +
+                        'CreateCity in the south-westCity in the south-westCity in the south-westv',
                     img: '../../../img/noImage.png',
                     lat: 0,
                     lon: 0,
@@ -64,7 +68,7 @@ class CityPosts extends Component {
                     city: 'Galway',
                     country: 'Ireland',
                     email: '',
-                    description: 'City in the west',
+                    description: 'CreateCity in the west',
                     img: '../../../img/noImage.png',
                     lat: 0,
                     lon: 0,
@@ -105,7 +109,7 @@ class CityPosts extends Component {
     //                         })
     //                 }
     //                 // else{
-    //                 //     this.setState({city: "City"})
+    //                 //     this.setState({city: "CreateCity"})
     //                 //     this.setState({country: "Country"})
     //                 //     //this.setState({email: email})
     //                 //     this.setState({description: "description"})
@@ -158,20 +162,21 @@ class CityPosts extends Component {
         this.setState({lng: lng})
         this.setState({city: city})
         this.setState({country: country})
+        this.setState({flag: flag})
     }
 
     render() {
         return (
             <View style={{flex: 1}}>
-                <CustomHeader title="CityPosts" isHome={true} navigation={this.props.navigation}/>
+                <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <View style={{flex: 1}}>
                         <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
                                   parentCallback={this.callbackFunction}/>
                     </View>
-                    {this.state.posts.map((item, index) => {
+                    { this.state.posts.map((item, index) => {
                         return (
-                            <Card key={this.state.posts.indexId}>
+                            <Card key={this.state.posts.city}>
                                 <CardItem>
                                     <CardTitle
                                         title={item.city}
@@ -185,7 +190,7 @@ class CityPosts extends Component {
                                 </CardItem>
                                 <CardItem>
                                     <Body>
-                                        <Text>{item.description} </Text>
+                                        <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.description} </Text>
                                     </Body>
                                     <CardAction
                                         separator={true}
@@ -213,7 +218,7 @@ class CityPosts extends Component {
     }
 }
 
-export default CityPosts
+export default DisplayCityPosts
 const styles = StyleSheet.create({
     actionButtonIcon: {
         fontSize: 20,

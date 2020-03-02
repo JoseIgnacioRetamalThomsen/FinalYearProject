@@ -1,3 +1,5 @@
+import DisplayCities from "./src/component/tabs/feed/DisplayCities";
+
 console.disableYellowBox = true
 
 import React from 'react';
@@ -8,9 +10,9 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {IMAGE} from './src/constants/Image'
 
-import CityPosts from './src/component/tabs/feed/CityPosts'
+import DisplayCityPosts from './src/component/tabs/feed/DisplayCityPosts'
 import MyPosts from './src/component/tabs/myPosts/MyPosts'
-import FeedDetail from './src/component/tabs/feed/FeedDetail'
+import CityDetail from './src/component/tabs/feed/CityDetail'
 import PostDetails from './src/component/tabs/myPosts/PostDetails'
 import SideMenu from './src/component/SideMenu'
 import Profile from './src/component/drawer/Profile'
@@ -24,22 +26,31 @@ import WriteCityPost from "./src/component/tabs/feed/WriteCityPost";
 import Post from "./src/component/tabs/myPosts/Post";
 import WelcomePage from "./src/component/WelcomePage";
 import MapInput from "./src/component/MapInput";
+import CreateCity from "./src/component/tabs/feed/CreateCity";
 
 const navOptionHandler = (navigation) => ({
     header: null
 })
 
 const FeedStack = createStackNavigator({
-    CityPosts: {
-        screen: CityPosts,
+    DisplayCities: {
+        screen: DisplayCities,
+        navigationOptions: navOptionHandler
+    },
+    CreateCity: {
+        screen: CreateCity,
+        navigationOptions: navOptionHandler
+    },
+    CityDetail: {
+        screen: CityDetail,
+        navigationOptions: navOptionHandler
+    },
+    DisplayCityPosts: {
+        screen: DisplayCityPosts,
         navigationOptions: navOptionHandler
     },
     WriteCityPost: {
         screen: WriteCityPost,
-        navigationOptions: navOptionHandler
-    },
-    FeedDetail: {
-        screen: FeedDetail,
         navigationOptions: navOptionHandler
     }
 })
@@ -75,7 +86,7 @@ const MainTabs = createBottomTabNavigator({
     Feed: {
         screen: FeedStack,
         navigationOptions: {
-            tabBarLabel: 'CityPosts',
+            tabBarLabel: 'Cities',
             tabBarIcon: ({tintColor}) => (
                 <Image
                     source={IMAGE.ICON_FEED}
@@ -88,7 +99,7 @@ const MainTabs = createBottomTabNavigator({
     MyPosts: {
         screen: MyPostsStack,
         navigationOptions: {
-            tabBarLabel: 'MyPosts',
+            tabBarLabel: 'Places',
             tabBarIcon: ({tintColor}) => (
                 <Image
                     source={IMAGE.ICON_DEFAULT_PROFILE}

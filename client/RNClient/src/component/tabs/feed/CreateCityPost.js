@@ -1,11 +1,11 @@
 import React from 'react'
 import {Button, TextInput, View, NativeModules, Image} from "react-native";
-import styles from "../styles/Style";
+import styles from "../../../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 import {Body, CardItem, Text, Title} from "native-base";
 
-export default class CreateCity extends React.Component {
+export default class CreateCityPost extends React.Component {
     constructor(props) {
         super(props)
         this.state = {

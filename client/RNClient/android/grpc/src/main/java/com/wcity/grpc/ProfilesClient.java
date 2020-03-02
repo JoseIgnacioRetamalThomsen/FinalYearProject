@@ -75,7 +75,7 @@ public class ProfilesClient {
         return user;
     }
 
-    public City createCity(String token, String name, String country, String creatorEmail,
+    public CreateCity createCity(String token, String name, String country, String creatorEmail,
                            String description, GeolocationP location) {
         CityRequestP cityRequestP = CityRequestP.newBuilder()
                 .setToken(token)
@@ -87,10 +87,10 @@ public class ProfilesClient {
                 .build();
         CityResponseP response;
 
-        City city = null;
+        CreateCity city = null;
         try {
             response = stub.createCity(cityRequestP);
-            city = new City(response.getValid(), response.getName(), response.getCountry(),
+            city = new CreateCity(response.getValid(), response.getName(), response.getCountry(),
                     response.getCreatorEmail(), response.getDescription(), response.getLocation().getLat(), response.getLocation().getLon(), response.getId());
         } catch (StatusRuntimeException e) {
             e.getMessage();
@@ -98,7 +98,7 @@ public class ProfilesClient {
         return city;
     }
 
-    public City getCity(String token, String name, String country, String creatorEmail,
+    public CreateCity getCity(String token, String name, String country, String creatorEmail,
                         String description, GeolocationP location) {
         CityRequestP cityRequestP = CityRequestP
                 .newBuilder()
@@ -111,10 +111,10 @@ public class ProfilesClient {
                 .build();
         CityResponseP response;
 
-        City city = null;
+        CreateCity city = null;
         try {
             response = stub.getCity(cityRequestP);
-            city = new City(response.getValid(), response.getName(), response.getCountry(),
+            city = new CreateCity(response.getValid(), response.getName(), response.getCountry(),
                     response.getCreatorEmail(), response.getDescription(), response.getLocation().getLat(), response.getLocation().getLon(), response.getId());
         } catch (StatusRuntimeException e) {
             e.getMessage();
@@ -122,7 +122,7 @@ public class ProfilesClient {
         return city;
     }
 
-    public City updateCity(String token, String name, String country,
+    public CreateCity updateCity(String token, String name, String country,
                            String creatorEmail, String description, GeolocationP location) {
         CityRequestP cityRequestP = CityRequestP
                 .newBuilder()
@@ -135,10 +135,10 @@ public class ProfilesClient {
                 .build();
         CityResponseP response;
 
-        City city = null;
+        CreateCity city = null;
         try {
             response = stub.updateCity(cityRequestP);
-            city = new City(response.getValid(), response.getName(), response.getCountry(),
+            city = new CreateCity(response.getValid(), response.getName(), response.getCountry(),
                     response.getCreatorEmail(), response.getDescription(),
                     response.getLocation().getLat(), response.getLocation().getLon(), response.getId());
         } catch (StatusRuntimeException e) {
@@ -181,9 +181,9 @@ public class ProfilesClient {
         try {
             response = stub.getVisitedCitys(visitedRequestP);
 
-            ArrayList<City> cityList = new ArrayList<>();
+            ArrayList<CreateCity> cityList = new ArrayList<>();
             for (CityResponseP city : response.getCitysList()) {
-                cityList.add(new City(city.getValid(), city.getName(), city.getCountry(),
+                cityList.add(new CreateCity(city.getValid(), city.getName(), city.getCountry(),
                         city.getCreatorEmail(), city.getDescription(), city.getLocation().getLon(),
                         city.getLocation().getLat(), city.getId()));
             }
