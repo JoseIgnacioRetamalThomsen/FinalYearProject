@@ -12,16 +12,31 @@ class CityDetail extends Component {
         super(props);
         this.state = {
             indexId: 0,
-            city: 'Dublin',
-            country: 'Ireland',
+            city: '',
+            country: '',
             email: '',
-            description: 'CreateCity in the eastCreateCity in the eastCreateCity in the eastCreateCity in the east' +
-                'CreateCity in the eastCreateCity in the eastCreateCity in the eastCreateCity in the east',
-            img: '../../../img/nuig.jpg',
+            description: '',
             lat: 0,
             lon: 0,
         }
     }
+    componentDidMount() {
+        const indexId = this.props.navigation.getParam('indexId', 0)
+        const city = this.props.navigation.getParam('city', '')
+        const country = this.props.navigation.getParam('country', '')
+        const description = this.props.navigation.getParam('description', '')
+        const img = this.props.navigation.getParam('img', '')
+
+        this.setState({
+            indexId,
+            city,
+            country,
+            description,
+            img
+        })
+        console.log('componentDidMount'+indexId, city, description)
+    }
+
     render() {
         return (
             <View style={{flex: 1}}>

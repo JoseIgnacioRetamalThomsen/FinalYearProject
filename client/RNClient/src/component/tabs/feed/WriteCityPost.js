@@ -33,37 +33,7 @@ callbackFunction = ( city, country, lat, lon) => {
          this.setState({lat: lat})
           this.setState({lon: lon})
     }
-     addCity() {
-            AsyncStorage.getAllKeys((err, keys) => {
-                AsyncStorage.multiGet(keys, (err, stores) => {
-                    stores.map((result, i, store) => {
-                        let key = store[i][0];
-                        let value = store[i][1]
-                        console.log("key/value in city " + key + " " + value)
 
-                        if (value !== null) {
-                            NativeModules.ProfilesModule.createCity(
-                                value,
-                                this.state.city,
-                                this.state.country,
-                                key,
-                                this.state.body,
-                                this.state.lat,
-                                this.state.lon,
-                                (err) => {
-                                    console.log("err in createCity " + err)
-                                },
-                                (name, country, email, description, lat, lon, id) => {
-
-                                    console.log("name, country, email, description, lat, lon id is " +
-                                        name, country, email, description, lat, lon, id)
-                                    console.log("successfully created a city!!!")
-                                })
-                        }
-                    })
-                })
-            })
-        }
  getCity() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
@@ -101,7 +71,7 @@ callbackFunction = ( city, country, lat, lon) => {
             })
         })
     }
-        addCityPost() {
+        createCityPost() {
          console.log("indexId "+this.state.indexId)
             AsyncStorage.getAllKeys((err, keys) => {
                 AsyncStorage.multiGet(keys, (err, stores) => {
@@ -178,7 +148,7 @@ callbackFunction = ( city, country, lat, lon) => {
 
                     <View style={styles.container}>
                        <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
-                           onPress={() => this.addCityPost()}>
+                           onPress={() => this.createCityPost()}>
                          <Text style={styles.loginText}>Submit</Text>
                      </TouchableHighlight>
                       </View>

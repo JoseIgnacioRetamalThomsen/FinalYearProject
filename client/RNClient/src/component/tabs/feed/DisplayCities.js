@@ -7,6 +7,7 @@ import CustomHeader from "../../CustomHeader";
 import MapInput from "../../MapInput";
 import ActionButton from "react-native-action-button";
 import CreateCity from "./CreateCity";
+import CityDetail from "./CityDetail";
 
 export default class DisplayCities extends Component {
     constructor(props) {
@@ -130,8 +131,7 @@ export default class DisplayCities extends Component {
 
         return (
             <View style={{flex: 1}}>
-                <CustomHeader title="Cities" isHome={false} navigation={this.props.navigation}/>
-                {/*<CreateCity parentCallback={this.callbackFunction} />*/}
+                <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <View style={{flex: 1}}>
                         <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
@@ -160,7 +160,7 @@ export default class DisplayCities extends Component {
                                         separator={true}
                                         inColumn={false}>
                                         <CardButton
-                                            onPress={() => this.props.navigation.navigate('CityDetail', item.indexId)}
+                                            onPress={() => this.props.navigation.navigate('CityDetail', {city:item.city, description:item.description})}
                                             title="More"
                                             color="blue"
                                         />
