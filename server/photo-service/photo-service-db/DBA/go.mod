@@ -3,7 +3,7 @@ module github.com/joseignacioretamalthomsen/photos-dba
 go 1.13
 
 require (
-	github.com/joseignacioretamalthomsen/wcity v0.1.45
+	github.com/joseignacioretamalthomsen/wcity v0.1.49
 	github.com/ziutek/mymysql v1.5.4
 	google.golang.org/grpc v1.25.1
 )

@@ -59,7 +59,9 @@ func SetupConnection(connectionType string, socket string, user string, pass str
 	return true, nil
 }
 
-func AddProfilePhoto(photo pb.ProfilePhoto) (int64, error) {
+func AddProfilePhoto(photo pb.ProfilePhoto) (int64,string, error) {
+
+	log.Printf("Add profile in dba: %v", configuration.MySQL_socket)
 	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
 	err := db.Connect()
 	if err != nil {
@@ -70,16 +72,23 @@ func AddProfilePhoto(photo pb.ProfilePhoto) (int64, error) {
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s, %s ) values (?,?,?)", PROFILES_TABLE, PROFILE_EMAIL, ALL_URL, ALL_SELECTED)
 	stmt, err := db.Prepare(stmtStr)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
 	res, err := stmt.Run(photo.UserEmail, photo.Url, photo.Selected)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
-	return int64(res.InsertId()), nil
+	rows, _, err := db.Query("select %s from %s where %s = '%s'",ALL_TIMESTAMP,PROFILES_TABLE,ALL_ID ,strconv.Itoa(int(res.InsertId())))
+
+	if err != nil {
+		return -1,"",err
+	}
+
+
+	return int64(res.InsertId()), rows[0].Str(0), nil
 }
 
-func AddCityPhoto(photo pb.CityPhoto) (int64, error) {
+func AddCityPhoto(photo pb.CityPhoto) (int64,string  , error) {
 	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
 	err := db.Connect()
 	if err != nil {
@@ -90,16 +99,22 @@ func AddCityPhoto(photo pb.CityPhoto) (int64, error) {
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s, %s ) values (?,?,?)", CITY_TABLE, CITY_ID, ALL_URL, ALL_SELECTED)
 	stmt, err := db.Prepare(stmtStr)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
 	res, err := stmt.Run(photo.CityId, photo.Url, photo.Selected)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
-	return int64(res.InsertId()), nil
+	rows, _, err := db.Query("select %s from %s where %s = '%s'",ALL_TIMESTAMP,CITY_TABLE,ALL_ID ,strconv.Itoa(int(res.InsertId())))
+
+	if err != nil {
+		return -1,"",err
+	}
+
+	return int64(res.InsertId()),rows[0].Str(0), nil
 }
 
-func AddPlacePhoto(photo pb.PlacePhoto) (int64, error) {
+func AddPlacePhoto(photo pb.PlacePhoto) (int64, string, error) {
 	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
 	err := db.Connect()
 	if err != nil {
@@ -110,16 +125,24 @@ func AddPlacePhoto(photo pb.PlacePhoto) (int64, error) {
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s, %s ) values (?,?,?)", PLACE_TABLE, PLACE_ID, ALL_URL, ALL_SELECTED)
 	stmt, err := db.Prepare(stmtStr)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
 	res, err := stmt.Run(photo.PlaceId, photo.Url, photo.Selected)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
-	return int64(res.InsertId()), nil
+
+	//get timestampt
+	rows, _, err := db.Query("select %s from %s where %s = '%s'",ALL_TIMESTAMP,PLACE_TABLE,ALL_ID ,strconv.Itoa(int(res.InsertId())))
+
+	if err != nil {
+		return -1,"",err
+	}
+
+	return int64(res.InsertId()), rows[0].Str(0),nil
 }
 
-func AddPostPhoto(photo pb.PostPhoto) (int64, error) {
+func AddPostPhoto(photo pb.PostPhoto) (int64,string, error) {
 	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
 	err := db.Connect()
 	if err != nil {
@@ -130,13 +153,21 @@ func AddPostPhoto(photo pb.PostPhoto) (int64, error) {
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s, %s ) values (?,?,?)", POST_TABLE, POST_ID, ALL_URL, ALL_SELECTED)
 	stmt, err := db.Prepare(stmtStr)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
 	res, err := stmt.Run(photo.PostId, photo.Url, photo.Selected)
 	if err != nil {
-		return -1, err
+		return -1,"", err
 	}
-	return int64(res.InsertId()), nil
+
+	//get timestampt
+	rows, _, err := db.Query("select %s from %s where %s = '%s'",ALL_TIMESTAMP,POST_TABLE,ALL_ID ,strconv.Itoa(int(res.InsertId())))
+
+	if err != nil {
+		return -1,"",err
+	}
+
+	return int64(res.InsertId()),rows[0].Str(0), nil
 }
 
 func GetProfilePhotos(email string) ([]*pb.ProfilePhoto, error) {
@@ -180,7 +211,7 @@ func GetCityPhotos(cityId int) ([]*pb.CityPhoto, error) {
 	defer db.Close()
 
 	rows, _, err := db.Query("select * from %s where %s = '%s' ",CITY_TABLE,CITY_ID ,strconv.Itoa(cityId))
-	fmt.Printf("select * from %s where %s = '%s'",CITY_TABLE,CITY_ID ,strconv.Itoa(cityId))
+
 	if err != nil {
 		return nil,err
 	}
@@ -191,7 +222,7 @@ func GetCityPhotos(cityId int) ([]*pb.CityPhoto, error) {
 	var list []*pb.CityPhoto
 
 	for _, value := range rows{
-		fmt.Println(value.Str(3))
+
 		list = append(list,&pb.CityPhoto{
 			Id:                   int32(value.Int64(0)),
 			CityId:               int32(value.Int64(1)),

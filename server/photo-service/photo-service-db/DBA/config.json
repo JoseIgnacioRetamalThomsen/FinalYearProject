@@ -1,7 +1,7 @@
 {
-  "Port" : ":7171",
+  "Port" : ":7172",
   "Coneection_type" :"tcp",
-  "MySQL_socket" : "0.0.0.0:3306",
+  "MySQL_socket" : "10.154.0.6:3306",
   "MySQL_user": "golandAcces",
   "MySQL_pass" : "supedPss",
   "MySQL_db" : "Photos"
