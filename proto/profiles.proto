@@ -7,12 +7,17 @@ syntax = "proto3";
 
 package wcity;
 
+import "profiles_shared.proto";
+
 option java_multiple_files = true;
 option java_package = "io.grpc.wcity.profiles";
 option java_outer_classname = "ProfilesProto";
 option objc_class_prefix = "RPC";
 
 service Profiles {
+    rpc SearchAllDBA(SearchAllRequest)  returns (stream SearchAllResult);
+    rpc GetAllCitys(GetAllRequest) returns (stream City);
+    rpc GetAllPlaces(GetAllRequest) returns(stream Place);
     rpc CreateUser (UserRequestP) returns (UserResponseP);
     rpc GetUser (UserRequestP) returns (UserResponseP);
     rpc UpdateUser (UserRequestP) returns (UserResponseP);
@@ -30,83 +35,51 @@ service Profiles {
     // reques only need email,tokem, city name and city coutry
     rpc GetCityPlaces (CityRequestP) returns (VisitedPlacesResponseP);
 }
-message GeolocationP {
-    float lon = 1;
-    float lat = 2;
-}
+
 message UserRequestP {
     string token = 1;
     string email = 2;
-    string name = 3;
-    string description = 4;
+    User user = 3;
 }
 message UserResponseP {
     bool valid = 1;
-    string email = 2;
-    string name = 3;
-    string description = 4;
+    User user = 2;
 }
 message CityRequestP {
     string token = 1;
     string name = 2;
-    string country = 3;
-    string creatorEmail = 4;
-    string description = 5;
-    GeolocationP location = 6;
+    City city = 3;
 }
 message CityResponseP {
     bool valid = 1;
-    string name = 2;
-    string country = 3;
-    string creatorEmail = 4;
-    string description = 5;
-    GeolocationP location = 6;
-    int32 id = 7;
+    City city = 2;
 }
 message PlaceRequestP {
     string token = 1;
     string name = 2;
-    string city = 3;
-    string country = 4;
-    string creatorEmail = 5;
-    string description = 6;
-    GeolocationP location = 7;
+    Place place = 3;
 }
 message PlaceResponseP {
     bool valid = 1;
-    string name = 2;
-    string city = 3;
-    string country = 4;
-    string creatorEmail = 5;
-    string description = 6;
-    GeolocationP location = 7;
-    int32 id = 8;
+    Place place = 2;
 }
 message VisitCityRequestP {
     string token = 1;
     string email = 2;
-    string cityName = 3;
-    string cityCountry = 4;
+    int32 id = 3;
 }
 message VisitCityResponseP {
     bool valid = 1;
-    string email = 2;
-    string cityName = 3;
-    string cityCountry = 4;
+    string timeStamp = 2;
 }
 message VisitPlaceRequestP {
     string token = 1;
     string email = 2;
-    string placeName = 3;
-    string placeCity = 4;
-    string placeCountry = 5;
+    int32 placeId =3;
 }
 message VisitPlaceResponseP {
     bool valid = 1;
-    string email = 2;
-    string placeName = 3;
-    string placeCity = 4;
-    string placeCountry = 5;
+    string timeStamp = 2;
 }
 message VisitedRequestP {
     string token = 1;
@@ -114,11 +87,9 @@ message VisitedRequestP {
 }
 message VisitedCitysResponseP {
     bool valid = 1;
-    string email = 2;
-    repeated CityResponseP citys = 3;
+    repeated City citys = 3;
 }
 message VisitedPlacesResponseP {
     bool valid = 1;
-    string email = 2;
-    repeated PlaceResponseP places = 3;
+    repeated Place places = 3;
 }

@@ -27,8 +27,8 @@ const (
 
 )
 const(
-	//url = "0.0.0.0:60051"
-	url="35.197.216.42:60051";
+	url = "0.0.0.0:60051"
+	//url="35.197.216.42:60051";
 	//url = "35.234.146.99:5777"
 	token ="a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508"
 	tokenEmail ="a@a.com"
@@ -69,16 +69,16 @@ func main(){
 	s2 := &profileServer{dbserverCtx}
 	profSerConn = *s2
 
-	//fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
-	//fmt.Println(GetUser(tokenEmail,token))
+//	fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
+//	fmt.Println(GetUser(tokenEmail,token))
 //	fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
 //	fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
-	//fmt.Println(GetCity(tokenEmail,token,"San Pedro" , "Chile"))
+	fmt.Println(GetCity(tokenEmail,token,"galway", "ireland"))
 //	fmt.Println(CreatePlace(tokenEmail,token,"plaza1","san pedro","chile","nada",3,3))
-//	fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
-//	fmt.Println(UpdatePlace(tokenEmail,token,"plaza","san pedro","chile","Algo",3,3))
-//
-	fmt.Println(GetPlace(tokenEmail,token, "gmit","galway", "ireland"))
+//fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
+	//fmt.Println(UpdatePlace(tokenEmail,token,"plaza","san pedro","chile","Algo",3,3))
+
+	//fmt.Println(GetPlace(tokenEmail,token, "gmit","galway", "ireland"))
 //	fmt.Println(VisitCity(tokenEmail,token,"San Pedro","Chile"))
 //fmt.Println(VisitPlace(tokenEmail,token,"plaza1","san pedro","chile"))
 //fmt.Println(GetVisitedCity(tokenEmail,token))

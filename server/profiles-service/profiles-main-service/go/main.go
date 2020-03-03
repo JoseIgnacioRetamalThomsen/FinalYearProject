@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net"
@@ -26,9 +27,10 @@ const (
 
 )
 const(
-	//url = "0.0.0.0:5777"
+	url = "0.0.0.0:5777"
 	//url="localhost:5777";
-	url = "35.197.221.57:5777"
+	//url = "35.197.221.57:5777"
+	//url = "34.89.92.151:5777"
 )
 
 type neo4jDB struct {
@@ -461,7 +463,7 @@ func (s *server) GetCityPlaces(ctx context.Context, in *pb.CityRequestP) (*pb.Vi
 	},nil
 }
 
-func main(){
+func main() {
 	//conect to neo4j db
 	dbserverCtx, err := newNeo4jDBContext(url)
 	if err != nil {
@@ -479,7 +481,64 @@ func main(){
 	s1 := &authClient{psserverCtx}
 	prsCon = *s1
 
-	//fmt.Println(CheckToken(tokenEmail,token))
+	//get city
+	r, _ := GetCity("galway", "ireland");
+	fmt.Print(r.Country + "\n" + r.Name + "\n" + r.GetCreatorEmail() + "\n" + r.Description)
+	fmt.Println("\nid :", r.Id)
+//	fmt.Println(CheckToken(tokenEmail,token))
+
+/*
+	for i := 0; i < 1; i++ {
+		//crete user
+		res, errr := CreateUser(email, name, description)
+		if errr != nil {
+			panic(errr)
+		}
+		fmt.Print(res)
+
+		//create city
+		a, _ := CreateCity(cityName, cityCountry, cityUserEmail, cityLat, cityLon, cityDescription)
+		fmt.Print(a.Id)
+
+		//get city
+		r, _ := GetCity(cityName, cityCountry);
+		fmt.Print(r.Country + "\n" + r.Name + "\n" + r.GetCreatorEmail() + "\n" + r.Description)
+		fmt.Println(r.Id)
+
+		//create place
+		r1, _ := CreatePlace(placeName, placeCity, placeCountry, placeDescription, placeCreatorEmail, placeLat, placeLon)
+		fmt.Println(r1)
+		//get place
+		r2, _ := GetPlace(placeName, placeCity, placeCountry)
+		fmt.Println(r2)
+
+		r3, _ := VisitPlace(email, placeName, placeCity, placeCountry1)
+		fmt.Println(r3)
+		r4, _ := GetVisitedPlaces(email)
+		fmt.Println(r4.GetPlaces()[0].Name)
+		//fmt.Println(r4.GetPlaces()[1].Name)
+		for _, value := range r4.GetPlaces() {
+			fmt.Println(value.Name)
+		}
+		r5, _ := VisitCity(email, cityName, cityCountry);
+		fmt.Println(r5)
+		r6, _ := GetVisitedCitys(email)
+		for _, value := range r6.GetCitys() {
+			fmt.Println(value.Name)
+		}
+	}*/
+//	b11, err := UpdateUser(email, "new Nax", "New descdffadfsa")
+//	fmt.Println(b11)
+
+	//b1, err := UpdateCity("galway", "ireland", "user1@email.com", "this is the last", 7.8, 77)
+	//fmt.Println(b1)
+	//b2, err := UpdatePlace("gmit", "galway", "ireland", "user1@email.com", "very very last", 4, 4)
+	//fmt.Println(b2)
+
+	r7, err := GetPlacesCity("galway", "ireland")
+	for _, value := range r7.GetPlaces() {
+		fmt.Println(value.Name)
+	}
 
 	//start server
 	lis, err := net.Listen("tcp", port)
@@ -492,67 +551,7 @@ func main(){
 		log.Fatalf("failed to serve: %v", err)
 	}
 
-
-
-	////crete user
-	//res , errr := CreateUser(email,name,description)
-	//if errr != nil {
-	//	panic(errr)
-	//}
-	//fmt.Print(res)
-	//
-	//get user
-	//n,e,d,err := GetUser(email)
-	//fmt.Print(n +"\n")
-	//fmt.Print(e +"\n")
-	//fmt.Print(d +"\n")
-
-	//create city
-	//a,err :=CreateCity(cityName,cityCountry,cityUserEmail,cityLat,cityLon,cityDescription)
-	//fmt.Print(a.Id)
-
-
-	////get city
-	//r,err := GetCity(cityName,cityCountry);
-	//fmt.Print(r.Country + "\n" +r.Name +"\n" +r.GetCreatorEmail() +"\n" +r.Description)
-	//fmt.Println(r.Id)
-	//
-	////create place
-	//r1,err := CreatePlace(placeName,placeCity,placeCountry,placeDescription,placeCreatorEmail,placeLat,placeLon)
-	//fmt.Println(r1)
-	////get place
-	//r2,err := GetPlace(placeName,placeCity,placeCountry)
-	//fmt.Println(r2)
-	//
-	//
-	//r3, err := VisitPlace(email,placeName,placeCity, placeCountry1)
-	//fmt.Println(r3)
-	//r4,err := GetVisitedPlaces(email)
-	//fmt.Println(r4.GetPlaces()[0].Name)
-	////fmt.Println(r4.GetPlaces()[1].Name)
-	//for _, value := range r4.GetPlaces(){
-	//	fmt.Println(value.Name)
-	//}
-	//r5,err := VisitCity(email,cityName,cityCountry);
-	//fmt.Println(r5)
-	//r6,err := GetVisitedCitys(email)
-	//for _, value := range r6.GetCitys(){
-	//	fmt.Println(value.Name)
-	//}
-	//b11,err := UpdateUser(email,"new Nax","New descdffadfsa")
-	//fmt.Println(b11)
-	//
-	//b1,err := UpdateCity("galway","ireland","user1@email.com","this is the last" ,7.8,77)
-	//fmt.Println(b1)
-	//b2,err := UpdatePlace("gmit","galway","ireland","user1@email.com","very very last",4,4)
-	//fmt.Println(b2)
-	//
-	//r7,err := GetPlacesCity("galway","ireland")
-	//for _,value := range r7.GetPlaces(){
-	//	fmt.Println(value.Name)
-	}
-
-
+}
 	//check token
 
 // password service client

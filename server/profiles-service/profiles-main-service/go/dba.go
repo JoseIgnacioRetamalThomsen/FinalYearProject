@@ -8,8 +8,11 @@ import (
 	"time"
 )
 
+const(
+	CON_DEADLINE = 30;
+)
 func GetPlacesCity(cityName string, cityCountry string)(pb.VisitedPlacesResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.GetCityPlaces(ctx,&pb.CityRequestPDB{
 		Name:                 strings.ToLower(cityName),
@@ -21,7 +24,7 @@ func GetPlacesCity(cityName string, cityCountry string)(pb.VisitedPlacesResponse
 }
 
 func UpdatePlace(name string, city string, country string,creatorEmail string, description string, lat float32, lon float32)(bool, error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.UpdatePlaceRequest(ctx,&pb.PlacePDB{
 		Name:                 strings.ToLower(name),
@@ -39,7 +42,7 @@ func UpdatePlace(name string, city string, country string,creatorEmail string, d
 }
 
 func UpdateCity(name string, country string, creatorEmail string, description string, lat float32 , lon float32)(bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.UpdateCityRequest(ctx,&pb.CityPDB{
 		Name:    strings.ToLower(name),
@@ -62,7 +65,7 @@ func UpdateCity(name string, country string, creatorEmail string, description st
 }
 
 func UpdateUser(email string,name string, description string)(bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.UpdateUserRequest(ctx, &pb.CreateUserRequestPDB{
 		Email: strings.ToLower(email),
@@ -76,7 +79,7 @@ func UpdateUser(email string,name string, description string)(bool,error){
 	return res,nil
 }
 func GetVisitedCitys(email string)(pb.VisitedCitysResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.GetVisitedCitys(ctx,&pb.VisitedCitysRequestPDB{
 		Email:           strings.ToLower(email)})
@@ -87,7 +90,7 @@ func GetVisitedCitys(email string)(pb.VisitedCitysResponsePDB,error){
 }
 
 func VisitCity(email string, cityName string, cityCountry string)(pb.VisitCityResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.VisitCity(ctx,&pb.VisitCityRequestPDB{
 		Email:                strings.ToLower(email),
@@ -102,7 +105,7 @@ func VisitCity(email string, cityName string, cityCountry string)(pb.VisitCityRe
 }
 
 func GetVisitedPlaces(email string)(pb.VisitedPlacesResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.GetVisitedPlaces(ctx,&pb.VisitedPlacesRequestPDB{
 		Email:  strings.ToLower(email)})
@@ -115,7 +118,7 @@ func GetVisitedPlaces(email string)(pb.VisitedPlacesResponsePDB,error){
 
 func VisitPlace(email string, placeName string, placeCity string, placeCountry string)(pb.VisitPlaceResponsePDB,error){
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(),CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.VisitPlace(ctx,&pb.VisitPlaceRequestPDB{
 		Email:strings.ToLower(email),
@@ -131,7 +134,7 @@ func VisitPlace(email string, placeName string, placeCity string, placeCountry s
 
 func GetPlace(name string, city string,country string)(pb.PlacePDB,error){
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.GetPlace(ctx,&pb.PlaceRequestPDB{
 		Name:strings.ToLower(name),
@@ -145,7 +148,7 @@ func GetPlace(name string, city string,country string)(pb.PlacePDB,error){
 }
 
 func CreatePlace(name string, city string, country string, description string, creatorEmail string, lat float32, lon float32)(int32,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.CreatePlaceRequest(ctx,&pb.PlacePDB{
 		Name:strings.ToLower(name),
@@ -161,7 +164,7 @@ func CreatePlace(name string, city string, country string, description string, c
 }
 
 func GetCity(name string, country string)(pb.CityPDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.GetCity(ctx,&pb.CityRequestPDB{
 		Name:strings.ToLower(name),
@@ -173,7 +176,7 @@ func GetCity(name string, country string)(pb.CityPDB,error){
 }
 
 func CreateCity(name string, country string, creatorEmail string, lat float32,lon float32, description string) (pb.CityResponseP,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.CreateCity(ctx, &pb.CityPDB{ Name: strings.ToLower(name),
 		Country:strings.ToLower(country),
@@ -196,13 +199,13 @@ func CreateCity(name string, country string, creatorEmail string, lat float32,lo
 }
 
 func CreateUser(email string,name string, description string) (bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.CreateUser(ctx, &pb.CreateUserRequestPDB{
 		Email: strings.ToLower(email),
 		Name: strings.ToLower(name),
 		Description:description})
-	if err == nil {
+	if err != nil {
 		return false, err
 	}
 	res, err := strconv.ParseBool(r.Valied)
@@ -211,7 +214,7 @@ func CreateUser(email string,name string, description string) (bool,error){
 }
 
 func GetUser(email string)(pb.UserResponseP,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 
 	r, err := dbConn.context.dbClient.GetUser(ctx, &pb.GetUserRequestPDB{Email: strings.ToLower(email)})

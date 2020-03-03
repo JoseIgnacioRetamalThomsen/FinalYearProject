@@ -24,64 +24,9 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type CreateUserRequestPDB struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description          string   `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *CreateUserRequestPDB) Reset()         { *m = CreateUserRequestPDB{} }
-func (m *CreateUserRequestPDB) String() string { return proto.CompactTextString(m) }
-func (*CreateUserRequestPDB) ProtoMessage()    {}
-func (*CreateUserRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{0}
-}
-
-func (m *CreateUserRequestPDB) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CreateUserRequestPDB.Unmarshal(m, b)
-}
-func (m *CreateUserRequestPDB) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CreateUserRequestPDB.Marshal(b, m, deterministic)
-}
-func (m *CreateUserRequestPDB) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CreateUserRequestPDB.Merge(m, src)
-}
-func (m *CreateUserRequestPDB) XXX_Size() int {
-	return xxx_messageInfo_CreateUserRequestPDB.Size(m)
-}
-func (m *CreateUserRequestPDB) XXX_DiscardUnknown() {
-	xxx_messageInfo_CreateUserRequestPDB.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_CreateUserRequestPDB proto.InternalMessageInfo
-
-func (m *CreateUserRequestPDB) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-func (m *CreateUserRequestPDB) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *CreateUserRequestPDB) GetDescription() string {
-	if m != nil {
-		return m.Description
-	}
-	return ""
-}
-
 type CreateUserResponsePDB struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Valied               string   `protobuf:"bytes,2,opt,name=valied,proto3" json:"valied,omitempty"`
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	User                 *User    `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -91,7 +36,7 @@ func (m *CreateUserResponsePDB) Reset()         { *m = CreateUserResponsePDB{} }
 func (m *CreateUserResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*CreateUserResponsePDB) ProtoMessage()    {}
 func (*CreateUserResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{1}
+	return fileDescriptor_ff8a164433363f89, []int{0}
 }
 
 func (m *CreateUserResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -112,18 +57,18 @@ func (m *CreateUserResponsePDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateUserResponsePDB proto.InternalMessageInfo
 
-func (m *CreateUserResponsePDB) GetEmail() string {
+func (m *CreateUserResponsePDB) GetValid() bool {
 	if m != nil {
-		return m.Email
+		return m.Valid
 	}
-	return ""
+	return false
 }
 
-func (m *CreateUserResponsePDB) GetValied() string {
+func (m *CreateUserResponsePDB) GetUser() *User {
 	if m != nil {
-		return m.Valied
+		return m.User
 	}
-	return ""
+	return nil
 }
 
 type GetUserRequestPDB struct {
@@ -137,7 +82,7 @@ func (m *GetUserRequestPDB) Reset()         { *m = GetUserRequestPDB{} }
 func (m *GetUserRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*GetUserRequestPDB) ProtoMessage()    {}
 func (*GetUserRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{2}
+	return fileDescriptor_ff8a164433363f89, []int{1}
 }
 
 func (m *GetUserRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -166,21 +111,18 @@ func (m *GetUserRequestPDB) GetEmail() string {
 }
 
 type UserResponsePDB struct {
-	Email                string         `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Name                 string         `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Description          string         `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	VisitedCitys         []*CityMinPDB  `protobuf:"bytes,4,rep,name=visitedCitys,proto3" json:"visitedCitys,omitempty"`
-	VisitedPlaces        []*PlaceMinPDB `protobuf:"bytes,5,rep,name=visitedPlaces,proto3" json:"visitedPlaces,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
-	XXX_unrecognized     []byte         `json:"-"`
-	XXX_sizecache        int32          `json:"-"`
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	User                 *User    `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *UserResponsePDB) Reset()         { *m = UserResponsePDB{} }
 func (m *UserResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*UserResponsePDB) ProtoMessage()    {}
 func (*UserResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{3}
+	return fileDescriptor_ff8a164433363f89, []int{2}
 }
 
 func (m *UserResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -201,181 +143,18 @@ func (m *UserResponsePDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UserResponsePDB proto.InternalMessageInfo
 
-func (m *UserResponsePDB) GetEmail() string {
+func (m *UserResponsePDB) GetValid() bool {
 	if m != nil {
-		return m.Email
+		return m.Valid
 	}
-	return ""
+	return false
 }
 
-func (m *UserResponsePDB) GetName() string {
+func (m *UserResponsePDB) GetUser() *User {
 	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *UserResponsePDB) GetDescription() string {
-	if m != nil {
-		return m.Description
-	}
-	return ""
-}
-
-func (m *UserResponsePDB) GetVisitedCitys() []*CityMinPDB {
-	if m != nil {
-		return m.VisitedCitys
+		return m.User
 	}
 	return nil
-}
-
-func (m *UserResponsePDB) GetVisitedPlaces() []*PlaceMinPDB {
-	if m != nil {
-		return m.VisitedPlaces
-	}
-	return nil
-}
-
-type CityMinPDB struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Country              string   `protobuf:"bytes,2,opt,name=country,proto3" json:"country,omitempty"`
-	CreatorEmail         string   `protobuf:"bytes,3,opt,name=creatorEmail,proto3" json:"creatorEmail,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *CityMinPDB) Reset()         { *m = CityMinPDB{} }
-func (m *CityMinPDB) String() string { return proto.CompactTextString(m) }
-func (*CityMinPDB) ProtoMessage()    {}
-func (*CityMinPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{4}
-}
-
-func (m *CityMinPDB) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CityMinPDB.Unmarshal(m, b)
-}
-func (m *CityMinPDB) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CityMinPDB.Marshal(b, m, deterministic)
-}
-func (m *CityMinPDB) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CityMinPDB.Merge(m, src)
-}
-func (m *CityMinPDB) XXX_Size() int {
-	return xxx_messageInfo_CityMinPDB.Size(m)
-}
-func (m *CityMinPDB) XXX_DiscardUnknown() {
-	xxx_messageInfo_CityMinPDB.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_CityMinPDB proto.InternalMessageInfo
-
-func (m *CityMinPDB) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *CityMinPDB) GetCountry() string {
-	if m != nil {
-		return m.Country
-	}
-	return ""
-}
-
-func (m *CityMinPDB) GetCreatorEmail() string {
-	if m != nil {
-		return m.CreatorEmail
-	}
-	return ""
-}
-
-type CityPDB struct {
-	Name                 string          `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Country              string          `protobuf:"bytes,2,opt,name=country,proto3" json:"country,omitempty"`
-	CreatorEmail         string          `protobuf:"bytes,3,opt,name=creatorEmail,proto3" json:"creatorEmail,omitempty"`
-	Location             *GeolocationPDB `protobuf:"bytes,4,opt,name=location,proto3" json:"location,omitempty"`
-	Description          string          `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	Places               []*PlaceMinPDB  `protobuf:"bytes,6,rep,name=places,proto3" json:"places,omitempty"`
-	Id                   int32           `protobuf:"varint,7,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
-}
-
-func (m *CityPDB) Reset()         { *m = CityPDB{} }
-func (m *CityPDB) String() string { return proto.CompactTextString(m) }
-func (*CityPDB) ProtoMessage()    {}
-func (*CityPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{5}
-}
-
-func (m *CityPDB) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CityPDB.Unmarshal(m, b)
-}
-func (m *CityPDB) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CityPDB.Marshal(b, m, deterministic)
-}
-func (m *CityPDB) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CityPDB.Merge(m, src)
-}
-func (m *CityPDB) XXX_Size() int {
-	return xxx_messageInfo_CityPDB.Size(m)
-}
-func (m *CityPDB) XXX_DiscardUnknown() {
-	xxx_messageInfo_CityPDB.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_CityPDB proto.InternalMessageInfo
-
-func (m *CityPDB) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *CityPDB) GetCountry() string {
-	if m != nil {
-		return m.Country
-	}
-	return ""
-}
-
-func (m *CityPDB) GetCreatorEmail() string {
-	if m != nil {
-		return m.CreatorEmail
-	}
-	return ""
-}
-
-func (m *CityPDB) GetLocation() *GeolocationPDB {
-	if m != nil {
-		return m.Location
-	}
-	return nil
-}
-
-func (m *CityPDB) GetDescription() string {
-	if m != nil {
-		return m.Description
-	}
-	return ""
-}
-
-func (m *CityPDB) GetPlaces() []*PlaceMinPDB {
-	if m != nil {
-		return m.Places
-	}
-	return nil
-}
-
-func (m *CityPDB) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
 }
 
 type CityRequestPDB struct {
@@ -390,7 +169,7 @@ func (m *CityRequestPDB) Reset()         { *m = CityRequestPDB{} }
 func (m *CityRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*CityRequestPDB) ProtoMessage()    {}
 func (*CityRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{6}
+	return fileDescriptor_ff8a164433363f89, []int{3}
 }
 
 func (m *CityRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -426,11 +205,8 @@ func (m *CityRequestPDB) GetCountry() string {
 }
 
 type CityResponsePDB struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Country              string   `protobuf:"bytes,2,opt,name=country,proto3" json:"country,omitempty"`
-	Valid                bool     `protobuf:"varint,3,opt,name=valid,proto3" json:"valid,omitempty"`
-	City                 *CityPDB `protobuf:"bytes,4,opt,name=city,proto3" json:"city,omitempty"`
-	Id                   int32    `protobuf:"varint,5,opt,name=id,proto3" json:"id,omitempty"`
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	City                 *City    `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -440,7 +216,7 @@ func (m *CityResponsePDB) Reset()         { *m = CityResponsePDB{} }
 func (m *CityResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*CityResponsePDB) ProtoMessage()    {}
 func (*CityResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{7}
+	return fileDescriptor_ff8a164433363f89, []int{4}
 }
 
 func (m *CityResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -461,20 +237,6 @@ func (m *CityResponsePDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CityResponsePDB proto.InternalMessageInfo
 
-func (m *CityResponsePDB) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *CityResponsePDB) GetCountry() string {
-	if m != nil {
-		return m.Country
-	}
-	return ""
-}
-
 func (m *CityResponsePDB) GetValid() bool {
 	if m != nil {
 		return m.Valid
@@ -482,215 +244,11 @@ func (m *CityResponsePDB) GetValid() bool {
 	return false
 }
 
-func (m *CityResponsePDB) GetCity() *CityPDB {
+func (m *CityResponsePDB) GetCity() *City {
 	if m != nil {
 		return m.City
 	}
 	return nil
-}
-
-func (m *CityResponsePDB) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
-
-type GeolocationPDB struct {
-	Lon                  float32  `protobuf:"fixed32,1,opt,name=lon,proto3" json:"lon,omitempty"`
-	Lat                  float32  `protobuf:"fixed32,2,opt,name=lat,proto3" json:"lat,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GeolocationPDB) Reset()         { *m = GeolocationPDB{} }
-func (m *GeolocationPDB) String() string { return proto.CompactTextString(m) }
-func (*GeolocationPDB) ProtoMessage()    {}
-func (*GeolocationPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{8}
-}
-
-func (m *GeolocationPDB) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GeolocationPDB.Unmarshal(m, b)
-}
-func (m *GeolocationPDB) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GeolocationPDB.Marshal(b, m, deterministic)
-}
-func (m *GeolocationPDB) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GeolocationPDB.Merge(m, src)
-}
-func (m *GeolocationPDB) XXX_Size() int {
-	return xxx_messageInfo_GeolocationPDB.Size(m)
-}
-func (m *GeolocationPDB) XXX_DiscardUnknown() {
-	xxx_messageInfo_GeolocationPDB.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GeolocationPDB proto.InternalMessageInfo
-
-func (m *GeolocationPDB) GetLon() float32 {
-	if m != nil {
-		return m.Lon
-	}
-	return 0
-}
-
-func (m *GeolocationPDB) GetLat() float32 {
-	if m != nil {
-		return m.Lat
-	}
-	return 0
-}
-
-type PlaceMinPDB struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	City                 string   `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
-	Country              string   `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
-	CreatorEmail         string   `protobuf:"bytes,4,opt,name=creatorEmail,proto3" json:"creatorEmail,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *PlaceMinPDB) Reset()         { *m = PlaceMinPDB{} }
-func (m *PlaceMinPDB) String() string { return proto.CompactTextString(m) }
-func (*PlaceMinPDB) ProtoMessage()    {}
-func (*PlaceMinPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{9}
-}
-
-func (m *PlaceMinPDB) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PlaceMinPDB.Unmarshal(m, b)
-}
-func (m *PlaceMinPDB) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PlaceMinPDB.Marshal(b, m, deterministic)
-}
-func (m *PlaceMinPDB) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PlaceMinPDB.Merge(m, src)
-}
-func (m *PlaceMinPDB) XXX_Size() int {
-	return xxx_messageInfo_PlaceMinPDB.Size(m)
-}
-func (m *PlaceMinPDB) XXX_DiscardUnknown() {
-	xxx_messageInfo_PlaceMinPDB.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_PlaceMinPDB proto.InternalMessageInfo
-
-func (m *PlaceMinPDB) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *PlaceMinPDB) GetCity() string {
-	if m != nil {
-		return m.City
-	}
-	return ""
-}
-
-func (m *PlaceMinPDB) GetCountry() string {
-	if m != nil {
-		return m.Country
-	}
-	return ""
-}
-
-func (m *PlaceMinPDB) GetCreatorEmail() string {
-	if m != nil {
-		return m.CreatorEmail
-	}
-	return ""
-}
-
-type PlacePDB struct {
-	Name                 string          `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	City                 string          `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
-	Country              string          `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
-	CreatorEmail         string          `protobuf:"bytes,4,opt,name=creatorEmail,proto3" json:"creatorEmail,omitempty"`
-	Location             *GeolocationPDB `protobuf:"bytes,5,opt,name=location,proto3" json:"location,omitempty"`
-	Description          string          `protobuf:"bytes,6,opt,name=description,proto3" json:"description,omitempty"`
-	Id                   int32           `protobuf:"varint,7,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}        `json:"-"`
-	XXX_unrecognized     []byte          `json:"-"`
-	XXX_sizecache        int32           `json:"-"`
-}
-
-func (m *PlacePDB) Reset()         { *m = PlacePDB{} }
-func (m *PlacePDB) String() string { return proto.CompactTextString(m) }
-func (*PlacePDB) ProtoMessage()    {}
-func (*PlacePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{10}
-}
-
-func (m *PlacePDB) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PlacePDB.Unmarshal(m, b)
-}
-func (m *PlacePDB) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PlacePDB.Marshal(b, m, deterministic)
-}
-func (m *PlacePDB) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PlacePDB.Merge(m, src)
-}
-func (m *PlacePDB) XXX_Size() int {
-	return xxx_messageInfo_PlacePDB.Size(m)
-}
-func (m *PlacePDB) XXX_DiscardUnknown() {
-	xxx_messageInfo_PlacePDB.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_PlacePDB proto.InternalMessageInfo
-
-func (m *PlacePDB) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *PlacePDB) GetCity() string {
-	if m != nil {
-		return m.City
-	}
-	return ""
-}
-
-func (m *PlacePDB) GetCountry() string {
-	if m != nil {
-		return m.Country
-	}
-	return ""
-}
-
-func (m *PlacePDB) GetCreatorEmail() string {
-	if m != nil {
-		return m.CreatorEmail
-	}
-	return ""
-}
-
-func (m *PlacePDB) GetLocation() *GeolocationPDB {
-	if m != nil {
-		return m.Location
-	}
-	return nil
-}
-
-func (m *PlacePDB) GetDescription() string {
-	if m != nil {
-		return m.Description
-	}
-	return ""
-}
-
-func (m *PlacePDB) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
 }
 
 type PlaceRequestPDB struct {
@@ -706,7 +264,7 @@ func (m *PlaceRequestPDB) Reset()         { *m = PlaceRequestPDB{} }
 func (m *PlaceRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*PlaceRequestPDB) ProtoMessage()    {}
 func (*PlaceRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{11}
+	return fileDescriptor_ff8a164433363f89, []int{5}
 }
 
 func (m *PlaceRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -749,22 +307,18 @@ func (m *PlaceRequestPDB) GetCountry() string {
 }
 
 type PlaceResponsePDB struct {
-	Name                 string    `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	City                 string    `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
-	Country              string    `protobuf:"bytes,3,opt,name=country,proto3" json:"country,omitempty"`
-	Valid                bool      `protobuf:"varint,4,opt,name=valid,proto3" json:"valid,omitempty"`
-	Place                *PlacePDB `protobuf:"bytes,5,opt,name=place,proto3" json:"place,omitempty"`
-	Id                   int32     `protobuf:"varint,6,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
-	XXX_unrecognized     []byte    `json:"-"`
-	XXX_sizecache        int32     `json:"-"`
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	Place                *Place   `protobuf:"bytes,2,opt,name=place,proto3" json:"place,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *PlaceResponsePDB) Reset()         { *m = PlaceResponsePDB{} }
 func (m *PlaceResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*PlaceResponsePDB) ProtoMessage()    {}
 func (*PlaceResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{12}
+	return fileDescriptor_ff8a164433363f89, []int{6}
 }
 
 func (m *PlaceResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -785,27 +339,6 @@ func (m *PlaceResponsePDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PlaceResponsePDB proto.InternalMessageInfo
 
-func (m *PlaceResponsePDB) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *PlaceResponsePDB) GetCity() string {
-	if m != nil {
-		return m.City
-	}
-	return ""
-}
-
-func (m *PlaceResponsePDB) GetCountry() string {
-	if m != nil {
-		return m.Country
-	}
-	return ""
-}
-
 func (m *PlaceResponsePDB) GetValid() bool {
 	if m != nil {
 		return m.Valid
@@ -813,18 +346,11 @@ func (m *PlaceResponsePDB) GetValid() bool {
 	return false
 }
 
-func (m *PlaceResponsePDB) GetPlace() *PlacePDB {
+func (m *PlaceResponsePDB) GetPlace() *Place {
 	if m != nil {
 		return m.Place
 	}
 	return nil
-}
-
-func (m *PlaceResponsePDB) GetId() int32 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
 }
 
 type UpdatedUserRequestPDB struct {
@@ -840,7 +366,7 @@ func (m *UpdatedUserRequestPDB) Reset()         { *m = UpdatedUserRequestPDB{} }
 func (m *UpdatedUserRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*UpdatedUserRequestPDB) ProtoMessage()    {}
 func (*UpdatedUserRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{13}
+	return fileDescriptor_ff8a164433363f89, []int{7}
 }
 
 func (m *UpdatedUserRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -893,7 +419,7 @@ func (m *VisitedCitysRequestPDB) Reset()         { *m = VisitedCitysRequestPDB{}
 func (m *VisitedCitysRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*VisitedCitysRequestPDB) ProtoMessage()    {}
 func (*VisitedCitysRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{14}
+	return fileDescriptor_ff8a164433363f89, []int{8}
 }
 
 func (m *VisitedCitysRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -922,18 +448,18 @@ func (m *VisitedCitysRequestPDB) GetEmail() string {
 }
 
 type VisitedCitysResponsePDB struct {
-	Email                string     `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Citys                []*CityPDB `protobuf:"bytes,2,rep,name=citys,proto3" json:"citys,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
-	XXX_unrecognized     []byte     `json:"-"`
-	XXX_sizecache        int32      `json:"-"`
+	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Citys                []*City  `protobuf:"bytes,2,rep,name=citys,proto3" json:"citys,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *VisitedCitysResponsePDB) Reset()         { *m = VisitedCitysResponsePDB{} }
 func (m *VisitedCitysResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*VisitedCitysResponsePDB) ProtoMessage()    {}
 func (*VisitedCitysResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{15}
+	return fileDescriptor_ff8a164433363f89, []int{9}
 }
 
 func (m *VisitedCitysResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -961,7 +487,7 @@ func (m *VisitedCitysResponsePDB) GetEmail() string {
 	return ""
 }
 
-func (m *VisitedCitysResponsePDB) GetCitys() []*CityPDB {
+func (m *VisitedCitysResponsePDB) GetCitys() []*City {
 	if m != nil {
 		return m.Citys
 	}
@@ -969,9 +495,7 @@ func (m *VisitedCitysResponsePDB) GetCitys() []*CityPDB {
 }
 
 type VisitCityRequestPDB struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	CityName             string   `protobuf:"bytes,2,opt,name=cityName,proto3" json:"cityName,omitempty"`
-	CityCountry          string   `protobuf:"bytes,3,opt,name=cityCountry,proto3" json:"cityCountry,omitempty"`
+	CityId               int32    `protobuf:"varint,1,opt,name=cityId,proto3" json:"cityId,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -981,7 +505,7 @@ func (m *VisitCityRequestPDB) Reset()         { *m = VisitCityRequestPDB{} }
 func (m *VisitCityRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*VisitCityRequestPDB) ProtoMessage()    {}
 func (*VisitCityRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{16}
+	return fileDescriptor_ff8a164433363f89, []int{10}
 }
 
 func (m *VisitCityRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -1002,32 +526,16 @@ func (m *VisitCityRequestPDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_VisitCityRequestPDB proto.InternalMessageInfo
 
-func (m *VisitCityRequestPDB) GetEmail() string {
+func (m *VisitCityRequestPDB) GetCityId() int32 {
 	if m != nil {
-		return m.Email
+		return m.CityId
 	}
-	return ""
-}
-
-func (m *VisitCityRequestPDB) GetCityName() string {
-	if m != nil {
-		return m.CityName
-	}
-	return ""
-}
-
-func (m *VisitCityRequestPDB) GetCityCountry() string {
-	if m != nil {
-		return m.CityCountry
-	}
-	return ""
+	return 0
 }
 
 type VisitCityResponsePDB struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	CityName             string   `protobuf:"bytes,2,opt,name=cityName,proto3" json:"cityName,omitempty"`
-	CityCountry          string   `protobuf:"bytes,3,opt,name=cityCountry,proto3" json:"cityCountry,omitempty"`
-	Valid                bool     `protobuf:"varint,4,opt,name=valid,proto3" json:"valid,omitempty"`
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	TimeStamp            string   `protobuf:"bytes,2,opt,name=timeStamp,proto3" json:"timeStamp,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1037,7 +545,7 @@ func (m *VisitCityResponsePDB) Reset()         { *m = VisitCityResponsePDB{} }
 func (m *VisitCityResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*VisitCityResponsePDB) ProtoMessage()    {}
 func (*VisitCityResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{17}
+	return fileDescriptor_ff8a164433363f89, []int{11}
 }
 
 func (m *VisitCityResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -1058,27 +566,6 @@ func (m *VisitCityResponsePDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_VisitCityResponsePDB proto.InternalMessageInfo
 
-func (m *VisitCityResponsePDB) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-func (m *VisitCityResponsePDB) GetCityName() string {
-	if m != nil {
-		return m.CityName
-	}
-	return ""
-}
-
-func (m *VisitCityResponsePDB) GetCityCountry() string {
-	if m != nil {
-		return m.CityCountry
-	}
-	return ""
-}
-
 func (m *VisitCityResponsePDB) GetValid() bool {
 	if m != nil {
 		return m.Valid
@@ -1086,9 +573,15 @@ func (m *VisitCityResponsePDB) GetValid() bool {
 	return false
 }
 
+func (m *VisitCityResponsePDB) GetTimeStamp() string {
+	if m != nil {
+		return m.TimeStamp
+	}
+	return ""
+}
+
 type CityPlacesRequestPDB struct {
-	CityName             string   `protobuf:"bytes,1,opt,name=cityName,proto3" json:"cityName,omitempty"`
-	CityCountry          string   `protobuf:"bytes,2,opt,name=cityCountry,proto3" json:"cityCountry,omitempty"`
+	CityId               int32    `protobuf:"varint,1,opt,name=cityId,proto3" json:"cityId,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1098,7 +591,7 @@ func (m *CityPlacesRequestPDB) Reset()         { *m = CityPlacesRequestPDB{} }
 func (m *CityPlacesRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*CityPlacesRequestPDB) ProtoMessage()    {}
 func (*CityPlacesRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{18}
+	return fileDescriptor_ff8a164433363f89, []int{12}
 }
 
 func (m *CityPlacesRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -1119,35 +612,26 @@ func (m *CityPlacesRequestPDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CityPlacesRequestPDB proto.InternalMessageInfo
 
-func (m *CityPlacesRequestPDB) GetCityName() string {
+func (m *CityPlacesRequestPDB) GetCityId() int32 {
 	if m != nil {
-		return m.CityName
+		return m.CityId
 	}
-	return ""
-}
-
-func (m *CityPlacesRequestPDB) GetCityCountry() string {
-	if m != nil {
-		return m.CityCountry
-	}
-	return ""
+	return 0
 }
 
 type CityPlacesResponsePDB struct {
-	CityName             string      `protobuf:"bytes,1,opt,name=cityName,proto3" json:"cityName,omitempty"`
-	CityCountry          string      `protobuf:"bytes,2,opt,name=cityCountry,proto3" json:"cityCountry,omitempty"`
-	Valid                bool        `protobuf:"varint,3,opt,name=valid,proto3" json:"valid,omitempty"`
-	Places               []*PlacePDB `protobuf:"bytes,4,rep,name=places,proto3" json:"places,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
-	XXX_unrecognized     []byte      `json:"-"`
-	XXX_sizecache        int32       `json:"-"`
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	Places               []*Place `protobuf:"bytes,4,rep,name=places,proto3" json:"places,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *CityPlacesResponsePDB) Reset()         { *m = CityPlacesResponsePDB{} }
 func (m *CityPlacesResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*CityPlacesResponsePDB) ProtoMessage()    {}
 func (*CityPlacesResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{19}
+	return fileDescriptor_ff8a164433363f89, []int{13}
 }
 
 func (m *CityPlacesResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -1168,20 +652,6 @@ func (m *CityPlacesResponsePDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CityPlacesResponsePDB proto.InternalMessageInfo
 
-func (m *CityPlacesResponsePDB) GetCityName() string {
-	if m != nil {
-		return m.CityName
-	}
-	return ""
-}
-
-func (m *CityPlacesResponsePDB) GetCityCountry() string {
-	if m != nil {
-		return m.CityCountry
-	}
-	return ""
-}
-
 func (m *CityPlacesResponsePDB) GetValid() bool {
 	if m != nil {
 		return m.Valid
@@ -1189,7 +659,7 @@ func (m *CityPlacesResponsePDB) GetValid() bool {
 	return false
 }
 
-func (m *CityPlacesResponsePDB) GetPlaces() []*PlacePDB {
+func (m *CityPlacesResponsePDB) GetPlaces() []*Place {
 	if m != nil {
 		return m.Places
 	}
@@ -1197,10 +667,7 @@ func (m *CityPlacesResponsePDB) GetPlaces() []*PlacePDB {
 }
 
 type VisitPlaceRequestPDB struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	PlaceName            string   `protobuf:"bytes,2,opt,name=placeName,proto3" json:"placeName,omitempty"`
-	PlaceCity            string   `protobuf:"bytes,3,opt,name=placeCity,proto3" json:"placeCity,omitempty"`
-	PlaceCountry         string   `protobuf:"bytes,4,opt,name=placeCountry,proto3" json:"placeCountry,omitempty"`
+	PlaceId              int32    `protobuf:"varint,1,opt,name=placeId,proto3" json:"placeId,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1210,7 +677,7 @@ func (m *VisitPlaceRequestPDB) Reset()         { *m = VisitPlaceRequestPDB{} }
 func (m *VisitPlaceRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*VisitPlaceRequestPDB) ProtoMessage()    {}
 func (*VisitPlaceRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{20}
+	return fileDescriptor_ff8a164433363f89, []int{14}
 }
 
 func (m *VisitPlaceRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -1231,40 +698,16 @@ func (m *VisitPlaceRequestPDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_VisitPlaceRequestPDB proto.InternalMessageInfo
 
-func (m *VisitPlaceRequestPDB) GetEmail() string {
+func (m *VisitPlaceRequestPDB) GetPlaceId() int32 {
 	if m != nil {
-		return m.Email
+		return m.PlaceId
 	}
-	return ""
-}
-
-func (m *VisitPlaceRequestPDB) GetPlaceName() string {
-	if m != nil {
-		return m.PlaceName
-	}
-	return ""
-}
-
-func (m *VisitPlaceRequestPDB) GetPlaceCity() string {
-	if m != nil {
-		return m.PlaceCity
-	}
-	return ""
-}
-
-func (m *VisitPlaceRequestPDB) GetPlaceCountry() string {
-	if m != nil {
-		return m.PlaceCountry
-	}
-	return ""
+	return 0
 }
 
 type VisitPlaceResponsePDB struct {
-	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	PlaceName            string   `protobuf:"bytes,2,opt,name=placeName,proto3" json:"placeName,omitempty"`
-	PlaceCity            string   `protobuf:"bytes,3,opt,name=placeCity,proto3" json:"placeCity,omitempty"`
-	PlaceCountry         string   `protobuf:"bytes,4,opt,name=placeCountry,proto3" json:"placeCountry,omitempty"`
-	Valid                bool     `protobuf:"varint,5,opt,name=valid,proto3" json:"valid,omitempty"`
+	Valid                bool     `protobuf:"varint,1,opt,name=valid,proto3" json:"valid,omitempty"`
+	TimeStamp            string   `protobuf:"bytes,2,opt,name=timeStamp,proto3" json:"timeStamp,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1274,7 +717,7 @@ func (m *VisitPlaceResponsePDB) Reset()         { *m = VisitPlaceResponsePDB{} }
 func (m *VisitPlaceResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*VisitPlaceResponsePDB) ProtoMessage()    {}
 func (*VisitPlaceResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{21}
+	return fileDescriptor_ff8a164433363f89, []int{15}
 }
 
 func (m *VisitPlaceResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -1295,39 +738,18 @@ func (m *VisitPlaceResponsePDB) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_VisitPlaceResponsePDB proto.InternalMessageInfo
 
-func (m *VisitPlaceResponsePDB) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-func (m *VisitPlaceResponsePDB) GetPlaceName() string {
-	if m != nil {
-		return m.PlaceName
-	}
-	return ""
-}
-
-func (m *VisitPlaceResponsePDB) GetPlaceCity() string {
-	if m != nil {
-		return m.PlaceCity
-	}
-	return ""
-}
-
-func (m *VisitPlaceResponsePDB) GetPlaceCountry() string {
-	if m != nil {
-		return m.PlaceCountry
-	}
-	return ""
-}
-
 func (m *VisitPlaceResponsePDB) GetValid() bool {
 	if m != nil {
 		return m.Valid
 	}
 	return false
+}
+
+func (m *VisitPlaceResponsePDB) GetTimeStamp() string {
+	if m != nil {
+		return m.TimeStamp
+	}
+	return ""
 }
 
 type VisitedPlacesRequestPDB struct {
@@ -1341,7 +763,7 @@ func (m *VisitedPlacesRequestPDB) Reset()         { *m = VisitedPlacesRequestPDB
 func (m *VisitedPlacesRequestPDB) String() string { return proto.CompactTextString(m) }
 func (*VisitedPlacesRequestPDB) ProtoMessage()    {}
 func (*VisitedPlacesRequestPDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{22}
+	return fileDescriptor_ff8a164433363f89, []int{16}
 }
 
 func (m *VisitedPlacesRequestPDB) XXX_Unmarshal(b []byte) error {
@@ -1370,18 +792,18 @@ func (m *VisitedPlacesRequestPDB) GetEmail() string {
 }
 
 type VisitedPlacesResponsePDB struct {
-	Email                string      `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Places               []*PlacePDB `protobuf:"bytes,2,rep,name=places,proto3" json:"places,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
-	XXX_unrecognized     []byte      `json:"-"`
-	XXX_sizecache        int32       `json:"-"`
+	Email                string   `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Places               []*Place `protobuf:"bytes,2,rep,name=places,proto3" json:"places,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *VisitedPlacesResponsePDB) Reset()         { *m = VisitedPlacesResponsePDB{} }
 func (m *VisitedPlacesResponsePDB) String() string { return proto.CompactTextString(m) }
 func (*VisitedPlacesResponsePDB) ProtoMessage()    {}
 func (*VisitedPlacesResponsePDB) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ff8a164433363f89, []int{23}
+	return fileDescriptor_ff8a164433363f89, []int{17}
 }
 
 func (m *VisitedPlacesResponsePDB) XXX_Unmarshal(b []byte) error {
@@ -1409,7 +831,7 @@ func (m *VisitedPlacesResponsePDB) GetEmail() string {
 	return ""
 }
 
-func (m *VisitedPlacesResponsePDB) GetPlaces() []*PlacePDB {
+func (m *VisitedPlacesResponsePDB) GetPlaces() []*Place {
 	if m != nil {
 		return m.Places
 	}
@@ -1417,17 +839,11 @@ func (m *VisitedPlacesResponsePDB) GetPlaces() []*PlacePDB {
 }
 
 func init() {
-	proto.RegisterType((*CreateUserRequestPDB)(nil), "wcity.CreateUserRequestPDB")
 	proto.RegisterType((*CreateUserResponsePDB)(nil), "wcity.CreateUserResponsePDB")
 	proto.RegisterType((*GetUserRequestPDB)(nil), "wcity.GetUserRequestPDB")
 	proto.RegisterType((*UserResponsePDB)(nil), "wcity.UserResponsePDB")
-	proto.RegisterType((*CityMinPDB)(nil), "wcity.CityMinPDB")
-	proto.RegisterType((*CityPDB)(nil), "wcity.CityPDB")
 	proto.RegisterType((*CityRequestPDB)(nil), "wcity.CityRequestPDB")
 	proto.RegisterType((*CityResponsePDB)(nil), "wcity.CityResponsePDB")
-	proto.RegisterType((*GeolocationPDB)(nil), "wcity.GeolocationPDB")
-	proto.RegisterType((*PlaceMinPDB)(nil), "wcity.PlaceMinPDB")
-	proto.RegisterType((*PlacePDB)(nil), "wcity.PlacePDB")
 	proto.RegisterType((*PlaceRequestPDB)(nil), "wcity.PlaceRequestPDB")
 	proto.RegisterType((*PlaceResponsePDB)(nil), "wcity.PlaceResponsePDB")
 	proto.RegisterType((*UpdatedUserRequestPDB)(nil), "wcity.UpdatedUserRequestPDB")
@@ -1446,66 +862,53 @@ func init() {
 func init() { proto.RegisterFile("profilesdb.proto", fileDescriptor_ff8a164433363f89) }
 
 var fileDescriptor_ff8a164433363f89 = []byte{
-	// 944 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xbc, 0x57, 0x4d, 0x6e, 0xdb, 0x38,
-	0x14, 0x86, 0x64, 0xcb, 0x76, 0x9e, 0x13, 0xdb, 0xe1, 0xc4, 0x8e, 0xa0, 0x64, 0x66, 0x02, 0x62,
-	0x06, 0x93, 0x99, 0x85, 0x67, 0x26, 0x49, 0x81, 0x02, 0x05, 0xb2, 0x88, 0x13, 0x78, 0xd5, 0xc0,
-	0x70, 0x9a, 0x02, 0xdd, 0x14, 0x50, 0x24, 0xb5, 0x10, 0xe0, 0x58, 0xae, 0xa5, 0xa4, 0xc8, 0xae,
-	0xdb, 0x02, 0x5d, 0xf6, 0x02, 0x6d, 0x8f, 0xd1, 0x3b, 0x74, 0xd7, 0x5b, 0xf4, 0x10, 0x25, 0x29,
-	0x9a, 0xa4, 0x68, 0xd9, 0xae, 0x13, 0xa4, 0x3b, 0x91, 0x8f, 0xef, 0xe7, 0xfb, 0xf8, 0xf1, 0x91,
-	0x82, 0xc6, 0x68, 0x1c, 0xbd, 0x08, 0x07, 0x41, 0xec, 0x5f, 0xb4, 0xc9, 0x67, 0x12, 0x21, 0xeb,
-	0xb5, 0x17, 0x26, 0x37, 0xf8, 0x02, 0x36, 0x3a, 0xe3, 0xc0, 0x4d, 0x82, 0xf3, 0x38, 0x18, 0xf7,
-	0x83, 0x57, 0x57, 0x41, 0x9c, 0xf4, 0x8e, 0x8f, 0xd0, 0x06, 0x58, 0xc1, 0xa5, 0x1b, 0x0e, 0x6c,
-	0x63, 0xc7, 0xd8, 0x5d, 0xe9, 0xa7, 0x03, 0x84, 0xa0, 0x38, 0x74, 0x2f, 0x03, 0xdb, 0x64, 0x93,
-	0xec, 0x1b, 0xed, 0x40, 0xd5, 0x0f, 0x62, 0x6f, 0x1c, 0x8e, 0x92, 0x30, 0x1a, 0xda, 0x05, 0x66,
-	0x52, 0xa7, 0xf0, 0x09, 0x34, 0xd5, 0x1c, 0xf1, 0x28, 0x1a, 0xc6, 0xc1, 0xec, 0x24, 0x2d, 0x28,
-	0x5d, 0xbb, 0x83, 0x30, 0xf0, 0x79, 0x1a, 0x3e, 0xc2, 0x7f, 0xc3, 0x7a, 0x37, 0x48, 0x66, 0xd5,
-	0x69, 0x2a, 0x21, 0xf0, 0x17, 0x03, 0xea, 0x3f, 0x96, 0xec, 0x56, 0x88, 0xd0, 0x03, 0x58, 0xbd,
-	0x0e, 0xe3, 0x30, 0x09, 0xfc, 0x0e, 0x21, 0x31, 0xb6, 0x8b, 0x3b, 0x85, 0xdd, 0xea, 0xde, 0x7a,
-	0x9b, 0x71, 0xda, 0xa6, 0x73, 0x8f, 0xc3, 0x21, 0x49, 0xda, 0xcf, 0x2c, 0x43, 0x0f, 0x61, 0x8d,
-	0x8f, 0x7b, 0x03, 0xd7, 0x0b, 0x62, 0xdb, 0x62, 0x7e, 0x88, 0xfb, 0xb1, 0x49, 0xee, 0x98, 0x5d,
-	0x88, 0x9f, 0x03, 0xc8, 0xa8, 0xa2, 0x68, 0x43, 0x29, 0xda, 0x86, 0xb2, 0x17, 0x5d, 0x0d, 0x93,
-	0xf1, 0x0d, 0xc7, 0x32, 0x19, 0x22, 0x0c, 0xab, 0x1e, 0xa5, 0x3f, 0x1a, 0x9f, 0x30, 0xfc, 0x29,
-	0x9e, 0xcc, 0x1c, 0xfe, 0x66, 0x40, 0x99, 0x26, 0xb8, 0x97, 0xe8, 0xe8, 0x7f, 0xa8, 0x0c, 0x22,
-	0xcf, 0x65, 0x6c, 0x16, 0x89, 0xbd, 0xba, 0xd7, 0xe4, 0x90, 0xbb, 0x41, 0x34, 0xb1, 0x50, 0xd4,
-	0x62, 0x99, 0xbe, 0x07, 0xd6, 0xf4, 0x1e, 0xfc, 0x03, 0xa5, 0x51, 0xca, 0x62, 0x69, 0x26, 0x8b,
-	0x7c, 0x05, 0xaa, 0x81, 0x19, 0xfa, 0x76, 0x99, 0x04, 0xb1, 0xfa, 0xe4, 0x0b, 0x1f, 0x42, 0x8d,
-	0xa2, 0x55, 0x74, 0xb4, 0x14, 0x68, 0xfc, 0x96, 0xe8, 0x2b, 0x0d, 0x20, 0xf5, 0xb5, 0x1c, 0x6d,
-	0x44, 0x8d, 0x54, 0xd6, 0x3e, 0xe3, 0xab, 0xd2, 0x4f, 0x07, 0x84, 0xcc, 0x22, 0xc5, 0xc0, 0x49,
-	0xaa, 0x29, 0x7a, 0xa2, 0x68, 0x98, 0x8d, 0x63, 0xb1, 0x04, 0x96, 0x03, 0xa8, 0x65, 0x59, 0x44,
-	0x0d, 0x28, 0x0c, 0x08, 0x67, 0xb4, 0x10, 0xb3, 0x4f, 0x3f, 0xd9, 0x8c, 0x9b, 0xb0, 0x1a, 0xe8,
-	0x8c, 0x9b, 0xe0, 0x18, 0xaa, 0x0a, 0x51, 0xb9, 0xc5, 0x23, 0x5e, 0x0c, 0x3f, 0x1a, 0x2c, 0xb9,
-	0x02, 0xa8, 0x30, 0x5f, 0x07, 0xc5, 0x1c, 0x95, 0x7d, 0x35, 0xa0, 0xc2, 0xb2, 0xfe, 0xb4, 0x94,
-	0x19, 0xe9, 0x59, 0xb7, 0x92, 0x5e, 0x69, 0x5a, 0x7a, 0xba, 0x9c, 0xce, 0xa0, 0xce, 0x60, 0x2d,
-	0xd0, 0xd3, 0x52, 0xe8, 0xf0, 0x07, 0x03, 0x1a, 0x3c, 0xea, 0x7c, 0x91, 0x2d, 0x47, 0x9a, 0x10,
-	0x5e, 0x51, 0x15, 0xde, 0x9f, 0x60, 0xb1, 0xa3, 0xc2, 0x39, 0xaa, 0xab, 0x67, 0x89, 0xb2, 0x93,
-	0x5a, 0x39, 0xf0, 0x92, 0x00, 0xee, 0x41, 0xf3, 0x7c, 0xe4, 0x93, 0xce, 0xee, 0xdf, 0xe3, 0xf5,
-	0xd1, 0x86, 0xd6, 0x53, 0xa5, 0x8b, 0x2e, 0xca, 0x82, 0xcf, 0x61, 0x33, 0xbb, 0x7e, 0xd1, 0x1d,
-	0xf0, 0x07, 0x58, 0x1e, 0x6b, 0xe3, 0x26, 0x6b, 0x24, 0xfa, 0xb1, 0x4b, 0x8d, 0x38, 0x84, 0x5f,
-	0x58, 0x58, 0xad, 0x71, 0xe4, 0x87, 0x74, 0xa0, 0x42, 0xbd, 0x4e, 0x25, 0x5a, 0x31, 0xa6, 0x88,
-	0xe9, 0x77, 0x27, 0xb3, 0x3f, 0xea, 0x14, 0x7e, 0x63, 0xc0, 0x86, 0x92, 0x6b, 0x51, 0xfd, 0x77,
-	0x4a, 0x96, 0x2f, 0x08, 0xfc, 0x84, 0xbc, 0x0b, 0x28, 0x7e, 0xd6, 0x3f, 0x15, 0xb8, 0x6a, 0x2e,
-	0x63, 0x7e, 0x2e, 0x73, 0x1a, 0xd8, 0x7b, 0x83, 0x3c, 0x05, 0x94, 0xb0, 0x12, 0xd9, 0x9d, 0xe2,
-	0xce, 0xe8, 0xa6, 0x7f, 0x89, 0x1b, 0x22, 0xbd, 0x9f, 0xa7, 0x54, 0xcd, 0xcd, 0xf8, 0xdd, 0x84,
-	0x6f, 0xfd, 0x14, 0xe7, 0xf3, 0xbd, 0x0d, 0x2b, 0xcc, 0x51, 0x21, 0x5c, 0x4e, 0x08, 0x2b, 0xc5,
-	0xc9, 0xf9, 0x96, 0x13, 0xb4, 0x67, 0xa5, 0x03, 0x0e, 0x86, 0xf7, 0x2c, 0x75, 0x0e, 0x7f, 0x22,
-	0x2c, 0xa9, 0xe5, 0x2c, 0xda, 0xff, 0x7b, 0xae, 0x47, 0xb2, 0x6b, 0xa9, 0x0a, 0xf9, 0x57, 0x1c,
-	0xb3, 0x29, 0x91, 0xe4, 0x9f, 0xcb, 0x67, 0x60, 0x6b, 0x0e, 0x8b, 0x80, 0xc9, 0x0d, 0x34, 0xe7,
-	0x6e, 0xe0, 0xde, 0xe7, 0x32, 0x40, 0x8f, 0xbf, 0x70, 0x49, 0xb4, 0x2e, 0x79, 0x2d, 0x89, 0x07,
-	0x27, 0xda, 0x9a, 0x9c, 0xe7, 0x9c, 0x77, 0xae, 0xb3, 0x9d, 0x63, 0x94, 0x65, 0x3d, 0x82, 0x32,
-	0x7f, 0x72, 0x22, 0x5b, 0x5c, 0x1b, 0xda, 0x13, 0xd4, 0x69, 0x71, 0x8b, 0xee, 0x7c, 0x30, 0xa9,
-	0x82, 0x11, 0xad, 0x75, 0x15, 0xe1, 0xa5, 0x1f, 0xf1, 0x43, 0x40, 0xa9, 0x97, 0xaa, 0x45, 0xa4,
-	0x23, 0x77, 0x36, 0xd5, 0x09, 0xd5, 0xff, 0x3f, 0x56, 0x32, 0x4b, 0xd9, 0xcc, 0xa4, 0x10, 0xf5,
-	0x6a, 0x95, 0xa0, 0x7d, 0xa8, 0x10, 0x0f, 0x16, 0x08, 0xb5, 0xb2, 0x61, 0x85, 0x8f, 0x9e, 0x1f,
-	0x1d, 0xc3, 0x8a, 0xe8, 0x50, 0xc8, 0xe1, 0xd6, 0x9c, 0xfe, 0xe8, 0x6c, 0x4d, 0xdb, 0x64, 0xb1,
-	0x64, 0xa3, 0xa4, 0xd0, 0x51, 0x66, 0xa9, 0x5e, 0xc1, 0x76, 0x8e, 0x51, 0x06, 0xea, 0x41, 0x9d,
-	0x60, 0x50, 0xdb, 0x3e, 0xfa, 0x55, 0x75, 0x98, 0xba, 0x3b, 0x9c, 0xdf, 0x72, 0xcd, 0x32, 0xe2,
-	0x19, 0x34, 0x64, 0xc4, 0x54, 0xb0, 0x48, 0xf3, 0xd1, 0x75, 0xef, 0xfc, 0x9e, 0x6f, 0x97, 0x41,
-	0x4f, 0x61, 0x3d, 0xbd, 0x2f, 0x15, 0x09, 0xdd, 0x4d, 0x9f, 0x3c, 0x9e, 0x42, 0xfa, 0x32, 0x4a,
-	0x4b, 0x9d, 0x6f, 0xa9, 0xb4, 0x2e, 0xac, 0x71, 0xa5, 0x71, 0x7a, 0x66, 0xe8, 0x6d, 0x11, 0x2b,
-	0x47, 0xfb, 0x60, 0x87, 0x51, 0xfb, 0xe5, 0x78, 0xe4, 0xf1, 0x95, 0x23, 0x71, 0x94, 0x8f, 0xea,
-	0xf2, 0x58, 0xf7, 0xe8, 0x7f, 0x6b, 0xcf, 0xf8, 0x68, 0x16, 0xfa, 0xbd, 0xce, 0x45, 0x89, 0xfd,
-	0xc6, 0xee, 0x7f, 0x0f, 0x00, 0x00, 0xff, 0xff, 0x3a, 0x03, 0x3d, 0x13, 0xda, 0x0e, 0x00, 0x00,
+	// 727 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xac, 0x56, 0x6d, 0x6f, 0xd3, 0x30,
+	0x10, 0x56, 0xbb, 0x75, 0x5b, 0x6f, 0x63, 0xdd, 0x4c, 0xdb, 0x45, 0x61, 0xb0, 0x61, 0xf1, 0x01,
+	0x3e, 0x50, 0xb6, 0x21, 0x04, 0xd2, 0xa4, 0x49, 0xeb, 0x2a, 0x8d, 0x37, 0xa1, 0x28, 0xd5, 0xf6,
+	0x15, 0x65, 0x89, 0x61, 0x91, 0xd2, 0x26, 0xc4, 0x29, 0x68, 0x7f, 0x87, 0x3f, 0xc3, 0xdf, 0xc2,
+	0xb1, 0x9d, 0xc4, 0x4e, 0x53, 0xa5, 0xbc, 0x7c, 0x8b, 0x7d, 0xf7, 0x3c, 0xf7, 0xdc, 0xf9, 0xee,
+	0x14, 0xd8, 0x89, 0xe2, 0xf0, 0x8b, 0x1f, 0x10, 0xea, 0xdd, 0x0c, 0xd8, 0x67, 0x12, 0xa2, 0xd6,
+	0x0f, 0xd7, 0x4f, 0xee, 0xcc, 0x5e, 0x66, 0xf8, 0x4c, 0x6f, 0x9d, 0x98, 0x78, 0xc2, 0x8a, 0x3f,
+	0x41, 0xef, 0x22, 0x26, 0x4e, 0x42, 0xae, 0x28, 0x89, 0x6d, 0x42, 0xa3, 0x70, 0x4a, 0x89, 0x35,
+	0x1a, 0xa2, 0x2e, 0xb4, 0xbe, 0x3b, 0x81, 0xef, 0x19, 0x8d, 0xc3, 0xc6, 0xd3, 0x0d, 0x5b, 0x1c,
+	0xd0, 0x01, 0xac, 0xce, 0x98, 0xa3, 0xd1, 0x64, 0x97, 0x9b, 0x27, 0x9b, 0x03, 0xce, 0x3d, 0xe0,
+	0x58, 0x6e, 0xc0, 0xcf, 0x60, 0xf7, 0x92, 0x24, 0x82, 0xec, 0xdb, 0x8c, 0xd0, 0x44, 0x72, 0x91,
+	0x89, 0xe3, 0x07, 0x1c, 0xd6, 0xb6, 0xc5, 0x01, 0xbf, 0x85, 0xce, 0x7f, 0x0a, 0x7a, 0x06, 0xdb,
+	0x17, 0xec, 0x4a, 0x89, 0x88, 0x60, 0x75, 0xea, 0x4c, 0x08, 0xe7, 0x69, 0xdb, 0xfc, 0x1b, 0x19,
+	0xb0, 0xee, 0x86, 0xb3, 0x69, 0x12, 0xdf, 0x49, 0x1d, 0xd9, 0x31, 0x55, 0x22, 0xf0, 0x4b, 0x28,
+	0x49, 0x63, 0x97, 0x94, 0x70, 0x2c, 0x37, 0xe0, 0x31, 0x74, 0xac, 0xc0, 0x71, 0x49, 0x8d, 0x14,
+	0xa4, 0xf0, 0xb4, 0x05, 0x54, 0x95, 0xb7, 0xa2, 0xcb, 0xfb, 0x08, 0x3b, 0x92, 0xb4, 0x4e, 0x1f,
+	0x86, 0x56, 0x94, 0x7a, 0x4a, 0x81, 0x5b, 0x52, 0xa0, 0x40, 0x0b, 0x13, 0x76, 0xa1, 0x77, 0x15,
+	0x79, 0xec, 0xc5, 0xbd, 0x45, 0xaf, 0xd4, 0x50, 0x5e, 0x29, 0x97, 0xdf, 0x54, 0xe4, 0x1f, 0xc2,
+	0xa6, 0x47, 0xa8, 0x1b, 0xfb, 0x51, 0xe2, 0x87, 0x53, 0x29, 0x57, 0xbd, 0xc2, 0x03, 0xe8, 0x5f,
+	0xfb, 0xd4, 0x67, 0x41, 0xd2, 0xe2, 0xd0, 0xba, 0x28, 0xd8, 0x86, 0x3d, 0xdd, 0x5f, 0xcb, 0xb4,
+	0x42, 0xd6, 0x63, 0x68, 0xa5, 0xa9, 0x51, 0xa6, 0x6b, 0xa5, 0xfc, 0x14, 0xc2, 0x82, 0x9f, 0xc3,
+	0x7d, 0xce, 0x59, 0x6a, 0x8d, 0x3e, 0xac, 0xa5, 0xf6, 0x77, 0xa2, 0x74, 0x2d, 0x5b, 0x9e, 0xf0,
+	0x7b, 0xe8, 0x2a, 0xee, 0x75, 0x95, 0xde, 0x87, 0x76, 0xe2, 0x4f, 0xc8, 0x38, 0x71, 0x26, 0x91,
+	0xac, 0x4d, 0x71, 0xc1, 0xd2, 0xef, 0xa6, 0x34, 0xbc, 0xee, 0x74, 0x89, 0xd8, 0x63, 0x36, 0x85,
+	0x8a, 0x7f, 0x5d, 0xf0, 0x27, 0xb0, 0xc6, 0xdf, 0x92, 0x1a, 0xab, 0x3c, 0x7b, 0xfd, 0x9d, 0xa5,
+	0x0d, 0x1f, 0xc9, 0x84, 0xca, 0x0d, 0xc9, 0x1a, 0x8d, 0x7b, 0xe4, 0x2a, 0xb2, 0x23, 0xfe, 0x00,
+	0x3d, 0x15, 0xf1, 0x6f, 0x35, 0x78, 0x91, 0x3f, 0xe9, 0x5c, 0x19, 0xaa, 0x7b, 0xe0, 0x1a, 0x8c,
+	0x12, 0xa0, 0xae, 0x09, 0x8a, 0x3a, 0x34, 0x17, 0xd7, 0xe1, 0xe4, 0xd7, 0x06, 0x80, 0x25, 0x97,
+	0x1f, 0xa3, 0x3a, 0x87, 0xad, 0x31, 0x71, 0x62, 0xf7, 0xf6, 0x3c, 0x08, 0x46, 0xc3, 0x73, 0xb4,
+	0x27, 0x41, 0xf9, 0xa5, 0x14, 0x6a, 0xf6, 0xe7, 0x0d, 0x74, 0x16, 0x24, 0x47, 0x0d, 0xf4, 0x0a,
+	0xb6, 0xd9, 0x92, 0x63, 0x37, 0xbc, 0x59, 0x53, 0x92, 0xae, 0xf4, 0x15, 0xd7, 0x19, 0x83, 0xda,
+	0x95, 0x0c, 0xf6, 0x1a, 0x3a, 0xc2, 0x2e, 0xf2, 0x5b, 0x8c, 0xd3, 0xf2, 0xe0, 0x40, 0x28, 0x96,
+	0x34, 0x52, 0x17, 0xa0, 0xb9, 0x9f, 0x85, 0xa8, 0x5c, 0xe2, 0x67, 0xb0, 0x2b, 0x66, 0x5d, 0x19,
+	0xf5, 0x3f, 0xc1, 0x9f, 0xc2, 0xba, 0xdc, 0xe6, 0xc8, 0x28, 0x94, 0xea, 0x7b, 0x23, 0xaf, 0x53,
+	0x19, 0x7c, 0x9c, 0xa9, 0x4e, 0xd3, 0x47, 0x6a, 0x2d, 0x72, 0x48, 0x79, 0xd6, 0xde, 0x64, 0x7a,
+	0x95, 0x99, 0x5d, 0x16, 0x99, 0x2a, 0xe5, 0x91, 0x7a, 0x9a, 0xcb, 0x9c, 0xcc, 0x32, 0xf2, 0x14,
+	0x90, 0x90, 0xa9, 0xce, 0x09, 0xd2, 0x9e, 0xc0, 0xdc, 0xd3, 0x1a, 0x4b, 0x07, 0x0b, 0xc1, 0x7f,
+	0x03, 0x3e, 0x82, 0x0d, 0xa6, 0x99, 0x5f, 0xa3, 0xbe, 0xee, 0x94, 0xab, 0xd6, 0xa8, 0xd0, 0x08,
+	0xda, 0xf9, 0x8e, 0x42, 0xa6, 0x34, 0x55, 0x2c, 0x39, 0xf3, 0xc1, 0xbc, 0xad, 0x88, 0x7b, 0x09,
+	0x50, 0x8c, 0x39, 0xd2, 0x5c, 0xcb, 0xe1, 0xf7, 0x2b, 0x8c, 0x05, 0x91, 0xc5, 0x1b, 0x5a, 0x5d,
+	0xdc, 0xe8, 0xa1, 0x0a, 0x98, 0xdb, 0xfe, 0xe6, 0xa3, 0x4a, 0x73, 0xc1, 0x38, 0x86, 0x9d, 0x82,
+	0x51, 0x8c, 0x09, 0x2a, 0x61, 0xca, 0xdb, 0xc4, 0x3c, 0xa8, 0xb6, 0xab, 0xf9, 0xde, 0x93, 0xbd,
+	0x21, 0x19, 0x17, 0x74, 0x48, 0x1d, 0xd1, 0xf0, 0x18, 0xfa, 0x7e, 0x38, 0xf8, 0x1a, 0x47, 0xae,
+	0xf4, 0xcc, 0xfe, 0xa9, 0x86, 0x9d, 0x62, 0xc1, 0x58, 0xe9, 0x7f, 0x95, 0xd5, 0xf8, 0xd9, 0x5c,
+	0xb1, 0xad, 0x8b, 0x9b, 0x35, 0xfe, 0x9b, 0xf5, 0xf2, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0xc7,
+	0xcf, 0x84, 0x15, 0x98, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1520,19 +923,22 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ProfilesDBClient interface {
-	CreateUser(ctx context.Context, in *CreateUserRequestPDB, opts ...grpc.CallOption) (*CreateUserResponsePDB, error)
+	SearchAllDBA(ctx context.Context, in *SearchAllRequest, opts ...grpc.CallOption) (ProfilesDB_SearchAllDBAClient, error)
+	GetAllCitysDBA(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (ProfilesDB_GetAllCitysDBAClient, error)
+	GetAllPlacesDBA(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (ProfilesDB_GetAllPlacesDBAClient, error)
+	CreateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*CreateUserResponsePDB, error)
+	UpdateUserRequest(ctx context.Context, in *User, opts ...grpc.CallOption) (*CreateUserResponsePDB, error)
 	GetUser(ctx context.Context, in *GetUserRequestPDB, opts ...grpc.CallOption) (*UserResponsePDB, error)
-	CreateCity(ctx context.Context, in *CityPDB, opts ...grpc.CallOption) (*CityResponsePDB, error)
-	CreatePlaceRequest(ctx context.Context, in *PlacePDB, opts ...grpc.CallOption) (*PlaceResponsePDB, error)
-	GetCity(ctx context.Context, in *CityRequestPDB, opts ...grpc.CallOption) (*CityPDB, error)
-	GetPlace(ctx context.Context, in *PlaceRequestPDB, opts ...grpc.CallOption) (*PlacePDB, error)
+	CreateCity(ctx context.Context, in *City, opts ...grpc.CallOption) (*CityResponsePDB, error)
+	UpdateCityRequest(ctx context.Context, in *City, opts ...grpc.CallOption) (*CityResponsePDB, error)
+	GetCity(ctx context.Context, in *CityRequestPDB, opts ...grpc.CallOption) (*CityResponsePDB, error)
+	CreatePlaceRequest(ctx context.Context, in *Place, opts ...grpc.CallOption) (*PlaceResponsePDB, error)
+	UpdatePlaceRequest(ctx context.Context, in *Place, opts ...grpc.CallOption) (*PlaceResponsePDB, error)
+	GetPlace(ctx context.Context, in *PlaceRequestPDB, opts ...grpc.CallOption) (*Place, error)
 	VisitCity(ctx context.Context, in *VisitCityRequestPDB, opts ...grpc.CallOption) (*VisitCityResponsePDB, error)
 	VisitPlace(ctx context.Context, in *VisitPlaceRequestPDB, opts ...grpc.CallOption) (*VisitPlaceResponsePDB, error)
 	GetVisitedCitys(ctx context.Context, in *VisitedCitysRequestPDB, opts ...grpc.CallOption) (*VisitedCitysResponsePDB, error)
 	GetVisitedPlaces(ctx context.Context, in *VisitedPlacesRequestPDB, opts ...grpc.CallOption) (*VisitedPlacesResponsePDB, error)
-	UpdateUserRequest(ctx context.Context, in *CreateUserRequestPDB, opts ...grpc.CallOption) (*CreateUserResponsePDB, error)
-	UpdateCityRequest(ctx context.Context, in *CityPDB, opts ...grpc.CallOption) (*CityResponsePDB, error)
-	UpdatePlaceRequest(ctx context.Context, in *PlacePDB, opts ...grpc.CallOption) (*PlaceResponsePDB, error)
 	GetCityPlaces(ctx context.Context, in *CityRequestPDB, opts ...grpc.CallOption) (*VisitedPlacesResponsePDB, error)
 }
 
@@ -1544,9 +950,114 @@ func NewProfilesDBClient(cc *grpc.ClientConn) ProfilesDBClient {
 	return &profilesDBClient{cc}
 }
 
-func (c *profilesDBClient) CreateUser(ctx context.Context, in *CreateUserRequestPDB, opts ...grpc.CallOption) (*CreateUserResponsePDB, error) {
+func (c *profilesDBClient) SearchAllDBA(ctx context.Context, in *SearchAllRequest, opts ...grpc.CallOption) (ProfilesDB_SearchAllDBAClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_ProfilesDB_serviceDesc.Streams[0], "/wcity.ProfilesDB/SearchAllDBA", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &profilesDBSearchAllDBAClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProfilesDB_SearchAllDBAClient interface {
+	Recv() (*SearchAllResult, error)
+	grpc.ClientStream
+}
+
+type profilesDBSearchAllDBAClient struct {
+	grpc.ClientStream
+}
+
+func (x *profilesDBSearchAllDBAClient) Recv() (*SearchAllResult, error) {
+	m := new(SearchAllResult)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *profilesDBClient) GetAllCitysDBA(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (ProfilesDB_GetAllCitysDBAClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_ProfilesDB_serviceDesc.Streams[1], "/wcity.ProfilesDB/GetAllCitysDBA", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &profilesDBGetAllCitysDBAClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProfilesDB_GetAllCitysDBAClient interface {
+	Recv() (*City, error)
+	grpc.ClientStream
+}
+
+type profilesDBGetAllCitysDBAClient struct {
+	grpc.ClientStream
+}
+
+func (x *profilesDBGetAllCitysDBAClient) Recv() (*City, error) {
+	m := new(City)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *profilesDBClient) GetAllPlacesDBA(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (ProfilesDB_GetAllPlacesDBAClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_ProfilesDB_serviceDesc.Streams[2], "/wcity.ProfilesDB/GetAllPlacesDBA", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &profilesDBGetAllPlacesDBAClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type ProfilesDB_GetAllPlacesDBAClient interface {
+	Recv() (*Place, error)
+	grpc.ClientStream
+}
+
+type profilesDBGetAllPlacesDBAClient struct {
+	grpc.ClientStream
+}
+
+func (x *profilesDBGetAllPlacesDBAClient) Recv() (*Place, error) {
+	m := new(Place)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *profilesDBClient) CreateUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*CreateUserResponsePDB, error) {
 	out := new(CreateUserResponsePDB)
 	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/CreateUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *profilesDBClient) UpdateUserRequest(ctx context.Context, in *User, opts ...grpc.CallOption) (*CreateUserResponsePDB, error) {
+	out := new(CreateUserResponsePDB)
+	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/UpdateUserRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1562,7 +1073,7 @@ func (c *profilesDBClient) GetUser(ctx context.Context, in *GetUserRequestPDB, o
 	return out, nil
 }
 
-func (c *profilesDBClient) CreateCity(ctx context.Context, in *CityPDB, opts ...grpc.CallOption) (*CityResponsePDB, error) {
+func (c *profilesDBClient) CreateCity(ctx context.Context, in *City, opts ...grpc.CallOption) (*CityResponsePDB, error) {
 	out := new(CityResponsePDB)
 	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/CreateCity", in, out, opts...)
 	if err != nil {
@@ -1571,7 +1082,25 @@ func (c *profilesDBClient) CreateCity(ctx context.Context, in *CityPDB, opts ...
 	return out, nil
 }
 
-func (c *profilesDBClient) CreatePlaceRequest(ctx context.Context, in *PlacePDB, opts ...grpc.CallOption) (*PlaceResponsePDB, error) {
+func (c *profilesDBClient) UpdateCityRequest(ctx context.Context, in *City, opts ...grpc.CallOption) (*CityResponsePDB, error) {
+	out := new(CityResponsePDB)
+	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/UpdateCityRequest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *profilesDBClient) GetCity(ctx context.Context, in *CityRequestPDB, opts ...grpc.CallOption) (*CityResponsePDB, error) {
+	out := new(CityResponsePDB)
+	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/GetCity", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *profilesDBClient) CreatePlaceRequest(ctx context.Context, in *Place, opts ...grpc.CallOption) (*PlaceResponsePDB, error) {
 	out := new(PlaceResponsePDB)
 	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/CreatePlaceRequest", in, out, opts...)
 	if err != nil {
@@ -1580,17 +1109,17 @@ func (c *profilesDBClient) CreatePlaceRequest(ctx context.Context, in *PlacePDB,
 	return out, nil
 }
 
-func (c *profilesDBClient) GetCity(ctx context.Context, in *CityRequestPDB, opts ...grpc.CallOption) (*CityPDB, error) {
-	out := new(CityPDB)
-	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/GetCity", in, out, opts...)
+func (c *profilesDBClient) UpdatePlaceRequest(ctx context.Context, in *Place, opts ...grpc.CallOption) (*PlaceResponsePDB, error) {
+	out := new(PlaceResponsePDB)
+	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/UpdatePlaceRequest", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *profilesDBClient) GetPlace(ctx context.Context, in *PlaceRequestPDB, opts ...grpc.CallOption) (*PlacePDB, error) {
-	out := new(PlacePDB)
+func (c *profilesDBClient) GetPlace(ctx context.Context, in *PlaceRequestPDB, opts ...grpc.CallOption) (*Place, error) {
+	out := new(Place)
 	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/GetPlace", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -1634,33 +1163,6 @@ func (c *profilesDBClient) GetVisitedPlaces(ctx context.Context, in *VisitedPlac
 	return out, nil
 }
 
-func (c *profilesDBClient) UpdateUserRequest(ctx context.Context, in *CreateUserRequestPDB, opts ...grpc.CallOption) (*CreateUserResponsePDB, error) {
-	out := new(CreateUserResponsePDB)
-	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/UpdateUserRequest", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *profilesDBClient) UpdateCityRequest(ctx context.Context, in *CityPDB, opts ...grpc.CallOption) (*CityResponsePDB, error) {
-	out := new(CityResponsePDB)
-	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/UpdateCityRequest", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *profilesDBClient) UpdatePlaceRequest(ctx context.Context, in *PlacePDB, opts ...grpc.CallOption) (*PlaceResponsePDB, error) {
-	out := new(PlaceResponsePDB)
-	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/UpdatePlaceRequest", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *profilesDBClient) GetCityPlaces(ctx context.Context, in *CityRequestPDB, opts ...grpc.CallOption) (*VisitedPlacesResponsePDB, error) {
 	out := new(VisitedPlacesResponsePDB)
 	err := c.cc.Invoke(ctx, "/wcity.ProfilesDB/GetCityPlaces", in, out, opts...)
@@ -1672,19 +1174,22 @@ func (c *profilesDBClient) GetCityPlaces(ctx context.Context, in *CityRequestPDB
 
 // ProfilesDBServer is the server API for ProfilesDB service.
 type ProfilesDBServer interface {
-	CreateUser(context.Context, *CreateUserRequestPDB) (*CreateUserResponsePDB, error)
+	SearchAllDBA(*SearchAllRequest, ProfilesDB_SearchAllDBAServer) error
+	GetAllCitysDBA(*GetAllRequest, ProfilesDB_GetAllCitysDBAServer) error
+	GetAllPlacesDBA(*GetAllRequest, ProfilesDB_GetAllPlacesDBAServer) error
+	CreateUser(context.Context, *User) (*CreateUserResponsePDB, error)
+	UpdateUserRequest(context.Context, *User) (*CreateUserResponsePDB, error)
 	GetUser(context.Context, *GetUserRequestPDB) (*UserResponsePDB, error)
-	CreateCity(context.Context, *CityPDB) (*CityResponsePDB, error)
-	CreatePlaceRequest(context.Context, *PlacePDB) (*PlaceResponsePDB, error)
-	GetCity(context.Context, *CityRequestPDB) (*CityPDB, error)
-	GetPlace(context.Context, *PlaceRequestPDB) (*PlacePDB, error)
+	CreateCity(context.Context, *City) (*CityResponsePDB, error)
+	UpdateCityRequest(context.Context, *City) (*CityResponsePDB, error)
+	GetCity(context.Context, *CityRequestPDB) (*CityResponsePDB, error)
+	CreatePlaceRequest(context.Context, *Place) (*PlaceResponsePDB, error)
+	UpdatePlaceRequest(context.Context, *Place) (*PlaceResponsePDB, error)
+	GetPlace(context.Context, *PlaceRequestPDB) (*Place, error)
 	VisitCity(context.Context, *VisitCityRequestPDB) (*VisitCityResponsePDB, error)
 	VisitPlace(context.Context, *VisitPlaceRequestPDB) (*VisitPlaceResponsePDB, error)
 	GetVisitedCitys(context.Context, *VisitedCitysRequestPDB) (*VisitedCitysResponsePDB, error)
 	GetVisitedPlaces(context.Context, *VisitedPlacesRequestPDB) (*VisitedPlacesResponsePDB, error)
-	UpdateUserRequest(context.Context, *CreateUserRequestPDB) (*CreateUserResponsePDB, error)
-	UpdateCityRequest(context.Context, *CityPDB) (*CityResponsePDB, error)
-	UpdatePlaceRequest(context.Context, *PlacePDB) (*PlaceResponsePDB, error)
 	GetCityPlaces(context.Context, *CityRequestPDB) (*VisitedPlacesResponsePDB, error)
 }
 
@@ -1692,22 +1197,40 @@ type ProfilesDBServer interface {
 type UnimplementedProfilesDBServer struct {
 }
 
-func (*UnimplementedProfilesDBServer) CreateUser(ctx context.Context, req *CreateUserRequestPDB) (*CreateUserResponsePDB, error) {
+func (*UnimplementedProfilesDBServer) SearchAllDBA(req *SearchAllRequest, srv ProfilesDB_SearchAllDBAServer) error {
+	return status.Errorf(codes.Unimplemented, "method SearchAllDBA not implemented")
+}
+func (*UnimplementedProfilesDBServer) GetAllCitysDBA(req *GetAllRequest, srv ProfilesDB_GetAllCitysDBAServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllCitysDBA not implemented")
+}
+func (*UnimplementedProfilesDBServer) GetAllPlacesDBA(req *GetAllRequest, srv ProfilesDB_GetAllPlacesDBAServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllPlacesDBA not implemented")
+}
+func (*UnimplementedProfilesDBServer) CreateUser(ctx context.Context, req *User) (*CreateUserResponsePDB, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (*UnimplementedProfilesDBServer) UpdateUserRequest(ctx context.Context, req *User) (*CreateUserResponsePDB, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserRequest not implemented")
 }
 func (*UnimplementedProfilesDBServer) GetUser(ctx context.Context, req *GetUserRequestPDB) (*UserResponsePDB, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (*UnimplementedProfilesDBServer) CreateCity(ctx context.Context, req *CityPDB) (*CityResponsePDB, error) {
+func (*UnimplementedProfilesDBServer) CreateCity(ctx context.Context, req *City) (*CityResponsePDB, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCity not implemented")
 }
-func (*UnimplementedProfilesDBServer) CreatePlaceRequest(ctx context.Context, req *PlacePDB) (*PlaceResponsePDB, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreatePlaceRequest not implemented")
+func (*UnimplementedProfilesDBServer) UpdateCityRequest(ctx context.Context, req *City) (*CityResponsePDB, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCityRequest not implemented")
 }
-func (*UnimplementedProfilesDBServer) GetCity(ctx context.Context, req *CityRequestPDB) (*CityPDB, error) {
+func (*UnimplementedProfilesDBServer) GetCity(ctx context.Context, req *CityRequestPDB) (*CityResponsePDB, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCity not implemented")
 }
-func (*UnimplementedProfilesDBServer) GetPlace(ctx context.Context, req *PlaceRequestPDB) (*PlacePDB, error) {
+func (*UnimplementedProfilesDBServer) CreatePlaceRequest(ctx context.Context, req *Place) (*PlaceResponsePDB, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePlaceRequest not implemented")
+}
+func (*UnimplementedProfilesDBServer) UpdatePlaceRequest(ctx context.Context, req *Place) (*PlaceResponsePDB, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePlaceRequest not implemented")
+}
+func (*UnimplementedProfilesDBServer) GetPlace(ctx context.Context, req *PlaceRequestPDB) (*Place, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPlace not implemented")
 }
 func (*UnimplementedProfilesDBServer) VisitCity(ctx context.Context, req *VisitCityRequestPDB) (*VisitCityResponsePDB, error) {
@@ -1722,15 +1245,6 @@ func (*UnimplementedProfilesDBServer) GetVisitedCitys(ctx context.Context, req *
 func (*UnimplementedProfilesDBServer) GetVisitedPlaces(ctx context.Context, req *VisitedPlacesRequestPDB) (*VisitedPlacesResponsePDB, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVisitedPlaces not implemented")
 }
-func (*UnimplementedProfilesDBServer) UpdateUserRequest(ctx context.Context, req *CreateUserRequestPDB) (*CreateUserResponsePDB, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserRequest not implemented")
-}
-func (*UnimplementedProfilesDBServer) UpdateCityRequest(ctx context.Context, req *CityPDB) (*CityResponsePDB, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCityRequest not implemented")
-}
-func (*UnimplementedProfilesDBServer) UpdatePlaceRequest(ctx context.Context, req *PlacePDB) (*PlaceResponsePDB, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePlaceRequest not implemented")
-}
 func (*UnimplementedProfilesDBServer) GetCityPlaces(ctx context.Context, req *CityRequestPDB) (*VisitedPlacesResponsePDB, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCityPlaces not implemented")
 }
@@ -1739,8 +1253,71 @@ func RegisterProfilesDBServer(s *grpc.Server, srv ProfilesDBServer) {
 	s.RegisterService(&_ProfilesDB_serviceDesc, srv)
 }
 
+func _ProfilesDB_SearchAllDBA_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SearchAllRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProfilesDBServer).SearchAllDBA(m, &profilesDBSearchAllDBAServer{stream})
+}
+
+type ProfilesDB_SearchAllDBAServer interface {
+	Send(*SearchAllResult) error
+	grpc.ServerStream
+}
+
+type profilesDBSearchAllDBAServer struct {
+	grpc.ServerStream
+}
+
+func (x *profilesDBSearchAllDBAServer) Send(m *SearchAllResult) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _ProfilesDB_GetAllCitysDBA_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetAllRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProfilesDBServer).GetAllCitysDBA(m, &profilesDBGetAllCitysDBAServer{stream})
+}
+
+type ProfilesDB_GetAllCitysDBAServer interface {
+	Send(*City) error
+	grpc.ServerStream
+}
+
+type profilesDBGetAllCitysDBAServer struct {
+	grpc.ServerStream
+}
+
+func (x *profilesDBGetAllCitysDBAServer) Send(m *City) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _ProfilesDB_GetAllPlacesDBA_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetAllRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ProfilesDBServer).GetAllPlacesDBA(m, &profilesDBGetAllPlacesDBAServer{stream})
+}
+
+type ProfilesDB_GetAllPlacesDBAServer interface {
+	Send(*Place) error
+	grpc.ServerStream
+}
+
+type profilesDBGetAllPlacesDBAServer struct {
+	grpc.ServerStream
+}
+
+func (x *profilesDBGetAllPlacesDBAServer) Send(m *Place) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 func _ProfilesDB_CreateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserRequestPDB)
+	in := new(User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1752,7 +1329,25 @@ func _ProfilesDB_CreateUser_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/wcity.ProfilesDB/CreateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilesDBServer).CreateUser(ctx, req.(*CreateUserRequestPDB))
+		return srv.(ProfilesDBServer).CreateUser(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProfilesDB_UpdateUserRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfilesDBServer).UpdateUserRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.ProfilesDB/UpdateUserRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfilesDBServer).UpdateUserRequest(ctx, req.(*User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1776,7 +1371,7 @@ func _ProfilesDB_GetUser_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _ProfilesDB_CreateCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CityPDB)
+	in := new(City)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1788,25 +1383,25 @@ func _ProfilesDB_CreateCity_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/wcity.ProfilesDB/CreateCity",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilesDBServer).CreateCity(ctx, req.(*CityPDB))
+		return srv.(ProfilesDBServer).CreateCity(ctx, req.(*City))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfilesDB_CreatePlaceRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PlacePDB)
+func _ProfilesDB_UpdateCityRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(City)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProfilesDBServer).CreatePlaceRequest(ctx, in)
+		return srv.(ProfilesDBServer).UpdateCityRequest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/wcity.ProfilesDB/CreatePlaceRequest",
+		FullMethod: "/wcity.ProfilesDB/UpdateCityRequest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilesDBServer).CreatePlaceRequest(ctx, req.(*PlacePDB))
+		return srv.(ProfilesDBServer).UpdateCityRequest(ctx, req.(*City))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1825,6 +1420,42 @@ func _ProfilesDB_GetCity_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProfilesDBServer).GetCity(ctx, req.(*CityRequestPDB))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProfilesDB_CreatePlaceRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Place)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfilesDBServer).CreatePlaceRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.ProfilesDB/CreatePlaceRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfilesDBServer).CreatePlaceRequest(ctx, req.(*Place))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProfilesDB_UpdatePlaceRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Place)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProfilesDBServer).UpdatePlaceRequest(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/wcity.ProfilesDB/UpdatePlaceRequest",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProfilesDBServer).UpdatePlaceRequest(ctx, req.(*Place))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1919,60 +1550,6 @@ func _ProfilesDB_GetVisitedPlaces_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProfilesDB_UpdateUserRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateUserRequestPDB)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfilesDBServer).UpdateUserRequest(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/wcity.ProfilesDB/UpdateUserRequest",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilesDBServer).UpdateUserRequest(ctx, req.(*CreateUserRequestPDB))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProfilesDB_UpdateCityRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CityPDB)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfilesDBServer).UpdateCityRequest(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/wcity.ProfilesDB/UpdateCityRequest",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilesDBServer).UpdateCityRequest(ctx, req.(*CityPDB))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ProfilesDB_UpdatePlaceRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PlacePDB)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ProfilesDBServer).UpdatePlaceRequest(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/wcity.ProfilesDB/UpdatePlaceRequest",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProfilesDBServer).UpdatePlaceRequest(ctx, req.(*PlacePDB))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ProfilesDB_GetCityPlaces_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CityRequestPDB)
 	if err := dec(in); err != nil {
@@ -2000,6 +1577,10 @@ var _ProfilesDB_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ProfilesDB_CreateUser_Handler,
 		},
 		{
+			MethodName: "UpdateUserRequest",
+			Handler:    _ProfilesDB_UpdateUserRequest_Handler,
+		},
+		{
 			MethodName: "GetUser",
 			Handler:    _ProfilesDB_GetUser_Handler,
 		},
@@ -2008,12 +1589,20 @@ var _ProfilesDB_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ProfilesDB_CreateCity_Handler,
 		},
 		{
-			MethodName: "CreatePlaceRequest",
-			Handler:    _ProfilesDB_CreatePlaceRequest_Handler,
+			MethodName: "UpdateCityRequest",
+			Handler:    _ProfilesDB_UpdateCityRequest_Handler,
 		},
 		{
 			MethodName: "GetCity",
 			Handler:    _ProfilesDB_GetCity_Handler,
+		},
+		{
+			MethodName: "CreatePlaceRequest",
+			Handler:    _ProfilesDB_CreatePlaceRequest_Handler,
+		},
+		{
+			MethodName: "UpdatePlaceRequest",
+			Handler:    _ProfilesDB_UpdatePlaceRequest_Handler,
 		},
 		{
 			MethodName: "GetPlace",
@@ -2036,22 +1625,26 @@ var _ProfilesDB_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ProfilesDB_GetVisitedPlaces_Handler,
 		},
 		{
-			MethodName: "UpdateUserRequest",
-			Handler:    _ProfilesDB_UpdateUserRequest_Handler,
-		},
-		{
-			MethodName: "UpdateCityRequest",
-			Handler:    _ProfilesDB_UpdateCityRequest_Handler,
-		},
-		{
-			MethodName: "UpdatePlaceRequest",
-			Handler:    _ProfilesDB_UpdatePlaceRequest_Handler,
-		},
-		{
 			MethodName: "GetCityPlaces",
 			Handler:    _ProfilesDB_GetCityPlaces_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SearchAllDBA",
+			Handler:       _ProfilesDB_SearchAllDBA_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllCitysDBA",
+			Handler:       _ProfilesDB_GetAllCitysDBA_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetAllPlacesDBA",
+			Handler:       _ProfilesDB_GetAllPlacesDBA_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "profilesdb.proto",
 }
