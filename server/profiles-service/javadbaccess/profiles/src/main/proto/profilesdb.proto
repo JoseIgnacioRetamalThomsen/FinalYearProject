@@ -1,158 +1,106 @@
-syntax = "proto3";
+//Jose I. Retamal
+//GMIT 2020
 
+//Define interface for connect to profiles database
+
+syntax = "proto3";
 
 package wcity;
 
+import "profiles_shared.proto";
+
 option java_multiple_files = true;
-option java_package = "io.grpc.wcity.profilesDB";
+option java_package = "io.grpc.wcity.profiles";
 option java_outer_classname = "ProfilesDBProto";
 option objc_class_prefix = "RPC";
 
-service ProfilesDB{
-    rpc CreateUser(CreateUserRequestPDB) returns (CreateUserResponsePDB);
-    rpc GetUser(GetUserRequestPDB) returns (UserResponsePDB);
-    rpc CreateCity(CityPDB) returns (CityResponsePDB);
-    rpc CreatePlaceRequest(PlacePDB) returns (PlaceResponsePDB);
-    rpc GetCity(CityRequestPDB) returns (CityPDB);
-    rpc GetPlace(PlaceRequestPDB) returns (PlacePDB);
-    rpc VisitCity(VisitCityRequestPDB) returns (VisitCityResponsePDB);
-    rpc VisitPlace(VisitPlaceRequestPDB) returns (VisitPlaceResponsePDB);
-    rpc GetVisitedCitys(VisitedCitysRequestPDB) returns (VisitedCitysResponsePDB);
-    rpc GetVisitedPlaces(VisitedPlacesRequestPDB) returns (VisitedPlacesResponsePDB);
-    rpc UpdateUserRequest(CreateUserRequestPDB) returns (CreateUserResponsePDB);
-    rpc UpdateCityRequest(CityPDB) returns (CityResponsePDB);
-    rpc UpdatePlaceRequest(PlacePDB) returns (PlaceResponsePDB);
-    rpc GetCityPlaces(CityRequestPDB) returns (VisitedPlacesResponsePDB);
-    
+service ProfilesDB {
+    rpc SearchAllDBA(SearchAllRequest)  returns (stream SearchAllResult);
+    rpc GetAllCitysDBA(GetAllRequest) returns (stream City);
+    rpc GetAllPlacesDBA(GetAllRequest) returns(stream Place);
+    rpc CreateUser (User) returns (CreateUserResponsePDB);
+    rpc UpdateUserRequest (User) returns (CreateUserResponsePDB);
+    rpc GetUser (GetUserRequestPDB) returns (UserResponsePDB);
+    rpc CreateCity (City) returns (CityResponsePDB);
+    rpc UpdateCityRequest (City) returns (CityResponsePDB);
+    rpc GetCity (CityRequestPDB) returns (CityResponsePDB);
+    rpc CreatePlaceRequest (Place) returns (PlaceResponsePDB);
+    rpc UpdatePlaceRequest (Place) returns (PlaceResponsePDB);
+    rpc GetPlace (PlaceRequestPDB) returns (Place);
+    rpc VisitCity (VisitCityRequestPDB) returns (VisitCityResponsePDB);
+    rpc VisitPlace (VisitPlaceRequestPDB) returns (VisitPlaceResponsePDB);
+    rpc GetVisitedCitys (VisitedCitysRequestPDB) returns (VisitedCitysResponsePDB);
+    rpc GetVisitedPlaces (VisitedPlacesRequestPDB) returns (VisitedPlacesResponsePDB);
+    rpc GetCityPlaces (CityRequestPDB) returns (VisitedPlacesResponsePDB);
+
 }
-message CreateUserRequestPDB{
-     string email = 1;
-     string name = 2;
-     string description =3;
+message CreateUserResponsePDB {
+    bool valid = 1;
+    User user =2;
 }
-message CreateUserResponsePDB{
-    string email =1 ;
-    string valied = 2;
-}
-message GetUserRequestPDB{
+message GetUserRequestPDB {
     string email = 2;
 }
-message UserResponsePDB{
-     string email = 1;
-     string name = 2;
-     string description =3;
-     repeated CityMinPDB visitedCitys = 4;
-     repeated PlaceMinPDB visitedPlaces = 5;
+message UserResponsePDB {
+    bool valid = 1;
+    User user = 2;
 }
-message CityMinPDB{
-    string name = 1;
-    string country = 2;
-    string creatorEmail = 3;
-}
-message CityPDB{
-    string name = 1;
-    string country = 2;
-    string creatorEmail = 3;
-    GeolocationPDB location = 4;
-    string description = 5;
-    repeated PlaceMinPDB places = 6;
-    int32 id = 7;
-}
-message CityRequestPDB{
+message CityRequestPDB {
     string name = 1;
     string country = 2;
 }
-message CityResponsePDB{
-    string name = 1;
-    string country = 2;
-    bool valid = 3;
-    CityPDB city = 4;
-    int32 id = 5;
+message CityResponsePDB {
+    bool valid = 1;
+    City city = 2;
 }
-message GeolocationPDB{
-    float lon = 1;
-    float lat = 2;
-}
-message PlaceMinPDB{
-    string name = 1;
-    string city = 2; 
-    string country = 3; 
-    string creatorEmail = 4;
-}
-message PlacePDB{
-    string name = 1;
-    string city = 2;
-    string country = 3;
-    string creatorEmail = 4;
-    GeolocationPDB location = 5;
-    string description = 6;
-    int32 id = 7;
-} 
-message PlaceRequestPDB{
+message PlaceRequestPDB {
     string name = 1;
     string city = 2;
     string country = 3;
 }
-message PlaceResponsePDB{
-    string name =1;
-    string city =2;
-    string country =3;
-    bool valid = 4;
-    PlacePDB place =5;
-    int32 id = 6;
-
+message PlaceResponsePDB {
+    bool valid = 1;
+    Place place = 2;
 }
-message UpdatedUserRequestPDB{
+message UpdatedUserRequestPDB {
     string email = 1;
     string name = 2;
-    string description = 3; 
+    string description = 3;
 }
-message VisitedCitysRequestPDB{
+message VisitedCitysRequestPDB {
     string email = 1;
 }
-
-message VisitedCitysResponsePDB{
+message VisitedCitysResponsePDB {
     string email = 1;
-    repeated CityPDB citys= 2;
+    repeated City citys = 2;
 }
-message VisitCityRequestPDB{
+message VisitCityRequestPDB {
+    string userEmail =1;
+    int32 cityId = 2;
+}
+message VisitCityResponsePDB {
+    bool valid = 1;
+    string timeStamp = 2;
+}
+message CityPlacesRequestPDB {
+    int32 cityId = 1;
+}
+message CityPlacesResponsePDB {
+    bool valid = 1;
+    repeated Place places = 4;
+}
+message VisitPlaceRequestPDB {
+    string userEmail = 1;
+    int32 placeId = 2;
+}
+message VisitPlaceResponsePDB {
+    bool valid = 1;
+    string timeStamp = 2;
+}
+message VisitedPlacesRequestPDB {
     string email = 1;
-    string cityName = 2;
-    string cityCountry =3;
 }
-message VisitCityResponsePDB{
+message VisitedPlacesResponsePDB {
     string email = 1;
-    string cityName = 2;
-    string cityCountry =3;
-    bool valid = 4;
-}
-message CityPlacesRequestPDB{
-    string cityName = 1;
-    string cityCountry = 2;
-}
-message CityPlacesResponsePDB{
-    string cityName = 1;
-    string cityCountry = 2;
-    bool valid = 3;
-    repeated PlacePDB places = 4;
-}
-message VisitPlaceRequestPDB{
-    string email = 1;
-    string placeName = 2;
-    string placeCity = 3;
-    string placeCountry = 4;
-}
-message VisitPlaceResponsePDB{
-    string email = 1;
-    string placeName =2;
-    string placeCity =3;
-    string placeCountry = 4;
-    bool valid = 5;
-}
-message VisitedPlacesRequestPDB{
-    string email =1;
-}
-message VisitedPlacesResponsePDB{
-    string email = 1;
-    repeated PlacePDB places =2;
+    repeated Place places = 2;
 }

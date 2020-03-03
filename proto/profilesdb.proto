@@ -75,7 +75,8 @@ message VisitedCitysResponsePDB {
     repeated City citys = 2;
 }
 message VisitCityRequestPDB {
-    int32 cityId = 1;
+    string userEmail =1;
+    int32 cityId = 2;
 }
 message VisitCityResponsePDB {
     bool valid = 1;
@@ -89,7 +90,8 @@ message CityPlacesResponsePDB {
     repeated Place places = 4;
 }
 message VisitPlaceRequestPDB {
-    int32 placeId = 1;
+    string userEmail = 1;
+    int32 placeId = 2;
 }
 message VisitPlaceResponsePDB {
     bool valid = 1;
