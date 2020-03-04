@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"io"
 
 	//"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
@@ -69,11 +69,13 @@ func main(){
 	s2 := &profileServer{dbserverCtx}
 	profSerConn = *s2
 
+	GetAllCitys()
+	GetAllPlaces()
 //	fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
 //	fmt.Println(GetUser(tokenEmail,token))
 //	fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
 //	fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
-	fmt.Println(GetCity(tokenEmail,token,"galway", "ireland"))
+	//fmt.Println(GetCity(tokenEmail,token,"galway", "ireland"))
 //	fmt.Println(CreatePlace(tokenEmail,token,"plaza1","san pedro","chile","nada",3,3))
 //fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
 	//fmt.Println(UpdatePlace(tokenEmail,token,"plaza","san pedro","chile","Algo",3,3))
@@ -85,7 +87,7 @@ func main(){
 //fmt.Println(GetVisitedPlaces(tokenEmail,token))
 //fmt.Println(GetCityPlaces(tokenEmail,token,"san Pedro","chile"))
 }
-
+/*
 
 func CreateUser(email string,name string, description string,token string) (bool,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -327,4 +329,54 @@ func GetCityPlaces(email string, token string, cityName string, cityCountry stri
 	}
 	fmt.Println(r)
 	return r.Valid
+}
+
+*/
+func GetAllCitys(){
+
+	// initialize a pb.Rectangle
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	stream, err := profSerConn.context.dbClient.GetAllCitys(ctx,&pb.GetAllRequest{
+		Max:                  100,
+
+	})
+	//stream, err := client.ListFeatures(context.Background(), rect)
+	if err != nil {
+		panic (err)
+	}
+	for {
+		city, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.ListFeatures(_) = _, %v", profSerConn.context.dbClient, err)
+		}
+		log.Println(city)
+	}
+}
+func GetAllPlaces(){
+
+	// initialize a pb.Rectangle
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	stream, err := profSerConn.context.dbClient.GetAllPlaces(ctx,&pb.GetAllRequest{
+		Max:                  100,
+
+	})
+	//stream, err := client.ListFeatures(context.Background(), rect)
+	if err != nil {
+		panic (err)
+	}
+	for {
+		city, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.ListFeatures(_) = _, %v", profSerConn.context.dbClient, err)
+		}
+		log.Println(city)
+	}
 }

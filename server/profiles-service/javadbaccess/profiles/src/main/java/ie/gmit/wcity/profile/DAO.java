@@ -89,7 +89,6 @@ public class DAO implements AutoCloseable {
 										.setLat(r.get(0).get("lat").asFloat()).setLon(r.get(0).get("lon").asFloat()))
 								.setPlaceId(r.get(1).asInt()).build());
 					}
-
 					queue.offer(new PlacePoison());
 					return 1;
 				}

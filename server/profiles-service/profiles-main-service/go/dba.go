@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	pb "github.com/joseignacioretamalthomsen/wcity"
+	"io"
+	"log"
 	"strings"
 	"time"
 )
@@ -172,5 +174,82 @@ func GetUser(request pb.GetUserRequestPDB)(*pb.UserResponseP,error){
 			},nil
 }
 
+//structs to pass in channels from dba to main
+// need for pass the error
+type CityResult struct{
+	City *pb.City
+	Err error
+}
+type PlaceResult struct{
+	Place *pb.Place
+	Err error
+}
+
+func GetAllCitysDBA(in *pb.GetAllRequest,c chan CityResult)(*pb.UserResponseP,error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
+	defer cancel()
+
+	stream, err := dbConn.context.dbClient.GetAllCitysDBA(ctx, &pb.GetAllRequest{Max: 100})
+
+	if err != nil {
+		panic(err)
+	}
+	for {
+		city, err := stream.Recv()
+		if err == io.EOF {
+
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.ListFeatures(_) = _, %v", ctx, err)
+			c <- CityResult{
+				City: nil,
+				Err:   err,
+			}
+		}
+		log.Println(city)
+		c <- CityResult{
+			City: city,
+			Err:   nil,
+		}
+
+	}
+	close(c)
+	return nil,nil
+}
 
 
+func GetAllPlacesDBA(in *pb.GetAllRequest,c chan PlaceResult)(*pb.UserResponseP,error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
+	defer cancel()
+
+	stream, err := dbConn.context.dbClient.GetAllPlacesDBA(ctx, &pb.GetAllRequest{Max: 100})
+
+	if err != nil {
+		panic(err)
+	}
+	for {
+		place, err := stream.Recv()
+		if err == io.EOF {
+
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.AllPLaces = _, %v", ctx, err)
+			c <- PlaceResult{
+				Place: nil,
+				Err:   err,
+			}
+		}
+
+		c <- PlaceResult{
+			Place: place,
+			Err:   nil,
+		}
+
+	}
+	close(c)
+	return nil,nil
+}

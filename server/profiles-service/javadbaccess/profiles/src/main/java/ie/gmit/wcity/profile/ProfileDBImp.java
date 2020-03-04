@@ -31,12 +31,14 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	private final static String PASSWORD = "test";
 
 	private static final ExecutorService CANCELLATION_EXECUTOR = Executors.newCachedThreadPool();
+	private static final ExecutorService pool = Executors.newFixedThreadPool(5);
 
 	private static final Logger logger = Logger.getLogger(ProfileDBImp.class.getName());
 
 	/**
 	 * Return all city's async
-	 * @param request limit
+	 * 
+	 * @param request  limit
 	 * @param response stream observer
 	 */
 	public void GetAllCitysDBA(GetAllRequest request, StreamObserver<City> response) {
@@ -61,14 +63,15 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 
 	/**
 	 * Return all places async
-	 * @param request limit
+	 * 
+	 * @param request  limit
 	 * @param response stream observer
 	 */
 	public void GetAllPlacesDBA(GetAllRequest request, StreamObserver<Place> response) {
 		logger.info("Get All Places.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+
 			BlockingQueue<PlaceOrBuilder> queue = new ArrayBlockingQueue<PlaceOrBuilder>(1000);
 			dao.getAllPlaces(request, queue);
 			while (true) {
@@ -83,16 +86,15 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 			response.onError(e);
 		}
 	}
-	
-	
+
 	/**
 	 * Create a new user
 	 */
 	public void createUser(User request, StreamObserver<CreateUserResponsePDB> response) {
 		logger.info("Create user request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+
 			int userId = dao.createUser(request);
 			response.onNext(CreateUserResponsePDB.newBuilder().setValid(true)
 					.setUser(User.newBuilder().setUserId(userId).setDescripiton(request.getDescripiton())
@@ -109,15 +111,16 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void getUser(GetUserRequestPDB request, StreamObserver<UserResponsePDB> response) {
 		logger.info("Get user request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			User u = dao.getUser(request.getEmail());
 
 			response.onNext(UserResponsePDB.newBuilder().setValid(true).setUser(u).build());
 			response.onCompleted();
+			dao.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.onError(e);
 		}
 	}
@@ -127,9 +130,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void createCity(City request, StreamObserver<CityResponsePDB> response) {
 		logger.info("Create city request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			int res = dao.createCity(request);
 
@@ -146,9 +148,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void getCity(CityRequestPDB request, StreamObserver<CityResponsePDB> response) {
 		logger.info("Get city request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+
 			City res = dao.getCity(request.getName(), request.getCountry());
 			response.onNext(CityResponsePDB.newBuilder().setValid(true).setCity(res).build());
 			response.onCompleted();
@@ -162,9 +164,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void getPlace(PlaceRequestPDB request, StreamObserver<Place> response) {
 		logger.info("Get place request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			Place u = dao.getPlace(request.getName(), request.getCity(), request.getCountry());
 
@@ -180,9 +181,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void createPlaceRequest(Place request, StreamObserver<PlaceResponsePDB> response) {
 		logger.info("Create place request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD);) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			int id = dao.createPlace(request);
 			Place placeRes = request.toBuilder().setPlaceId(id).build();
@@ -200,9 +200,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void visitPlace(VisitPlaceRequestPDB request, StreamObserver<VisitPlaceResponsePDB> response) {
 		logger.info("Visit place request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			String timeStamp = dao.visitPlace(request);
 			response.onNext(VisitPlaceResponsePDB.newBuilder().setValid(true).setTimeStamp(timeStamp).build());
@@ -217,9 +216,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void getVisitedPlaces(VisitedPlacesRequestPDB request, StreamObserver<VisitedPlacesResponsePDB> response) {
 		logger.info("Get Visited place request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			List<Place> res = dao.getVisitedPlaces(request.getEmail());
 
@@ -238,9 +236,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void visitCity(VisitCityRequestPDB request, StreamObserver<VisitCityResponsePDB> response) {
 		logger.info("Visit city request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			boolean res = dao.visitCity(request);
 
@@ -259,9 +256,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void getVisitedCitys(VisitedCitysRequestPDB request, StreamObserver<VisitedCitysResponsePDB> response) {
 		logger.info("Get Visited city request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			List<City> res = dao.getVisitedCitys(request.getEmail());
 
@@ -279,9 +275,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void updateUserRequest(User request, StreamObserver<CreateUserResponsePDB> response) {
 		logger.info("Update user request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+
 			boolean valid = dao.updateUser(request);
 			response.onNext(CreateUserResponsePDB.newBuilder().setValid(valid).setUser(request).build());
 			response.onCompleted();
@@ -295,9 +291,8 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void updateCityRequest(City request, StreamObserver<CityResponsePDB> response) {
 		logger.info("Update city request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
 
 			boolean valid = dao.updateCity(request);
 
@@ -315,9 +310,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void updatePlaceRequest(Place request, StreamObserver<PlaceResponsePDB> response) {
 		logger.info("Update place request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+
 			boolean valid = dao.updatePlace(request);
 			response.onNext(PlaceResponsePDB.newBuilder().setPlace(request).setValid(valid).build());
 			response.onCompleted();
@@ -332,9 +327,9 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 	 */
 	public void getCityPlaces(CityRequestPDB request, StreamObserver<VisitedPlacesResponsePDB> response) {
 		logger.info("Get places city request.");
-		try {
+		try (DAO dao = new DAO(URL, USER_NAME, PASSWORD)) {
 			Context context = Context.current();
-			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+
 			List<Place> res = dao.getPlacesInCity(request);
 			response.onNext(VisitedPlacesResponsePDB.newBuilder().addAllPlaces(res).build());
 			response.onCompleted();

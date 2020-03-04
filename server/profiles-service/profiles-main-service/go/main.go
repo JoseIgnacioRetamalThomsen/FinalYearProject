@@ -386,6 +386,47 @@ func (s *server) GetCityPlaces(ctx context.Context, in *pb.CreateCityRequestP) (
 	},nil
 }
 
+
+
+func (s *server) GetAllCitys(in *pb.GetAllRequest, stream pb.Profiles_GetAllCitysServer) error {
+	// create a channel, that is like a blocking queue
+	ch := make(chan CityResult)
+
+
+	go GetAllCitysDBA(in,ch)
+	for i := range ch {
+		if i.Err != nil{
+			return i.Err
+		}
+		if err := stream.Send(i.City); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *server) GetAllPlaces(in *pb.GetAllRequest, stream pb.Profiles_GetAllPlacesServer) error {
+	// create a channel, that is like a blocking queue
+	ch := make(chan PlaceResult)
+
+	// Get all places in different thread
+	go GetAllPlacesDBA(in,ch)
+
+	// send results back async
+	for i := range ch {
+		//send the error if
+		if i.Err != nil{
+			return i.Err
+		}
+		// get next place from stream
+		if err := stream.Send(i.Place); err != nil {
+			return err
+		}
+	}
+	// all finish with no errors
+	return nil
+}
+
 func main() {
 	//conect to neo4j db
 	dbserverCtx, err := newNeo4jDBContext(url)
@@ -403,6 +444,7 @@ func main() {
 	}
 	s1 := &authClient{psserverCtx}
 	prsCon = *s1
+
 
 	//get city
 //	r, _ := GetCity("galway", "ireland");
