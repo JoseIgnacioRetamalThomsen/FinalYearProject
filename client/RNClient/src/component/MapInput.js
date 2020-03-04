@@ -10,11 +10,11 @@ export default class MapInput extends React.Component {
             lng: 0,
             city: '',
             country: '',
-            flag: 'false',
         }
     }
     sendData = () => {
         this.props.parentCallback(this.state.lat, this.state.lng, this.state.city, this.state.country)
+        console.log(this.state.lat, this.state.lng, this.state.city, this.state.country)
     }
     render() {
         return (
@@ -35,7 +35,7 @@ export default class MapInput extends React.Component {
                         lng: details.geometry.location.lng,
                         city: details.address_components.filter(ac => ~ac.types.indexOf('locality'))[0].long_name,
                         country: details.address_components.filter(ac => ~ac.types.indexOf('country'))[0].long_name,
-                        flag: true,
+
                     })
 
                     console.log("lat&lng " + this.state.lat + " " + this.state.lng, this.state.city, this.state.country)
@@ -51,6 +51,7 @@ export default class MapInput extends React.Component {
                 }}
                 nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+
             >
 
               </GooglePlacesAutocomplete>

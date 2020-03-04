@@ -44,17 +44,18 @@ public class PostClient {
                 .setBody(body)
                 .setTimeStamp(timeStamp)
                 //.setLikes(0, null)
-                .setMongoId(mongoId)
+                //.setMongoId(mongoId)
                 .build();
         CreatePostResponse response;
-        int index = 0;
+        int index;
         try {
             response = stub.createCityPost(cityPost);
-           // if(response.getValied() == true)
+          //  if(response.getValied() == true)
                 index = response.getIndexId();
-           // else index = 0;
+           // else index = -1;
         } catch (StatusRuntimeException e) {
             e.getMessage();
+            index = -999;
         }
         return index;
     }

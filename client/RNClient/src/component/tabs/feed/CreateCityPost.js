@@ -1,51 +1,118 @@
-import React from 'react'
-import {Button, TextInput, View, NativeModules, Image} from "react-native";
-import styles from "../../../styles/Style";
-import AsyncStorage from "@react-native-community/async-storage";
-import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
-import {Body, CardItem, Text, Title} from "native-base";
+import React, {Component} from "react";
+import {Button, Text, View, Card, TextInput, TouchableHighlight, NativeModules, ScrollView} from "react-native";
+import CustomHeader from "../../CustomHeader";
+import {Root} from "native-base";
 
-export default class CreateCityPost extends React.Component {
+import styles from '../../../styles/Style'
+import AsyncStorage from '@react-native-community/async-storage'
+import LoadImage from '../../LoadImage'
+
+export default class CreateCityPost extends Component {
     constructor(props) {
         super(props)
         this.state = {
             indexId: 0,
-            cityName: '',
-            cityCountry: '',
+            creatorEmail: '',
+            city: '',
+            country: '',
             title: '',
             body: '',
             timeStamp: '',
+            //timeStamp
+            //new Date().getDate()
             likes: [],
             mongoId: '',
+            img: '',
+            lat: 0,
+            lon: 0,
         }
     }
 
-    addCityPost() {
+    componentDidMount() {
+        const indexId = this.props.navigation.getParam('indexId', '')
+        const city = this.props.navigation.getParam('city', '')
+        const country = this.props.navigation.getParam('country', '')
+
+        this.setState({
+            indexId,
+            city,
+            country,
+        })
+        console.log('componentDidMount' + indexId, city)
+    }
+
+    getCityPosts() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
                     let key = store[i][0];
                     let value = store[i][1]
+                    console.log("key/value in getCity() " + key + " " + value)
+
+                    if (value !== null) {
+                        NativeModules.ProfilesModule.getCity(
+                            value,
+                            this.state.name,
+                            this.state.country,
+                            key,
+                            this.state.description,
+                            this.state.lat,
+                            this.state.lon,
+
+                            (err) => {
+                                console.log("err in getCity " + err)
+                            },
+                            (valid, name, country, email, description, lat, lon, id) => {
+                                this.setState({name: name})
+                                this.setState({country: country})
+                                // this.setState({email: email})
+                                this.setState({description: description})
+                                this.setState({lat: lat})
+                                this.setState({lon: lon})
+                                console.log("name id  is " + name, id)
+                                console.log("successfully got a city!!!")
+                                //this.props.navigation.navigate('DisplayCities')
+                            })
+                    }
+                })
+            })
+        })
+    }
+
+    createCityPost() {
+        console.log("indexId " + this.state.indexId)
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let key = store[i][0];
+                    let value = store[i][1]
+
                     console.log("key/value in city " + key + " " + value)
 
                     if (value !== null) {
                         NativeModules.PostModule.createCityPost(
                             this.state.indexId,
                             key,
-                            this.state.cityName,
-                            this.state.cityCountry,
+                            this.state.city,
+                            this.state.country,
                             this.state.title,
                             this.state.body,
                             this.state.timeStamp,
                             this.state.likes,
                             this.state.mongoId,
                             (err) => {
-                                console.log("err in createPlace " + err)
+                                console.log("err in createCityPost " + err)
                             },
-                            (indexId) => {
-                                this.setState({indexId: indexId})
+                            (index) => {
+                                if (index == -1) {
+                                    console.log(" no response " + index)
+                                    // this.setState({indexId: indexId})
 
-                                console.log(" indexId in createCityPost is " + indexId)
+                                } else {
+                                    console.log("indexId in createCityPost is " + index, this.state.indexId)
+                                    this.props.navigation.navigate('DisplayCityPosts')
+
+                                }
                             })
                     }
                 })
@@ -55,36 +122,51 @@ export default class CreateCityPost extends React.Component {
 
     render() {
         return (
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Root>
+                <View style={{flex: 1}}>
+                    <CustomHeader title="Write a city post " isHome={false} navigation={this.props.navigation}/>
+                    <View style={styles.container}>
 
-                <Card>
-                    <CardImage
-                        source={{uri: 'http://placehold.it/480x270'}}
-                        title="Above all i am here"
-                    />
-                    <CardTitle
-                        title="This is a title"
-                        subtitle="This is subtitle"
-                    />
-                    <CardContent text="Your device will reboot in few seconds once successful, be patient meanwhile" />
-                    <CardAction
-                        separator={true}
-                        inColumn={false}>
-                        <CardButton
-                            onPress={() => {}}
-                            title="Push"
-                            color="blue"
-                        />
-                        <CardButton
-                            onPress={() => {}}
-                            title="Later"
-                            color="blue"
-                        />
-                    </CardAction>
-                </Card>
+                        <ScrollView style={{flex: 1}}>
 
-            </View>
+                            <View style={styles.inputContainer}>
+                                <Text
+                                    style={styles.inputs}
+                                    placeholder="City"
+                                    underlineColorAndroid='transparent'
+                                >
+                                    {this.state.city}
+                                </Text>
+                            </View>
 
+                            <View style={styles.inputContainer}>
+                                <Text
+                                    style={styles.inputs}
+                                    placeholder="Country"
+                                >
+                                    {this.state.country}
+                                </Text>
+                            </View>
+
+
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.inputs}
+                                    placeholder="Description"
+                                    onChangeText={(body) => this.setState({body})}/>
+                            </View>
+
+
+                            <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
+                                                onPress={() => this.createCityPost()}>
+                                <Text style={styles.loginText}>Submit</Text>
+                            </TouchableHighlight>
+
+                        </ScrollView>
+                    </View>
+
+                </View>
+            </Root>
         )
     }
 }

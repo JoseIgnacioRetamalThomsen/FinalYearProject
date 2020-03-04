@@ -8,6 +8,7 @@ import MapInput from "../../MapInput";
 import ActionButton from "react-native-action-button";
 import CreateCity from "./CreateCity";
 import CityDetail from "./CityDetail";
+import GeoLoc from "../../GeoLoc"
 
 export default class DisplayCities extends Component {
     constructor(props) {
@@ -22,19 +23,19 @@ export default class DisplayCities extends Component {
                     description: 'CreateCity in the east',
                     img: '../../../img/nuig.jpg',
                     lat: 0,
-                    lon: 0,
-                    id: 0,
+                    lng: 0,
+
                 },
                 {
                     indexId: 1,
-                    city: 'Limerick',
-                    country: 'Ireland',
+                    city: 'Moscow',
+                    country: 'Russia',
                     email: '',
                     description: 'CreateCity in the south-west',
                     img: '../../../img/noImage.png',
                     lat: 0,
-                    lon: 0,
-                    id: 0,
+                    lng: 0,
+
                 },
                 {
                     indexId: 2,
@@ -44,11 +45,18 @@ export default class DisplayCities extends Component {
                     description: 'CreateCity in the west',
                     img: '../../../img/noImage.png',
                     lat: 0,
-                    lon: 0,
-                    id: 0,
+                    lng: 0,
                 },
             ]
         }
+    }
+
+    callbackFunction = (lat, lng, city, country) => {
+        this.setState({lat: lat})
+        this.setState({lng:lng})
+        this.setState({city:city})
+        this.setState({country:country})
+        console.log(this.state.lat, this.state.lng)
     }
 
     // componentDidMount() {
@@ -67,21 +75,20 @@ export default class DisplayCities extends Component {
     //                         key,
     //                         this.state.description,
     //                         this.state.lat,
-    //                         this.state.lon,
+    //                         this.state.lng,
     //                         (err) => {
     //                             console.log("error In ProfilesModule.getCity " + err)
     //                         },
-    //                         (city, country, email, description, lat, lon, id) => {
+    //                         (valid, city, country, email, description, lat, lng, id) => {
     //                             this.setState({city: city})
     //                             this.setState({country: country})
     //                             this.setState({email: email})
     //                             this.setState({description: description})
-    //                             this.setState({lat: lat})
-    //                             this.setState({lon: lon})
+    //                             // this.setState({lat: lat})
+    //                             // this.setState({lng: lng})
     //                             this.setState({id: id})
-    //                             console.log("successful values in getCity!!!" + this.state.city, this.state.country, this.state.description)
+    //                             console.log("successful values in getCity!!!" + this.state.id, this.state.city, this.state.country, this.state.description)
     //                         })
-    //
     //                 }
     //             })
     //         })
@@ -103,18 +110,18 @@ export default class DisplayCities extends Component {
                             key,
                             this.state.description,
                             this.state.lat,
-                            this.state.lon,
+                            this.state.lng,
                             (err) => {
                                 console.log("err in updateCity " + err)
                             },
-                            (name, country, email, description, lat, lon, id) => {
+                            (name, country, email, description, lat, lng, id) => {
                                 this.setState({name: name})
                                 this.setState({country: country})
                                 // this.setState({email: email})
                                 this.setState({description: description})
                                 this.setState({lat: lat})
-                                this.setState({lon: lon})
-                                console.log("name, country, email, description, lat, lon id in updateCity is " + name, country, email, description, lat, lon, id)
+                                this.setState({lng: lng})
+                                console.log("name, country, email, description, lat, lon id in updateCity is " + name, country, email, description, lat, lng, id)
                                 console.log("successfully updated a city!!!")
                             })
                     }
@@ -122,15 +129,11 @@ export default class DisplayCities extends Component {
             })
         })
     }
-    callbackFunction = ( city, indexId) => {
-        this.setState({city: city})
-        this.setState({indexId: indexId})
-        console.log("sendData"+this.state.city, this.state.cityId)
-    }
-    render() {
 
+    render() {
         return (
             <View style={{flex: 1}}>
+                 <GeoLoc parentCallback={this.callbackFunction} />
                 <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <View style={{flex: 1}}>
@@ -160,7 +163,7 @@ export default class DisplayCities extends Component {
                                         separator={true}
                                         inColumn={false}>
                                         <CardButton
-                                            onPress={() => this.props.navigation.navigate('CityDetail', {city:item.city, description:item.description})}
+                                            onPress={() => this.props.navigation.navigate('CityDetail', {indexId:item.indexId, city:item.city, country:item.country, description:item.description, img:item.img})}
                                             title="More"
                                             color="blue"
                                         />

@@ -19,7 +19,6 @@ class DisplayCityPosts extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            flag: 'false',
             posts: [
                 // {
                 //     valid: true,
@@ -40,7 +39,7 @@ class DisplayCityPosts extends Component {
                 // },
                 {
                     indexId: 0,
-                    city: 'Dublin',
+                    city: 'GMIT',
                     country: 'Ireland',
                     email: '',
                     description: 'CreateCity in the east',
@@ -51,7 +50,7 @@ class DisplayCityPosts extends Component {
                 },
                 {
                     indexId: 1,
-                    city: 'Limerick',
+                    city: 'NUIG',
                     country: 'Ireland',
                     email: '',
                     description: 'CreateCity in the south-west CreateCity in the south-west CreateCity in the south-west CreateCity in the south-westCity in the south-west CreateCity in the south-west' +
@@ -65,7 +64,7 @@ class DisplayCityPosts extends Component {
                 },
                 {
                     indexId: 1,
-                    city: 'Galway',
+                    city: 'GTI',
                     country: 'Ireland',
                     email: '',
                     description: 'CreateCity in the west',
@@ -108,15 +107,6 @@ class DisplayCityPosts extends Component {
     //                             //console.log("successful values in getCityPosts!!!" + this.state.indexId, this.state.cityName, this.state.cityCountry)
     //                         })
     //                 }
-    //                 // else{
-    //                 //     this.setState({city: "CreateCity"})
-    //                 //     this.setState({country: "Country"})
-    //                 //     //this.setState({email: email})
-    //                 //     this.setState({description: "description"})
-    //                 //     // this.setState({lat: lat})
-    //                 //     // this.setState({lon: lon})
-    //                 //     // this.setState({id: id})
-    //                 // }
     //             })
     //         })
     //     })
@@ -162,13 +152,13 @@ class DisplayCityPosts extends Component {
         this.setState({lng: lng})
         this.setState({city: city})
         this.setState({country: country})
-        this.setState({flag: flag})
     }
 
     render() {
         return (
             <View style={{flex: 1}}>
-                <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
+
+                <CustomHeader title={this.state.city +" Posts"} isHome={false} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <View style={{flex: 1}}>
                         <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}

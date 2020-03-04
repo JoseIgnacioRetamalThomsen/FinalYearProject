@@ -22,11 +22,11 @@ import Register from './src/component/auth/Register'
 import RestorePassword from './src/component/auth/RestorePassword'
 import LoadImage from './src/component/LoadImage'
 import WritePost from "./src/component/tabs/myPosts/WritePost";
-import WriteCityPost from "./src/component/tabs/feed/WriteCityPost";
 import Post from "./src/component/tabs/myPosts/Post";
 import WelcomePage from "./src/component/WelcomePage";
 import MapInput from "./src/component/MapInput";
 import CreateCity from "./src/component/tabs/feed/CreateCity";
+import CreateCityPost from "./src/component/tabs/feed/CreateCityPost";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -49,8 +49,8 @@ const FeedStack = createStackNavigator({
         screen: DisplayCityPosts,
         navigationOptions: navOptionHandler
     },
-    WriteCityPost: {
-        screen: WriteCityPost,
+    CreateCityPost: {
+        screen: CreateCityPost,
         navigationOptions: navOptionHandler
     }
 })

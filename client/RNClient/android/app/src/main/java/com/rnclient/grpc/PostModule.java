@@ -20,7 +20,7 @@ public class PostModule extends ReactContextBaseJavaModule {
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
     private static final String IP_ADDRESS = "35.197.216.42";
-    private static final int PORT_NUMBER = 60051;
+    private static final int PORT_NUMBER = 10051;
     private static PostClient client;
 
     public PostModule(ReactApplicationContext context) {
@@ -39,10 +39,9 @@ public class PostModule extends ReactContextBaseJavaModule {
                                String title, String body, String timeStamp, ReadableArray likes, String mongoId, Callback errorCallback,
                                Callback successCallback) {
         int index;
-
         int response = client.createCityPost(indexId, creatorEmail, cityName, cityCountry, title, body, timeStamp, likes.toArrayList(), mongoId);
         try {
-            if (response == 0) {
+            if (response == -1) {
                 index = -1;
             } else index = response;
             successCallback.invoke(index);
@@ -72,7 +71,7 @@ public class PostModule extends ReactContextBaseJavaModule {
         PlacePostResponse response = client.getPlacePosts(indexId);
         try {
             if (response == null) {
-                successCallback.invoke(null);
+                //successCallback.invoke(response);
             } else {
                 successCallback.invoke(response);
             }
@@ -86,7 +85,7 @@ public class PostModule extends ReactContextBaseJavaModule {
         CityPostResponse response = client.getCityPosts(indexId);
         try {
             if (response == null) {
-                successCallback.invoke(null);
+               // successCallback.invoke(response);
             } else {
                 successCallback.invoke(response);
             }

@@ -83,7 +83,7 @@ export default class CreateCity extends React.Component {
         return (
             <Root>
                 <View style={{flex: 1}}>
-                    <CustomHeader title="Write a city post " isHome={false} navigation={this.props.navigation}/>
+                    <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
                     <View style={styles.container}>
                         <GeoLoc parentCallback={this.callbackFunction} />
                         <View style={styles.inputContainer}>
