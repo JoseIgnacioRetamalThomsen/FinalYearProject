@@ -5,7 +5,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.google.protobuf.ByteString;
-import com.wcity.grpc.PhotosClient;
+import com.wcity.grpc.clients.PhotosClient;
+import com.wcity.grpc.objects.CityPhoto;
+import com.wcity.grpc.objects.PlacePhoto;
+import com.wcity.grpc.objects.PostPhoto;
+import com.wcity.grpc.objects.ProfilePhoto;
+import com.wcity.grpc.objects.ProfilePhotoResponse;
 
 public class PhotosModule extends ReactContextBaseJavaModule {
 
@@ -31,13 +36,13 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getProfilePhoto(String email, String token, Callback errorCallback, Callback successCallback) {
 
-        String url = "";
-        String response = client.getProfilePhoto(email, token);
+        ProfilePhotoResponse response = client.getProfilePhoto(email, token);
+
         try {
-            if (response == "") {
-                successCallback.invoke("");
-            } else url = response;
-            successCallback.invoke(url);
+            if (response == null) {
+                successCallback.invoke("Invalid user");
+            } else
+                successCallback.invoke(response);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
@@ -46,13 +51,11 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void uploadProfilePhoto(String email, String token, String image, Callback errorCallback, Callback successCallback) {
 
-        String url = "";
-        String response = client.uploadProfilePhoto(email, token, image);
+        ProfilePhoto response = client.uploadProfilePhoto(email, token, image);
         try {
-            if (response == "") {
+            if (response == null) {
                 errorCallback.invoke("Invalid user");
-            } else url = response;
-            successCallback.invoke(url);
+            } else successCallback.invoke(response);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

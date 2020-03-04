@@ -2,26 +2,16 @@ package com.rnclient;
 
 import android.app.Application;
 import android.content.Context;
-
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.rnclient.grpc.PhotosPackage;
-import com.rnfs.RNFSPackage;
-
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
-
-import com.imagepicker.ImagePickerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import com.rnclient.grpc.HelloWorldPackage;
 import com.rnclient.grpc.LoginPackage;
-import com.rnclient.grpc.ProfilesPackage;
+import com.rnclient.grpc.PhotosPackage;
 import com.rnclient.grpc.PostPackage;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -38,9 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
                     @SuppressWarnings("UnnecessaryLocalVariable")
                     List<ReactPackage> packages = new PackageList(this).getPackages();
                     // Packages that cannot be autolinked yet can be added manually here, for example:
-                    packages.add(new HelloWorldPackage());
                     packages.add(new LoginPackage());
-                    packages.add(new ProfilesPackage());
+                   // packages.add(new ProfilesPackage());
                     packages.add(new PhotosPackage());
                     packages.add(new PostPackage());
                     return packages;

@@ -1,7 +1,13 @@
+//Jose I. Retamal
+//GMIT 2020
+
+//Define interface for connect to main photo service
+
 syntax = "proto3";
 
-
 package wcity;
+
+import "photo_shared.proto";
 
 option java_multiple_files = true;
 option java_package = "io.grpc.wcity.photo";
@@ -10,102 +16,95 @@ option objc_class_prefix = "RPC";
 
 service PhotosService {
     rpc GetProfilePhoto (ProfilePhotoRequestP) returns (ProfilePhotoResponseP);
-    rpc UploadProfilePhoto (ProfileUploadRequest) returns (ProfileUploadResponse);
-    rpc GetCityImage (CityPhotoRequest) returns (CityPhotoResponse);
-    rpc UploadCityPhoto (CityUploadRequest) returns (CityPhotoResponse);
-    rpc GetPlacePhoto (PlacePhotoRequest) returns (PlacePhotoResponse);
-    rpc UploadPlacePhoto (PlaceUploadRequest) returns (PlacePhotoResponse);
-    rpc GetPostImage (PostPhotoRequest) returns (PostPhotoResponse);
-    rpc UploadPostImage (PostUploadRequest) returns (PostPhotoResponse);
+    rpc UploadProfilePhoto (ProfileUploadRequestP) returns (ProfileUploadResponseP);
+    rpc UploadCityPhoto (CityUploadRequestP) returns (CityUploadResponseP);
+    rpc GetCityImage (CityPhotoRequestP) returns (CityPhotoResponseP);
+    rpc GetPlacePhoto (PlacePhotoRequestP) returns (PlacePhotoResponseP);
+    rpc UploadPlacePhoto (PlaceUploadRequestP) returns (PlaceUploadResponseP);
+    rpc GetPostImage (PostPhotoRequestP) returns (PostPhotoResponseP);
+    rpc UploadPostImage (PostUploadRequestP) returns (PostUploadResponseP);
 }
-
 message ProfilePhotoRequestP {
     string email = 1;
     string token = 2;
 }
-
 message ProfilePhotoResponseP {
     string email = 1;
     bool valid = 2;
-    string url = 3;
+    repeated ProfilePhoto photos = 3;
 }
-
-message ProfileUploadRequest {
+message ProfileUploadRequestP {
     string email = 1;
     string token = 2;
     bytes image = 3;
 }
-
-message ProfileUploadResponse {
-    string email = 1;
-    bool valid = 2;
-    string url = 3;
+message ProfileUploadResponseP {
+     bool sucess = 1;
+    ProfilePhoto photo = 2;
 }
-message CityPhotoRequest {
+// request for all pictures of the city
+message CityPhotoRequestP {
     string token = 1;
-    string cityName = 2;
-    string cityCountry = 3;
-
+    string email = 2;
+    int32 cityId = 3; // neo4j id
 }
-message CityUploadRequest {
+message CityPhotoResponseP {
+    bool valid = 1;
+    int32 cityID = 2;
+    repeated CityPhoto photos = 3;
+    int32 active = 4; //indicate active photo in the city
+}
+message CityUploadRequestP {
     string token = 1;
-    string cityName = 2;
-    string cityCountry = 3;
+    string email = 2;
+    int32 cityId = 3; // neo4j id
     bytes image = 4;
 }
-message CityPhotoResponse {
-    bool valid = 1;
-    string cityName = 2;
-    string cityCountry = 3;
-    string url = 4;
+message CityUploadResponseP {
+    bool sucess = 1;
+    CityPhoto photo = 2;
 }
-message PlacePhotoRequest {
+//request all for a place
+message PlacePhotoRequestP {
     string token = 1;
-    string placeName = 2;
-    string placeCity = 3;
-    string placecountry = 4;
+    string email = 2;
+    int32 placeId = 3;
 }
-message PlaceUploadRequest {
-    string token = 1;
-    string placeName = 2;
-    string placeCity = 3;
-    string placecountry = 4;
-    bytes image = 5;
-}
-message PlacePhotoResponse {
+message PlacePhotoResponseP {
     bool valid = 1;
-    string placeName = 2;
-    string placeCity = 3;
-    string placecountry = 4;
-    string url = 5;
+    int32 placeId = 2;
+    repeated PlacePhoto photos = 3;
+    bool active = 4;
 }
+message PlaceUploadRequestP {
+    string token = 1;
+    string email = 2;
+    int32 placeId = 3;
+    bytes image = 4;
+}
+message PlaceUploadResponseP {
+    bool success = 1;
+    PlacePhoto photo = 2;
+  }
 //name is city or place name
-message PostPhotoRequest {
+message PostPhotoRequestP {
     string token = 1;
-    string postId = 2;
-    string userEmail = 3;
-    PostType type = 4;
-    string name = 5;
+    string userEmail = 2;
+    string postId = 3;
 }
-message PostUploadRequest {
-    string token = 1;
-    string postId = 2;
-    string userEmail = 3;
-    PostType type = 4;
-    string name = 5;
-    bytes image = 6;
-
-}
-message PostPhotoResponse {
+message PostPhotoResponseP {
     bool valid = 1;
     string postId = 2;
     string userEmail = 3;
-    PostType type = 4;
-    string name = 5;
-    string url = 6;
+    repeated PostPhoto photos = 4;
 }
-
-enum PostType {
-    CITY = 0;
-    PLACE = 1;
+message PostUploadRequestP {
+    string token = 1;
+    string postId = 2;
+    string userEmail = 3;
+    bytes image = 4;
+}
+message PostUploadResponseP{
+  bool sucess = 1;
+  PostPhoto photo = 2;
 }
