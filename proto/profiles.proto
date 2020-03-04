@@ -51,12 +51,12 @@ message UserResponseP {
 }
 message CreateCityRequestP {
     string token = 1;
-    string name = 2;
+    string name = 2;//bug email
     City city = 3;
 }
 message GetCityRequestP {
     string token = 1;
-    string name = 2;
+    string name = 2;//bug email
     string cityName = 3;
     string cityCountry = 4;
 }
@@ -66,7 +66,7 @@ message CityResponseP {
 }
 message CreatePlaceRequestP {
     string token = 1;
-    string name = 2;
+    string name = 2;//bug email
     Place place = 3;
 }
 message GetPlaceRequestP {

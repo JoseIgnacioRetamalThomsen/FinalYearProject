@@ -59,8 +59,29 @@ public class ProfileDBImp extends ProfilesDBImplBase {
 		}
 	}
 
-	public void GetAllPlacesDBA(GetAllRequest request, StreamObserver<City> response) {
-		
+	/**
+	 * Return all places async
+	 * @param request limit
+	 * @param response stream observer
+	 */
+	public void GetAllPlacesDBA(GetAllRequest request, StreamObserver<Place> response) {
+		logger.info("Get All Places.");
+		try {
+			Context context = Context.current();
+			DAO dao = new DAO(URL, USER_NAME, PASSWORD);
+			BlockingQueue<PlaceOrBuilder> queue = new ArrayBlockingQueue<PlaceOrBuilder>(1000);
+			dao.getAllPlaces(request, queue);
+			while (true) {
+				PlaceOrBuilder temp = queue.take();
+				if (temp instanceof PlacePoison) {
+					response.onCompleted();
+					break;
+				}
+				response.onNext((Place) temp);
+			}
+		} catch (Exception e) {
+			response.onError(e);
+		}
 	}
 	
 	
