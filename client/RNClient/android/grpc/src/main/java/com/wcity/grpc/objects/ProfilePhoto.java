@@ -6,6 +6,11 @@ public class ProfilePhoto {
     private String url;
     private String timestamp;
     private boolean selected;
+    public String error;
+
+    public ProfilePhoto() {
+
+    }
 
     public ProfilePhoto(int id, String userEmail, String url, String timestamp, boolean selected) {
         this.id = id;

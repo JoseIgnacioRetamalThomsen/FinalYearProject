@@ -23,6 +23,7 @@ service PhotosService {
     rpc UploadPlacePhoto (PlaceUploadRequestP) returns (PlaceUploadResponseP);
     rpc GetPostImage (PostPhotoRequestP) returns (PostPhotoResponseP);
     rpc UploadPostImage (PostUploadRequestP) returns (PostUploadResponseP);
+
 }
 message ProfilePhotoRequestP {
     string email = 1;
@@ -39,7 +40,7 @@ message ProfileUploadRequestP {
     bytes image = 3;
 }
 message ProfileUploadResponseP {
-     bool sucess = 1;
+    bool sucess = 1;
     ProfilePhoto photo = 2;
 }
 // request for all pictures of the city
@@ -85,7 +86,7 @@ message PlaceUploadRequestP {
 message PlaceUploadResponseP {
     bool success = 1;
     PlacePhoto photo = 2;
-  }
+}
 //name is city or place name
 message PostPhotoRequestP {
     string token = 1;
@@ -105,6 +106,6 @@ message PostUploadRequestP {
     bytes image = 4;
 }
 message PostUploadResponseP{
-  bool sucess = 1;
-  PostPhoto photo = 2;
+    bool sucess = 1;
+    PostPhoto photo = 2;
 }

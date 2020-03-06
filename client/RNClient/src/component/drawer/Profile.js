@@ -19,6 +19,7 @@ import AsyncStorage from "@react-native-community/async-storage"
 
 
 let key
+
 class Profile extends Component {
     constructor(props) {
         super(props);
@@ -28,83 +29,83 @@ class Profile extends Component {
             email: key,
             name: '',
             description: '',
-            message:''
+            message: ''
         }
     }
 
-    // componentDidMount() {
-    //     AsyncStorage.getAllKeys((err, keys) => {
-    //         AsyncStorage.multiGet(keys, (err, stores) => {
-    //             stores.map((result, i, store) => {
-    //                  key = store[i][0];
-    //                 let value = store[i][1]
-    //
-    //                 console.log("key/value in profile " + key + " " + value)
-    //                 //this.setState({email: key})
-    //                 if (value !== null) {
-    //
-    //                     NativeModules.PhotosModule.getProfilePhoto(
-    //                         key,
-    //                         value,
-    //                         (err) => {
-    //                             console.log("In profile photo " + err)
-    //                         },
-    //                         (url) => {
-    //                             this.setState({avatar_url: url})
-    //                             console.log("successful photo get() " +this.state.avatar_url)
-    //                         })
-    //                     NativeModules.ProfilesModule.getUser(
-    //                         value,
-    //                         key,
-    //                         (err) => {
-    //                             //if(err.includes("Invalid user")){
-    //                                // this.setState({message: "Unauthorised user"})
-    //                                // console.log("In profile!!! Invalid user ")
-    //                            // }else
-    //                             console.log("In profile!!! " + err)
-    //                         },
-    //                         (name, description) => {
-    //                             //if(name!="" || description!=""){
-    //                                 this.setState({name: name})
-    //                                 this.setState({description: description})
-    //                                 console.log("successful getUser")
-    //                            // }
-    //                           //  else console.log("null values")
-    //                         })
-    //
-    //                 }
-    //             })
-    //         })
-    //     })
-    // }
+    componentDidMount() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    key = store[i][0];
+                    let value = store[i][1]
 
-    // async updatePhoto() {
-    //     AsyncStorage.getAllKeys((err, keys) => {
-    //         AsyncStorage.multiGet(keys, (err, stores) => {
-    //             stores.map((result, i, store) => {
-    //                 key = store[i][0];
-    //                 let value = store[i][1]
-    //                 console.log("key/value in profile " + key + " " + value)
-    //                 console.log("this.state.image " + this.state.image)
-    //                 if (value !== null) {
-    //                     NativeModules.PhotosModule.uploadProfilePhoto(
-    //                         key,
-    //                         value,
-    //                         this.state.image,
-    //
-    //                         (err) => {
-    //                             console.log("In uploadPhoto " + err)
-    //                         },
-    //                         (url) => {
-    //                             this.setState({avatar_url: url})
-    //                             console.log("avatar_url  is " + this.state.avatar_url)
-    //                             console.log("successful upload!!!")
-    //                         })
-    //                 }
-    //             })
-    //         })
-    //     })
-    // }
+                    console.log("key/value in profile " + key + " " + value)
+                    //this.setState({email: key})
+                    if (value !== null) {
+
+                        NativeModules.PhotosModule.getProfilePhoto(
+                            key,
+                            value,
+                            (err) => {
+                                console.log("In profile photo " + err)
+                            },
+                            (email, isValid, id, userEmail, url, timestamp, isSelected) => {
+                                this.setState({avatar_url: url})
+                                console.log("successful photo get() " + this.state.avatar_url)
+                            })
+                        // NativeModules.ProfilesModule.getUser(
+                        //     value,
+                        //     key,
+                        //     (err) => {
+                        //         //if(err.includes("Invalid user")){
+                        //            // this.setState({message: "Unauthorised user"})
+                        //            // console.log("In profile!!! Invalid user ")
+                        //        // }else
+                        //         console.log("In profile!!! " + err)
+                        //     },
+                        //     (name, description) => {
+                        //         //if(name!="" || description!=""){
+                        //             this.setState({name: name})
+                        //             this.setState({description: description})
+                        //             console.log("successful getUser")
+                        //        // }
+                        //       //  else console.log("null values")
+                        //     })
+
+                    }
+                })
+            })
+        })
+    }
+
+    async updatePhoto() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    key = store[i][0];
+                    let value = store[i][1]
+                    console.log("key/value in profile " + key + " " + value)
+                    console.log("this.state.image " + this.state.image)
+                    if (value !== null) {
+                        NativeModules.PhotosModule.uploadProfilePhoto(
+                            key,
+                            value,
+                            this.state.image,
+
+                            (err) => {
+                                console.log("In uploadPhoto " + err)
+                            },
+                            (url) => {
+                                this.setState({avatar_url: url})
+                                console.log("avatar_url  is " + this.state.avatar_url)
+                                console.log("successful upload!!!")
+                            })
+                    }
+                })
+            })
+        })
+    }
 
     render() {
         return (
@@ -124,9 +125,10 @@ class Profile extends Component {
                                 <PhotoUpload onPhotoSelect={avatar => {
                                     if (avatar) {
                                         this.setState({image: avatar})
-                                      //  this.updatePhoto()
+                                        this.updatePhoto()
                                         console.log('Image base64 string: ', avatar)
-                                     }}
+                                    }
+                                }
                                 }>
                                     <Image source={{uri: this.state.avatar_url}}
                                            style={{
@@ -139,7 +141,7 @@ class Profile extends Component {
                                                resizeMode: 'cover'
                                            }}/>
                                 </PhotoUpload>
-                                <GeoLoc></GeoLoc>
+                                {/*<GeoLoc></GeoLoc>*/}
                             </View>
                         </Card>
                         <View>
@@ -154,7 +156,7 @@ class Profile extends Component {
                             </View>
                         </View>
                         <Button style={styles.buttonContainer} title="Edit Profile"
-    onPress={() => this.props.navigation.navigate("Settings")}/>
+                                onPress={() => this.props.navigation.navigate("Settings")}/>
                     </View>
                 </ScrollView>
             </View>

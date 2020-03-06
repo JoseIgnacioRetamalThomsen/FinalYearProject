@@ -1,8 +1,11 @@
 package com.wcity.grpc.clients;
 
+import android.annotation.TargetApi;
+
 import com.google.protobuf.ByteString;
 import com.wcity.grpc.objects.ProfilePhoto;
 import com.wcity.grpc.objects.ProfilePhotoResponse;
+
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -16,7 +19,9 @@ import io.grpc.wcity.photo.PhotosServiceGrpc;
 
 import io.grpc.wcity.photo.ProfilePhotoRequestP;
 import io.grpc.wcity.photo.ProfilePhotoResponseP;
+
 import io.grpc.wcity.photo.ProfileUploadRequestP;
+
 import io.grpc.wcity.photo.ProfileUploadResponseP;
 
 
@@ -53,7 +58,7 @@ public class PhotosClient {
 
             if (isValid == true)
                 photoResponse = new ProfilePhotoResponse(response.getEmail(), response.getValid(),
-                        photoList);
+                        photoList.get(0));
             else photoResponse = null;
         } catch (StatusRuntimeException e) {
             e.getMessage();
@@ -61,23 +66,30 @@ public class PhotosClient {
         return photoResponse;
     }
 
+    @TargetApi(11)
     public ProfilePhoto uploadProfilePhoto(String email, String token, String image) {
-        ProfileUploadRequestP userData = ProfileUploadRequestP.newBuilder().setEmail(email).setToken(token).setImage(ByteString.copyFrom(Base64.getMimeDecoder().decode(image.replaceFirst("^.*;base64,", "")))).build();
+        ProfileUploadRequestP userData = ProfileUploadRequestP.newBuilder()
+                .setEmail(email)
+                .setToken(token)
+                .setImage(ByteString.copyFrom(Base64.getMimeDecoder().decode(image.replaceFirst("^.*;base64,", ""))))
+                .build();
 
         ProfileUploadResponseP response;
         ProfilePhoto profilePhoto = null;
-        boolean isSuccess;
 
+        boolean isSuccess;
         try {
             response = stub.uploadProfilePhoto(userData);
             isSuccess = response.getSucess();
-            if (isSuccess == true)
+           // if (isSuccess == true)
                 profilePhoto = new ProfilePhoto(response.getPhoto().getId(),
                         response.getPhoto().getUserEmail(), response.getPhoto().getUrl(),
                         response.getPhoto().getTimestamp(), response.getPhoto().getSelected());
-            else profilePhoto = null;
+           // else profilePhoto = null;
         } catch (StatusRuntimeException e) {
             e.getMessage();
+            profilePhoto = new ProfilePhoto();
+            profilePhoto.error = e.getMessage();
         }
         return profilePhoto;
     }

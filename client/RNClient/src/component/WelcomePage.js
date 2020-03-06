@@ -32,7 +32,7 @@ export default class WelcomePage extends Component {
                                 },
                                 (isSuccess) => {
                                     isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
-                                    logger.log(isSuccess)
+                                    console.log("isSuccess "+isSuccess)
                                 }
                              )
                         } else {

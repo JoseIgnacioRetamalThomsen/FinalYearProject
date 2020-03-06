@@ -35,7 +35,6 @@ public class LoginClient {
         try {
             response = stub.createUser(userData);
             token = response.getToken();
-            System.out.println("token in java " + token);
         } catch (StatusRuntimeException e) {
             e.getMessage();
         }

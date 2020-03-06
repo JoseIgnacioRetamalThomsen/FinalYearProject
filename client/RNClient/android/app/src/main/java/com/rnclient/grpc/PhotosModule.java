@@ -40,9 +40,8 @@ public class PhotosModule extends ReactContextBaseJavaModule {
 
         try {
             if (response == null) {
-                successCallback.invoke("Invalid user");
-            } else
-                successCallback.invoke(response);
+                successCallback.invoke();
+            } else successCallback.invoke(response);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
@@ -53,9 +52,9 @@ public class PhotosModule extends ReactContextBaseJavaModule {
 
         ProfilePhoto response = client.uploadProfilePhoto(email, token, image);
         try {
-            if (response == null) {
-                errorCallback.invoke("Invalid user");
-            } else successCallback.invoke(response);
+            if (response.error != null) {
+                errorCallback.invoke(response.error);
+            } else successCallback.invoke(response.getUrl());
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
