@@ -1,5 +1,7 @@
 package com.wcity.grpc;
 
+import com.wcity.grpc.objects.Place;
+
 import java.util.ArrayList;
 
 

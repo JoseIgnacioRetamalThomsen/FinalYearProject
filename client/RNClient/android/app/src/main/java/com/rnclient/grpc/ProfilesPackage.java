@@ -20,7 +20,7 @@ public class ProfilesPackage implements ReactPackage{
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-      //  modules.add(new ProfilesModule(reactContext));
+        modules.add(new ProfilesModule(reactContext));
 
         return modules;
     }

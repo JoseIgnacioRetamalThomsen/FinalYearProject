@@ -50,7 +50,7 @@ export default class WelcomePage extends Component {
     render() {
         return (
             <View>
-                <Text> Welcome Page</Text>
+                <Text></Text>
             </View>
         )
     }

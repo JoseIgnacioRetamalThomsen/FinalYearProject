@@ -1,35 +1,28 @@
-package com.wcity.grpc;
+package com.wcity.grpc.objects;
 
-public class Place {
-    private boolean valid;
+public class City {
     private String name;
-    private String city;
     private String country;
     private String creatorEmail;
-    private String description;
     private float lat;
     private float lon;
-    private int id;
+    private String description;
+    private int cityId;
+    public String error;
 
-    public Place(boolean valid, String name, String city, String country, String creatorEmail,
-                 String description, float lat, float lon, int id) {
-        this.valid = valid;
+    public City(String name, String country, String creatorEmail, float lat, float lon,
+                String description, int cityId) {
         this.name = name;
-        this.city = city;
         this.country = country;
         this.creatorEmail = creatorEmail;
-        this.description = description;
         this.lat = lat;
         this.lon = lon;
-        this.id = id;
+        this.description = description;
+        this.cityId = cityId;
     }
 
-    public boolean isValid() {
-        return valid;
-    }
+    public City() {
 
-    public void setValid(boolean valid) {
-        this.valid = valid;
     }
 
     public String getName() {
@@ -38,14 +31,6 @@ public class Place {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
     }
 
     public String getCountry() {
@@ -72,6 +57,14 @@ public class Place {
         this.description = description;
     }
 
+    public int getId() {
+        return cityId;
+    }
+
+    public void setId(int cityId) {
+        this.cityId = cityId;
+    }
+
     public float getLat() {
         return lat;
     }
@@ -88,11 +81,11 @@ public class Place {
         this.lon = lon;
     }
 
-    public int getId() {
-        return id;
+    public int getCityId() {
+        return cityId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import com.rnclient.grpc.LoginPackage;
 import com.rnclient.grpc.PhotosPackage;
 import com.rnclient.grpc.PostPackage;
+import com.rnclient.grpc.ProfilesPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -29,7 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
                     List<ReactPackage> packages = new PackageList(this).getPackages();
                     // Packages that cannot be autolinked yet can be added manually here, for example:
                     packages.add(new LoginPackage());
-                   // packages.add(new ProfilesPackage());
+                    packages.add(new ProfilesPackage());
                     packages.add(new PhotosPackage());
                     packages.add(new PostPackage());
                     return packages;

@@ -1,4 +1,9 @@
-package com.wcity.grpc;
+package com.wcity.grpc.clients;
+
+import com.wcity.grpc.CityPostResponse;
+import com.wcity.grpc.MyCityPost;
+import com.wcity.grpc.MyPlacePost;
+import com.wcity.grpc.PlacePostResponse;
 
 import java.util.ArrayList;
 import java.util.List;

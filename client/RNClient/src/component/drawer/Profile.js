@@ -17,7 +17,6 @@ import {Card} from 'react-native-elements'
 import Settings from "./Settings"
 import AsyncStorage from "@react-native-community/async-storage"
 
-
 let key
 
 class Profile extends Component {
@@ -25,7 +24,7 @@ class Profile extends Component {
         super(props);
         this.state = {
             avatar_url: null,
-            image: null,
+            image: '../../img/profile.png',
             email: key,
             name: '',
             description: '',
@@ -43,35 +42,42 @@ class Profile extends Component {
                     console.log("key/value in profile " + key + " " + value)
                     //this.setState({email: key})
                     if (value !== null) {
-
                         NativeModules.PhotosModule.getProfilePhoto(
                             key,
                             value,
                             (err) => {
                                 console.log("In profile photo " + err)
                             },
-                            (email, isValid, id, userEmail, url, timestamp, isSelected) => {
-                                this.setState({avatar_url: url})
-                                console.log("successful photo get() " + this.state.avatar_url)
+                            (url) => {
+                                if(url == null){
+                                    this.setState({avatar_url: 'https://storage.googleapis.com/wcity-images-1/profile-1/1896665_1780468.jpg'})
+                                }
+                                    else{
+                                    this.setState({avatar_url: url})
+                                    console.log("successful photo get() " + this.state.avatar_url)
+                                }
+
                             })
-                        // NativeModules.ProfilesModule.getUser(
-                        //     value,
-                        //     key,
-                        //     (err) => {
-                        //         //if(err.includes("Invalid user")){
-                        //            // this.setState({message: "Unauthorised user"})
-                        //            // console.log("In profile!!! Invalid user ")
-                        //        // }else
-                        //         console.log("In profile!!! " + err)
-                        //     },
-                        //     (name, description) => {
-                        //         //if(name!="" || description!=""){
-                        //             this.setState({name: name})
-                        //             this.setState({description: description})
-                        //             console.log("successful getUser")
-                        //        // }
-                        //       //  else console.log("null values")
-                        //     })
+                        NativeModules.ProfilesModule.getUser(
+                            value,
+                            key,
+                            (err) => {
+                                //if(err.includes("Invalid user")){
+                                // this.setState({message: "Unauthorised user"})
+                                // console.log("In profile!!! Invalid user ")
+                                // }else
+                                console.log("err In profile!!! " + err)
+                            },
+                            (email, name, description, userId) => {
+                                if(userId == undefined){
+                                 console.log("null values")
+                                }else{
+                                    this.setState({name: name})
+                                    this.setState({description: description})
+                                    this.setState({userId: userId})
+                                    console.log("successful getUser", userId)
+                                }
+                            })
 
                     }
                 })
@@ -79,7 +85,7 @@ class Profile extends Component {
         })
     }
 
-    async updatePhoto() {
+    updatePhoto() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {

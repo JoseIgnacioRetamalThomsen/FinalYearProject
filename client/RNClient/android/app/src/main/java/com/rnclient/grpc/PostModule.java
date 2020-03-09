@@ -7,9 +7,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.wcity.grpc.CityPostResponse;
 import com.wcity.grpc.PlacePostResponse;
-import com.wcity.grpc.PostClient;
+import com.wcity.grpc.clients.PostClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

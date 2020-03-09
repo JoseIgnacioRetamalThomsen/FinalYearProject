@@ -1,100 +1,114 @@
-//package com.rnclient.grpc;
-//
-//import com.facebook.react.bridge.ReactApplicationContext;
-//import com.facebook.react.bridge.ReactContextBaseJavaModule;
-//import com.facebook.react.bridge.ReactMethod;
-//import com.wcity.grpc.CreateCity;
-//import com.wcity.grpc.Place;
-//import com.wcity.grpc.ProfilesClient;
-//
-//
-//import com.facebook.react.bridge.Callback;
-//import com.wcity.grpc.User;
-//import com.wcity.grpc.VisitCity;
-//import com.wcity.grpc.VisitPlace;
-//import com.wcity.grpc.VisitedCities;
-//import com.wcity.grpc.VisitedPlaces;
-//
-//import java.util.ArrayList;
-//
-//import io.grpc.wcity.profiles.GeolocationP;
-//import io.grpc.wcity.profiles.PlaceResponseP;
-//
-//public class ProfilesModule extends ReactContextBaseJavaModule {
-//
-//    private static ReactApplicationContext reactContext;
-//
-//    private static final String DURATION_SHORT_KEY = "SHORT";
-//    private static final String DURATION_LONG_KEY = "LONG";
-//    private static final String IP_ADDRESS = "35.197.216.42";
-//    private static final int PORT_NUMBER = 60051;
-//    private static ProfilesClient client;
-//
-//    public ProfilesModule(ReactApplicationContext context) {
-//        super(context);
-//        reactContext = context;
-//        client = new ProfilesClient(IP_ADDRESS, PORT_NUMBER);
-//    }
-//
-//    @Override
-//    public String getName() {
-//        return "ProfilesModule";
-//    }
-//
-//    @ReactMethod
-//    public void getUser(String token, String email, Callback errorCallback,
-//                        Callback successCallback) {
-//        User user = client.getUser(token, email);
-//
-//        try {
-//            if (user.isValid() == true) {
-//                successCallback.invoke(user.getName(), user.getDescription());
+package com.rnclient.grpc;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+
+import com.google.gson.Gson;
+import com.wcity.grpc.objects.City;
+import com.wcity.grpc.objects.Place;
+import com.wcity.grpc.clients.ProfilesClient;
+
+
+import com.facebook.react.bridge.Callback;
+import com.wcity.grpc.objects.User;
+import com.wcity.grpc.VisitCity;
+import com.wcity.grpc.VisitPlace;
+import com.wcity.grpc.VisitedCities;
+import com.wcity.grpc.VisitedPlaces;
+
+import java.util.Iterator;
+import java.util.List;
+import io.grpc.wcity.profiles.GeolocationP;
+
+
+public class ProfilesModule extends ReactContextBaseJavaModule {
+
+    private static ReactApplicationContext reactContext;
+
+    private static final String DURATION_SHORT_KEY = "SHORT";
+    private static final String DURATION_LONG_KEY = "LONG";
+    private static final String IP_ADDRESS = "35.197.216.42";
+    private static final int PORT_NUMBER = 60051;
+    private static ProfilesClient client;
+
+    public ProfilesModule(ReactApplicationContext context) {
+        super(context);
+        reactContext = context;
+        client = new ProfilesClient(IP_ADDRESS, PORT_NUMBER);
+    }
+
+    @Override
+    public String getName() {
+        return "ProfilesModule";
+    }
+
+    @ReactMethod
+    public void getUser(String token, String email, Callback errorCallback,
+                        Callback successCallback) {
+        User user = client.getUser(token, email);
+    if (user == null) errorCallback.invoke("error8");
+        try {
+            successCallback.invoke(user.getEmail(), user.getName(), user.getDescription(),
+                    user.getUserId());
+
+        } catch (Exception e) {
+//            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+        @ReactMethod
+    public void updateUser(String token, String email, String userEmail, String name,
+                           String description, int userId,
+                           Callback errorCallback, Callback successCallback) {
+        User user = client.updateUser(token, email, userEmail, name, description, userId);
+        try {
+            //  if (user.isValid() == true) {
+            successCallback.invoke(user.getEmail(), user.getName(), user.getDescription(),
+                    user.getUserId());
 //            } else {
 //                errorCallback.invoke("Invalid user");
 //            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
-//    @ReactMethod
-//    public void updateUser(String token, String email, String name, String description,
-//                           Callback errorCallback, Callback successCallback) {
-//        User user = client.updateUser(token, email, name, description);
-//        try {
-//            //  if (user.isValid() == true) {
-//            successCallback.invoke(user.getName(), user.getDescription());
-////            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
-//    @ReactMethod
-//    public void createCity(String token, String name, String country, String creatorEmail,
-//                           String description, float lat, float lon, Callback errorCallback,
-//                           Callback successCallback) {
-//        CreateCity city = client.createCity(token, name, country, creatorEmail, description,
-//                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
-//        try {
-//            // if (city.isValid() == true) {
-//            successCallback.invoke(city.isValid(), city.getName(), city.getCountry(),
-//                    city.getCreatorEmail(), city.getDescription(), city.getLat(), city.getLon(), city.getId());
-////            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void createCity(String token, String email, String name, String country,
+                           String creatorEmail, float lat, float lon, String description,
+                            Callback errorCallback, Callback successCallback) {
+        City city = client.createCity(token, email, name, country, creatorEmail,
+                lat, lon, description);
+        if(city.error != null) {errorCallback.invoke(city.error); return;}
+        try {
+            // if (city.isValid() == true) {
+            successCallback.invoke(city.getCityId());
+//            } else {
+//                errorCallback.invoke("Invalid user");
+//            }
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+        @ReactMethod
+    public void getAllCities(int max, Callback errorCallback,
+                        Callback successCallback) {
+            String cityList;
+            try{
+               cityList = client.getAllCities(max);
+                successCallback.invoke(cityList);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
 //    @ReactMethod
 //    public void getCity(String token, String name, String country, String creatorEmail,
 //                        String description, float lat, float lon, Callback errorCallback,
 //                        Callback successCallback) {
-//        CreateCity city = client.getCity(token, name, country, creatorEmail, description,
+//        City city = client.getCity(token, name, country, creatorEmail, description,
 //                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
 //        try {
 //            //if (city.isValid() == true) {
@@ -112,7 +126,7 @@
 //    public void updateCity(String token, String name, String country, String creatorEmail,
 //                           String description, float lat, float lon, Callback errorCallback,
 //                           Callback successCallback) {
-//        CreateCity city = client.updateCity(token, name, country, creatorEmail, description,
+//        City city = client.updateCity(token, name, country, creatorEmail, description,
 //                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
 //        try {
 //            //if (city.isValid() == true) {
@@ -125,7 +139,7 @@
 //            errorCallback.invoke(e.getMessage());
 //        }
 //    }
-//
+
 //    @ReactMethod
 //    public void visitCity(String token, String email, String cityName,
 //                          String cityCountry, Callback errorCallback,
@@ -264,6 +278,6 @@
 //        } catch (Exception e) {
 //            errorCallback.invoke(e.getMessage());
 //        }
-//    }
-//
-//}
+    //}
+
+}

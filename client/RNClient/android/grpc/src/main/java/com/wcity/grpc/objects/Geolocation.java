@@ -1,4 +1,4 @@
-package com.wcity.grpc;
+package com.wcity.grpc.objects;
 
 public class Geolocation {
     private float longitude;

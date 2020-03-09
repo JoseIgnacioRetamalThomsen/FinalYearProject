@@ -2,12 +2,12 @@ package com.wcity.grpc.objects;
 
 public class CityPhoto {
     private int id;
-    private String cityId;
+    private int cityId;
     private String url;
     private String timestamp;
     private boolean selected;
 
-    public CityPhoto(int id, String cityId, String url, String timestamp, boolean selected) {
+    public CityPhoto(int id, int cityId, String url, String timestamp, boolean selected) {
         this.id = id;
         this.cityId = cityId;
         this.url = url;
@@ -23,11 +23,11 @@ public class CityPhoto {
         this.id = id;
     }
 
-    public String getCityId() {
+    public int getCityId() {
         return cityId;
     }
 
-    public void setCityId(String cityId) {
+    public void setCityId(int cityId) {
         this.cityId = cityId;
     }
 

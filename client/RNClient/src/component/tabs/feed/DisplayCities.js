@@ -14,86 +14,75 @@ export default class DisplayCities extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            max: 999999,
             cities: [
-                {
-                    indexId: 0,
-                    city: 'Dublin',
-                    country: 'Ireland',
-                    email: '',
-                    description: 'CreateCity in the east',
-                    img: '../../../img/nuig.jpg',
-                    lat: 0,
-                    lng: 0,
 
-                },
                 {
-                    indexId: 1,
-                    city: 'Moscow',
-                    country: 'Russia',
-                    email: '',
-                    description: 'CreateCity in the south-west',
-                    img: '../../../img/noImage.png',
-                    lat: 0,
-                    lng: 0,
+                    cityId: 0,
+                    country: '',
+                    creatorEmail: '',
+                    description: '',
+                   // img: '../../../img/nuig.jpg',
+                    lat: 0.0,
+                    lng: 0.0,
+                    name: '',
+                    //photoId: 0,
+                   // url: ''
 
-                },
-                {
-                    indexId: 2,
-                    city: 'Galway',
-                    country: 'Ireland',
-                    email: '',
-                    description: 'CreateCity in the west',
-                    img: '../../../img/noImage.png',
-                    lat: 0,
-                    lng: 0,
                 },
             ]
         }
     }
 
-    callbackFunction = (lat, lng, city, country) => {
-        this.setState({lat: lat})
-        this.setState({lng:lng})
-        this.setState({city:city})
-        this.setState({country:country})
-        console.log(this.state.lat, this.state.lng)
+    // callbackFunction = (lat, lng, city, country) => {
+    //     this.setState({lat: lat})
+    //     this.setState({lng: lng})
+    //     this.setState({city: city})
+    //     this.setState({country: country})
+    //     console.log(this.state.lat, this.state.lng)
+    // }
+
+    componentDidMount() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let key = store[i][0];
+                    let value = store[i][1]
+                    console.log("key/value in displayCity " + key + " " + value)
+
+                    if (value !== null) {
+                        NativeModules.ProfilesModule.getAllCities(
+                            this.state.max,
+                            (err) => {
+                                console.log("error In ProfilesModule.getCity " + err)
+                            },
+                            //city.getName(), city.getCountry(), city.getCreatorEmail(),
+                            //                         city.getLocation().getLat(), city.getLocation().getLon(),
+                            //                         city.getDescription(), city.getCityId()
+                            (jsonCityList) => {
+                               // this.state.cities = JSON.parse(jsonCityList);
+                                 this.setState({cities: JSON.parse(jsonCityList)})
+                                console.log("successful values in jsonCityList!!!" + this.state.cities.description)
+                            })
+                        // NativeModules.PhotosModule.getCityImage(
+                        //     value,
+                        //     key,
+                        //     this.state.cityId,
+                        //
+                        //     (err) => {
+                        //         console.log("error In PhotoModule.getCityImage " + err)
+                        //     },
+                        //     (url) => {
+                        //         url == null ? this.setState({url: 'https://storage.googleapis.com/wcity-images-1/profile-1/1458676_1980584.jpg'}) : this.setState({url: url})
+                        //
+                        //         console.log("successful values in getCityImage!!!" + this.setState({url: url}))
+                        //     })
+                    }
+                })
+            })
+        })
     }
 
-    // componentDidMount() {
-    //     AsyncStorage.getAllKeys((err, keys) => {
-    //         AsyncStorage.multiGet(keys, (err, stores) => {
-    //             stores.map((result, i, store) => {
-    //                 let key = store[i][0];
-    //                 let value = store[i][1]
-    //                 console.log("key/value in displayCity " + key + " " + value)
-    //
-    //                 if (value !== null) {
-    //                     NativeModules.ProfilesModule.getCity(
-    //                         value,
-    //                         this.state.city,
-    //                         this.state.country,
-    //                         key,
-    //                         this.state.description,
-    //                         this.state.lat,
-    //                         this.state.lng,
-    //                         (err) => {
-    //                             console.log("error In ProfilesModule.getCity " + err)
-    //                         },
-    //                         (valid, city, country, email, description, lat, lng, id) => {
-    //                             this.setState({city: city})
-    //                             this.setState({country: country})
-    //                             this.setState({email: email})
-    //                             this.setState({description: description})
-    //                             // this.setState({lat: lat})
-    //                             // this.setState({lng: lng})
-    //                             this.setState({id: id})
-    //                             console.log("successful values in getCity!!!" + this.state.id, this.state.city, this.state.country, this.state.description)
-    //                         })
-    //                 }
-    //             })
-    //         })
-    //     })
-    // }
     updateCity() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
@@ -103,27 +92,27 @@ export default class DisplayCities extends Component {
                     console.log("key/value in updatecity " + key + " " + value)
 
                     if (value !== null) {
-                        NativeModules.ProfilesModule.updateCity(
-                            value,
-                            this.state.name,
-                            this.state.country,
-                            key,
-                            this.state.description,
-                            this.state.lat,
-                            this.state.lng,
-                            (err) => {
-                                console.log("err in updateCity " + err)
-                            },
-                            (name, country, email, description, lat, lng, id) => {
-                                this.setState({name: name})
-                                this.setState({country: country})
-                                // this.setState({email: email})
-                                this.setState({description: description})
-                                this.setState({lat: lat})
-                                this.setState({lng: lng})
-                                console.log("name, country, email, description, lat, lon id in updateCity is " + name, country, email, description, lat, lng, id)
-                                console.log("successfully updated a city!!!")
-                            })
+                        // NativeModules.ProfilesModule.updateCity(
+                        //     value,
+                        //     this.state.name,
+                        //     this.state.country,
+                        //     key,
+                        //     this.state.description,
+                        //     this.state.lat,
+                        //     this.state.lng,
+                        //     (err) => {
+                        //         console.log("err in updateCity " + err)
+                        //     },
+                        //     (name, country, email, description, lat, lng, id) => {
+                        //         this.setState({name: name})
+                        //         this.setState({country: country})
+                        //         // this.setState({email: email})
+                        //         this.setState({description: description})
+                        //         this.setState({lat: lat})
+                        //         this.setState({lng: lng})
+                        //         console.log("name, country, email, description, lat, lon id in updateCity is " + name, country, email, description, lat, lng, id)
+                        //     })
+
                     }
                 })
             })
@@ -132,29 +121,30 @@ export default class DisplayCities extends Component {
 
     render() {
         return (
+
             <View style={{flex: 1}}>
-                 <GeoLoc parentCallback={this.callbackFunction} />
+                {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
                 <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <View style={{flex: 1}}>
-                        <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
-                                  parentCallback={this.callbackFunction}/>
+                        {/*<MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}*/}
+                        {/*          parentCallback={this.callbackFunction}/>*/}
                     </View>
-                    { this.state.cities.map((item, index) => {
+                    {this.state.cities.map((item, index) => {
                         return (
-                            <Card key={this.state.cities.indexId}>
+                            <Card key={this.state.cities.cityId}>
 
                                 <CardItem>
                                     <CardTitle
-                                        title={item.city}
+                                        title={item.name}
                                         subtitle={item.country}
                                     />
                                 </CardItem>
 
-                                <CardItem cardBody>
-                                    <Image source={require('../../../img/noImage.png')}
-                                           style={{height: 200, width: null, flex: 1}}/>
-                                </CardItem>
+                                {/*<CardItem cardBody>*/}
+                                {/*    <Image source={{uri: this.state.url}}*/}
+                                {/*           style={{height: 200, width: null, flex: 1}}/>*/}
+                                {/*</CardItem>*/}
                                 <CardItem>
                                     <Body>
                                         <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.description} </Text>
@@ -163,7 +153,13 @@ export default class DisplayCities extends Component {
                                         separator={true}
                                         inColumn={false}>
                                         <CardButton
-                                            onPress={() => this.props.navigation.navigate('CityDetail', {indexId:item.indexId, city:item.city, country:item.country, description:item.description, img:item.img})}
+                                            onPress={() => this.props.navigation.navigate('CityDetail', {
+                                                indexId: item.indexId,
+                                                name: item.name,
+                                                country: item.country,
+                                                description: item.description,
+                                                //img: item.img
+                                            })}
                                             title="More"
                                             color="blue"
                                         />

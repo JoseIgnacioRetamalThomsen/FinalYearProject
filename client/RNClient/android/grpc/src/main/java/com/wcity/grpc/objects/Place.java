@@ -1,8 +1,8 @@
-package com.wcity.grpc;
+package com.wcity.grpc.objects;
 
-public class CreateCity {
-    private boolean valid;
+public class Place {
     private String name;
+    private String city;
     private String country;
     private String creatorEmail;
     private String description;
@@ -10,10 +10,11 @@ public class CreateCity {
     private float lon;
     private int id;
 
+    public Place(String name, String city, String country, String creatorEmail,
+                 String description, float lat, float lon, int id) {
 
-    public CreateCity(boolean valid, String name, String country, String creatorEmail, String description, float lat, float lon, int id) {
-        this.valid = valid;
         this.name = name;
+        this.city = city;
         this.country = country;
         this.creatorEmail = creatorEmail;
         this.description = description;
@@ -22,20 +23,20 @@ public class CreateCity {
         this.id = id;
     }
 
-    public boolean isValid() {
-        return valid;
-    }
-
-    public void setValid(boolean valid) {
-        this.valid = valid;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getCountry() {
@@ -62,14 +63,6 @@ public class CreateCity {
         this.description = description;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public float getLat() {
         return lat;
     }
@@ -84,5 +77,13 @@ public class CreateCity {
 
     public void setLon(float lon) {
         this.lon = lon;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

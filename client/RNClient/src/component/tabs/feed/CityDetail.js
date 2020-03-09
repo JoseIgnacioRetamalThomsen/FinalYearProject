@@ -75,7 +75,7 @@ class CityDetail extends Component {
                                 separator={true}
                                 inColumn={false}>
                                 <CardButton
-                                    onPress={() => this.props.navigation.navigate('CityDetail')}
+                                    onPress={() => this.props.navigation.navigate('CreateCity')}
                                     title="Edit"
                                     color="blue"
                                 />

@@ -27,6 +27,7 @@ import WelcomePage from "./src/component/WelcomePage";
 import MapInput from "./src/component/MapInput";
 import CreateCity from "./src/component/tabs/feed/CreateCity";
 import CreateCityPost from "./src/component/tabs/feed/CreateCityPost";
+import Test from "./src/component/Test";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -35,6 +36,10 @@ const navOptionHandler = (navigation) => ({
 const FeedStack = createStackNavigator({
     DisplayCities: {
         screen: DisplayCities,
+        navigationOptions: navOptionHandler
+    },
+    Test:{
+        screen: Test,
         navigationOptions: navOptionHandler
     },
     CreateCity: {

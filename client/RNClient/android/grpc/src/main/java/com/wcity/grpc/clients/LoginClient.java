@@ -1,4 +1,4 @@
-package com.wcity.grpc;
+package com.wcity.grpc.clients;
 
 import java.util.concurrent.TimeUnit;
 

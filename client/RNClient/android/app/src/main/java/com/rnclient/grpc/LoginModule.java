@@ -3,9 +3,7 @@ package com.rnclient.grpc;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.wcity.grpc.LoginClient;
-
-import io.grpc.wcity.login.UserResponse;
+import com.wcity.grpc.clients.LoginClient;
 
 import com.facebook.react.bridge.Callback;
 

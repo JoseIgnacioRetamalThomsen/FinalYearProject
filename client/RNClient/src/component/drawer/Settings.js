@@ -3,19 +3,19 @@ import {Button, NativeModules, TextInput, View} from 'react-native';
 import CustomHeader from '../CustomHeader'
 import styles from "../../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
-import Modules from '../Modules'
 
 class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userId: 0,
             avatar_url: '',
             name: '',
             description: '',
         }
     }
 
-    async onClickListener() {
+    onClickListener() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -27,17 +27,19 @@ class Settings extends Component {
                         NativeModules.ProfilesModule.updateUser(
                             value,
                             key,
+                            key,
                             this.state.name,
                             this.state.description,
+                            this.state.userId,
                             (err) => {
                                 console.log("error In settings " + err)
                             },
-                            (name, description) => {
+                            (email, name, description, userId) => {
                                 this.setState({name: name})
                                 this.setState({description: description})
+                                this.userId({description: userId})
                                 console.log("successful!!!" + this.state.name, this.state.description)
                             })
-
                     }
                 })
             })
@@ -65,7 +67,7 @@ class Settings extends Component {
                             onPress={() => this.onClickListener()}/>
                 </View>
             </View>
-        );
+        )
     }
 }
 
