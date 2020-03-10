@@ -6,12 +6,26 @@ import MapInput from "../../MapInput";
 import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
 import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
-
+import Carousel from 'react-native-snap-carousel';
 
 class CityDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            images: [
+                {
+                    url:"https://storage.googleapis.com/wcity-images-1/city-1/1953847_1044359.jpg",
+                    timestamp :"4554"
+                },
+                {
+                    url:"https://storage.googleapis.com/wcity-images-1/city-1/1953847_1044359.jpg",
+                    timestamp :"45574"
+
+                }
+
+            ]
+
+            ,
             cityId: 0,
             indexId: 0,
             city: '',
@@ -83,6 +97,18 @@ class CityDetail extends Component {
         })
     }
 
+    _renderItem = ({item, index}) => {
+        console.log(item,index);
+        return (
+            <View style={styles.slide}>
+                {/*<Text style={styles.title}>{item.timestamp}</Text>*/}
+                 <Image source={{uri: item.url}}
+                     style={{height: 200, width: null, flex: 1}}/>
+            </View>
+
+        )
+    }
+
     render() {
         return (
             <View style={{flex: 1}}>
@@ -115,7 +141,19 @@ class CityDetail extends Component {
                             </CardAction>
                         </CardItem>
                     </Card>
-
+                    {/*<CardItem cardBody>*/}
+                    {/*    <Image source={{url: this.state.url}}*/}
+                    {/*           style={{height: 200, width: null, flex: 1}}/>*/}
+                    {/*</CardItem>*/}
+                    <Carousel
+                        ref={(c) => {
+                            this._carousel = c;
+                        }}
+                        data={this.state.images}
+                        renderItem={this._renderItem}
+                        sliderWidth={500}
+                        itemWidth={500}
+                    />
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
