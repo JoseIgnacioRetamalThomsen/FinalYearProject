@@ -17,7 +17,7 @@ export default class CreateCity extends React.Component {
         this.state = {
             cities: [
                 {
-                    cityId: 0,
+                    cityId: "32",
                     token: '',
                     name: '',
                     country: '',
@@ -25,7 +25,8 @@ export default class CreateCity extends React.Component {
                     description: '',
                     lat: 60,
                     lon: 80,
-                    uri: '',
+                    image:'',
+                    url: '',
                 },
 
             ]
@@ -53,58 +54,30 @@ export default class CreateCity extends React.Component {
                 stores.map((result, i, store) => {
                     let key = store[i][0];
                     let value = store[i][1]
-        NativeModules.ProfilesModule.createCity(
-            value,
-            key,
-            this.state.name,
-            this.state.country,
-            key,
-            89,
-            90,
-            //parseFloat(this.state.lon),
-            this.state.description,
-            (err) => {
-                console.log("err in createCity " + err)
-            },
-            (id) => {
-                //this.setState(this.state.cityId:id)
-                console.log("valid, city, country, email, description, lat, lon id is " + id)
-                console.log("successfully created a city!!!")
-                // this.sendData()
-                this.props.navigation.navigate('DisplayCities')
-            })
+                    NativeModules.ProfilesModule.createCity(
+                        value,
+                        key,
+                        this.state.name,
+                        this.state.country,
+                        key,
+                        89,
+                        90,
+                        //parseFloat(this.state.lon),
+                        this.state.description,
+                        (err) => {
+                            console.log("err in createCity " + err)
+                        },
+                        (cityId) => {
+                            this.setState({cityId:cityId})
+                            this.uploadCityPhoto();
+                            console.log("valid, city, country, email, description, lat, lon id is " + cityId)
+                            console.log("successfully created a city!!!")
+                            // this.sendData()
+                            this.props.navigation.navigate('DisplayCities')
+                        })
                 })
             })
         })
-        // AsyncStorage.getAllKeys((err, keys) => {
-        //     AsyncStorage.multiGet(keys, (err, stores) => {
-        //         stores.map((result, i, store) => {
-        //             let key = store[i][0];
-        //             let value = store[i][1]
-        //             console.log("key/value in city " + key + " " + value)
-        //             if (value !== null) {
-        //                 NativeModules.ProfilesModule.createCity(
-        //                     value,
-        //                     key,
-        //                     this.state.city,
-        //                     this.state.country,
-        //                     key,
-        //                     this.state.lat,
-        //                     this.state.lon,
-        //                     this.state.description,
-        //                     this.state.cityId,
-        //                     (err) => {
-        //                         console.log("err in createCity " + err)
-        //                     },
-        //                     (id) => {
-        //                         //this.setState(this.state.cityId:id)
-        //                         console.log("valid, city, country, email, description, lat, lon id is " + id)
-        //                         console.log("successfully created a city!!!")
-        //                         // this.sendData()
-        //                         this.props.navigation.navigate('DisplayCities')
-        //                     })
-        //             }
-
     }
 
     uploadCityPhoto() {
@@ -114,20 +87,19 @@ export default class CreateCity extends React.Component {
                     let key = store[i][0];
                     let value = store[i][1]
                     console.log("key/value in createcity " + key + " " + value)
-                    console.log("this.state.image " + this.state.image)
+                    //console.log("this.state.image " + this.state.image)
                     if (value !== null) {
                         NativeModules.PhotosModule.uploadCityPhoto(
                             key,
                             value,
-                            this.state.cityId,
+                            parseInt(this.state.cityId),
                             this.state.image,
-
                             (err) => {
                                 console.log("In uploadPhoto " + err)
                             },
                             (url) => {
-                                this.setState({uri: url})
-                                console.log("avatar_url  is " + this.state.uri)
+                                this.setState({url: url})
+                                console.log("avatar_url  is " + this.state.url, url, this.state.image)
                                 console.log("successful upload!!!")
                             })
                     }
@@ -171,27 +143,26 @@ export default class CreateCity extends React.Component {
                             <View style={styles.container}>
                             </View>
                         </View>
-                        <View>
-                            {/*<PhotoUpload onPhotoSelect={url => {*/}
-                            {/*    if (url) {*/}
-                            {/*        this.setState({image: url})*/}
-                            {/*        this.updatePhoto()*/}
-                            {/*        console.log('Image base64 string: ', url)*/}
-                            {/*    }*/}
-                            {/*}*/}
-                            {/*}>*/}
-                            {/*    <Image source={{uri: this.state.url}}*/}
-                            {/*           style={{*/}
-                            {/*               height: 120,*/}
-                            {/*               width: 120,*/}
-                            {/*               borderRadius: 60,*/}
-                            {/*               borderColor: 'black',*/}
-                            {/*               borderWidth: 5,*/}
-                            {/*               flex: 0,*/}
-                            {/*               resizeMode: 'cover'*/}
-                            {/*           }}/>*/}
-                            {/*</PhotoUpload>*/}
-                        </View>
+
+                        <PhotoUpload onPhotoSelect={image => {
+                            if (image) {
+                                this.setState({image: image})
+                                //this.uploadCityPhoto()
+                            }
+                        }
+                        }>
+                            <Image source={{image: this.state.image}}
+                                   style={{
+                                       height: 120,
+                                       width: 120,
+                                       borderRadius: 60,
+                                       borderColor: 'black',
+                                       borderWidth: 5,
+                                       flex: 0,
+                                       resizeMode: 'cover'
+                                   }}/>
+                        </PhotoUpload>
+
                     </View>
 
                     <View style={styles.container}>

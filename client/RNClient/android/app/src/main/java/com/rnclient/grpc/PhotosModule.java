@@ -64,6 +64,10 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     public void uploadCityPhoto(String token, String email, int cityId, String image,
                                 Callback errorCallback, Callback successCallback) {
         CityPhoto response = client.uploadCityPhoto(token, email, cityId, image);
+
+        if (response.isError()){
+            errorCallback.invoke(response.getError()); return;
+        }
         try {
             successCallback.invoke(response.getUrl());
         } catch (Exception e) {

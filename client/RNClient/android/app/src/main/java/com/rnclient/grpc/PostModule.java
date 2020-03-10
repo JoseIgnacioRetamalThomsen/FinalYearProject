@@ -35,15 +35,12 @@ public class PostModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void createCityPost(int indexId, String creatorEmail, String cityName, String cityCountry,
-                               String title, String body, String timeStamp, ReadableArray likes, String mongoId, Callback errorCallback,
+                               String title, String body, String timeStamp, Callback errorCallback,
                                Callback successCallback) {
-        int index;
-        int response = client.createCityPost(indexId, creatorEmail, cityName, cityCountry, title, body, timeStamp, likes.toArrayList(), mongoId);
+        int response;
         try {
-            if (response == -1) {
-                index = -1;
-            } else index = response;
-            successCallback.invoke(index);
+            response = client.createCityPost(indexId, creatorEmail, cityName, cityCountry, title, body, timeStamp);
+            successCallback.invoke(response);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

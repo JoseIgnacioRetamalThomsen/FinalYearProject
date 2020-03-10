@@ -18,7 +18,6 @@ export default class CreateCityPost extends Component {
             title: '',
             body: '',
             timeStamp: '',
-            //timeStamp
             //new Date().getDate()
             likes: [],
             mongoId: '',
@@ -28,18 +27,18 @@ export default class CreateCityPost extends Component {
         }
     }
 
-    componentDidMount() {
-        const indexId = this.props.navigation.getParam('indexId', '')
-        const city = this.props.navigation.getParam('city', '')
-        const country = this.props.navigation.getParam('country', '')
-
-        this.setState({
-            indexId,
-            city,
-            country,
-        })
-        console.log('componentDidMount' + indexId, city)
-    }
+    // componentDidMount() {
+    //     const indexId = this.props.navigation.getParam('indexId', '')
+    //     const city = this.props.navigation.getParam('city', '')
+    //     const country = this.props.navigation.getParam('country', '')
+    //
+    //     this.setState({
+    //         indexId,
+    //         city,
+    //         country,
+    //     })
+    //     console.log('componentDidMount' + indexId, city)
+    // }
 
     getCityPosts() {
         AsyncStorage.getAllKeys((err, keys) => {
@@ -52,7 +51,7 @@ export default class CreateCityPost extends Component {
                     if (value !== null) {
                         NativeModules.ProfilesModule.getCity(
                             value,
-                            this.state.name,
+                            this.state.city,
                             this.state.country,
                             key,
                             this.state.description,
@@ -98,21 +97,13 @@ export default class CreateCityPost extends Component {
                             this.state.title,
                             this.state.body,
                             this.state.timeStamp,
-                            this.state.likes,
-                            this.state.mongoId,
                             (err) => {
                                 console.log("err in createCityPost " + err)
                             },
-                            (index) => {
-                                if (index == -1) {
-                                    console.log(" no response " + index)
-                                    // this.setState({indexId: indexId})
-
-                                } else {
-                                    console.log("indexId in createCityPost is " + index, this.state.indexId)
-                                    this.props.navigation.navigate('DisplayCityPosts')
-
-                                }
+                            (indexId) => {
+                                this.setState({indexId: indexId})
+                                console.log("indexId in createCityPost is " + indexId, this.state.indexId)
+                                this.props.navigation.navigate('DisplayCityPosts')
                             })
                     }
                 })
@@ -130,22 +121,22 @@ export default class CreateCityPost extends Component {
                         <ScrollView style={{flex: 1}}>
 
                             <View style={styles.inputContainer}>
-                                <Text
+                                <TextInput
                                     style={styles.inputs}
                                     placeholder="City"
                                     underlineColorAndroid='transparent'
-                                >
-                                    {this.state.city}
-                                </Text>
+                                    onChangeText={(city) => this.setState({city})}/>
+
+
                             </View>
 
                             <View style={styles.inputContainer}>
-                                <Text
+                                <TextInput
                                     style={styles.inputs}
                                     placeholder="Country"
-                                >
-                                    {this.state.country}
-                                </Text>
+                                    onChangeText={(country) => this.setState({country})}/>
+
+
                             </View>
 
 

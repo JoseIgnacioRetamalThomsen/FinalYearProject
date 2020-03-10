@@ -1,5 +1,9 @@
-syntax = "proto3";
+//Jose I. Retamal
+//GMIT 2020
 
+//Define interface for connect to main post service
+
+syntax = "proto3";
 
 package wcity;
 
@@ -8,64 +12,61 @@ option java_package = "io.grpc.wcity.postservice";
 option java_outer_classname = "PostProto";
 option objc_class_prefix = "RPC";
 
-service PostsService{
-    rpc CreateCityPost(CityPost) returns (CreatePostResponse);
-    rpc CreatePlacePost(PlacePost) returns (CreatePostResponse);
-    rpc GetPlacePosts(PostsRequest) returns (PlacePostsResponse);
-    rpc GetCityPosts(PostsRequest) returns(CityPostsResponse);
-    rpc UpdatePlacePost(UpdatePostRequest) returns (UpdatePostResponse);
-    rpc UpdateCityPost(UpdatePostRequest) returns (UpdatePostResponse);
+service PostsService {
+    rpc CreateCityPost (CityPost) returns (CreatePostResponse);
+    rpc CreatePlacePost (PlacePost) returns (CreatePostResponse);
+    rpc GetPlacePosts (PostsRequest) returns (PlacePostsResponse);
+    rpc GetCityPosts (PostsRequest) returns (CityPostsResponse);
+    rpc UpdatePlacePost (UpdatePostRequest) returns (UpdatePostResponse);
+    rpc UpdateCityPost (UpdatePostRequest) returns (UpdatePostResponse);
 }
-
-message CityPost{
-    int32 indexId =1;
+message CityPost {
+    int32 indexId = 1;
     string creatorEmail = 2;
     string cityName = 3;
-    string cityCountry =4;
-    string title =5;
-    string body =6;
+    string cityCountry = 4;
+    string title = 5;
+    string body = 6;
     string timeStamp = 7;
-    repeated string likes =8;
+    repeated string likes = 8;
     string mongoId = 9;
 }
-message PlacePost{
-    int32 indexId =1;
+message PlacePost {
+    int32 indexId = 1;
     string creatorEmail = 2;
     string cityName = 3;
-    string countryName =4;
-    string placeName =5;
-    string title =6;
-    string body =7;
+    string countryName = 4;
+    string placeName = 5;
+    string title = 6;
+    string body = 7;
     string timeStamp = 8;
-    repeated string likes =9;
+    repeated string likes = 9;
     string mongoId = 10;
 }
-
-message CreatePostResponse{
-    bool valied =1;
+message CreatePostResponse {
+    bool valied = 1;
     int32 indexId = 2;
 
 }
-message PostsRequest{
-    int32 indexId =1;
+message PostsRequest {
+    int32 indexId = 1;
 }
-message CityPostsResponse{
+message CityPostsResponse {
     bool valid = 1;
-    int32 indexId =2;
-    repeated CityPost posts =3;
+    int32 indexId = 2;
+    repeated CityPost posts = 3;
 }
-message PlacePostsResponse{
-    bool valid =1;
-    int32 indexId =2;
-    repeated PlacePost posts =3;
+message PlacePostsResponse {
+    bool valid = 1;
+    int32 indexId = 2;
+    repeated PlacePost posts = 3;
 }
-
-message UpdatePostRequest{
+message UpdatePostRequest {
     string mongoId = 1;
     string title = 2;
     string body = 3;
 }
-
-message UpdatePostResponse{
+message UpdatePostResponse {
     bool valid = 1;
+
 }

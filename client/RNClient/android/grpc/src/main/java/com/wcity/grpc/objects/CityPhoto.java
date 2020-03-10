@@ -6,6 +6,23 @@ public class CityPhoto {
     private String url;
     private String timestamp;
     private boolean selected;
+    private String error;
+
+    public boolean isError(){
+        return error !=  null;
+    }
+
+    public CityPhoto() {
+
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
 
     public CityPhoto(int id, int cityId, String url, String timestamp, boolean selected) {
         this.id = id;

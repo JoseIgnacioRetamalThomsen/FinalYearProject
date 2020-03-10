@@ -38,7 +38,7 @@ public class PostClient {
 
 
     public int createCityPost(int indexId, String creatorEmail, String cityName, String cityCountry,
-                              String title, String body, String timeStamp, ArrayList likes, String mongoId) {
+                              String title, String body, String timeStamp) {
 
         CityPost cityPost = CityPost.newBuilder()
                 .setIndexId(indexId)
@@ -48,8 +48,6 @@ public class PostClient {
                 .setTitle(title)
                 .setBody(body)
                 .setTimeStamp(timeStamp)
-                //.setLikes(0, null)
-                //.setMongoId(mongoId)
                 .build();
         CreatePostResponse response;
         int index;

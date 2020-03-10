@@ -111,10 +111,10 @@ public class PhotosClient {
         return profilePhoto;
     }
 
-    public CityPhoto uploadCityPhoto(String token, String email, int cityId, String image) {
+    public CityPhoto uploadCityPhoto(String email, String token,  int cityId, String image) {
         CityUploadRequestP userData = CityUploadRequestP.newBuilder()
-                .setToken(token)
                 .setEmail(email)
+                .setToken(token)
                 .setCityId(cityId)
                 .setImage(ByteString.copyFrom(Base64.getMimeDecoder().decode(image.replaceFirst("^.*;base64,", ""))))
                 .build();
@@ -131,6 +131,8 @@ public class PhotosClient {
                     response.getPhoto().getTimestamp(), response.getPhoto().getSelected());
             // else profilePhoto = null;
         } catch (StatusRuntimeException e) {
+            cityPhoto = new CityPhoto();
+            cityPhoto.setError(e.getMessage());
             e.getMessage();
         }
         return cityPhoto;
