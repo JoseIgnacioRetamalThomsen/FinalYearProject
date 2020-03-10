@@ -2,6 +2,7 @@ package com.wcity.grpc.clients;
 
 import android.annotation.TargetApi;
 
+import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import com.wcity.grpc.objects.CityPhoto;
 import com.wcity.grpc.objects.CityPhotoResponse;
@@ -43,7 +44,6 @@ import io.grpc.wcity.photo.ProfileUploadResponseP;
 
 
 public class PhotosClient {
-
     private final ManagedChannel channel;
     private final PhotosServiceGrpc.PhotosServiceBlockingStub stub;
 
@@ -85,6 +85,7 @@ public class PhotosClient {
         }
         return photoResponse;
     }
+
     @TargetApi(11)
     public ProfilePhoto uploadProfilePhoto(String email, String token, String image) {
         ProfileUploadRequestP userData = ProfileUploadRequestP.newBuilder()
@@ -95,10 +96,10 @@ public class PhotosClient {
 
         ProfileUploadResponseP response;
         ProfilePhoto profilePhoto;
-        boolean isSuccess;
+      // boolean isSuccess;
         try {
             response = stub.uploadProfilePhoto(userData);
-            isSuccess = response.getSucess();
+           // isSuccess = response.getSucess();
             // if (isSuccess == true)
             profilePhoto = new ProfilePhoto(response.getPhoto().getId(),
                     response.getPhoto().getUserEmail(), response.getPhoto().getUrl(),
@@ -111,7 +112,7 @@ public class PhotosClient {
         return profilePhoto;
     }
 
-    public CityPhoto uploadCityPhoto(String email, String token,  int cityId, String image) {
+    public CityPhoto uploadCityPhoto(String email, String token, int cityId, String image) {
         CityUploadRequestP userData = CityUploadRequestP.newBuilder()
                 .setEmail(email)
                 .setToken(token)
@@ -139,6 +140,7 @@ public class PhotosClient {
     }
 
     public CityPhotoResponse getCityImage(String token, String email, int cityId) {
+
         CityPhotoRequestP userData = CityPhotoRequestP.newBuilder()
                 .setToken(token)
                 .setEmail(email)
@@ -146,28 +148,27 @@ public class PhotosClient {
                 .build();
         CityPhotoResponseP response;
         CityPhotoResponse photoResponse = null;
-        boolean isValid;
 
         try {
             response = stub.getCityImage(userData);
-            isValid = response.getValid();
             List<CityPhoto> photoList = new ArrayList<>();
+
             for (io.grpc.wcity.photoShared.CityPhoto photo : response.getPhotosList()) {
-                photoList.add(new CityPhoto(photo.getId(), photo.getCityId(), photo.getUrl(),
-                        photo.getTimestamp(), photo.getSelected()));
+                photoList.add(new CityPhoto(photo.getUrl(), photo.getTimestamp(), photo.getSelected()));
             }
 
-            if (isValid == true)
-                photoResponse = new CityPhotoResponse(response.getValid(), response.getCityID(),
-                        photoList, response.getActive());
-            else photoResponse = null;
+            photoResponse = new CityPhotoResponse(response.getValid(), response.getCityID(),
+                    photoList, response.getActive());
         } catch (StatusRuntimeException e) {
+            photoResponse = new CityPhotoResponse();
+            photoResponse.error = e.getMessage();
             e.getMessage();
         }
         return photoResponse;
     }
 
     public PlacePhotoResponse getPlacePhoto(String token, String email, int placeId) {
+        Gson gson = new Gson();
         PlacePhotoRequestP userData = PlacePhotoRequestP.newBuilder()
                 .setToken(token)
                 .setEmail(email)
@@ -175,21 +176,18 @@ public class PhotosClient {
                 .build();
         PlacePhotoResponseP response;
         PlacePhotoResponse photoResponse = null;
-        boolean isValid;
 
         try {
             response = stub.getPlacePhoto(userData);
-            isValid = response.getValid();
             List<PlacePhoto> photoList = new ArrayList<>();
             for (io.grpc.wcity.photoShared.PlacePhoto photo : response.getPhotosList()) {
                 photoList.add(new PlacePhoto(photo.getId(), photo.getPlaceId(), photo.getUrl(),
                         photo.getTimestamp(), photo.getSelected()));
             }
 
-            if (isValid == true)
-                photoResponse = new PlacePhotoResponse(response.getValid(), response.getPlaceId(),
-                        photoList, response.getActive());
-            else photoResponse = null;
+            photoResponse = new PlacePhotoResponse(response.getValid(), response.getPlaceId(),
+                    gson.toJson(photoList), response.getActive());
+
         } catch (StatusRuntimeException e) {
             e.getMessage();
         }
@@ -206,10 +204,10 @@ public class PhotosClient {
 
         PlaceUploadResponseP response;
         PlacePhoto placePhoto = null;
-        boolean isSuccess;
+        //boolean isSuccess;
         try {
             response = stub.uploadPlacePhoto(userData);
-            isSuccess = response.getSuccess();
+            //isSuccess = response.getSuccess();
             // if (isSuccess == true)
             placePhoto = new PlacePhoto(response.getPhoto().getId(),
                     response.getPhoto().getPlaceId(), response.getPhoto().getUrl(),
@@ -222,6 +220,8 @@ public class PhotosClient {
     }
 
     public PostPhotoResponse getPostImage(String token, String userEmail, String postId) {
+        Gson gson = new Gson();
+
         PostPhotoRequestP userData = PostPhotoRequestP.newBuilder()
                 .setToken(token)
                 .setUserEmail(userEmail)
@@ -229,21 +229,17 @@ public class PhotosClient {
                 .build();
         PostPhotoResponseP response;
         PostPhotoResponse photoResponse = null;
-        boolean isValid;
 
         try {
             response = stub.getPostImage(userData);
-            isValid = response.getValid();
             List<PostPhoto> photoList = new ArrayList<>();
             for (io.grpc.wcity.photoShared.PostPhoto photo : response.getPhotosList()) {
                 photoList.add(new PostPhoto(photo.getId(), photo.getPostId(), photo.getUrl(),
                         photo.getTimestamp(), photo.getSelected()));
             }
 
-            if (isValid == true)
-                photoResponse = new PostPhotoResponse(response.getValid(), response.getPostId(),
-                        response.getUserEmail(), photoList);
-            else photoResponse = null;
+            photoResponse = new PostPhotoResponse(response.getValid(), response.getPostId(),
+                    response.getUserEmail(), gson.toJson(photoList));
         } catch (StatusRuntimeException e) {
             e.getMessage();
         }
@@ -261,10 +257,10 @@ public class PhotosClient {
 
         PostUploadResponseP response;
         PostPhoto postPhoto = null;
-        boolean isSuccess;
+       // boolean isSuccess;
         try {
             response = stub.uploadPostImage(userData);
-            isSuccess = response.getSucess();
+            //isSuccess = response.getSucess();
             // if (isSuccess == true)
             postPhoto = new PostPhoto(response.getPhoto().getId(),
                     response.getPhoto().getPostId(), response.getPhoto().getUrl(),

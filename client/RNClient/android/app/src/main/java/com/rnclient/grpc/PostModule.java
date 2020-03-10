@@ -45,12 +45,14 @@ public class PostModule extends ReactContextBaseJavaModule {
             errorCallback.invoke(e.getMessage());
         }
     }
+
     @ReactMethod
     public void createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
-                                String placeName, String title, String body, String timeStamp, List <String> likes, String mongoId, Callback errorCallback,
-                               Callback successCallback) {
+                                String placeName, String title, String body, String timeStamp, Callback errorCallback,
+                                Callback successCallback) {
         int index;
-        int response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body, timeStamp, likes, mongoId);
+        int response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body,
+                timeStamp);
         try {
             if (response == 0) {
                 index = -1;
@@ -75,16 +77,42 @@ public class PostModule extends ReactContextBaseJavaModule {
             errorCallback.invoke(e.getMessage());
         }
     }
+
     @ReactMethod
     public void getCityPosts(int indexId, Callback errorCallback, Callback successCallback) {
 
         CityPostResponse response = client.getCityPosts(indexId);
         try {
             if (response == null) {
-               // successCallback.invoke(response);
+                // successCallback.invoke(response);
             } else {
                 successCallback.invoke(response);
             }
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void updateCityPost(String mongoId, String title, String body, Callback errorCallback,
+                               Callback successCallback) {
+        boolean isValid;
+        try {
+            isValid = client.updateCityPost(mongoId, title, body);
+            successCallback.invoke(isValid);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void updatePlacePost(String mongoId, String title, String body, Callback errorCallback,
+                                Callback successCallback) {
+        boolean isValid;
+
+        try {
+            isValid = client.updatePlacePost(mongoId, title, body);
+            successCallback.invoke(isValid);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

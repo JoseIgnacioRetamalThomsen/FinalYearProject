@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {Image, NativeModules, ScrollView, StyleSheet, View} from 'react-native';
 import {Body, CardItem, Icon, Text} from 'native-base';
 import CustomHeader from '../../CustomHeader'
 import MapInput from "../../MapInput";
 import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
 import ActionButton from "react-native-action-button";
+import AsyncStorage from "@react-native-community/async-storage";
+
 
 class CityDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            cityId: 0,
             indexId: 0,
             city: '',
             country: '',
@@ -34,6 +37,7 @@ class CityDetail extends Component {
     }
 
     componentDidMount() {
+        const cityId = this.props.navigation.getParam('cityId', '')
         const indexId = this.props.navigation.getParam('indexId', '')
         const city = this.props.navigation.getParam('city', '')
         const country = this.props.navigation.getParam('country', '')
@@ -41,13 +45,42 @@ class CityDetail extends Component {
         const img = this.props.navigation.getParam('img', '')
 
         this.setState({
+            cityId,
             indexId,
             city,
             country,
             description,
             img
         })
-        console.log('componentDidMount' + indexId, city, img)
+        console.log('componentDidMount' + cityId, city, img)
+        this.getCityImages()
+    }
+
+    getCityImages() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+                    console.log("email/token in getCityImages " + email + " " + token)
+
+                    if (token !== null) {
+
+                        NativeModules.PhotosModule.getCityImage(
+                            token,
+                            email,
+                            parseInt(this.state.cityId),
+                            (err) => {
+                                console.log("error In PhotoModule.getCityImage " + err)
+                            },
+                            (url) => {
+                                console.log("Url is !!!", url)
+                                this.setState({url: url})
+                            })
+                    }
+                })
+            })
+        })
     }
 
     render() {
@@ -82,45 +115,6 @@ class CityDetail extends Component {
                             </CardAction>
                         </CardItem>
                     </Card>
-                    {/*{this.state.posts.map((item, indexId) => {*/}
-                    {/*    return (*/}
-                    {/*        <Card key={this.state.posts.indexId}>*/}
-
-                    {/*            <CardItem>*/}
-                    {/*                <CardTitle*/}
-                    {/*                    title={item.cityName}*/}
-                    {/*                    subtitle={item.cityCountry}*/}
-                    {/*                />*/}
-                    {/*            </CardItem>*/}
-
-                    {/*            <CardItem cardBody>*/}
-                    {/*                <Image source={require('../../../img/noImage.png')}*/}
-                    {/*                       style={{height: 200, width: null, flex: 1}}/>*/}
-                    {/*            </CardItem>*/}
-                    {/*            <CardItem>*/}
-                    {/*                <Body>*/}
-                    {/*                    <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.body} </Text>*/}
-                    {/*                </Body>*/}
-                    {/*                <CardAction*/}
-                    {/*                    separator={true}*/}
-                    {/*                    inColumn={false}>*/}
-                    {/*                    <CardButton*/}
-                    {/*                        onPress={() => this.props.navigation.navigate('CityDetail', {*/}
-                    {/*                            indexId: item.indexId,*/}
-                    {/*                            city: item.city,*/}
-                    {/*                            country: item.country,*/}
-                    {/*                            description: item.description,*/}
-                    {/*                            img: item.img*/}
-                    {/*                        })}*/}
-                    {/*                        title="More"*/}
-                    {/*                        color="blue"*/}
-                    {/*                    />*/}
-                    {/*                </CardAction>*/}
-                    {/*            </CardItem>*/}
-                    {/*        </Card>*/}
-                    {/*    )*/}
-                    {/*})}*/}
-
 
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
@@ -145,5 +139,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         height: 22,
         color: 'white',
+
     },
 })

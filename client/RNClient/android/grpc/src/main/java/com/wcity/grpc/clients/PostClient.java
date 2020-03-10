@@ -18,6 +18,8 @@ import io.grpc.wcity.postservice.CreatePostResponse;
 import io.grpc.wcity.postservice.PlacePostsResponse;
 import io.grpc.wcity.postservice.PostsRequest;
 import io.grpc.wcity.postservice.PostsServiceGrpc;
+import io.grpc.wcity.postservice.UpdatePostRequest;
+import io.grpc.wcity.postservice.UpdatePostResponse;
 
 public class PostClient {
 
@@ -53,9 +55,9 @@ public class PostClient {
         int index;
         try {
             response = stub.createCityPost(cityPost);
-          //  if(response.getValied() == true)
-                index = response.getIndexId();
-           // else index = -1;
+            //  if(response.getValied() == true)
+            index = response.getIndexId();
+            // else index = -1;
         } catch (StatusRuntimeException e) {
             e.getMessage();
             index = -999;
@@ -65,7 +67,7 @@ public class PostClient {
 
 
     public int createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
-                               String placeName, String title, String body, String timeStamp, List<String> likes, String mongoId) {
+                               String placeName, String title, String body, String timeStamp) {
 
         io.grpc.wcity.postservice.PlacePost placePost = io.grpc.wcity.postservice.PlacePost.newBuilder()
                 .setIndexId(indexId)
@@ -76,8 +78,6 @@ public class PostClient {
                 .setTitle(title)
                 .setBody(body)
                 .setTimeStamp(timeStamp)
-                .setLikes(0, null)
-                .setMongoId(mongoId)
                 .build();
         CreatePostResponse response;
         int index = 0;
@@ -144,4 +144,43 @@ public class PostClient {
         return cityPostResponse;
     }
 
+
+    public boolean updateCityPost(String mongoId, String title, String body) {
+        UpdatePostRequest request = UpdatePostRequest.newBuilder()
+                .setMongoId(mongoId)
+                .setTitle(title)
+                .setBody(body)
+                .build();
+
+        UpdatePostResponse response;
+        boolean isValid;
+        try {
+            response = stub.updateCityPost(request);
+            isValid = response.getValid();
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+            isValid = false;
+        }
+        return isValid;
+    }
+
+
+    public boolean updatePlacePost(String mongoId, String title, String body) {
+        UpdatePostRequest request = UpdatePostRequest.newBuilder()
+                .setMongoId(mongoId)
+                .setTitle(title)
+                .setBody(body)
+                .build();
+
+        UpdatePostResponse response;
+        boolean isValid;
+        try {
+            response = stub.updateCityPost(request);
+            isValid = response.getValid();
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+            isValid = false;
+        }
+        return isValid;
+    }
 }

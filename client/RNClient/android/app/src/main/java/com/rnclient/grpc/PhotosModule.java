@@ -4,6 +4,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.google.gson.Gson;
 import com.wcity.grpc.clients.PhotosClient;
 import com.wcity.grpc.objects.CityPhoto;
 import com.wcity.grpc.objects.CityPhotoResponse;
@@ -38,7 +39,6 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getProfilePhoto(String email, String token, Callback errorCallback,
                                 Callback successCallback) {
-
         ProfilePhotoResponse response = client.getProfilePhoto(email, token);
 
         try {
@@ -78,23 +78,15 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCityImage(String token, String email, int cityId,
                              Callback errorCallback, Callback successCallback) {
-        CityPhotoResponse response = client.getCityImage(email, token, cityId);
-        int id = 0;
-        int cId = 0;
-        String url = "";
-        String timestamp = "";
-        boolean selected = false;
+        Gson gson = new Gson();
 
+        CityPhotoResponse response = client.getCityImage(token, email, cityId);
+
+        if(response.error != null){
+            errorCallback.invoke(response.error); return;
+        }
         try {
-            for (int i = 0; i < response.getPhotos().size(); i++) {
-//                 id = response.getPhotos().get(i).getId();
-//                 cId = response.getPhotos().get(i).getCityId();
-                url = response.getPhotos().get(i).getUrl();
-//                 timestamp = response.getPhotos().get(i).getTimestamp();
-//                 selected = response.getPhotos().get(i).isSelected();
-            }
-//            successCallback.invoke(id, cId, url, timestamp, selected);
-            successCallback.invoke(url);
+            successCallback.invoke(gson.toJson(response.getPhotos()));
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
@@ -104,22 +96,9 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     public void getPlacePhoto(String token, String email, int placeId, Callback errorCallback,
                               Callback successCallback) {
         PlacePhotoResponse response = client.getPlacePhoto(token, email, placeId);
-        int id = 0;
-        int pId = 0;
-        String url = "";
-        String timestamp = "";
-        boolean selected = false;
-
         try {
-            for (int i = 0; i < response.getPhotos().size(); i++) {
-//                 id = response.getPhotos().get(i).getId();
-//                 pId = response.getPhotos().get(i).getCityId();
-                url = response.getPhotos().get(i).getUrl();
-//                 timestamp = response.getPhotos().get(i).getTimestamp();
-//                 selected = response.getPhotos().get(i).isSelected();
-            }
-//            successCallback.invoke(id, cId, url, timestamp, selected);
-            successCallback.invoke(url);
+            successCallback.invoke(response.isValid(), response.getPlaceId(), response.getPhotos(),
+                    response.isActive());
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
@@ -135,27 +114,13 @@ public class PhotosModule extends ReactContextBaseJavaModule {
             errorCallback.invoke(e.getMessage());
         }
     }
-
     @ReactMethod
     public void getPostImage(String token, String userEmail, String postId, Callback errorCallback,
                              Callback successCallback) {
         PostPhotoResponse response = client.getPostImage(token, userEmail, postId);
-        int id = 0;
-        int pId = 0;
-        String url = "";
-        String timestamp = "";
-        boolean selected = false;
-
         try {
-            for (int i = 0; i < response.getPhotos().size(); i++) {
-//                 id = response.getPhotos().get(i).getId();
-//                 pId = response.getPhotos().get(i).getPostId();
-                url = response.getPhotos().get(i).getUrl();
-//                 timestamp = response.getPhotos().get(i).getTimestamp();
-//                 selected = response.getPhotos().get(i).isSelected();
-            }
-//            successCallback.invoke(id, cId, url, timestamp, selected);
-            successCallback.invoke(url);
+            successCallback.invoke(response.isValid(), response.getPostId(),
+                    response.getUserEmail(), response.getPhotos());
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

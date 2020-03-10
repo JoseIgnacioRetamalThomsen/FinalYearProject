@@ -5,8 +5,12 @@ import java.util.List;
 public class CityPhotoResponse {
     private  boolean valid;
     private int cityID;
-    private List <CityPhoto> photos;
+    private List<CityPhoto> photos;
     private int active;
+    public String error;
+
+    public CityPhotoResponse() {
+    }
 
     public CityPhotoResponse(boolean valid, int cityID, List<CityPhoto> photos, int active) {
         this.valid = valid;

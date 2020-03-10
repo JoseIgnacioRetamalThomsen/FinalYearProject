@@ -27,7 +27,7 @@ export default class DisplayCities extends Component {
                     lng: 0.0,
                     name: '',
                     //photoId: 0,
-                   // url: ''
+                    url: ''
 
                 },
             ]
@@ -56,27 +56,12 @@ export default class DisplayCities extends Component {
                             (err) => {
                                 console.log("error In ProfilesModule.getCity " + err)
                             },
-                            //city.getName(), city.getCountry(), city.getCreatorEmail(),
-                            //                         city.getLocation().getLat(), city.getLocation().getLon(),
-                            //                         city.getDescription(), city.getCityId()
+
                             (jsonCityList) => {
                                // this.state.cities = JSON.parse(jsonCityList);
                                  this.setState({cities: JSON.parse(jsonCityList)})
                                 console.log("successful values in jsonCityList!!!" + this.state.cities.description)
                             })
-                        // NativeModules.PhotosModule.getCityImage(
-                        //     value,
-                        //     key,
-                        //     this.state.cityId,
-                        //
-                        //     (err) => {
-                        //         console.log("error In PhotoModule.getCityImage " + err)
-                        //     },
-                        //     (url) => {
-                        //         url == null ? this.setState({url: 'https://storage.googleapis.com/wcity-images-1/profile-1/1458676_1980584.jpg'}) : this.setState({url: url})
-                        //
-                        //         console.log("successful values in getCityImage!!!" + this.setState({url: url}))
-                        //     })
                     }
                 })
             })
@@ -142,9 +127,10 @@ export default class DisplayCities extends Component {
                                 </CardItem>
 
                                 {/*<CardItem cardBody>*/}
-                                {/*    <Image source={{uri: this.state.url}}*/}
+                                {/*    <Image source={{url: this.state.url}}*/}
                                 {/*           style={{height: 200, width: null, flex: 1}}/>*/}
                                 {/*</CardItem>*/}
+
                                 <CardItem>
                                     <Body>
                                         <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.description} </Text>
@@ -154,6 +140,7 @@ export default class DisplayCities extends Component {
                                         inColumn={false}>
                                         <CardButton
                                             onPress={() => this.props.navigation.navigate('CityDetail', {
+                                                cityId: item.cityId,
                                                 indexId: item.indexId,
                                                 name: item.name,
                                                 country: item.country,

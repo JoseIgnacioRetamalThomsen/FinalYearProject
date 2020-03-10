@@ -5,10 +5,10 @@ import java.util.List;
 public class PlacePhotoResponse {
     private boolean valid;
     private int placeId;
-    private List<PlacePhoto> photos;
+    private String photos;
     private boolean active;
 
-    public PlacePhotoResponse(boolean valid, int placeId, List<PlacePhoto> photos, boolean active) {
+    public PlacePhotoResponse(boolean valid, int placeId, String photos, boolean active) {
         this.valid = valid;
         this.placeId = placeId;
         this.photos = photos;
@@ -31,11 +31,11 @@ public class PlacePhotoResponse {
         this.placeId = placeId;
     }
 
-    public List<PlacePhoto> getPhotos() {
+    public String getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<PlacePhoto> photos) {
+    public void setPhotos(String photos) {
         this.photos = photos;
     }
 

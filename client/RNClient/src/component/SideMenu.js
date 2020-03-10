@@ -8,7 +8,7 @@ import PhotoUpload from 'react-native-photo-upload'
 
 class SideMenu extends Component {
 
-    async logout() {
+     logout() {
         try {
             AsyncStorage.getAllKeys((err, keys) => {
                 AsyncStorage.multiGet(keys, (err, stores) => {
@@ -18,21 +18,21 @@ class SideMenu extends Component {
                         NativeModules.LoginModule.logout(
                             value,
                             key,
-                            async (err) => {
+                            (err) => {
                                 this.props.navigation.navigate('auth')
-                                await AsyncStorage.clear()
-                                logger.log(err)
-                                console.log(key, value)
+                                console.log("Deleted email & token ", key, value)
+                                 AsyncStorage.clear()
+
                             },
-                            async (isSuccess) => {
+                             (isSuccess) => {
                                 isSuccess ? this.props.navigation.navigate('auth') : this.props.navigation.navigate('app')
-                                await AsyncStorage.clear()
+                                 AsyncStorage.clear()
                             })
                     })
                 })
             })
         } catch (e) {
-            logger.log(e.message)
+            console.log(e.message)
         }
         this.props.navigation.navigate('auth')
     }

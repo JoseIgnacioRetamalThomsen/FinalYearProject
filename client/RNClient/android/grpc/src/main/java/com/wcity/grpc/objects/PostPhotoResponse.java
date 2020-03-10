@@ -6,10 +6,10 @@ public class PostPhotoResponse {
     private boolean valid;
     private String postId;
     private String userEmail;
-    private List<PostPhoto> photos;
+    private String photos;
 
     public PostPhotoResponse(boolean valid, String postId, String userEmail,
-                             List<PostPhoto> photos) {
+                             String photos) {
         this.valid = valid;
         this.postId = postId;
         this.userEmail = userEmail;
@@ -40,11 +40,11 @@ public class PostPhotoResponse {
         this.userEmail = userEmail;
     }
 
-    public List<PostPhoto> getPhotos() {
+    public String getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<PostPhoto> photos) {
+    public void setPhotos(String photos) {
         this.photos = photos;
     }
 }

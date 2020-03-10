@@ -19,7 +19,7 @@ import com.wcity.grpc.VisitedPlaces;
 
 import java.util.Iterator;
 import java.util.List;
-import io.grpc.wcity.profiles.GeolocationP;
+//import io.grpc.wcity.profiles.GeolocationP;
 
 
 public class ProfilesModule extends ReactContextBaseJavaModule {
@@ -41,6 +41,30 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "ProfilesModule";
+    }
+
+    @ReactMethod
+    public void getAllCities(int max, Callback errorCallback,
+                             Callback successCallback) {
+        String cityList;
+        try{
+            cityList = client.getAllCities(max);
+            successCallback.invoke(cityList);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void getAllPlaces(int max, Callback errorCallback,
+                             Callback successCallback) {
+        String placeList;
+        try{
+            placeList = client.getAllPlaces(max);
+            successCallback.invoke(placeList);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
     }
 
     @ReactMethod
@@ -92,17 +116,6 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
         }
     }
 
-        @ReactMethod
-    public void getAllCities(int max, Callback errorCallback,
-                        Callback successCallback) {
-            String cityList;
-            try{
-               cityList = client.getAllCities(max);
-                successCallback.invoke(cityList);
-        } catch (Exception e) {
-            errorCallback.invoke(e.getMessage());
-        }
-    }
 
 //    @ReactMethod
 //    public void getCity(String token, String name, String country, String creatorEmail,

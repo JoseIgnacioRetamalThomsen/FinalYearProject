@@ -16,6 +16,12 @@ public class CityPhoto {
 
     }
 
+    public CityPhoto(String url, String timestamp, boolean selected) {
+        this.url = url;
+        this.timestamp = timestamp;
+        this.selected = selected;
+    }
+
     public String getError() {
         return error;
     }
