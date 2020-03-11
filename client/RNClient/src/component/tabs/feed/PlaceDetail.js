@@ -1,16 +1,19 @@
 import React, {Component} from 'react';
-import {Image, NativeModules, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Image, NativeModules, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
 import CustomHeader from "../../CustomHeader";
 import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
 import {Body, CardItem, Icon} from "native-base";
 import Carousel from "react-native-snap-carousel";
 import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
+import Modal, { ModalContent } from 'react-native-modals';
+import {Button} from "react-native-elements";
 
 export default class PlaceDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isVisible: false,
             placeId: 0,
             placeName: '',
             city: '',
@@ -20,6 +23,13 @@ export default class PlaceDetail extends Component {
                 {
                     url:'',
                     timestamp: ''
+                }
+            ],
+            postTitle:'',
+            postDescription:'',
+            post:[
+                {
+
                 }
             ]
         }
@@ -122,14 +132,32 @@ export default class PlaceDetail extends Component {
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this place"
-                                       onPress={() => this.props.navigation.navigate('CreateCityPost', {
-                                           indexId: this.state.indexId,
-                                           city: this.state.city,
-                                           country: this.state.country
-                                       })}>
+                                       onPress={() => this.setState({isVisible: true})}>
                         <Icon name="md-create" style={styles.actionButtonIcon}/>
                     </ActionButton.Item>
                     </ActionButton>
+                <Modal
+                    visible={this.state.isVisible}
+                    onTouchOutside={() => {
+                        this.setState({ isVisible: false });
+                    }}
+                >
+                    <ModalContent>
+                        <TextInput
+                            placeholder="Title"
+                            underlineColorAndroid='transparent'
+                            onChangeText={(postTitle) => this.setState({postTitle})}/>
+
+                            <TextInput
+                            placeholder="Description"
+                            underlineColorAndroid='transparent'
+                            onChangeText={(postDescription) => this.setState({postDescription})}/>
+
+                            <Button onPress = { () => console.log("Pressed")}>
+                                Add place post
+                            </Button>
+                    </ModalContent>
+                </Modal>
             </View>
         )
     }
