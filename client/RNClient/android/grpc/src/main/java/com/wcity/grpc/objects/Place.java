@@ -9,6 +9,10 @@ public class Place {
     private float lat;
     private float lon;
     private int id;
+    public String error;
+
+    public Place() {
+    }
 
     public Place(String name, String city, String country, String creatorEmail,
                  String description, float lat, float lon, int id) {

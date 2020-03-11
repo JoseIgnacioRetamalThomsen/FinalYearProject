@@ -17,8 +17,11 @@ import com.wcity.grpc.VisitPlace;
 import com.wcity.grpc.VisitedCities;
 import com.wcity.grpc.VisitedPlaces;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import io.grpc.wcity.profiles.Geolocation;
 //import io.grpc.wcity.profiles.GeolocationP;
 
 
@@ -188,23 +191,22 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
 //        }
 //    }
 //
-//    @ReactMethod
-//    public void createPlace(String token, String name, String city, String country,
-//                            String creatorEmail, String description, float lat, float lon,
-//                            Callback errorCallback, Callback successCallback) {
-//        Place place = client.createPlace(token, name, city, country, creatorEmail, description,
-//                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
-//        try {
-//            //    if (place.isValid() == true) {
-//            successCallback.invoke(place.getName(), place.getCountry(), place.getCreatorEmail(),
-//                    place.getDescription(), place.getLat(), place.getLon(), place.getId());
-////            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
+    @ReactMethod
+    public void createPlace(String token, String email, String name, String city, String country,
+                             float lat, float lon,  String description,
+                            Callback errorCallback, Callback successCallback) {
+        Place place = client.createPlace(token, email, name, city, country,
+                lat, lon, description);
+        try {
+            //    if (place.isValid() == true) {
+            successCallback.invoke(place.getId());
+//            } else {
+//                errorCallback.invoke("Invalid user");
+//            }
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
 //
 //    @ReactMethod
 //    public void getPlace(String token, String name, String city, String country, String creatorEmail,
@@ -276,21 +278,19 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
 //        }
 //    }
 //
-//    @ReactMethod
-//    public void getCityPlaces(String token, String name, String country, String creatorEmail,
-//                              String description, float lat, float lon, Callback errorCallback,
-//                              Callback successCallback) {
-//        VisitedPlaces cityPlaces = client.getCityPlaces(token, name, country, creatorEmail, description,
-//                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
-//        try {
-//            // if (city.isValid() == true) {
-//            successCallback.invoke(cityPlaces.isValid(), cityPlaces.getEmail(), cityPlaces.getVisitedPlaces());
-////            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
+    @ReactMethod
+    public void getCityPlaces(String token, String email, String name, String country,
+                              Callback errorCallback, Callback successCallback) {
+        Gson gson = new Gson();
+        List<Place> placeList = client.getCityPlaces(token, email, name, country);
+//        if(placeList.get(0).error != null){
+//            errorCallback.invoke(placeList.get(0).error); return;
 //        }
-    //}
+        try {
+            successCallback.invoke(gson.toJson(placeList));
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
 
 }

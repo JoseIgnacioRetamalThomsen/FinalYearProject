@@ -187,8 +187,9 @@ public class ProfilesClient {
         }
         return city;
     }
+
     public Place createPlace(String token, String email, String name, String city, String country,
-                             String creatorEmail,  float lat, float lon, String description) {
+                             float lat, float lon, String description) {
         CreatePlaceRequestP placeRequestP = CreatePlaceRequestP.newBuilder()
                 .setToken(token)
                 .setName(email)
@@ -196,7 +197,6 @@ public class ProfilesClient {
                         .setName(name)
                         .setCity(city)
                         .setCountry(country)
-                        .setCreatorEmail(creatorEmail)
                         .setLocation(io.grpc.wcity.profiles.Geolocation.newBuilder()
                                 .setLat(lat)
                                 .setLon(lon)
@@ -212,7 +212,7 @@ public class ProfilesClient {
                     response.getPlace().getCountry(), response.getPlace().getCreatorEmail(),
                     response.getPlace().getDescription(), response.getPlace().getLocation().getLat(),
                     response.getPlace().getLocation().getLon(),
-                   response.getPlace().getPlaceId());
+                    response.getPlace().getPlaceId());
         } catch (StatusRuntimeException e) {
             e.getMessage();
         }
@@ -414,33 +414,41 @@ public class ProfilesClient {
 //        }
 //        return visitedPlaces;
 //    }
-//
-//    public VisitedPlaces getCityPlaces(String token, String name, String country, String creatorEmail,
-//                                       String description, GeolocationP location) {
-//        CityRequestP cityRequestP = CityRequestP.newBuilder()
-//                .setToken(token)
-//                .setName(name)
-//                .setCountry(country)
-//                .setCreatorEmail(creatorEmail)
-//                .setDescription(description)
-//                .setLocation(location)
-//                .build();
-//        VisitedPlacesResponseP response;
-//
-//        VisitedPlaces cityPlaces = null;
-//
-//        try {
-//            response = stub.getCityPlaces(cityRequestP);
-//            ArrayList<Place> cityPlacesList = new ArrayList<>();
-//            for (PlaceResponseP e : response.getPlacesList()) {
-//                cityPlacesList.add(new Place(e.getValid(), e.getName(), e.getCity(), e.getCountry(),
-//                        e.getCreatorEmail(), e.getDescription(), e.getLocation().getLon(),
-//                        e.getLocation().getLat(), e.getId()));
-//            }
-//            cityPlaces = new VisitedPlaces(response.getValid(), response.getEmail(), cityPlacesList);
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return cityPlaces;
-//    }
+// string name = 1;
+//    string country = 2;
+//    string creatorEmail = 3;
+//    Geolocation location = 4;
+//    string description = 5;
+//    int32 cityId = 6;
+    public List<Place> getCityPlaces(String token, String email, String name,
+                                String country) {
+        CreateCityRequestP userRequest = CreateCityRequestP.newBuilder()
+                .setToken(token)
+                .setName(email)
+                .setCity(io.grpc.wcity.profiles.City.newBuilder()
+                .setName(name)
+                .setCountry(country)
+                .build())
+        .build();
+        VisitedPlacesResponseP response;
+        List <Place> placeList = new ArrayList<>();
+        Place placeError;
+        try {
+            response = stub.getCityPlaces(userRequest);
+            for(io.grpc.wcity.profiles.Place place:response.getPlacesList()) {
+                placeList.add(
+                        new Place(place.getName(), place.getCity(), place.getCountry(),
+                                place.getCreatorEmail(), place.getDescription(),
+                                place.getLocation().getLat(), place.getLocation().getLon(),
+                                place.getPlaceId()
+                        ));
+            }
+        } catch (StatusRuntimeException e) {
+            placeError = new Place();
+            placeError.error = e.getMessage();
+            placeList.add(placeError);
+            e.getMessage();
+        }
+        return placeList;
+    }
 }

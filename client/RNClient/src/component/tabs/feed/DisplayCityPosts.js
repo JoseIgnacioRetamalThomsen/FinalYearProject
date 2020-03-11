@@ -111,6 +111,43 @@ class DisplayCityPosts extends Component {
     //         })
     //     })
     // }
+    getCityPosts() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let key = store[i][0];
+                    let value = store[i][1]
+                    console.log("key/value in getCity() " + key + " " + value)
+
+                    if (value !== null) {
+                        NativeModules.ProfilesModule.getCity(
+                            value,
+                            this.state.city,
+                            this.state.country,
+                            key,
+                            this.state.description,
+                            this.state.lat,
+                            this.state.lon,
+
+                            (err) => {
+                                console.log("err in getCity " + err)
+                            },
+                            (valid, name, country, email, description, lat, lon, id) => {
+                                this.setState({name: name})
+                                this.setState({country: country})
+                                // this.setState({email: email})
+                                this.setState({description: description})
+                                this.setState({lat: lat})
+                                this.setState({lon: lon})
+                                console.log("name id  is " + name, id)
+                                console.log("successfully got a city!!!")
+                                //this.props.navigation.navigate('DisplayCities')
+                            })
+                    }
+                })
+            })
+        })
+    }
     updateCity() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {

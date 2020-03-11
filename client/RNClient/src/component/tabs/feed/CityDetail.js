@@ -7,25 +7,12 @@ import {Card, CardAction, CardButton, CardTitle} from "react-native-material-car
 import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
 import Carousel from 'react-native-snap-carousel';
+import CreatePlace from './CreatePlace'
 
 class CityDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            images: [
-                {
-                    url:"https://storage.googleapis.com/wcity-images-1/city-1/1953847_1044359.jpg",
-                    timestamp :"4554"
-                },
-                {
-                    url:"https://storage.googleapis.com/wcity-images-1/city-1/1953847_1044359.jpg",
-                    timestamp :"45574"
-
-                }
-
-            ]
-
-            ,
             cityId: 0,
             indexId: 0,
             city: '',
@@ -34,6 +21,26 @@ class CityDetail extends Component {
             description: '',
             lat: 0,
             lon: 0,
+            images: [
+                {
+                    url:"",
+                    timestamp :"4554"
+                },
+                {
+                    url:"",
+                    timestamp :"45574"
+
+                }
+
+            ],
+            places:[
+                {
+                    name:'',
+                    city:'',
+                    country:'',
+                    description: ''
+                }
+            ],
             posts: [
                 {
                     indexId: '',
@@ -68,6 +75,7 @@ class CityDetail extends Component {
         })
         console.log('componentDidMount' + cityId, city, img)
         this.getCityImages()
+        this.getCityPlaces()
     }
 
     getCityImages() {
@@ -78,8 +86,7 @@ class CityDetail extends Component {
                     let token = store[i][1]
                     console.log("email/token in getCityImages " + email + " " + token)
 
-                    if (token !== null) {
-
+                    if (token != null) {
                         NativeModules.PhotosModule.getCityImage(
                             token,
                             email,
@@ -87,21 +94,46 @@ class CityDetail extends Component {
                             (err) => {
                                 console.log("error In PhotoModule.getCityImage " + err)
                             },
-                            (url) => {
-                                console.log("Url is !!!", url)
-                                this.setState({url: url})
+                            (images) => {
+                                this.setState({images: JSON.parse(images)})
                             })
                     }
                 })
             })
         })
     }
+getCityPlaces(){
+    AsyncStorage.getAllKeys((err, keys) => {
+        AsyncStorage.multiGet(keys, (err, stores) => {
+            stores.map((result, i, store) => {
+                let email = store[i][0];
+                let token = store[i][1]
+                if (token != null) {
+                    NativeModules.ProfilesModule.getCityPlaces(
+                        token,
+                        email,
+                        //this.state.city,
+                        'San Pedro',
+                        "Chile",
+                        //this.state.country,
+                        (err) => {
+                            console.log(err)
+                        },
+                        (placesList) => {
+                             console.log(" placesList is !!!", placesList, this.state.city, this.state.country)
+                             this.setState({places: JSON.parse(placesList)})
+                        })
+                }
+            })
+        })
+    })
+}
 
     _renderItem = ({item, index}) => {
         console.log(item,index);
         return (
             <View style={styles.slide}>
-                {/*<Text style={styles.title}>{item.timestamp}</Text>*/}
+                <Text style={styles.title}>{item.timestamp}</Text>
                  <Image source={{uri: item.url}}
                      style={{height: 200, width: null, flex: 1}}/>
             </View>
@@ -126,6 +158,15 @@ class CityDetail extends Component {
                             <Image source={this.state.img}
                                    style={{height: 200, width: null, flex: 1}}/>
                         </CardItem>
+                        <Carousel
+                            ref={(c) => {
+                                this._carousel = c;
+                            }}
+                            data={this.state.images}
+                            renderItem={this._renderItem}
+                            sliderWidth={500}
+                            itemWidth={500}
+                        />
                         <CardItem>
                             <Body>
                                 <Text>{this.state.description} </Text>
@@ -141,23 +182,18 @@ class CityDetail extends Component {
                             </CardAction>
                         </CardItem>
                     </Card>
-                    {/*<CardItem cardBody>*/}
-                    {/*    <Image source={{url: this.state.url}}*/}
-                    {/*           style={{height: 200, width: null, flex: 1}}/>*/}
-                    {/*</CardItem>*/}
-                    <Carousel
-                        ref={(c) => {
-                            this._carousel = c;
-                        }}
-                        data={this.state.images}
-                        renderItem={this._renderItem}
-                        sliderWidth={500}
-                        itemWidth={500}
-                    />
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
                                        onPress={() => this.props.navigation.navigate('CreateCityPost', {
+                                           indexId: this.state.indexId,
+                                           city: this.state.city,
+                                           country: this.state.country
+                                       })}>
+                        <Icon name="md-create" style={styles.actionButtonIcon}/>
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#007AFF' title="Add a place"
+                                       onPress={() => this.props.navigation.navigate('CreatePlace', {
                                            indexId: this.state.indexId,
                                            city: this.state.city,
                                            country: this.state.country

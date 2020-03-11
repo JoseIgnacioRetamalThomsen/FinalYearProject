@@ -40,7 +40,7 @@ public class PostClient {
 
 
     public int createCityPost(int indexId, String creatorEmail, String cityName, String cityCountry,
-                              String title, String body, String timeStamp) {
+                              String title, String body) {
 
         CityPost cityPost = CityPost.newBuilder()
                 .setIndexId(indexId)
@@ -49,7 +49,6 @@ public class PostClient {
                 .setCityCountry(cityCountry)
                 .setTitle(title)
                 .setBody(body)
-                .setTimeStamp(timeStamp)
                 .build();
         CreatePostResponse response;
         int index;

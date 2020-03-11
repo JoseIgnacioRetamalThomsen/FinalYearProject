@@ -4,102 +4,73 @@ import styles from "../../../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
 import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'react-native-material-cards'
 import {Body, CardItem, Text, Title, Root} from "native-base";
-import ActionButton from "react-native-action-button";
 import CustomHeader from "../../CustomHeader";
-import MapInput from "../../MapInput";
-import LoadImage from "../../LoadImage";
-import GeoLoc from "../../GeoLoc";
 import PhotoUpload from "react-native-photo-upload";
 
-export default class CreateCity extends React.Component {
+export default class CreatePlace extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            cities: [
-                {
-                    cityId: "32",
-                    token: '',
-                    name: '',
-                    country: '',
-                    email: '',
-                    description: '',
-                    lat: 60,
-                    lon: 80,
-                    image:'',
+                    placeId: 0,
+                    image: '',
                     url: '',
-                },
-
-            ]
-
-        }
+                    placeName: '',
+                    city:'',
+                    country:'',
+                    lat:1,
+                    lon:1,
+                    description:'',
+                }
     }
 
-    // sendData = () => {
-    //     this.props.parentCallback(this.state.city, this.state.cityId)
-    //     console.log("sendData"+this.state.city, this.state.cityId)
-    // }
-
-    // callbackFunction = ( city, country, lat, lon) => {
-    //     this.setState({city: city})
-    //     this.setState({country: country})
-    //     this.setState({lat: lat})
-    //     this.setState({lon: lon})
-    //     console.log(lat, lon)
-    // }
-
-    createCity() {
-        console.log("Clicked")
+    createPlace() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
-                    let key = store[i][0];
-                    let value = store[i][1]
-                    NativeModules.ProfilesModule.createCity(
-                        value,
-                        key,
-                        this.state.name,
+                    let email = store[i][0];
+                    let token = store[i][1]
+                    NativeModules.ProfilesModule.createPlace(
+                        token,
+                        email,
+                        this.state.placeName,
+                        this.state.city,
                         this.state.country,
-                        key,
                         89,
                         90,
                         //parseFloat(this.state.lon),
                         this.state.description,
                         (err) => {
-                            console.log("err in createCity " + err)
+                            console.log(err)
                         },
-                        (cityId) => {
-                            this.setState({cityId:cityId})
-                            this.uploadCityPhoto();
-                            console.log(cityId)
-                            console.log("successfully created a city!!!")
-                            // this.sendData()
-                            this.props.navigation.navigate('DisplayCities')
+                        (placeId) => {
+                            this.setState({placeId:placeId})
+                            console.log(placeId)
+                           // console.log(this.state.placeName, this.state.description)
+                            this.uploadPlacePhoto();
+                            //this.props.navigation.navigate('DisplayPlaces')
                         })
                 })
             })
         })
     }
 
-    uploadCityPhoto() {
+    uploadPlacePhoto() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
-                    let key = store[i][0];
-                    let value = store[i][1]
-                    console.log("key/value in createcity " + key + " " + value)
-                    //console.log("this.state.image " + this.state.image)
-                    if (value !== null) {
-                        NativeModules.PhotosModule.uploadCityPhoto(
-                            key,
-                            value,
-                            parseInt(this.state.cityId),
+                    let email = store[i][0];
+                    let token = store[i][1]
+                    if (token != null) {
+                        NativeModules.PhotosModule.uploadPlacePhoto(
+                            token,
+                            email,
+                            parseInt(this.state.placeId),
                             this.state.image,
                             (err) => {
                                 console.log("In uploadPhoto " + err)
                             },
                             (url) => {
                                 this.setState({url: url})
-                                console.log("avatar_url  is " + this.state.url, url, this.state.image)
                             })
                     }
                 })
@@ -117,21 +88,21 @@ export default class CreateCity extends React.Component {
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.inputs}
-                                placeholder="CreateCity"
+                                placeholder="Place Name"
                                 underlineColorAndroid='transparent'
-                                onChangeText={(name) => this.setState({name})}
+                                onChangeText={(placeName) => this.setState({placeName})}
                             >
-                                {this.state.city}
+                                {this.state.placeName}
                             </TextInput>
                         </View>
 
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.inputs}
-                                placeholder="Country"
-                                onChangeText={(country) => this.setState({country})}
+                                placeholder="Description"
+                                onChangeText={(description) => this.setState({description})}
                             >
-                                {this.state.country}
+                                {this.state.description}
                             </TextInput>
                         </View>
                         <View style={styles.inputContainer}>
@@ -146,7 +117,7 @@ export default class CreateCity extends React.Component {
                         <PhotoUpload onPhotoSelect={image => {
                             if (image) {
                                 this.setState({image: image})
-                                //this.uploadCityPhoto()
+                                //this.createPlace()
                             }
                         }
                         }>
@@ -166,7 +137,7 @@ export default class CreateCity extends React.Component {
 
                     <View style={styles.container}>
                         <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
-                                            onPress={() => this.createCity()}>
+                                            onPress={() => this.createPlace()}>
                             <Text style={styles.loginText}>Submit</Text>
                         </TouchableHighlight>
                     </View>

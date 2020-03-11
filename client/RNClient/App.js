@@ -28,6 +28,8 @@ import MapInput from "./src/component/MapInput";
 import CreateCity from "./src/component/tabs/feed/CreateCity";
 import CreateCityPost from "./src/component/tabs/feed/CreateCityPost";
 import Test from "./src/component/Test";
+import DisplayPlaces from "./src/component/tabs/myPosts/DisplayPlaces";
+import CreatePlace from "./src/component/tabs/feed/CreatePlace";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -46,6 +48,10 @@ const FeedStack = createStackNavigator({
         screen: CreateCity,
         navigationOptions: navOptionHandler
     },
+    CreatePlace: {
+        screen: CreatePlace,
+        navigationOptions: navOptionHandler
+    },
     CityDetail: {
         screen: CityDetail,
         navigationOptions: navOptionHandler
@@ -61,6 +67,7 @@ const FeedStack = createStackNavigator({
 })
 
 const MyPostsStack = createStackNavigator({
+
     MyPosts: {
         screen: MyPosts,
         navigationOptions: navOptionHandler
