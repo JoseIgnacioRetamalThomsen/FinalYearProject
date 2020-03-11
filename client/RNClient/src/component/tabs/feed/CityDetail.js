@@ -23,22 +23,24 @@ class CityDetail extends Component {
             lon: 0,
             images: [
                 {
-                    url:"",
-                    timestamp :"4554"
+                    url: "",
+                    timestamp: ""
                 },
                 {
-                    url:"",
-                    timestamp :"45574"
+                    url: "",
+                    timestamp: ""
 
                 }
 
             ],
-            places:[
+            places: [
                 {
-                    name:'',
-                    city:'',
-                    country:'',
-                    description: ''
+                    id: 0,
+                    name: '',
+                    city: '',
+                    country: '',
+                    description: '',
+                    url:''
                 }
             ],
             posts: [
@@ -60,20 +62,19 @@ class CityDetail extends Component {
     componentDidMount() {
         const cityId = this.props.navigation.getParam('cityId', '')
         const indexId = this.props.navigation.getParam('indexId', '')
-        const city = this.props.navigation.getParam('city', '')
+        const city = this.props.navigation.getParam('name', '')
         const country = this.props.navigation.getParam('country', '')
         const description = this.props.navigation.getParam('description', '')
         const img = this.props.navigation.getParam('img', '')
 
         this.setState({
             cityId,
-            indexId,
             city,
             country,
             description,
             img
         })
-        console.log('componentDidMount' + cityId, city, img)
+        console.log('cityDetail' + cityId, city, country)
         this.getCityImages()
         this.getCityPlaces()
     }
@@ -96,48 +97,48 @@ class CityDetail extends Component {
                             },
                             (images) => {
                                 this.setState({images: JSON.parse(images)})
+                                console.log("image json", this.state.images.url)
                             })
                     }
                 })
             })
         })
     }
-getCityPlaces(){
-    AsyncStorage.getAllKeys((err, keys) => {
-        AsyncStorage.multiGet(keys, (err, stores) => {
-            stores.map((result, i, store) => {
-                let email = store[i][0];
-                let token = store[i][1]
-                if (token != null) {
-                    NativeModules.ProfilesModule.getCityPlaces(
-                        token,
-                        email,
-                        //this.state.city,
-                        'San Pedro',
-                        "Chile",
-                        //this.state.country,
-                        (err) => {
-                            console.log(err)
-                        },
-                        (placesList) => {
-                             console.log(" placesList is !!!", placesList, this.state.city, this.state.country)
-                             this.setState({places: JSON.parse(placesList)})
-                        })
-                }
+
+    getCityPlaces() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    this.setState({email: email})
+                    let token = store[i][1]
+                    if (token != null) {
+                        NativeModules.ProfilesModule.getCityPlaces(
+                            token,
+                            email,
+                            this.state.city,
+                            this.state.country,
+                            (err) => {
+                                console.log(err)
+                            },
+                            (placesList) => {
+                                console.log(" placesList is !!!", placesList, this.state.city, this.state.country)
+                                this.setState({places: JSON.parse(placesList)})
+                            })
+                    }
+                })
             })
         })
-    })
-}
+    }
 
     _renderItem = ({item, index}) => {
-        console.log(item,index);
+        console.log(item, index);
         return (
             <View style={styles.slide}>
                 <Text style={styles.title}>{item.timestamp}</Text>
-                 <Image source={{uri: item.url}}
-                     style={{height: 200, width: null, flex: 1}}/>
+                <Image source={{uri: item.url}}
+                       style={{height: 200, width: null, flex: 1}}/>
             </View>
-
         )
     }
 
@@ -182,6 +183,51 @@ getCityPlaces(){
                             </CardAction>
                         </CardItem>
                     </Card>
+
+
+
+
+                    <View style={{flex: 1}}>
+
+                    </View>
+                    {this.state.places.map((item, index) => {
+                        return (
+                            <Card key={this.state.places.placeId}>
+
+                                <CardItem>
+                                    <CardTitle
+                                        title={item.name}
+                                    />
+                                </CardItem>
+                                {/*<CardItem cardBody>*/}
+                                {/*    <Image source={{url: this.state.url}}*/}
+                                {/*           style={{height: 200, width: null, flex: 1}}/>*/}
+                                {/*</CardItem>*/}
+                                <CardItem>
+                                    <Body>
+                                        <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.description} </Text>
+                                    </Body>
+                                    <CardAction
+                                        separator={true}
+                                        inColumn={false}>
+                                        <CardButton
+                                            onPress={() => this.props.navigation.navigate('PlaceDetail', {
+                                                placeId: item.id,
+                                                name: item.name,
+                                                city: this.state.city,
+                                                country: this.state.country,
+                                                description: item.description,
+                                            })}
+                                            title="More"
+                                            color="blue"
+                                        />
+                                    </CardAction>
+                                </CardItem>
+                            </Card>
+                        )
+                    })}
+
+
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
@@ -195,8 +241,10 @@ getCityPlaces(){
                     <ActionButton.Item buttonColor='#007AFF' title="Add a place"
                                        onPress={() => this.props.navigation.navigate('CreatePlace', {
                                            indexId: this.state.indexId,
-                                           city: this.state.city,
-                                           country: this.state.country
+                                           name: this.state.city,
+                                           country: this.state.country,
+                                           email: this.state.email,
+                                           image: this.state.image
                                        })}>
                         <Icon name="md-create" style={styles.actionButtonIcon}/>
                     </ActionButton.Item>

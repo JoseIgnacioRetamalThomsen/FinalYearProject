@@ -95,10 +95,10 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getPlacePhoto(String token, String email, int placeId, Callback errorCallback,
                               Callback successCallback) {
+        Gson gson = new Gson();
         PlacePhotoResponse response = client.getPlacePhoto(token, email, placeId);
         try {
-            successCallback.invoke(response.isValid(), response.getPlaceId(), response.getPhotos(),
-                    response.isActive());
+            successCallback.invoke(gson.toJson(response.getPhotos()));
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

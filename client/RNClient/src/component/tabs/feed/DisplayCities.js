@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Button, Image, NativeModules, ScrollView, StyleSheet, View} from 'react-native';
+import {Image, NativeModules, ScrollView, StyleSheet, View} from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import {Body, CardItem, Icon, Text} from "native-base";
-import {Card, CardAction, CardButton, CardContent, CardImage, CardTitle} from "react-native-material-cards";
+import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
 import CustomHeader from "../../CustomHeader";
 import MapInput from "../../MapInput";
 import ActionButton from "react-native-action-button";
@@ -19,18 +19,17 @@ export default class DisplayCities extends Component {
 
                 {
                     cityId: 0,
+                    name: '',
                     country: '',
                     creatorEmail: '',
                     description: '',
-                   // img: '../../../img/nuig.jpg',
                     lat: 0.0,
                     lng: 0.0,
-                    name: '',
-                    //photoId: 0,
                     url: ''
 
                 },
-            ]
+            ],
+            isUpdated : false
         }
     }
 
@@ -41,6 +40,16 @@ export default class DisplayCities extends Component {
     //     this.setState({country: country})
     //     console.log(this.state.lat, this.state.lng)
     // }
+    // shouldComponentUpdate(prevProps, prevState){
+    //     console.log("in  shouldComponentUpdate1")
+    //     //this.displayCities()
+    //
+    //     if (prevState.cities !== this.state.cities) {
+    //         console.log("in  shouldComponentUpdate")
+    //         this.setState({isUpdated: false})
+    //
+    //     }
+    // }
 
     componentDidMount() {
         AsyncStorage.getAllKeys((err, keys) => {
@@ -48,19 +57,19 @@ export default class DisplayCities extends Component {
                 stores.map((result, i, store) => {
                     let key = store[i][0];
                     let value = store[i][1]
-                    console.log("key/value in displayCity " + key + " " + value)
 
-                    if (value !== null) {
+                    if (value != null) {
                         NativeModules.ProfilesModule.getAllCities(
                             this.state.max,
                             (err) => {
-                                console.log("error In ProfilesModule.getCity " + err)
+                                console.log(err)
                             },
 
                             (jsonCityList) => {
-                               // this.state.cities = JSON.parse(jsonCityList);
-                                 this.setState({cities: JSON.parse(jsonCityList)})
-                                console.log("successful values in jsonCityList!!!" + this.state.cities.description)
+                                this.setState({cities: JSON.parse(jsonCityList)})
+                                // this.setState({name: JSON.stringify(jsonCityList.name)})
+
+                                console.log("successful values in jsonCityList!!!", this.state.cities[0].name)
                             })
                     }
                 })
@@ -106,7 +115,6 @@ export default class DisplayCities extends Component {
 
     render() {
         return (
-
             <View style={{flex: 1}}>
                 {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
                 <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
@@ -125,12 +133,10 @@ export default class DisplayCities extends Component {
                                         subtitle={item.country}
                                     />
                                 </CardItem>
-
-                                {/*<CardItem cardBody>*/}
-                                {/*    <Image source={{url: this.state.url}}*/}
-                                {/*           style={{height: 200, width: null, flex: 1}}/>*/}
-                                {/*</CardItem>*/}
-
+                                <CardItem cardBody>
+                                    <Image source={{url: this.state.url}}
+                                           style={{height: 200, width: null, flex: 1}}/>
+                                </CardItem>
                                 <CardItem>
                                     <Body>
                                         <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.description} </Text>
@@ -141,11 +147,10 @@ export default class DisplayCities extends Component {
                                         <CardButton
                                             onPress={() => this.props.navigation.navigate('CityDetail', {
                                                 cityId: item.cityId,
-                                                indexId: item.indexId,
                                                 name: item.name,
+                                                indexId: item.indexId,
                                                 country: item.country,
                                                 description: item.description,
-                                                //img: item.img
                                             })}
                                             title="More"
                                             color="blue"

@@ -11,16 +11,30 @@ export default class CreatePlace extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-                    placeId: 0,
-                    image: '',
-                    url: '',
-                    placeName: '',
-                    city:'',
-                    country:'',
-                    lat:1,
-                    lon:1,
-                    description:'',
-                }
+            placeId: 0,
+            image: '',
+            url: '',
+            placeName: '',
+            city: '',
+            country: '',
+            lat: 1,
+            lon: 1,
+            description: '',
+        }
+    }
+
+    componentDidMount() {
+        const city = this.props.navigation.getParam('city', '')
+        const country = this.props.navigation.getParam('country', '')
+        const email = this.props.navigation.getParam('email', '')
+        const image = this.props.navigation.getParam('image', '')
+        console.log("Passed values: in createPlace", city, country, email, image)
+        this.setState({
+            city,
+            country,
+            email,
+            image
+        })
     }
 
     createPlace() {
@@ -43,9 +57,9 @@ export default class CreatePlace extends React.Component {
                             console.log(err)
                         },
                         (placeId) => {
-                            this.setState({placeId:placeId})
+                            this.setState({placeId: placeId})
                             console.log(placeId)
-                           // console.log(this.state.placeName, this.state.description)
+                            // console.log(this.state.placeName, this.state.description)
                             this.uploadPlacePhoto();
                             //this.props.navigation.navigate('DisplayPlaces')
                         })
@@ -67,7 +81,7 @@ export default class CreatePlace extends React.Component {
                             parseInt(this.state.placeId),
                             this.state.image,
                             (err) => {
-                                console.log("In uploadPhoto " + err)
+                                console.log(err)
                             },
                             (url) => {
                                 this.setState({url: url})
@@ -82,7 +96,7 @@ export default class CreatePlace extends React.Component {
         return (
             <Root>
                 <View style={{flex: 1}}>
-                    <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
+                    <CustomHeader title="Create place" isHome={false} navigation={this.props.navigation}/>
                     <View style={styles.container}>
                         {/*<GeoLoc parentCallback={this.callbackFunction} />*/}
                         <View style={styles.inputContainer}>
@@ -96,15 +110,6 @@ export default class CreatePlace extends React.Component {
                             </TextInput>
                         </View>
 
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.inputs}
-                                placeholder="Description"
-                                onChangeText={(description) => this.setState({description})}
-                            >
-                                {this.state.description}
-                            </TextInput>
-                        </View>
                         <View style={styles.inputContainer}>
                             <TextInput
                                 style={styles.inputs}

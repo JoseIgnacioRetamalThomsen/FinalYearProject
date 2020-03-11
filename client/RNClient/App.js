@@ -30,6 +30,7 @@ import CreateCityPost from "./src/component/tabs/feed/CreateCityPost";
 import Test from "./src/component/Test";
 import DisplayPlaces from "./src/component/tabs/myPosts/DisplayPlaces";
 import CreatePlace from "./src/component/tabs/feed/CreatePlace";
+import PlaceDetail from "./src/component/tabs/feed/PlaceDetail";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -38,10 +39,6 @@ const navOptionHandler = (navigation) => ({
 const FeedStack = createStackNavigator({
     DisplayCities: {
         screen: DisplayCities,
-        navigationOptions: navOptionHandler
-    },
-    Test:{
-        screen: Test,
         navigationOptions: navOptionHandler
     },
     CreateCity: {
@@ -54,6 +51,10 @@ const FeedStack = createStackNavigator({
     },
     CityDetail: {
         screen: CityDetail,
+        navigationOptions: navOptionHandler
+    },
+    PlaceDetail:{
+        screen: PlaceDetail,
         navigationOptions: navOptionHandler
     },
     DisplayCityPosts: {

@@ -168,7 +168,7 @@ public class PhotosClient {
     }
 
     public PlacePhotoResponse getPlacePhoto(String token, String email, int placeId) {
-        Gson gson = new Gson();
+
         PlacePhotoRequestP userData = PlacePhotoRequestP.newBuilder()
                 .setToken(token)
                 .setEmail(email)
@@ -186,7 +186,7 @@ public class PhotosClient {
             }
 
             photoResponse = new PlacePhotoResponse(response.getValid(), response.getPlaceId(),
-                    gson.toJson(photoList), response.getActive());
+                   photoList, response.getActive());
 
         } catch (StatusRuntimeException e) {
             e.getMessage();

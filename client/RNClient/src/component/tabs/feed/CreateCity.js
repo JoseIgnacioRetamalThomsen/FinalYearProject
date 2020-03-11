@@ -29,8 +29,8 @@ export default class CreateCity extends React.Component {
                     url: '',
                 },
 
-            ]
-
+            ],
+            isUpdated: true
         }
     }
 
@@ -73,7 +73,13 @@ export default class CreateCity extends React.Component {
                             console.log(cityId)
                             console.log("successfully created a city!!!")
                             // this.sendData()
-                            this.props.navigation.navigate('DisplayCities')
+                            this.props.navigation.navigate('CityDetail', {
+                                cityId: this.state.cityId,
+                                name: this.state.name,
+                                indexId: this.state.indexId,
+                                country: this.state.country,
+                                description: this.state.description,
+                            })
                         })
                 })
             })
@@ -99,7 +105,6 @@ export default class CreateCity extends React.Component {
                             },
                             (url) => {
                                 this.setState({url: url})
-                                console.log("avatar_url  is " + this.state.url, url, this.state.image)
                             })
                     }
                 })
