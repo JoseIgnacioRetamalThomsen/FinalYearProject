@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	url ="35.197.216.42:10051"
+	//url ="35.197.216.42:10051"
+	url ="0.0.0.0:10051"
 )
 
 type postService struct {
@@ -48,10 +49,10 @@ func main(){
 	s2 := &postService{dbserverCtx}
 	serviceConn = *s2
 
-	//CreateCityPost()
+	CreateCityPost()
 	//CreatePlacePost()
 	//GetPlacePosts()
-	GetCityPosts()
+	//GetCityPosts()
 }
 
 func CreateCityPost(){
@@ -72,7 +73,7 @@ func CreateCityPost(){
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(r)
+	fmt.Println(r.MongoId)
 }
 
 func CreatePlacePost(){

@@ -1,6 +1,7 @@
 package main
 
 import (
+
 	"context"
 	"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
@@ -11,6 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 	"log"
 	"net"
+	//"net/http"
 
 	//"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -74,12 +76,16 @@ func (s *server) CreateCityPost(ctx context.Context, in *pb.CityPostPSDB) (*pb.C
 		MongoId:      "",
 	})
 	if err != nil{
-		panic (err)
+		return &pb.CreatePostResponsePSDB{
+			Valied:               false,
+			MongoId:              fmt.Sprintf("%v",index),
+
+		},err
 	}
 	index = index
 	return &pb.CreatePostResponsePSDB{
 		Valied:               true,
-		IndexId:              in.IndexId,
+		MongoId:              fmt.Sprintf("%v",index),
 
 	},nil
 }
@@ -99,18 +105,18 @@ func (s *server) CreatePlacePost(ctx context.Context, in *pb.PlacePostPSDB) (*pb
 		Likes:        nil,
 
 	})
-	index = index
+
 	if err != nil{
 		return &pb.CreatePostResponsePSDB{
 			Valied:               false,
-			IndexId:              in.IndexId,
+			MongoId:              fmt.Sprintf("%v",index),
 
 		},err
 	}
 
 	return &pb.CreatePostResponsePSDB{
 		Valied:               true,
-		IndexId:              in.IndexId,
+		MongoId:              fmt.Sprintf("%v",index),
 
 	},nil
 }
@@ -221,7 +227,9 @@ func CreateCityPost(city *CityPost)(interface{},error){
 		fmt.Println("here")
 		return nil,err
 	}
-	return res.InsertedID,nil
+	 oid, ok := res.InsertedID.(primitive.ObjectID);
+	ok =ok;
+	return oid.Hex(),nil
 }
 
 func GetCityPost(IndexId int32)[]*pb.CityPostPSDB{
@@ -286,11 +294,13 @@ func CreatePlacePost(place *PlacePost)(interface{},error){
 		panic(err)
 	}
 
+
 	res, err := collection.InsertOne(ctx,data)
 	if err!=nil{
 		return "",err
 	}
-	return res.InsertedID,nil
+
+	return  res.InsertedID,nil
 }
 
 func GetPlacePost(indexId int32)[]*pb.PlacePostPSDB{

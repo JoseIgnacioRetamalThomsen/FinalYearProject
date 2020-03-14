@@ -12,27 +12,61 @@ option java_package = "io.grpc.wcity.photoShared";
 option java_outer_classname = "PhotoSharedProto";
 option objc_class_prefix = "RPC";
 
+// Profile Photo
+//
+// Contains all data for display  a profile picture.
 message ProfilePhoto {
+
+    //Photo id, unique identifier of this image
     int32 id = 1;
+    //User email is global unique identifier of the user
     string userEmail = 2;
+    // url of the picture in the server,
+    // used for display the picture
     string url = 3;
+    //Time of upload
     string timestamp = 4;
+    // true if is the fist image
     bool selected = 5;
 }
+
+// City Photo
+//
+// Contains all data for display  a city picture.
 message CityPhoto {
+
+    //Photo id, unique identifier of this image
     int32 id = 1;
+    // Unique identifier of the city, is the neo4jid
     int32 cityId = 2;
+    // url of the picture in the server,
+    // used for display the picture
     string url = 3;
+    //Time of upload
     string timestamp = 4;
+    // true if is the fist image
     bool selected = 5;
 }
+
+// Place Photo
+//
+// Contains all data for display  a place picture.
 message PlacePhoto {
+
+    //Photo id, unique identifier of this image
     int32 id = 1;
+    // Unique identifier of the place, is the neo4jid
     int32 placeId = 2;
+    // url of the picture in the server,
+    // used for display the picture
     string url = 3;
     string timestamp = 4;
     bool selected = 5;
 }
+
+// Post Photo
+//
+// Contains all data for display  a post picture.
 message PostPhoto {
     int32 id = 1;
     string postId = 2;

@@ -27,8 +27,8 @@ const (
 
 )
 const(
-	url = "0.0.0.0:60051"
-	//url="35.197.216.42:60051";
+	//url = "0.0.0.0:60051"
+	url="35.197.216.42:60051";
 	//url = "35.234.146.99:5777"
 	token ="a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508"
 	tokenEmail ="a@a.com"
@@ -335,7 +335,7 @@ func GetCityPlaces(email string, token string, cityName string, cityCountry stri
 func GetAllCitys(){
 
 	// initialize a pb.Rectangle
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	stream, err := profSerConn.context.dbClient.GetAllCitys(ctx,&pb.GetAllRequest{
 		Max:                  100,
@@ -359,7 +359,7 @@ func GetAllCitys(){
 func GetAllPlaces(){
 
 	// initialize a pb.Rectangle
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	stream, err := profSerConn.context.dbClient.GetAllPlaces(ctx,&pb.GetAllRequest{
 		Max:                  100,

@@ -1,8 +1,6 @@
 //Jose I. Retamal
 //GMIT 2020
 
-//Define interface for connect to main profile service
-
 syntax = "proto3";
 
 package wcity;
@@ -14,14 +12,56 @@ option java_package = "io.grpc.wcity.profiles";
 option java_outer_classname = "ProfilesProto";
 option objc_class_prefix = "RPC";
 
+// Define server interface
+// For conetion from profiles main service to front end
 service Profiles {
+
+    // Search for city,place
+    //
+    // Given a serach frase it will return desidere amount of matches.
     rpc SearchAllDBA (SearchAllRequest) returns (stream SearchAllResult);
+
+    // Returns all citys on the database
+    //
+    // The amount of city's can be huge so they are return
+    // as a one way stream, a limit can be set.
     rpc GetAllCitys (GetAllRequest) returns (stream City);
+
+    // Returns all places on the database
+    //
+    // The amount of city's can be huge so they are return
+    // as a one way stream, a limit can be set.
     rpc GetAllPlaces (GetAllRequest) returns (stream Place);
+
+    // Create a new user
+    //
+    // Users are only created when a user create a new account
+    // on the auth service. When user create account auth service
+    // will use this method to create the account in the neo4j db.
     rpc CreateUser (CreateUserRequestP) returns (UserResponseP);
+
+    // Get User
+    //
+    // Returns all data for the requested user, the request
+    // must contain the user email wich is the unique identifier.
     rpc GetUser (GetUserRequestP) returns (UserResponseP);
+
+    // Update user data
+    //
+    // Must include the user email, the only data that can be updated
+    // at the moment is user description.
     rpc UpdateUser (CreateUserRequestP) returns (UserResponseP);
+
+    // Create a new city
+    //
+    // Users create citys, the city is identify by name and country,
+    // after the city is created it will have a id which is a integer.
+    // The id is used for add post and places to the city.
     rpc CreateCity (CreateCityRequestP) returns (CityResponseP);
+
+    //
+    //
+    //
     rpc CreatePlace (CreatePlaceRequestP) returns (PlaceResponseP);
     rpc UpdateCity (CreateCityRequestP) returns (CityResponseP);
     rpc UpdatePlace (CreatePlaceRequestP) returns (PlaceResponseP);

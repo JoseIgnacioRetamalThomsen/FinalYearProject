@@ -83,10 +83,10 @@ func main() {
 	dat, err := ioutil.ReadFile("img/website.jpg")
 	check(err)
 	dat=dat
-	//AddProfileImage(dat,tokenEmail,token)
+	fmt.Println(AddProfileImage(dat,tokenEmail,token))
 	//GetProfilePhoto(tokenEmail,token);
-	SendCityimage(dat,tokenEmail,1,token)
-GetCityIamge(1,tokenEmail,token)
+	//SendCityimage(dat,tokenEmail,1,token)
+//GetCityIamge(1,tokenEmail,token)
 	//fmt.Println(GetProfilePhoto("d","token"))
 	//endPlaceImage(dat,2,tokenEmail,token)
 

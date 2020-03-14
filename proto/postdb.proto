@@ -45,7 +45,8 @@ message PlacePostPSDB {
 }
 message CreatePostResponsePSDB {
     bool valied = 1;
-    int32 indexId = 2;
+    // unique identifier of the post
+    string mongoId = 2;
 }
 message PostsRequestPSDB {
     int32 indexId = 1;

@@ -169,6 +169,22 @@ func GetCityPostRequest(w http.ResponseWriter, r *http.Request){
 	json.NewEncoder(w).Encode(response)
 }
 
+func GetPlacePostRequest(w http.ResponseWriter, r *http.Request){
+	log.Printf("Received: %v", "Get place post")
+
+	i1, err := strconv.Atoi(mux.Vars(r)["indexid"])
+	if err !=nil{
+
+	}
+
+	response , err := GetPlacePosts(pb.PostsRequest{
+		IndexId:              int32(i1),
+
+	})
+
+	json.NewEncoder(w).Encode(response)
+}
+
 func main() {
 
 	//conect to profiles server
@@ -206,6 +222,8 @@ func main() {
 	router.HandleFunc("/city/post", CreateCityPostRequest).Methods("POST")
 	router.HandleFunc("/posts/city/{indexid}/", GetCityPostRequest).Methods("GET")
 
+	router.HandleFunc("/posts/place/{indexid}/", GetPlacePostRequest).Methods("GET")
+
 
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
 	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
@@ -218,8 +236,8 @@ func main() {
 
 ///********************* Profiles
 const(
-	url = "0.0.0.0:60051"
-	//url="35.197.216.42:60051";
+	//url = "0.0.0.0:60051"
+	url="35.197.216.42:60051";
 	//url = "35.234.146.99:5777"
 	token ="a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508"
 	tokenEmail ="a@a.com"
@@ -350,6 +368,16 @@ func GetCityPosts(request pb.PostsRequest)(*pb.CityPostsResponse ,error){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := serviceConn.context.dbClient.GetCityPosts(ctx,&request)
+	if err!=nil{
+		return nil,err
+	}
+	return r,nil
+}
+
+func GetPlacePosts(request pb.PostsRequest)(*pb.PlacePostsResponse,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := serviceConn.context.dbClient.GetPlacePosts(ctx,&request);
 	if err!=nil{
 		return nil,err
 	}
