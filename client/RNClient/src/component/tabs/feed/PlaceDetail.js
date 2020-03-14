@@ -17,26 +17,28 @@ export default class PlaceDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            //place
             isVisible: false,
             placeId: 0,
             placeName: '',
             city: '',
             country: '',
             description: '',
-            title:
-                '',
+            title: '',
             images: [
                 {
                     url: '',
                     timestamp: ''
                 }
             ],
+            //post
             postTitle: '',
             postDescription: '',
+            image: '',
             posts: [
                 {
                     body: '',
-                    placePostId: 0,
+                    placePostId: '',
                     creatorEmail: '',
                     timeStamp: '',
                     title: '',
@@ -105,7 +107,6 @@ export default class PlaceDetail extends Component {
     }
 
     createPlacePost() {
-
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -124,9 +125,10 @@ export default class PlaceDetail extends Component {
                             (err) => {
                                 console.log(err)
                             },
-                            (placePostId) => {
-                                this.setState({placePostId: placePostId})
-                                console.log("placePostId is " + placePostId)
+                            (mongoId) => {
+                                this.setState({mongoId: mongoId})
+                                this.uploadPostImage();
+                                console.log("mongoId is " + mongoId)
                             })
                     }
                 })
@@ -151,6 +153,34 @@ export default class PlaceDetail extends Component {
                                 this.setState({posts: JSON.parse(postsList)})
                                 console.log("string  is !!!!!!!" + postsList)
                                 console.log("string  is !!!!!!!" + this.state.posts[0].indexId)
+                            }
+                        )
+                    }
+                })
+            })
+        })
+    }
+
+    uploadPostImage() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token !== null) {
+                        NativeModules.PhotosModule.uploadPostImage(
+                            token,
+                            this.state.placePostId,
+                            email,
+                            this.state.image,
+                            (err) => {
+                                console.log(err)
+                            },
+                            (url) => {
+                                this.setState({url: url})
+                                console.log("url  is !!!!!!!" + url)
+
                             }
                         )
                     }
@@ -185,24 +215,23 @@ export default class PlaceDetail extends Component {
                             underlineColorAndroid='transparent'
                             onChangeText={(postDescription) => this.setState({postDescription})}/>
 
-
-                        {/*<PhotoUpload onPhotoSelect={image => {*/}
-                        {/*    if (image) {*/}
-                        {/*        this.setState({image: image})*/}
-                        {/*    }*/}
-                        {/*}*/}
-                        {/*}>*/}
-                        {/*    <Image source={{image: this.state.image}}*/}
-                        {/*           style={{*/}
-                        {/*               height: 120,*/}
-                        {/*               width: 120,*/}
-                        {/*               borderRadius: 60,*/}
-                        {/*               borderColor: 'black',*/}
-                        {/*               borderWidth: 5,*/}
-                        {/*               flex: 0,*/}
-                        {/*               resizeMode: 'cover'*/}
-                        {/*           }}/>*/}
-                        {/*</PhotoUpload>*/}
+                        <PhotoUpload onPhotoSelect={image => {
+                            if (image) {
+                                this.setState({image: image})
+                            }
+                        }
+                        }>
+                            <Image source={{image: this.state.image}}
+                                   style={{
+                                       height: 120,
+                                       width: 120,
+                                       borderRadius: 60,
+                                       borderColor: 'black',
+                                       borderWidth: 5,
+                                       flex: 0,
+                                       resizeMode: 'cover'
+                                   }}/>
+                        </PhotoUpload>
 
                         <Button onPress={() => this.createPlacePost()}>
                             Add place post

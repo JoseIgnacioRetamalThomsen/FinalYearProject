@@ -38,7 +38,7 @@ public class PostModule extends ReactContextBaseJavaModule {
     public void createCityPost(int indexId, String creatorEmail, String cityName, String cityCountry,
                                String title, String body, Callback errorCallback,
                                Callback successCallback) {
-        int response;
+        String response;
         try {
             response = client.createCityPost(indexId, creatorEmail, cityName, cityCountry, title, body);
             successCallback.invoke(response);
@@ -51,11 +51,11 @@ public class PostModule extends ReactContextBaseJavaModule {
     public void createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
                                 String placeName, String title, String body, Callback errorCallback,
                                 Callback successCallback) {
-        int index;
-        int response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body);
+
+        String response;
         try {
-            index = response;
-            successCallback.invoke(index);
+            response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body);
+            successCallback.invoke(response);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

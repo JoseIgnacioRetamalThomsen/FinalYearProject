@@ -127,9 +127,9 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void uploadPostImage(String token, String postId, String userEmail, String image, Callback errorCallback,
+    public void uploadPostImage(String token, String userEmail, String postId,  String image, Callback errorCallback,
                                 Callback successCallback) {
-        PostPhoto response = client.uploadPostImage(token, postId, userEmail, image);
+        PostPhoto response = client.uploadPostImage(token, userEmail, postId, image);
         try {
             successCallback.invoke(response.getUrl());
         } catch (Exception e) {

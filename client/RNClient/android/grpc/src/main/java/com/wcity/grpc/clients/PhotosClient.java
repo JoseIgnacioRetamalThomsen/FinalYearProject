@@ -246,11 +246,11 @@ public class PhotosClient {
         return photoResponse;
     }
 
-    public PostPhoto uploadPostImage(String token, String postId, String userEmail, String image) {
+    public PostPhoto uploadPostImage(String token, String userEmail, String postId, String image) {
         PostUploadRequestP userData = PostUploadRequestP.newBuilder()
                 .setToken(token)
-                .setPostId(postId)
                 .setUserEmail(userEmail)
+                .setPostId(postId)
                 .setImage(ByteString.copyFrom(Base64.getMimeDecoder()
                         .decode(image.replaceFirst("^.*;base64,", ""))))
                 .build();

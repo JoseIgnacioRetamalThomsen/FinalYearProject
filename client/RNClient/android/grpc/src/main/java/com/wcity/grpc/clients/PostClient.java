@@ -39,7 +39,7 @@ public class PostClient {
     }
 
 
-    public int createCityPost(int indexId, String creatorEmail, String cityName, String cityCountry,
+    public String createCityPost(int indexId, String creatorEmail, String cityName, String cityCountry,
                               String title, String body) {
 
         CityPost cityPost = CityPost.newBuilder()
@@ -51,21 +51,20 @@ public class PostClient {
                 .setBody(body)
                 .build();
         CreatePostResponse response;
-        int index;
+        String index = "";
         try {
             response = stub.createCityPost(cityPost);
-            //  if(response.getValied() == true)
-            index = response.getIndexId();
-            // else index = -1;
+
+            index = response.getMongoId();
+
         } catch (StatusRuntimeException e) {
             e.getMessage();
-            index = -999;
         }
         return index;
     }
 
 
-    public int createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
+    public String createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
                                String placeName, String title, String body) {
 
         PlacePost request = PlacePost.newBuilder()
@@ -78,10 +77,10 @@ public class PostClient {
                 .setBody(body)
                 .build();
         CreatePostResponse response;
-        int index = 0;
+        String index = "";
         try {
             response = stub.createPlacePost(request);
-            index = response.getIndexId();
+            index = response.getMongoId();
         } catch (StatusRuntimeException e) {
             e.getMessage();
         }
