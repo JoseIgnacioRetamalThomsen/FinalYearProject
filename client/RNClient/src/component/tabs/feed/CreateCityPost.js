@@ -61,11 +61,11 @@ export default class CreateCityPost extends Component {
                             this.state.title,
                             this.state.body,
                             (err) => {
-                                console.log("err in createCityPost " + err)
+                                console.log(err)
                             },
-                            (h) => {
-                                //this.setState({postId: postId})
-                                console.log("h in createCityPost is " + h)
+                            (postId) => {
+                                this.setState({postId: postId})
+                                console.log("h in createCityPost is " + postId)
                                // this.props.navigation.navigate('DisplayCityPosts')
                             })
                     }
@@ -90,7 +90,6 @@ export default class CreateCityPost extends Component {
                                     underlineColorAndroid='transparent'
                                     onChangeText={(title) => this.setState({title})}/>
 
-
                             </View>
 
                             <View style={styles.inputContainer}>
@@ -104,7 +103,6 @@ export default class CreateCityPost extends Component {
                             <PhotoUpload onPhotoSelect={image => {
                                 if (image) {
                                     this.setState({image: image})
-                                    //this.uploadCityPhoto()
                                 }
                             }
                             }>

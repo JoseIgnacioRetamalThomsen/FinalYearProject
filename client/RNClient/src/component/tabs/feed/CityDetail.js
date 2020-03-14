@@ -184,9 +184,6 @@ class CityDetail extends Component {
                         </CardItem>
                     </Card>
 
-
-
-
                     <View style={{flex: 1}}>
 
                     </View>
@@ -215,6 +212,7 @@ class CityDetail extends Component {
                                                 placeId: item.id,
                                                 name: item.name,
                                                 city: this.state.city,
+                                                cityId: this.state.cityId,
                                                 country: this.state.country,
                                                 description: item.description,
                                             })}

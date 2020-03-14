@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.google.gson.Gson;
 import com.wcity.grpc.CityPostResponse;
 import com.wcity.grpc.PlacePostResponse;
 import com.wcity.grpc.clients.PostClient;
@@ -48,15 +49,12 @@ public class PostModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
-                                String placeName, String title, String body, String timeStamp, Callback errorCallback,
+                                String placeName, String title, String body, Callback errorCallback,
                                 Callback successCallback) {
         int index;
-        int response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body,
-                timeStamp);
+        int response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body);
         try {
-            if (response == 0) {
-                index = -1;
-            } else index = response;
+            index = response;
             successCallback.invoke(index);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
@@ -65,14 +63,10 @@ public class PostModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getPlacePosts(int indexId, Callback errorCallback, Callback successCallback) {
-
+        Gson gson = new Gson();
         PlacePostResponse response = client.getPlacePosts(indexId);
         try {
-            if (response == null) {
-                //successCallback.invoke(response);
-            } else {
-                successCallback.invoke(response);
-            }
+            successCallback.invoke(gson.toJson(response.getMyPlacePosts()));
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

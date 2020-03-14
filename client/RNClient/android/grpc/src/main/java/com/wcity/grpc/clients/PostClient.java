@@ -15,6 +15,7 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.wcity.postservice.CityPost;
 import io.grpc.wcity.postservice.CityPostsResponse;
 import io.grpc.wcity.postservice.CreatePostResponse;
+import io.grpc.wcity.postservice.PlacePost;
 import io.grpc.wcity.postservice.PlacePostsResponse;
 import io.grpc.wcity.postservice.PostsRequest;
 import io.grpc.wcity.postservice.PostsServiceGrpc;
@@ -25,7 +26,6 @@ public class PostClient {
 
     private final ManagedChannel channel;
     private final PostsServiceGrpc.PostsServiceBlockingStub stub;
-
 
     public PostClient(String host, int port) {
         this.channel = ManagedChannelBuilder.forAddress(host, port)
@@ -66,9 +66,9 @@ public class PostClient {
 
 
     public int createPlacePost(int indexId, String creatorEmail, String cityName, String countryName,
-                               String placeName, String title, String body, String timeStamp) {
+                               String placeName, String title, String body) {
 
-        io.grpc.wcity.postservice.PlacePost placePost = io.grpc.wcity.postservice.PlacePost.newBuilder()
+        PlacePost request = PlacePost.newBuilder()
                 .setIndexId(indexId)
                 .setCreatorEmail(creatorEmail)
                 .setCityName(cityName)
@@ -76,12 +76,11 @@ public class PostClient {
                 .setPlaceName(placeName)
                 .setTitle(title)
                 .setBody(body)
-                .setTimeStamp(timeStamp)
                 .build();
         CreatePostResponse response;
         int index = 0;
         try {
-            response = stub.createPlacePost(placePost);
+            response = stub.createPlacePost(request);
             index = response.getIndexId();
         } catch (StatusRuntimeException e) {
             e.getMessage();

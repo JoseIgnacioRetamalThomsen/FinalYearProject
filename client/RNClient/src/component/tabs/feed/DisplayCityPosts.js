@@ -240,7 +240,6 @@ class DisplayCityPosts extends Component {
                     </ActionButton.Item>
                 </ActionButton>
             </View>
-
         )
     }
 }
