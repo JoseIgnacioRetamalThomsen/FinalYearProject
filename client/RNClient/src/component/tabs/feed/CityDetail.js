@@ -19,6 +19,7 @@ class CityDetail extends Component {
         this.state = {
             //city
             isVisible: false,
+            isVisible2: false,
             cityId: 0,
             indexId: 0,
             city: '',
@@ -166,7 +167,7 @@ class CityDetail extends Component {
                             this.state.cityPostTitle,
                             this.state.cityPostBody,
                             (err) => {
-                                console.log("HERE!!! ", err)
+                                console.log(err)
                             },
                             (cityPostId) => {
                                 this.setState({cityPostId: cityPostId})
@@ -202,9 +203,9 @@ class CityDetail extends Component {
                         },
                         (placeId) => {
                             this.setState({placeId: placeId})
-                            //console.log(placeId)
+                            console.log(placeId)
                             this.uploadPlacePhoto();
-                            this.setState({isVisible: false})
+                            this.setState({isVisible2: false})
                             //this.props.navigation.navigate('DisplayPlaces')
                         })
                 })
@@ -229,6 +230,7 @@ class CityDetail extends Component {
                             },
                             (placeUrl) => {
                                 this.setState({placeUrl: placeUrl})
+                                console.log("url ", placeUrl)
                             })
                     }
                 })
@@ -286,6 +288,7 @@ class CityDetail extends Component {
         })
     })
     }
+
     _renderItem = ({item, index}) => {
         console.log(item, index);
         return (
@@ -341,59 +344,59 @@ class CityDetail extends Component {
                                    }}/>
                         </PhotoUpload>
 
-                        <Button title= " Add city post" style = {{ height:200, width: 200,   borderColor: 'black'}} onPress={() => this.createCityPost()} >
+                        <Button title = "Add city post" style = {{ height:200, width: 200,   borderColor: 'black'}} onPress={() => this.createCityPost()} >
+
+                        </Button>
+                    </ModalContent>
+
+                </Modal>
+
+                {/*create place*/}
+                <Modal
+                    visible={this.state.isVisible2}
+                    modalAnimation={new SlideAnimation({
+                        slideFrom: 'bottom',
+                    })}
+                    onTouchOutside={() => {
+                        this.setState({isVisible2: false});
+                    }}
+                >
+                    <ModalContent style={{
+                        width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6
+                    }}>
+                        <TextInput
+                            placeholder="Title"
+                            underlineColorAndroid='transparent'
+                            onChangeText={(placeTitle) => this.setState({placeTitle})}/>
+
+                        <TextInput
+                            placeholder="Description"
+                            underlineColorAndroid='transparent'
+                            onChangeText={(placeDescription) => this.setState({placeDescription})}/>
+
+                        <PhotoUpload onPhotoSelect={placeImage => {
+                            if (placeImage) {
+                                this.setState({placeImage: placeImage})
+                            }
+                        }
+                        }>
+                            <Image source={{placeImage: this.state.placeImage}}
+                                   style={{
+                                       height: 120,
+                                       width: 120,
+                                       borderRadius: 60,
+                                       borderColor: 'black',
+                                       borderWidth: 5,
+                                       flex: 0,
+                                       resizeMode: 'cover'
+                                   }}/>
+                        </PhotoUpload>
+
+                        <Button  title = "Add place post" onPress={() => this.createPlace()}>
 
                         </Button>
                     </ModalContent>
                 </Modal>
-
-
-                {/*create place*/}
-                {/*<Modal*/}
-                {/*    visible={this.state.isVisible}*/}
-                {/*    modalAnimation={new SlideAnimation({*/}
-                {/*        slideFrom: 'bottom',*/}
-                {/*    })}*/}
-                {/*    onTouchOutside={() => {*/}
-                {/*        this.setState({isVisible: false});*/}
-                {/*    }}*/}
-                {/*>*/}
-                {/*    <ModalContent style={{*/}
-                {/*        width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6*/}
-                {/*    }}>*/}
-                {/*        <TextInput*/}
-                {/*            placeholder="Title"*/}
-                {/*            underlineColorAndroid='transparent'*/}
-                {/*            onChangeText={(placeTitle) => this.setState({placeTitle})}/>*/}
-
-                {/*        <TextInput*/}
-                {/*            placeholder="Description"*/}
-                {/*            underlineColorAndroid='transparent'*/}
-                {/*            onChangeText={(placeDescription) => this.setState({placeDescription})}/>*/}
-
-                {/*        <PhotoUpload onPhotoSelect={placeImage => {*/}
-                {/*            if (placeImage) {*/}
-                {/*                this.setState({placeImage: placeImage})*/}
-                {/*            }*/}
-                {/*        }*/}
-                {/*        }>*/}
-                {/*            <Image source={{placeImage: this.state.placeImage}}*/}
-                {/*                   style={{*/}
-                {/*                       height: 120,*/}
-                {/*                       width: 120,*/}
-                {/*                       borderRadius: 60,*/}
-                {/*                       borderColor: 'black',*/}
-                {/*                       borderWidth: 5,*/}
-                {/*                       flex: 0,*/}
-                {/*                       resizeMode: 'cover'*/}
-                {/*                   }}/>*/}
-                {/*        </PhotoUpload>*/}
-
-                {/*        <Button onPress={() => this.createPlace()}>*/}
-                {/*            Add place post*/}
-                {/*        </Button>*/}
-                {/*    </ModalContent>*/}
-                {/*</Modal>*/}
 
 
                 <CustomHeader title={this.state.city} isHome={false} navigation={this.props.navigation}/>
@@ -496,7 +499,7 @@ class CityDetail extends Component {
                                        //     email: this.state.email,
                                        //     image: this.state.image
                                        // })}>
-                                       onPress={() => this.setState({isVisible: true})}>
+                                       onPress={() => this.setState({isVisible2: true})}>
                         <Icon name="md-create" style={styles.actionButtonIcon}/>
                     </ActionButton.Item>
                 </ActionButton>

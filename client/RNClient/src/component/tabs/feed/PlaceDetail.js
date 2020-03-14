@@ -34,7 +34,9 @@ export default class PlaceDetail extends Component {
             //post
             postTitle: '',
             postDescription: '',
-            image: '',
+            postMongoId:'',
+            postImage: '',
+            postUrl: '',
             posts: [
                 {
                     body: '',
@@ -126,9 +128,11 @@ export default class PlaceDetail extends Component {
                                 console.log(err)
                             },
                             (mongoId) => {
-                                this.setState({mongoId: mongoId})
+
+                                this.setState({postMongoId: mongoId})
                                 this.uploadPostImage();
                                 console.log("mongoId is " + mongoId)
+                                this.setState({isVisible: false})
                             })
                     }
                 })
@@ -171,15 +175,15 @@ export default class PlaceDetail extends Component {
                     if (token !== null) {
                         NativeModules.PhotosModule.uploadPostImage(
                             token,
-                            this.state.placePostId,
                             email,
-                            this.state.image,
+                            this.state.postMongoId,
+                            this.state.postImage,
                             (err) => {
                                 console.log(err)
                             },
-                            (url) => {
-                                this.setState({url: url})
-                                console.log("url  is !!!!!!!" + url)
+                            (postUrl) => {
+                                this.setState({postUrl: postUrl})
+                                console.log("url  is !!!!!!!" + postUrl)
 
                             }
                         )
@@ -215,13 +219,13 @@ export default class PlaceDetail extends Component {
                             underlineColorAndroid='transparent'
                             onChangeText={(postDescription) => this.setState({postDescription})}/>
 
-                        <PhotoUpload onPhotoSelect={image => {
-                            if (image) {
-                                this.setState({image: image})
+                        <PhotoUpload onPhotoSelect={postImage => {
+                            if (postImage) {
+                                this.setState({postImage: postImage})
                             }
                         }
                         }>
-                            <Image source={{image: this.state.image}}
+                            <Image source={{image: this.state.postImage}}
                                    style={{
                                        height: 120,
                                        width: 120,
@@ -233,8 +237,8 @@ export default class PlaceDetail extends Component {
                                    }}/>
                         </PhotoUpload>
 
-                        <Button onPress={() => this.createPlacePost()}>
-                            Add place post
+                        <Button title= "Add place post" onPress={() => this.createPlacePost()}>
+
                         </Button>
                     </ModalContent>
                 </Modal>
