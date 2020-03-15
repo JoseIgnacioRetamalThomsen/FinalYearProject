@@ -60,8 +60,12 @@ message PlacePhoto {
     // url of the picture in the server,
     // used for display the picture
     string url = 3;
+    //Time of upload
     string timestamp = 4;
+    // true if is the fist image
     bool selected = 5;
+    //City of the place
+    int32 placeCityId = 6;
 }
 
 // Post Photo
@@ -73,4 +77,21 @@ message PostPhoto {
     string url = 3;
     string timestamp = 4;
     bool selected = 5;
+}
+
+// All photos for all citys
+
+message CitysPhoto{
+    int32 cityId = 1;
+    repeated CityPhoto  citysPhotos= 2;
+}
+
+message PlacesCityPhotos{
+    int32 cityId =1;
+    int32 placeId =2;
+    repeated PlacePhoto placePhotos =3;
+}
+enum PostType{
+    City = 0;
+    Place = 1;
 }

@@ -1,10 +1,10 @@
 # create image
 
-  sudo docker image build -t joseretamal/post-service:1.0 .
+  sudo docker image build -t joseretamal/post-service:1.1 .
 
   # push 
 
-  sudo docker push joseretamal/post-service:1.0
+  sudo docker push joseretamal/post-service:1.1
 
   # run
 

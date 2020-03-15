@@ -1,5 +1,5 @@
 package main
-
+//  "MySQL_socket" : "10.154.0.6:3306",
 import (
 	"context"
 	"encoding/json"
@@ -43,6 +43,7 @@ func (s *server) AddProfilePhotoDBA(ctx context.Context, in *pb.AddProfilePhotoD
 		UserEmail:            in.UserEmail,
 		Url:                  in.Url,
 		Selected:             in.Selected,
+
 	})
 
 	if err != nil{
@@ -137,6 +138,7 @@ func (s *server) AddPlacePhotoDBA(ctx context.Context, in *pb.AddPlacePhotoDBARe
 		Url:                  in.Url,
 		PlaceId:   in.PlaceId,
 		Selected:             false,
+		PlaceCityId: in.PlaceCityId,
 
 	})
 
@@ -178,12 +180,7 @@ func (s *server) GetPlacePhotoDBA(ctx context.Context, in *pb.GetPlacePhotosDBAR
 
 func (s *server) AddPostPhotoDBA(ctx context.Context, in *pb.AddPostPhotoDBARequest) (*pb.AddPostPhotoDBAResponse, error) {
 	log.Printf("Received: %v", "Add post photo")
-	id ,time, err:= dba.AddPostPhoto(pb.PostPhoto{
-		PostId:              in.PostId,
-		Url:                  in.Url,
-		Selected:             false,
-
-	})
+	id ,time, err:= dba.AddPostPhoto(*in)
 
 	if err != nil{
 		log.Printf("Error: %v", err)
@@ -220,6 +217,67 @@ func (s *server) GetPostPhotoDBA(ctx context.Context, in *pb.GetPostPhotosDBAReq
 	},nil
 }
 
+func (s *server) GetCitysPhotosDBA(ctx context.Context, in *pb.GetCitysPhotoRequest) (*pb.GetCitysPhotoResponse, error) {
+	log.Printf("Received: %v", "Get all citys photos")
+
+	photos,err := dba.GetCitysPhotos()
+
+	if err!= nil{
+		return &pb.GetCitysPhotoResponse{
+			Success:              false,
+			CityPhotos:           nil,
+
+		},err
+	}
+
+	return &pb.GetCitysPhotoResponse{
+		Success:              false,
+		CityPhotos:           photos,
+
+	},nil
+}
+
+func (s *server) GetPostsPhotosIdDBA(ctx context.Context, in *pb.GetPostsPhotosPerParentRequest) (*pb.GetPostsPhotosPerParentResponse, error) {
+	log.Printf("Received: %v", "Get all post photos per parent called")
+
+	photos ,err  := dba.GetPostsPhotoForOne(*in)
+
+	if err!= nil{
+		return &pb.GetPostsPhotosPerParentResponse{
+			Success:              false,
+			PlacesPhoto:          nil,
+
+		},err
+	}
+	return &pb.GetPostsPhotosPerParentResponse{
+		Success:              true,
+		PlacesPhoto:          photos,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	},nil
+}
+
+func (s *server) GetPlacesPerCityPhotoDBA(ctx context.Context, in *pb.GetPlacesPhotosPerCityRequest) (*pb.GetPlacesPhotosPerCityResponse, error) {
+	log.Printf("Received: %v", "GetPlacesPerCityPhotoDBA")
+
+	photos, err := dba.GetPlacePhotosPerCity(*in)
+
+	if err!= nil{
+		return &pb.GetPlacesPhotosPerCityResponse{
+			Success:              false,
+			PlacePhotos:          nil,
+
+		},err
+	}
+	return &pb.GetPlacesPhotosPerCityResponse{
+		Success:              true,
+		PlacePhotos:          photos,
+
+	},nil
+}
+
+
 func main(){
 
 	//read config file name from console input
@@ -231,64 +289,20 @@ func main(){
 		configuration.MySQL_user,
 		configuration.MySQL_pass,
 		configuration.MySQL_db)
+
 	log.Print("Starting Service")
-
-//test
-/*
-	dba.AddProfilePhoto(pb.ProfilePhoto{
-
-		UserEmail: "email1",
-		Url:       "url",
-
-		Selected: false,
-	})
-/*
-	dba.AddCityPhoto(pb.CityPhoto{
-
-		CityId:               6,
-		Url:                  "uel",
-		Selected:             false,
-
-	})
-
-	idp,_ := dba.AddPlacePhoto(pb.PlacePhoto{
-
-		PlaceId:              5,
-		Url:                  "fgsdfg",
-
-		Selected:             false,
-
-	})
-	fmt.Println(idp)
-	idpo,_ := dba.AddPostPhoto(pb.PostPhoto{
-
-		PostId:               "hj6",
-		Url:                  "gfhdgf",
-
-		Selected:             false,
-
-	})
-	fmt.Println(idpo)/*
-	_,err := dba.GetProfilePhotos("email1")
-	if err!= nil{
-		panic(err)
-	}*//*
-   _,err:= dba.GetPostPhotos("hj6")
-	if err!= nil{
-		panic(err)
-	}
-
- */
 	//end test
 	lis, err := net.Listen("tcp", configuration.Port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+
 	s := grpc.NewServer()
 	pb.RegisterPhotosDBAServiceServer(s, &server{})
 	log.Print("Service Started in port: ", configuration.Port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+	fmt.Print("Done")
 
 }

@@ -300,7 +300,9 @@ func CreatePlacePost(place *PlacePost)(interface{},error){
 		return "",err
 	}
 
-	return  res.InsertedID,nil
+	oid, ok := res.InsertedID.(primitive.ObjectID);
+	ok =ok;
+	return  oid.Hex(),nil
 }
 
 func GetPlacePost(indexId int32)[]*pb.PlacePostPSDB{

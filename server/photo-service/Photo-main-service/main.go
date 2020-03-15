@@ -38,6 +38,7 @@ const (
 )
 const (
 	DBA_URL = "35.197.221.57:7172"
+	//DBA_URL  = "0.0.0.0:7172"
 	AUTH_URL = "35.197.216.42:50051"
 )
 
@@ -110,7 +111,6 @@ func (s *server) GetProfilePhoto(ctx context.Context, in *pb.ProfilePhotoRequest
 	}, nil
 
 }
-
 
 func (s *server) UploadProfilePhoto(ctx context.Context, in *pb.ProfileUploadRequestP) (*pb.ProfileUploadResponseP, error) {
 
@@ -207,7 +207,6 @@ func (s *server) UploadCityPhoto(ctx context.Context, in *pb.CityUploadRequestP)
 	}, nil
 }
 
-
 func (s *server) GetCityImage(ctx context.Context, in *pb.CityPhotoRequestP) (*pb.CityPhotoResponseP, error) {
 	log.Printf("Received: %v", "get city picture")
 
@@ -225,10 +224,8 @@ func (s *server) GetCityImage(ctx context.Context, in *pb.CityPhotoRequestP) (*p
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_DB_CON_TIME)
 	defer cancel()
 
-
-	res, err := dbaConn.context.dbClient.GetCityPhotoDBA(ctx,&pb.GetCityPhotosDBARequest{
-		CityId:              in.CityId,
-
+	res, err := dbaConn.context.dbClient.GetCityPhotoDBA(ctx, &pb.GetCityPhotosDBARequest{
+		CityId: in.CityId,
 	})
 
 	if err != nil {
@@ -238,13 +235,14 @@ func (s *server) GetCityImage(ctx context.Context, in *pb.CityPhotoRequestP) (*p
 	}
 
 	return &pb.CityPhotoResponseP{
-		Valid:                true,
-		CityID:               in.CityId,
-		Photos:               res.Photos,
-		Active:               0,
-		}, nil
+		Valid:  true,
+		CityID: in.CityId,
+		Photos: res.Photos,
+		Active: 0,
+	}, nil
 
 }
+
 /*
 func (s *server) GetCityImage(ctx context.Context, in *pb.CityPhotoRequestP) (*pb.CityPhotoResponseP, error) {
 	//var urls [] string;
@@ -271,22 +269,21 @@ func (s *server) UploadPlacePhoto(ctx context.Context, in *pb.PlaceUploadRequest
 			Success: false,
 		}, status.Error(codes.PermissionDenied, "Invalid token")
 	}
-	fileName := placeFoler[0]+ getUrlEnd()
-	url := start_url+ buckets[0]+"/" + fileName
+	fileName := placeFoler[0] + getUrlEnd()
+	url := start_url + buckets[0] + "/" + fileName
 
-	Write(in.Image,buckets[0],fileName)
+	Write(in.Image, buckets[0], fileName)
 
 	//get urls from database
 	//database conection
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_DB_CON_TIME)
 	defer cancel()
 
-
-	res, err := dbaConn.context.dbClient.AddPlacePhotoDBA(ctx,&pb.AddPlacePhotoDBARequest{
-		PlaceId:              in.PlaceId,
-		Url:                  url,
-		Selected:             false,
-
+	res, err := dbaConn.context.dbClient.AddPlacePhotoDBA(ctx, &pb.AddPlacePhotoDBARequest{
+		PlaceId:  in.PlaceId,
+		Url:      url,
+		Selected: false,
+		PlaceCityId: in.PlaceCityId,
 	})
 
 	if err != nil {
@@ -296,25 +293,22 @@ func (s *server) UploadPlacePhoto(ctx context.Context, in *pb.PlaceUploadRequest
 	}
 
 	return &pb.PlaceUploadResponseP{
-		Success:              true,
-		Photo:           &pb.PlacePhoto{
-			Id:                   res.Sd,
-			PlaceId:              in.PlaceId,
-			Url:                  url,
-			Timestamp:            res.TimeStamp,
-			Selected:             false,
-
+		Success: true,
+		Photo: &pb.PlacePhoto{
+			Id:        res.Sd,
+			PlaceId:   in.PlaceId,
+			Url:       url,
+			Timestamp: res.TimeStamp,
+			Selected:  false,
 		},
 		XXX_NoUnkeyedLiteral: struct{}{},
 		XXX_unrecognized:     nil,
 		XXX_sizecache:        0,
-	},nil
+	}, nil
 }
 
-
-
 func (s *server) GetPlacePhoto(ctx context.Context, in *pb.PlacePhotoRequestP) (*pb.PlacePhotoResponseP, error) {
-		log.Printf("Received: %v", "get place picture")
+	log.Printf("Received: %v", "get place picture")
 
 	//check token
 	valid := CheckToken(in.Email, in.Token)
@@ -325,16 +319,13 @@ func (s *server) GetPlacePhoto(ctx context.Context, in *pb.PlacePhotoRequestP) (
 		}, status.Error(codes.PermissionDenied, "Invalid token")
 	}
 
-
 	//get urls from database
 	//database conection
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_DB_CON_TIME)
 	defer cancel()
 
-
-	res, err := dbaConn.context.dbClient.GetPlacePhotoDBA(ctx,&pb.GetPlacePhotosDBARequest{
-		PlaceId:              in.PlaceId,
-
+	res, err := dbaConn.context.dbClient.GetPlacePhotoDBA(ctx, &pb.GetPlacePhotosDBARequest{
+		PlaceId: in.PlaceId,
 	})
 
 	if err != nil {
@@ -343,11 +334,11 @@ func (s *server) GetPlacePhoto(ctx context.Context, in *pb.PlacePhotoRequestP) (
 		}, err
 	}
 	return &pb.PlacePhotoResponseP{
-		Valid:                true,
-		PlaceId:              in.PlaceId,
-		Photos:               res.Photos,
-		Active:               false,
-		},nil
+		Valid:   true,
+		PlaceId: in.PlaceId,
+		Photos:  res.Photos,
+		Active:  false,
+	}, nil
 }
 
 func (s *server) UploadPostImage(ctx context.Context, in *pb.PostUploadRequestP) (*pb.PostUploadResponseP, error) {
@@ -364,21 +355,21 @@ func (s *server) UploadPostImage(ctx context.Context, in *pb.PostUploadRequestP)
 	}
 
 	//save to bucker
-	fileName := postFolder[0]+ getUrlEnd()
-	url := start_url+ buckets[0]+"/" + fileName
-	Write(in.Image,buckets[0],fileName)
+	fileName := postFolder[0] + getUrlEnd()
+	url := start_url + buckets[0] + "/" + fileName
+	Write(in.Image, buckets[0], fileName)
 
 	//get urls from database
 	//database conection
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_DB_CON_TIME)
 	defer cancel()
 
-
-	res, err := dbaConn.context.dbClient.AddPostPhotoDBA(ctx,&pb.AddPostPhotoDBARequest{
-		PostId:               in.PostId,
-		Url:                  url,
-		Selected:             false,
-
+	res, err := dbaConn.context.dbClient.AddPostPhotoDBA(ctx, &pb.AddPostPhotoDBARequest{
+		PostId:   in.PostId,
+		Url:      url,
+		Selected: false,
+		Type : in.Type,
+		ParentId: in.ParentId,
 	})
 	if err != nil {
 		return &pb.PostUploadResponseP{
@@ -386,20 +377,16 @@ func (s *server) UploadPostImage(ctx context.Context, in *pb.PostUploadRequestP)
 		}, err
 	}
 
-
-
 	return &pb.PostUploadResponseP{
-		Sucess:               true,
-		Photo:                &pb.PostPhoto{
-			Id:                   res.Id,
-			PostId:               in.PostId,
-			Url:                  url,
-			Timestamp:            res.TimeStamp,
-			Selected:             false,
-
+		Sucess: true,
+		Photo: &pb.PostPhoto{
+			Id:        res.Id,
+			PostId:    in.PostId,
+			Url:       url,
+			Timestamp: res.TimeStamp,
+			Selected:  false,
 		},
-
-	},nil
+	}, nil
 }
 
 func (s *server) GetPostImage(ctx context.Context, in *pb.PostPhotoRequestP) (*pb.PostPhotoResponseP, error) {
@@ -420,10 +407,8 @@ func (s *server) GetPostImage(ctx context.Context, in *pb.PostPhotoRequestP) (*p
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_DB_CON_TIME)
 	defer cancel()
 
-
-	res, err := dbaConn.context.dbClient.GetPostPhotoDBA(ctx,&pb.GetPostPhotosDBARequest{
-		PlaceId:              in.PostId,
-
+	res, err := dbaConn.context.dbClient.GetPostPhotoDBA(ctx, &pb.GetPostPhotosDBARequest{
+		PlaceId: in.PostId,
 	})
 
 	if err != nil {
@@ -433,17 +418,109 @@ func (s *server) GetPostImage(ctx context.Context, in *pb.PostPhotoRequestP) (*p
 	}
 
 	return &pb.PostPhotoResponseP{
-		Valid:                true,
-		PostId:               in.PostId,
-		UserEmail:            in.UserEmail,
-		Photos:               res.Photos,
-	},nil
+		Valid:     true,
+		PostId:    in.PostId,
+		UserEmail: in.UserEmail,
+		Photos:    res.Photos,
+	}, nil
 
 }
 
+func (s *server) GetCitysPhotosP(ctx context.Context, in *pb.GetCitysPhotoRequestP) (*pb.GetCitysPhotoResponseP, error) {
 
+	log.Printf("Received: %v", "get al city images")
 
+	//check token
+	valid := CheckToken(in.Email, in.Token)
 
+	if !valid {
+		return &pb.GetCitysPhotoResponseP{
+			Success:    false,
+			CityPhotos: nil,
+		}, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res, err := dbaConn.context.dbClient.GetCitysPhotosDBA(ctx, &pb.GetCitysPhotoRequest{
+		Valid: true,
+	})
+	if err != nil {
+		return &pb.GetCitysPhotoResponseP{
+			Success:    false,
+			CityPhotos: nil,
+		}, err
+	}
+
+	return &pb.GetCitysPhotoResponseP{
+		Success:    true,
+		CityPhotos: res.CityPhotos,
+	}, nil
+}
+
+func (s *server) GetPostsPhotosIdP(ctx context.Context, in *pb.GetPostsPhotosPerParentRequestP) (*pb.GetPostsPhotosPerParentResponseP, error) {
+
+	log.Printf("Received: %v", "get post image for parent")
+	//check token
+	valid := CheckToken(in.Email, in.Token)
+
+	if !valid {
+		return &pb.GetPostsPhotosPerParentResponseP{
+			Success:     false,
+			PlacesPhoto: nil,
+		}, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res, err := dbaConn.context.dbClient.GetPostsPhotosIdDBA(ctx, &pb.GetPostsPhotosPerParentRequest{
+		Type:     in.Type,
+		ParentId: in.ParentId,
+	})
+
+	if err != nil {
+		return &pb.GetPostsPhotosPerParentResponseP{
+			Success:     false,
+			PlacesPhoto: nil,
+		}, err
+	}
+
+	return &pb.GetPostsPhotosPerParentResponseP{
+		Success:     true,
+		PlacesPhoto: res.PlacesPhoto,
+	}, nil
+
+}
+
+func (s *server) GetPlacesPerCityPhotoP(ctx context.Context, in *pb.GetPlacesPhotosPerCityRequestP) (*pb.GetPlacesPhotosPerCityResponseP, error) {
+
+	log.Printf("Received: %v", "get all Post cityu ")
+
+	//check token
+	valid := CheckToken(in.Email, in.Token)
+
+	if !valid {
+		return &pb.GetPlacesPhotosPerCityResponseP{
+			Success:     false,
+			PlacePhotos: nil,
+		}, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res, err := dbaConn.context.dbClient.GetPlacesPerCityPhotoDBA(ctx, &pb.GetPlacesPhotosPerCityRequest{
+		CityPlaceId:          in.PlaceId,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	})
+
+	if err != nil {
+		return &pb.GetPlacesPhotosPerCityResponseP{
+			Success:     false,
+			PlacePhotos: nil,
+		}, err
+	}
+
+	return &pb.GetPlacesPhotosPerCityResponseP{
+		Success:     true,
+		PlacePhotos: res.PlacePhotos,
+	}, nil
+}
 
 func main() {
 

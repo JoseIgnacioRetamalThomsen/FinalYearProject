@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	//"io/ioutil"
+
 	//"fmt"
 	//"io/ioutil"
 
@@ -29,6 +31,7 @@ import (
 
 const(
 	url = "35.197.216.42:30051"
+	//url = "0.0.0.0:30051"
 	//url="35.197.216.42:30051";
 	//url = "35.234.146.99:5777"
 	token ="ef236fdcb42d55d00703a8737d343574b9766c7a78fd5a268425f6bbe8753b9e"
@@ -80,10 +83,17 @@ func main() {
 	s2 := &photosServer{dbserverCtx}
 	photoConn = *s2
 
+	//GetCityPostsPhotos(tokenEmail,token)
+GetAllPhotoPerPostParent(tokenEmail,token)
 	dat, err := ioutil.ReadFile("img/website.jpg")
 	check(err)
 	dat=dat
-	fmt.Println(AddProfileImage(dat,tokenEmail,token))
+	//SendPlaceImage(dat,9,tokenEmail,token,7)
+
+	//SendPost(dat,"17",tokenEmail,token,9);
+//	dat=dat
+	//fmt.Println(AddProfileImage(dat,tokenEmail,token))
+//	GetCitysImage(tokenEmail,token)
 	//GetProfilePhoto(tokenEmail,token);
 	//SendCityimage(dat,tokenEmail,1,token)
 //GetCityIamge(1,tokenEmail,token)
@@ -169,7 +179,7 @@ func GetCityIamge(cityId int,email string , token string){
 	fmt.Println(r)
 }
 
-func SendPlaceImage(image []byte,placeId int,email string, token string){
+func SendPlaceImage(image []byte,placeId int,email string, token string, cityId int32){
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	r, err := photoConn.context.dbClient.UploadPlacePhoto(ctx, &pb.PlaceUploadRequestP{
@@ -177,6 +187,7 @@ func SendPlaceImage(image []byte,placeId int,email string, token string){
 		Image : image,
 		Token : token,
 		Email : email,
+		PlaceCityId:9,
 	})
 
 	if err!= nil{
@@ -199,7 +210,7 @@ func GetPlacePhotos(placeId int,email string,token string){
 	fmt.Println(r)
 }
 
-func SendPost(image []byte,postId string,email string, token string){
+func SendPost(image []byte,postId string,email string, token string, pi int32){
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	r, err := photoConn.context.dbClient.UploadPostImage(ctx, &pb.PostUploadRequestP{
@@ -207,6 +218,8 @@ func SendPost(image []byte,postId string,email string, token string){
 		Image : image,
 		UserEmail: email,
 		Token : token,
+		Type: pb.PostType_City,
+		ParentId : pi,
 	})
 	if err!= nil{
 		panic(err)
@@ -214,12 +227,13 @@ func SendPost(image []byte,postId string,email string, token string){
 	fmt.Println(r)
 }
 
-func GetPostImage(postId string,email string, token string){
+
+
+func GetCitysImage(email string, token string){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := photoConn.context.dbClient.GetPostImage(ctx, &pb.PostPhotoRequestP{
-		PostId : postId,
-		UserEmail : email,
+	r, err := photoConn.context.dbClient.GetCitysPhotosP(ctx, &pb.GetCitysPhotoRequestP{
+		Email : email,
 		Token : token,
 
 	})
@@ -229,3 +243,29 @@ func GetPostImage(postId string,email string, token string){
 	fmt.Println(r)
 }
 
+func GetAllPhotoPerPostParent(email string, token string){
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := photoConn.context.dbClient.GetPostsPhotosIdP(ctx,&pb.GetPostsPhotosPerParentRequestP{
+		Email : email,
+		Token : token,
+		Type : pb.PostType_City,
+		ParentId : 9,
+	})
+	err =err
+	fmt.Println(r)
+}
+
+func GetCityPostsPhotos(email string, token string){
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := photoConn.context.dbClient.GetPlacesPerCityPhotoP(ctx, &pb.GetPlacesPhotosPerCityRequestP{
+		Email: email,
+		Token: token,
+		PlaceId : 0,
+	})
+	err =err
+	fmt.Println(r)
+}

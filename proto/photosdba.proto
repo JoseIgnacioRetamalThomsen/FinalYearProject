@@ -23,6 +23,9 @@ service PhotosDBAService {
     rpc GetCityPhotoDBA (GetCityPhotosDBARequest) returns (GetCityPhotosDBAResponse);
     rpc GetPlacePhotoDBA (GetPlacePhotosDBARequest) returns (GetPlacePhotosDBAResponse);
     rpc GetPostPhotoDBA (GetPostPhotosDBARequest) returns (GetPostPhotosDBAResponse);
+    rpc GetCitysPhotosDBA(GetCitysPhotoRequest) returns (GetCitysPhotoResponse);
+    rpc GetPlacesPerCityPhotoDBA(GetPlacesPhotosPerCityRequest) returns (GetPlacesPhotosPerCityResponse);
+    rpc GetPostsPhotosIdDBA(GetPostsPhotosPerParentRequest) returns (GetPostsPhotosPerParentResponse);
 }
 message AddProfilePhotoDBARequest {
     string userEmail = 1;
@@ -48,6 +51,7 @@ message AddPlacePhotoDBARequest {
     int32 placeId = 1;
     string url = 2;
     bool selected = 3;
+    int32 placeCityId = 4;
 }
 message AddPlacePhotoDBAResponse {
     bool success = 1;
@@ -58,6 +62,8 @@ message AddPostPhotoDBARequest {
     string postId = 1;
     string url = 2;
     bool selected = 3;
+    PostType type =4;
+    int32 parentId =5;
 }
 message AddPostPhotoDBAResponse {
     bool sucess = 1;
@@ -91,4 +97,27 @@ message GetPostPhotosDBARequest {
 message GetPostPhotosDBAResponse {
     bool sucess = 1;
     repeated PostPhoto photos = 2;
+}
+message GetCitysPhotoRequest{
+    bool valid = 1;
+}
+message GetCitysPhotoResponse{
+    bool success =1 ;
+    repeated CitysPhoto cityPhotos = 2;
+}
+message GetPlacesPhotosPerCityRequest{
+    int32 cityPlaceId = 1;
+}
+message GetPlacesPhotosPerCityResponse{
+    bool success = 1;
+    repeated PlacesCityPhotos placePhotos =2;
+}
+message GetPostsPhotosPerParentRequest{
+    PostType type =1;
+    int32 parentId =2;
+
+}
+message GetPostsPhotosPerParentResponse{
+    bool success = 1;
+    repeated PostPhoto placesPhoto = 2;
 }
