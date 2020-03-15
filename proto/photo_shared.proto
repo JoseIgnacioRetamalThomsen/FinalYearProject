@@ -92,6 +92,6 @@ message PlacesCityPhotos{
     repeated PlacePhoto placePhotos =3;
 }
 enum PostType{
-    CityType = 0;
-    PlaceType = 1;
+    CityTypePhoto = 0;
+    PlaceTypePhoto = 1;
 }
