@@ -27,6 +27,12 @@ import io.grpc.wcity.photo.CityPhotoRequestP;
 import io.grpc.wcity.photo.CityPhotoResponseP;
 import io.grpc.wcity.photo.CityUploadRequestP;
 import io.grpc.wcity.photo.CityUploadResponseP;
+import io.grpc.wcity.photo.GetCitysPhotoRequestP;
+import io.grpc.wcity.photo.GetCitysPhotoResponseP;
+import io.grpc.wcity.photo.GetPlacesPhotosPerCityRequestP;
+import io.grpc.wcity.photo.GetPlacesPhotosPerCityResponseP;
+import io.grpc.wcity.photo.GetPostsPhotosPerParentRequestP;
+import io.grpc.wcity.photo.GetPostsPhotosPerParentResponseP;
 import io.grpc.wcity.photo.PhotosServiceGrpc;
 import io.grpc.wcity.photo.PlacePhotoRequestP;
 import io.grpc.wcity.photo.PlacePhotoResponseP;
@@ -41,6 +47,10 @@ import io.grpc.wcity.photo.ProfilePhotoRequestP;
 import io.grpc.wcity.photo.ProfilePhotoResponseP;
 import io.grpc.wcity.photo.ProfileUploadRequestP;
 import io.grpc.wcity.photo.ProfileUploadResponseP;
+import io.grpc.wcity.photoShared.CitysPhoto;
+import io.grpc.wcity.photoShared.PlacesCityPhotos;
+import io.grpc.wcity.photoShared.PostType;
+import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 
 
 public class PhotosClient {
@@ -194,12 +204,13 @@ public class PhotosClient {
         return photoResponse;
     }
 
-    public PlacePhoto uploadPlacePhoto(String token, String email, int placeId, String image) {
+    public PlacePhoto uploadPlacePhoto(String token, String email, int placeId, String image, int placeCityId) {
         PlaceUploadRequestP userData = PlaceUploadRequestP.newBuilder()
                 .setToken(token)
                 .setEmail(email)
                 .setPlaceId(placeId)
                 .setImage(ByteString.copyFrom(Base64.getMimeDecoder().decode(image.replaceFirst("^.*;base64,", ""))))
+                .setPlaceCityId(placeCityId)
                 .build();
 
         PlaceUploadResponseP response;
@@ -246,13 +257,16 @@ public class PhotosClient {
         return photoResponse;
     }
 
-    public PostPhoto uploadPostImage(String token, String userEmail, String postId, String image) {
+    public PostPhoto uploadPostImage(String token, String userEmail, String postId, String image,
+                                     int type, int parentId) {
         PostUploadRequestP userData = PostUploadRequestP.newBuilder()
                 .setToken(token)
                 .setUserEmail(userEmail)
                 .setPostId(postId)
                 .setImage(ByteString.copyFrom(Base64.getMimeDecoder()
                         .decode(image.replaceFirst("^.*;base64,", ""))))
+                .setType(PostType.forNumber(type))
+                .setParentId(parentId)
                 .build();
 
         PostUploadResponseP response;
@@ -267,8 +281,83 @@ public class PhotosClient {
                     response.getPhoto().getTimestamp(), response.getPhoto().getSelected());
             // else profilePhoto = null;
         } catch (StatusRuntimeException e) {
+            postPhoto = new PostPhoto();
+            postPhoto.setError(e.getMessage());
             e.getMessage();
         }
         return postPhoto;
+    }
+
+    public List<CityPhoto> getCitysPhoto (String token, String email) {
+        GetCitysPhotoRequestP requestP = GetCitysPhotoRequestP.newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .build();
+
+        List<CityPhoto> response = new ArrayList<>();
+        GetCitysPhotoResponseP responseP;
+
+        try{
+            responseP = stub.getCitysPhotosP(requestP);
+            for(CitysPhoto photo: responseP.getCityPhotosList()){
+                io.grpc.wcity.photoShared.CityPhoto cityPhoto = photo.getCitysPhotosList().get(0);
+                response.add(new CityPhoto(cityPhoto.getId(), cityPhoto.getCityId(), cityPhoto.getUrl(),
+                cityPhoto.getTimestamp(), cityPhoto.getSelected()));
+            }
+
+        }catch(StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return response;
+    }
+
+    public List<PlacePhoto> getPlacesPerCityPhoto (String token, String email, int cityid) {
+        GetPlacesPhotosPerCityRequestP requestP = GetPlacesPhotosPerCityRequestP.newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .setPlaceId(cityid)
+                .build();
+
+        List<PlacePhoto> response = new ArrayList<>();
+        GetPlacesPhotosPerCityResponseP responseP;
+
+        try{
+            responseP = stub.getPlacesPerCityPhotoP(requestP);
+            for(PlacesCityPhotos photo: responseP.getPlacePhotosList()){
+                io.grpc.wcity.photoShared.PlacePhoto placePhoto = photo.getPlacePhotosList().get(0);
+                response.add(new PlacePhoto(placePhoto.getId(), placePhoto.getPlaceId(), placePhoto.getUrl(),
+                        placePhoto.getTimestamp(), placePhoto.getSelected()));
+            }
+
+        }catch(StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return response;
+    }
+
+
+    public List<PostPhoto> getPostsPhotosIdP (String token, String email, int type, int parentId) {
+        GetPostsPhotosPerParentRequestP requestP = GetPostsPhotosPerParentRequestP.newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .setType(PostType.forNumber(type) )
+                .setParentId(parentId)
+                .build();
+
+        List<PostPhoto> response = new ArrayList<>();
+        GetPostsPhotosPerParentResponseP responseP;
+
+        try{
+            responseP = stub.getPostsPhotosIdP(requestP);
+            for(io.grpc.wcity.photoShared.PostPhoto photo: responseP.getPlacesPhotoList()){
+                //PostPhoto postPhoto = photo.getPlacePhotosList().get(0);
+                response.add(new PostPhoto(photo.getId(), photo.getPostId(),
+                        photo.getUrl(), photo.getTimestamp(), photo.getSelected()));
+            }
+
+        }catch(StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return response;
     }
 }

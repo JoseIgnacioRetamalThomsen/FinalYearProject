@@ -25,7 +25,7 @@ export default class CreateCity extends React.Component {
                     description: '',
                     lat: 60,
                     lon: 80,
-                    image:'',
+                    image: '',
                     url: '',
                 },
 
@@ -34,21 +34,8 @@ export default class CreateCity extends React.Component {
         }
     }
 
-    // sendData = () => {
-    //     this.props.parentCallback(this.state.city, this.state.cityId)
-    //     console.log("sendData"+this.state.city, this.state.cityId)
-    // }
-
-    // callbackFunction = ( city, country, lat, lon) => {
-    //     this.setState({city: city})
-    //     this.setState({country: country})
-    //     this.setState({lat: lat})
-    //     this.setState({lon: lon})
-    //     console.log(lat, lon)
-    // }
 
     createCity() {
-        console.log("Clicked")
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -65,14 +52,12 @@ export default class CreateCity extends React.Component {
                         //parseFloat(this.state.lon),
                         this.state.description,
                         (err) => {
-                            console.log("err in createCity " + err)
+                            console.log(err)
                         },
                         (cityId) => {
-                            this.setState({cityId:cityId})
+                            this.setState({cityId: cityId})
                             this.uploadCityPhoto();
-                            console.log(cityId)
-                            console.log("successfully created a city!!!")
-                            // this.sendData()
+
                             this.props.navigation.navigate('CityDetail', {
                                 cityId: this.state.cityId,
                                 name: this.state.name,
@@ -92,8 +77,7 @@ export default class CreateCity extends React.Component {
                 stores.map((result, i, store) => {
                     let key = store[i][0];
                     let value = store[i][1]
-                    console.log("key/value in createcity " + key + " " + value)
-                    //console.log("this.state.image " + this.state.image)
+
                     if (value !== null) {
                         NativeModules.PhotosModule.uploadCityPhoto(
                             key,
@@ -101,7 +85,7 @@ export default class CreateCity extends React.Component {
                             parseInt(this.state.cityId),
                             this.state.image,
                             (err) => {
-                                console.log("In uploadPhoto " + err)
+                                console.log(err)
                             },
                             (url) => {
                                 this.setState({url: url})
@@ -151,7 +135,6 @@ export default class CreateCity extends React.Component {
                         <PhotoUpload onPhotoSelect={image => {
                             if (image) {
                                 this.setState({image: image})
-                                //this.uploadCityPhoto()
                             }
                         }
                         }>

@@ -6,13 +6,25 @@ public class PostPhoto {
     private String url;
     private String timestamp;
     private boolean selected;
-
+    private String error;
     public PostPhoto(int id, String postId, String url, String timestamp, boolean selected) {
         this.id = id;
         this.postId = postId;
         this.url = url;
         this.timestamp = timestamp;
         this.selected = selected;
+    }
+
+    public PostPhoto() {
+
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public int getId() {
@@ -55,3 +67,4 @@ public class PostPhoto {
         this.selected = selected;
     }
 }
+

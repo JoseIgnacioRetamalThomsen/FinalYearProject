@@ -31,6 +31,9 @@ export default class PlaceDetail extends Component {
                     timestamp: ''
                 }
             ],
+            photoMap: [
+
+            ],
             //post
             postTitle: '',
             postDescription: '',
@@ -67,9 +70,9 @@ export default class PlaceDetail extends Component {
             country,
             description
         })
-        console.log("country is ", country)
         this.getPlaceImages()
         this.getPlacePosts()
+        this.getPostsPhotosIdP()
     }
 
     getPlaceImages() {
@@ -89,7 +92,6 @@ export default class PlaceDetail extends Component {
                             },
                             (images) => {
                                 this.setState({images: JSON.parse(images)})
-                                //console.log("image json", images)
                             })
                     }
                 })
@@ -98,7 +100,6 @@ export default class PlaceDetail extends Component {
     }
 
     _renderItem = ({item, index}) => {
-        console.log(item, index);
         return (
             <View style={styles.slide}>
                 <Text style={styles.title}>{item.timestamp}</Text>
@@ -128,10 +129,8 @@ export default class PlaceDetail extends Component {
                                 console.log(err)
                             },
                             (mongoId) => {
-
                                 this.setState({postMongoId: mongoId})
                                 this.uploadPostImage();
-                                console.log("mongoId is " + mongoId)
                                 this.setState({isVisible: false})
                             })
                     }
@@ -155,8 +154,6 @@ export default class PlaceDetail extends Component {
                             },
                             (postsList) => {
                                 this.setState({posts: JSON.parse(postsList)})
-                                console.log("string  is !!!!!!!" + postsList)
-                                console.log("string  is !!!!!!!" + this.state.posts[0].indexId)
                             }
                         )
                     }
@@ -178,15 +175,44 @@ export default class PlaceDetail extends Component {
                             email,
                             this.state.postMongoId,
                             this.state.postImage,
+                            1,
+                            this.state.placeId,
                             (err) => {
-                                console.log(err)
+                                console.log("err", err)
                             },
                             (postUrl) => {
                                 this.setState({postUrl: postUrl})
-                                console.log("url  is !!!!!!!" + postUrl)
-
+                                console.log("postUrl", postUrl)
                             }
                         )
+                    }
+                })
+            })
+        })
+    }
+
+    getPostsPhotosIdP() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token !== null) {
+                        NativeModules.PhotosModule.getPostsPhotosIdP(
+                            token,
+                            email,
+                            1,
+                            this.state.placeId,
+                            (err) => {
+                                console.log(err)
+                            },
+
+                            (photoList) => {
+                                this.setState({photoMap:photoList})
+                                console.log("???????????????????", photoList)
+
+                            })
                     }
                 })
             })
@@ -243,7 +269,7 @@ export default class PlaceDetail extends Component {
                     </ModalContent>
                 </Modal>
 
-                <CustomHeader title={this.state.city} isHome={false} navigation={this.props.navigation}/>
+                <CustomHeader title={this.state.placeName} isHome={false} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <Card>
                         <CardItem>

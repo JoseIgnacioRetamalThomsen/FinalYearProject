@@ -25,11 +25,12 @@ export default class DisplayCities extends Component {
                     description: '',
                     lat: 0.0,
                     lng: 0.0,
-                    url: ''
-
                 },
             ],
-            isUpdated : false
+            photoMap:[
+
+            ],
+            isUpdated: false
         }
     }
 
@@ -50,6 +51,30 @@ export default class DisplayCities extends Component {
     //
     //     }
     // }
+    getCitiesPhoto() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token !== null) {
+                        NativeModules.PhotosModule.getCitysPhoto(
+                            token,
+                            email,
+                            (err) => {
+                                console.log(err)
+                            },
+
+                            (jsonCityPhotoList) => {
+                                this.setState({photoMap:jsonCityPhotoList})
+
+                            })
+                    }
+                })
+            })
+        })
+    }
 
     componentDidMount() {
         AsyncStorage.getAllKeys((err, keys) => {
@@ -69,12 +94,12 @@ export default class DisplayCities extends Component {
                                 this.setState({cities: JSON.parse(jsonCityList)})
                                 // this.setState({name: JSON.stringify(jsonCityList.name)})
 
-                                console.log("successful values in jsonCityList!!!", this.state.cities[0].name)
                             })
                     }
                 })
             })
         })
+        this.getCitiesPhoto()
     }
 
     updateCity() {
@@ -83,7 +108,6 @@ export default class DisplayCities extends Component {
                 stores.map((result, i, store) => {
                     let key = store[i][0];
                     let value = store[i][1]
-                    console.log("key/value in updatecity " + key + " " + value)
 
                     if (value !== null) {
                         // NativeModules.ProfilesModule.updateCity(
@@ -126,16 +150,15 @@ export default class DisplayCities extends Component {
                     {this.state.cities.map((item, index) => {
                         return (
                             <Card key={this.state.cities.cityId}>
-
+                                <CardItem cardBody>
+                                    <Image source={{uri: this.state.photoMap[item.cityId]}}
+                                           style={{height: 200, width: null, flex: 1}}/>
+                                </CardItem>
                                 <CardItem>
                                     <CardTitle
                                         title={item.name}
                                         subtitle={item.country}
                                     />
-                                </CardItem>
-                                <CardItem cardBody>
-                                    <Image source={{url: this.state.url}}
-                                           style={{height: 200, width: null, flex: 1}}/>
                                 </CardItem>
                                 <CardItem>
                                     <Body>

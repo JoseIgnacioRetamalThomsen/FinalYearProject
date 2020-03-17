@@ -12,6 +12,7 @@ export default class CreatePlace extends React.Component {
         super(props)
         this.state = {
             placeId: 0,
+            cityId:'',
             image: '',
             url: '',
             placeName: '',
@@ -24,12 +25,14 @@ export default class CreatePlace extends React.Component {
     }
 
     componentDidMount() {
+        const cityId = this.props.navigation.getParam('cityId', '')
         const city = this.props.navigation.getParam('city', '')
         const country = this.props.navigation.getParam('country', '')
         const email = this.props.navigation.getParam('email', '')
         const image = this.props.navigation.getParam('image', '')
         console.log("Passed values: in createPlace", city, country, email, image)
         this.setState({
+            cityId,
             city,
             country,
             email,
@@ -80,6 +83,7 @@ export default class CreatePlace extends React.Component {
                             email,
                             parseInt(this.state.placeId),
                             this.state.image,
+                            this.state.cityId,
                             (err) => {
                                 console.log(err)
                             },

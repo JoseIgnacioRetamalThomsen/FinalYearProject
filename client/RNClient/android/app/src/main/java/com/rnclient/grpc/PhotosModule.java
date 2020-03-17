@@ -1,9 +1,11 @@
 package com.rnclient.grpc;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
 import com.google.gson.Gson;
 import com.wcity.grpc.clients.PhotosClient;
 import com.wcity.grpc.objects.CityPhoto;
@@ -14,6 +16,11 @@ import com.wcity.grpc.objects.PostPhoto;
 import com.wcity.grpc.objects.PostPhotoResponse;
 import com.wcity.grpc.objects.ProfilePhoto;
 import com.wcity.grpc.objects.ProfilePhotoResponse;
+
+import java.util.List;
+
+import io.grpc.wcity.photoShared.PostType;
+
 
 public class PhotosModule extends ReactContextBaseJavaModule {
 
@@ -65,8 +72,9 @@ public class PhotosModule extends ReactContextBaseJavaModule {
                                 Callback errorCallback, Callback successCallback) {
         CityPhoto response = client.uploadCityPhoto(token, email, cityId, image);
 
-        if (response.isError()){
-            errorCallback.invoke(response.getError()); return;
+        if (response.isError()) {
+            errorCallback.invoke(response.getError());
+            return;
         }
         try {
             successCallback.invoke(response.getUrl());
@@ -82,8 +90,9 @@ public class PhotosModule extends ReactContextBaseJavaModule {
 
         CityPhotoResponse response = client.getCityImage(token, email, cityId);
 
-        if(response.error != null){
-            errorCallback.invoke(response.error); return;
+        if (response.error != null) {
+            errorCallback.invoke(response.error);
+            return;
         }
         try {
             successCallback.invoke(gson.toJson(response.getPhotos()));
@@ -105,15 +114,16 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void uploadPlacePhoto(String token, String email, int placeId, String image, Callback errorCallback,
+    public void uploadPlacePhoto(String token, String email, int placeId, String image, int placeCityId, Callback errorCallback,
                                  Callback successCallback) {
-        PlacePhoto response = client.uploadPlacePhoto(token, email, placeId, image);
+        PlacePhoto response = client.uploadPlacePhoto(token, email, placeId, image, placeCityId);
         try {
             successCallback.invoke(response.getUrl());
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
     }
+
     @ReactMethod
     public void getPostImage(String token, String userEmail, String postId, Callback errorCallback,
                              Callback successCallback) {
@@ -127,9 +137,13 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void uploadPostImage(String token, String userEmail, String postId,  String image, Callback errorCallback,
-                                Callback successCallback) {
-        PostPhoto response = client.uploadPostImage(token, userEmail, postId, image);
+    public void uploadPostImage(String token, String userEmail, String postId, String image,
+                                int type, int parentId, Callback errorCallback, Callback successCallback) {
+        PostPhoto response = client.uploadPostImage(token, userEmail, postId, image, type, parentId);
+        if (response.getError() != null) {
+            errorCallback.invoke(response.getError());
+            return;
+        }
         try {
             successCallback.invoke(response.getUrl());
         } catch (Exception e) {
@@ -137,4 +151,48 @@ public class PhotosModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void getCitysPhoto(String token, String email, Callback errorCallback,
+                              Callback successCallback) {
+        List<CityPhoto> response = client.getCitysPhoto(token, email);
+        WritableMap map = Arguments.createMap();
+        for(CityPhoto e: response){
+            map.putString(""+ e.getCityId(), e.getUrl());
+        }
+        try {
+            successCallback.invoke(map);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void getPlacesPerCityPhoto(String token, String email, int cityId, Callback errorCallback,
+                              Callback successCallback) {
+        List<PlacePhoto> response = client.getPlacesPerCityPhoto(token, email, cityId);
+        WritableMap map = Arguments.createMap();
+        for(PlacePhoto e: response){
+            map.putString(""+ e.getPlaceId(), e.getUrl());
+        }
+        try {
+            successCallback.invoke(map);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void getPostsPhotosIdP(String token, String email, int type, int parentId,
+                                  Callback errorCallback, Callback successCallback) {
+        List<PostPhoto> response = client.getPostsPhotosIdP(token, email, type, parentId);
+        WritableMap map = Arguments.createMap();
+        for(PostPhoto e: response){
+            map.putString(""+ e.getPostId(), e.getUrl());
+        }
+        try {
+            successCallback.invoke(map);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
 }

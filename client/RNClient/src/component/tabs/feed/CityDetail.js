@@ -30,6 +30,9 @@ class CityDetail extends Component {
             lon: 0,
             cityImage:'',
             cityUrl:'',
+            photoMap:[
+
+            ],
             images: [
                 {
                     url: "",
@@ -99,6 +102,7 @@ class CityDetail extends Component {
         })
         this.getCityImages()
         this.getCityPlaces()
+        this.getPlacesPerCityPhoto()
     }
 
     getCityImages() {
@@ -118,7 +122,6 @@ class CityDetail extends Component {
                             },
                             (images) => {
                                 this.setState({images: JSON.parse(images)})
-                                // console.log("image json", this.state.images.url)
                             })
                     }
                 })
@@ -172,7 +175,6 @@ class CityDetail extends Component {
                             (cityPostId) => {
                                 this.setState({cityPostId: cityPostId})
                                 this.uploadPostImage();
-                                console.log("postId in createCityPost is " + cityPostId)
                                 this.setState({isVisible: false})
                                 // this.props.navigation.navigate('DisplayCityPosts')
                             })
@@ -197,15 +199,16 @@ class CityDetail extends Component {
                         89,
                         90,
                         //parseFloat(this.state.lon),
-                        this.state.description,
+                        this.state.placeDescription,
                         (err) => {
                             console.log(err)
                         },
                         (placeId) => {
                             this.setState({placeId: placeId})
-                            console.log(placeId)
                             this.uploadPlacePhoto();
                             this.setState({isVisible2: false})
+                            this.getCityPlaces()
+                            this.getPlacesPerCityPhoto()
                             //this.props.navigation.navigate('DisplayPlaces')
                         })
                 })
@@ -225,12 +228,12 @@ class CityDetail extends Component {
                             email,
                             parseInt(this.state.placeId),
                             this.state.placeImage,
+                            this.state.cityId,
                             (err) => {
                                 console.log(err)
                             },
                             (placeUrl) => {
                                 this.setState({placeUrl: placeUrl})
-                                console.log("url ", placeUrl)
                             })
                     }
                 })
@@ -255,7 +258,6 @@ class CityDetail extends Component {
                             },
                             (cityUrl) => {
                                 this.setState({cityUrl: cityUrl})
-                                console.log("cityUrl is ", cityUrl)
                             })
                     }
                 })
@@ -269,7 +271,6 @@ class CityDetail extends Component {
             stores.map((result, i, store) => {
                 let email = store[i][0]
                 let token = store[i][1]
-                console.log("token is ", token, email)
                 if (token !== null) {
                     NativeModules.PhotosModule.uploadPostImage(
                         token,
@@ -277,11 +278,10 @@ class CityDetail extends Component {
                         this.state.cityPostId,
                         this.state.cityPostImage,
                         (err) => {
-                            console.log("err" ,  err)
+                            console.log(err)
                         },
                         (cityUrl) => {
                             this.setState({cityUrl: cityUrl})
-                            console.log("cityUrl is ", cityUrl)
                         })
                 }
             })
@@ -289,8 +289,33 @@ class CityDetail extends Component {
     })
     }
 
+
+    getPlacesPerCityPhoto() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token !== null) {
+                        NativeModules.PhotosModule.getPlacesPerCityPhoto(
+                            token,
+                            email,
+                            this.state.cityId,
+                            (err) => {
+                                console.log(err)
+                            },
+
+                            (jsonCityPhotoList) => {
+                                this.setState({photoMap:jsonCityPhotoList})
+                            })
+                    }
+                })
+            })
+        })
+    }
+
     _renderItem = ({item, index}) => {
-        console.log(item, index);
         return (
             <View style={styles.slide}>
                 <Text style={styles.title}>{item.timestamp}</Text>
@@ -367,7 +392,7 @@ class CityDetail extends Component {
                         <TextInput
                             placeholder="Title"
                             underlineColorAndroid='transparent'
-                            onChangeText={(placeTitle) => this.setState({placeTitle})}/>
+                            onChangeText={(placeName) => this.setState({placeName})}/>
 
                         <TextInput
                             placeholder="Description"
@@ -402,6 +427,10 @@ class CityDetail extends Component {
                 <CustomHeader title={this.state.city} isHome={false} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <Card>
+                        <CardItem cardBody>
+                            <Image source={this.state.img}
+                                   style={{height: 200, width: null, flex: 1}}/>
+                        </CardItem>
                         <CardItem>
                             <CardTitle
                                 title={this.state.city}
@@ -409,19 +438,6 @@ class CityDetail extends Component {
                             />
                         </CardItem>
 
-                        <CardItem cardBody>
-                            <Image source={this.state.img}
-                                   style={{height: 200, width: null, flex: 1}}/>
-                        </CardItem>
-                        <Carousel
-                            ref={(c) => {
-                                this._carousel = c;
-                            }}
-                            data={this.state.images}
-                            renderItem={this._renderItem}
-                            sliderWidth={500}
-                            itemWidth={500}
-                        />
                         <CardItem>
                             <Body>
                                 <Text>{this.state.description} </Text>
@@ -436,39 +452,51 @@ class CityDetail extends Component {
                                 />
                             </CardAction>
                         </CardItem>
+                        <Carousel
+                            ref={(c) => {
+                                this._carousel = c;
+                            }}
+                            data={this.state.images}
+                            renderItem={this._renderItem}
+                            sliderWidth={500}
+                            itemWidth={500}
+                        />
                     </Card>
 
-                    <View style={{flex: 1}}>
+                    {/*<View style={{flex: 1}}>*/}
 
-                    </View>
-                    {this.state.places.map((item, index) => {
+                    {/*</View>*/}
+                    {this.state.places.map((e, index) => {
                         return (
                             <Card key={this.state.places.placeId}>
 
+
+                                <CardItem cardBody>
+                                    <Image source={{uri: this.state.photoMap[e.id]}}
+                                           style={{height: 200, width: null, flex: 1}}/>
+                                </CardItem>
+
                                 <CardItem>
                                     <CardTitle
-                                        title={item.name}
+                                        title={e.name}
                                     />
                                 </CardItem>
-                                {/*<CardItem cardBody>*/}
-                                {/*    <Image source={{url: this.state.url}}*/}
-                                {/*           style={{height: 200, width: null, flex: 1}}/>*/}
-                                {/*</CardItem>*/}
+
                                 <CardItem>
                                     <Body>
-                                        <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.description} </Text>
+                                        <Text numberOfLines={1} ellipsizeMode={"tail"}>{e.description} </Text>
                                     </Body>
                                     <CardAction
                                         separator={true}
                                         inColumn={false}>
                                         <CardButton
                                             onPress={() => this.props.navigation.navigate('PlaceDetail', {
-                                                placeId: item.id,
-                                                name: item.name,
+                                                placeId: e.id,
+                                                name: e.name,
                                                 city: this.state.city,
                                                 cityId: this.state.cityId,
                                                 country: this.state.country,
-                                                description: item.description,
+                                                description: e.description,
                                             })}
                                             title="More"
                                             color="blue"
@@ -483,22 +511,12 @@ class CityDetail extends Component {
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
-                                       // onPress={() => this.props.navigation.navigate('CreateCityPost', {
-                                       //     indexId: this.state.indexId,
-                                       //     city: this.state.city,
-                                       //     country: this.state.country
-                                       // })}>
+
                                        onPress={() => this.setState({isVisible: true})}>
                         <Icon name="md-create" style={styles.actionButtonIcon}/>
                     </ActionButton.Item>
                     <ActionButton.Item buttonColor='#007AFF' title="Add a place"
-                                       // onPress={() => this.props.navigation.navigate('CreatePlace', {
-                                       //     indexId: this.state.indexId,
-                                       //     name: this.state.city,
-                                       //     country: this.state.country,
-                                       //     email: this.state.email,
-                                       //     image: this.state.image
-                                       // })}>
+
                                        onPress={() => this.setState({isVisible2: true})}>
                         <Icon name="md-create" style={styles.actionButtonIcon}/>
                     </ActionButton.Item>
