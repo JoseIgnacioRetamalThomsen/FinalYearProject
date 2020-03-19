@@ -356,6 +356,8 @@ public class PhotosClient {
             }
 
         }catch(StatusRuntimeException e) {
+            PostPhoto postPhoto = new PostPhoto();
+            postPhoto.setError(e.getMessage());
             e.getMessage();
         }
         return response;

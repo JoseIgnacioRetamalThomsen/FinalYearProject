@@ -1,6 +1,8 @@
 package com.wcity.grpc;
 
 
+import com.wcity.grpc.objects.MyCityPost;
+
 import java.util.List;
 
 public class CityPostResponse {

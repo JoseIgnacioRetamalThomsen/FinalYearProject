@@ -31,9 +31,7 @@ export default class PlaceDetail extends Component {
                     timestamp: ''
                 }
             ],
-            photoMap: [
-
-            ],
+            photoMap: [],
             //post
             postTitle: '',
             postDescription: '',
@@ -153,6 +151,7 @@ export default class PlaceDetail extends Component {
                                 console.log(err)
                             },
                             (postsList) => {
+                                console.log("postsList", postsList)
                                 this.setState({posts: JSON.parse(postsList)})
                             }
                         )
@@ -207,7 +206,6 @@ export default class PlaceDetail extends Component {
                             (err) => {
                                 console.log(err)
                             },
-
                             (photoList) => {
                                 this.setState({photoMap:photoList})
                                 console.log("???????????????????", photoList)
@@ -321,10 +319,10 @@ export default class PlaceDetail extends Component {
                                     />
                                 </CardItem>
 
-                                {/*<CardItem cardBody>*/}
-                                {/*    <Image source={require('../../../img/noImage.png')}*/}
-                                {/*           style={{height: 200, width: null, flex: 1}}/>*/}
-                                {/*</CardItem>*/}
+                                <CardItem cardBody>
+                                    <Image source={{uri: this.state.photoMap[item.mongoId]}}
+                                           style={{height: 200, width: null, flex: 1}}/>
+                                </CardItem>
                                 <CardItem>
                                     <Body>
                                         <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.body} </Text>

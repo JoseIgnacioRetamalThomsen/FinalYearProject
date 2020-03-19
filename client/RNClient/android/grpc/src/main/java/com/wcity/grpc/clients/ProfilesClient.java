@@ -32,6 +32,7 @@ import io.grpc.wcity.profiles.CreateUserRequestP;
 
 import io.grpc.wcity.profiles.GetAllRequest;
 import io.grpc.wcity.profiles.GetCityRequestP;
+import io.grpc.wcity.profiles.GetPlaceRequestP;
 import io.grpc.wcity.profiles.GetUserRequestP;
 //import io.grpc.wcity.profiles.PlaceRequestP;
 import io.grpc.wcity.profiles.PlaceResponseP;
@@ -264,28 +265,25 @@ public class ProfilesClient {
 //        return city;
 //    }
 //
-//    public VisitCity visitCity(String token, String email, String cityName,
-//                               String cityCountry) {
-//        VisitCityRequestP visitCityRequestP = VisitCityRequestP
-//                .newBuilder()
-//                .setToken(token)
-//                .setEmail(email)
-//                .setCityName(cityName)
-//                .setCityCountry(cityCountry)
-//                .build();
-//        VisitCityResponseP response;
-//
-//        VisitCity visitedCity = null;
-//        try {
-//            response = stub.visitCity(visitCityRequestP);
-//            visitedCity = new VisitCity(response.getValid(), response.getEmail(),
-//                    response.getCityName(), response.getCityCountry());
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return visitedCity;
-//    }
-//
+    public String visitCity(String token, String email, String id) {
+        VisitCityRequestP visitCityRequestP = VisitCityRequestP
+                .newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .setId(id)
+                .build();
+        VisitCityResponseP response;
+
+        String visitedCity = null;
+        try {
+            response = stub.visitCity(visitCityRequestP);
+            visitedCity = response.getTimeStamp();
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return visitedCity;
+    }
+
 //    public VisitedCities getVisitedCities(String token, String email) {
 //        VisitedRequestP visitedRequestP = VisitedRequestP
 //                .newBuilder()
@@ -313,17 +311,15 @@ public class ProfilesClient {
 //    }
 //
 //
-//    public Place getPlace(String token, String name, String city, String country,
-//                          String creatorEmail, String description, GeolocationP location) {
-//        PlaceRequestP placeRequestP = PlaceRequestP
+//    public Place getPlace(String token, String email, String placeName, String placeCity,
+//                          String placeCountry) {
+//        GetPlaceRequestP placeRequestP = GetPlaceRequestP
 //                .newBuilder()
 //                .setToken(token)
-//                .setName(name)
-//                .setCity(city)
-//                .setCountry(country)
-//                .setCreatorEmail(creatorEmail)
-//                .setDescription(description)
-//                .setLocation(location)
+//                .setEmail(email)
+//                .setPlaceName(placeName)
+//                .setPlaceCity(placeCity)
+//                .setPlaceCountry(placeCountry)
 //                .build();
 //        PlaceResponseP response;
 //
@@ -332,14 +328,14 @@ public class ProfilesClient {
 //            response = stub.getPlace(placeRequestP);
 //            place = new Place(response.getValid(), response.getName(), response.getCity(),
 //                    response.getCountry(), response.getCreatorEmail(), response.getDescription(),
-//                    response.getLocation().getLat(), response.getLocation().getLon(), response.getId());
+//                   );
 //        } catch (StatusRuntimeException e) {
 //            e.getMessage();
 //        }
 //        return place;
 //    }
-//
-//
+
+
 //    public Place updatePlace(String token, String name, String city, String country,
 //                             String creatorEmail, String description, GeolocationP location) {
 //        PlaceRequestP placeRequestP = PlaceRequestP

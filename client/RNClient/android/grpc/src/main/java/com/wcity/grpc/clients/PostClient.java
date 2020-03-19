@@ -1,7 +1,7 @@
 package com.wcity.grpc.clients;
 
 import com.wcity.grpc.CityPostResponse;
-import com.wcity.grpc.MyCityPost;
+import com.wcity.grpc.objects.MyCityPost;
 import com.wcity.grpc.MyPlacePost;
 import com.wcity.grpc.PlacePostResponse;
 
@@ -106,7 +106,8 @@ public class PostClient {
                         post.getTitle(), post.getBody(), post.getTimeStamp(), post.getLikesList(),
                         post.getMongoId()));
             }
-            placePostResponse = new PlacePostResponse(response.getValid(), response.getIndexId(), myPlacePostList);
+            placePostResponse = new PlacePostResponse(response.getValid(), response.getIndexId(),
+                    myPlacePostList);
 
         } catch (StatusRuntimeException e) {
             e.getMessage();

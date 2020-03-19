@@ -138,6 +138,8 @@ export default class DisplayCities extends Component {
     }
 
     render() {
+       // let image = this.state.showDefault ? require('../../../img/noImage.png') : {uri: ImageUrl};source={image ? { uri: image } : defaultImg}
+
         return (
             <View style={{flex: 1}}>
                 {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
@@ -151,8 +153,10 @@ export default class DisplayCities extends Component {
                         return (
                             <Card key={this.state.cities.cityId}>
                                 <CardItem cardBody>
+
                                     <Image source={{uri: this.state.photoMap[item.cityId]}}
-                                           style={{height: 200, width: null, flex: 1}}/>
+                                           style={{height: 200, width: null, flex: 1}}
+                                    />
                                 </CardItem>
                                 <CardItem>
                                     <CardTitle

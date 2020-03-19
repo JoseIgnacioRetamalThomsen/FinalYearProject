@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
+import {NativeModules, Text} from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 
 class CustomHeader extends Component {
     render() {
@@ -21,10 +23,39 @@ class CustomHeader extends Component {
                     <Title>{title}</Title>
                 </Body>
                 <Right>
-
+                    <Button  hasText transparent onPress= {() => this.visitCity()}>
+                        <Text>Visit!</Text>
+                    </Button>
                 </Right>
             </Header>
         );
+    }
+
+    visitCity() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token !== null) {
+                        NativeModules.ProfilesModule.visitCity(
+                            token,
+                            email,
+                            this.state.cityId,
+                            (err) => {
+                                console.log(err)
+                            },
+
+                            (timestamp) => {
+                               // this.setState({timestamp: timestamp})
+                                console.log("timestamp is ", timestamp)
+
+                            })
+                    }
+                })
+            })
+        })
     }
 }
 export default CustomHeader

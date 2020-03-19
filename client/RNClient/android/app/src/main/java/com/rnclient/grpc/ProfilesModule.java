@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import io.grpc.wcity.profiles.Geolocation;
-//import io.grpc.wcity.profiles.GeolocationP;
+
 
 
 public class ProfilesModule extends ReactContextBaseJavaModule {
@@ -156,24 +156,18 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
 //        }
 //    }
 
-//    @ReactMethod
-//    public void visitCity(String token, String email, String cityName,
-//                          String cityCountry, Callback errorCallback,
-//                          Callback successCallback) {
-//        VisitCity visitCity = client.visitCity(token, email, cityName, cityCountry);
-//        try {
-//            //  if (visitCity.isValid() == true) {
-//            successCallback.invoke(visitCity.isValid(), visitCity.getEmail(),
-//                    visitCity.getCityName(), visitCity.getCityCountry()
-//            );
-//            //            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
+    @ReactMethod
+    public void visitCity(String token, String email, String id, Callback errorCallback,
+                          Callback successCallback) {
+        String response = client.visitCity(token, email, id);
+        try {
+            successCallback.invoke(response);
+
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
 //    @ReactMethod
 //    public void getVisitedCities(String token, String email,
 //                                 Callback errorCallback,

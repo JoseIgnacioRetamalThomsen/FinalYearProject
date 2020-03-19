@@ -75,13 +75,10 @@ public class PostModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCityPosts(int indexId, Callback errorCallback, Callback successCallback) {
 
+        Gson gson = new Gson();
         CityPostResponse response = client.getCityPosts(indexId);
         try {
-            if (response == null) {
-                // successCallback.invoke(response);
-            } else {
-                successCallback.invoke(response);
-            }
+            successCallback.invoke(gson.toJson(response.getMyCityPosts()));
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }

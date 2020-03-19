@@ -185,13 +185,16 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     public void getPostsPhotosIdP(String token, String email, int type, int parentId,
                                   Callback errorCallback, Callback successCallback) {
         List<PostPhoto> response = client.getPostsPhotosIdP(token, email, type, parentId);
+
         WritableMap map = Arguments.createMap();
         for(PostPhoto e: response){
             map.putString(""+ e.getPostId(), e.getUrl());
         }
+
         try {
             successCallback.invoke(map);
         } catch (Exception e) {
+
             errorCallback.invoke(e.getMessage());
         }
     }

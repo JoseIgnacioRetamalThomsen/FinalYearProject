@@ -1,4 +1,4 @@
-package com.wcity.grpc;
+package com.wcity.grpc.objects;
 
 import java.util.List;
 
