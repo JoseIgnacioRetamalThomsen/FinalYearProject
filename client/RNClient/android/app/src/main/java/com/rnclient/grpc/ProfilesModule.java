@@ -24,7 +24,6 @@ import java.util.List;
 import io.grpc.wcity.profiles.Geolocation;
 
 
-
 public class ProfilesModule extends ReactContextBaseJavaModule {
 
     private static ReactApplicationContext reactContext;
@@ -50,7 +49,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     public void getAllCities(int max, Callback errorCallback,
                              Callback successCallback) {
         String cityList;
-        try{
+        try {
             cityList = client.getAllCities(max);
             successCallback.invoke(cityList);
         } catch (Exception e) {
@@ -62,7 +61,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     public void getAllPlaces(int max, Callback errorCallback,
                              Callback successCallback) {
         String placeList;
-        try{
+        try {
             placeList = client.getAllPlaces(max);
             successCallback.invoke(placeList);
         } catch (Exception e) {
@@ -74,7 +73,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     public void getUser(String token, String email, Callback errorCallback,
                         Callback successCallback) {
         User user = client.getUser(token, email);
-    if (user == null) errorCallback.invoke("error8");
+        if (user == null) errorCallback.invoke("error8");
         try {
             successCallback.invoke(user.getEmail(), user.getName(), user.getDescription(),
                     user.getUserId());
@@ -84,7 +83,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
         }
     }
 
-        @ReactMethod
+    @ReactMethod
     public void updateUser(String token, String email, String userEmail, String name,
                            String description, int userId,
                            Callback errorCallback, Callback successCallback) {
@@ -104,10 +103,13 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void createCity(String token, String email, String name, String country,
                            String creatorEmail, float lat, float lon, String description,
-                            Callback errorCallback, Callback successCallback) {
+                           Callback errorCallback, Callback successCallback) {
         City city = client.createCity(token, email, name, country, creatorEmail,
                 lat, lon, description);
-        if(city.error != null) {errorCallback.invoke(city.error); return;}
+        if (city.error != null) {
+            errorCallback.invoke(city.error);
+            return;
+        }
         try {
             // if (city.isValid() == true) {
             successCallback.invoke(city.getCityId());
@@ -157,37 +159,37 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
 //    }
 
     @ReactMethod
-    public void visitCity(String token, String email, String id, Callback errorCallback,
+    public void visitCity(String token, String email, int id, Callback errorCallback,
                           Callback successCallback) {
-        String response = client.visitCity(token, email, id);
+        boolean isValid = client.visitCity(token, email, id);
         try {
-            successCallback.invoke(response);
-
+            successCallback.invoke(isValid);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
     }
 
-//    @ReactMethod
-//    public void getVisitedCities(String token, String email,
-//                                 Callback errorCallback,
-//                                 Callback successCallback) {
-//        VisitedCities visitedCities = client.getVisitedCities(token, email);
-//        try {
-//            //  if (visitedCities.isValid() == true) {
-//            successCallback.invoke(visitedCities.isValid(), visitedCities.getEmail(),
-//                    visitedCities.getVisitedCities());
-//            //            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
+    @ReactMethod
+    public void getVisitedCities(String token, String email, Callback errorCallback,
+                                 Callback successCallback) {
+        Gson gson = new Gson();
+        List<City> visitedCities = client.getVisitedCities(token, email);
+
+if (visitedCities.size()==1){
+    errorCallback.invoke(visitedCities.get(0).error);
+    return;
+}
+
+        try {
+            successCallback.invoke(gson.toJson(visitedCities));
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
     @ReactMethod
     public void createPlace(String token, String email, String name, String city, String country,
-                             float lat, float lon,  String description,
+                            float lat, float lon, String description,
                             Callback errorCallback, Callback successCallback) {
         Place place = client.createPlace(token, email, name, city, country,
                 lat, lon, description);
@@ -201,7 +203,8 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
             errorCallback.invoke(e.getMessage());
         }
     }
-//
+
+    //
 //    @ReactMethod
 //    public void getPlace(String token, String name, String city, String country, String creatorEmail,
 //                         String description, float lat, float lon, Callback errorCallback,

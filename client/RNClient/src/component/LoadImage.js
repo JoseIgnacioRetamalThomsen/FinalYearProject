@@ -28,6 +28,8 @@ export default class LoadImage extends Component {
     }
     takePhoto = () => {
         ImagePicker.openCamera({
+            width: 680,
+            height: 512,
             compressImageMaxWidth: 500,
             compressImageMaxHeight: 500,
             compressImageQuality: 0.7,
@@ -41,6 +43,8 @@ export default class LoadImage extends Component {
     }
     selectPhotoFromGallery = () => {
         ImagePicker.openPicker({
+            width: 680,
+            height: 512,
             compressImageMaxWidth: 500,
             compressImageMaxHeight: 500,
             compressImageQuality: 0.7,

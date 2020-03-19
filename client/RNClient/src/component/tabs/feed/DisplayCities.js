@@ -14,6 +14,7 @@ export default class DisplayCities extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            pressed: false,
             max: 999999,
             cities: [
 
@@ -138,8 +139,6 @@ export default class DisplayCities extends Component {
     }
 
     render() {
-       // let image = this.state.showDefault ? require('../../../img/noImage.png') : {uri: ImageUrl};source={image ? { uri: image } : defaultImg}
-
         return (
             <View style={{flex: 1}}>
                 {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}

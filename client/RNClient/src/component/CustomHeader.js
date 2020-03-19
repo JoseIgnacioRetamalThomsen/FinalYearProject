@@ -24,7 +24,6 @@ class CustomHeader extends Component {
                 </Body>
                 <Right>
                     <Button  hasText transparent onPress= {() => this.visitCity()}>
-                        <Text>Visit!</Text>
                     </Button>
                 </Right>
             </Header>

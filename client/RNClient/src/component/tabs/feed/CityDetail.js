@@ -12,6 +12,7 @@ import Modal, {ModalContent} from 'react-native-modals';
 import SlideAnimation from "react-native-modals/dist/animations/SlideAnimation";
 import PhotoUpload from "react-native-photo-upload";
 import {Button, Divider} from "react-native-elements";
+import SpecialHeader from "../../SpecialHeader";
 
 class CityDetail extends Component {
     constructor(props) {
@@ -100,7 +101,6 @@ class CityDetail extends Component {
             img
         })
         this.setState({cityId: cityId})
-        // console.log("cityId is ",cityId)
         this.getCityImages()
         this.getCityPlaces()
         this.getPlacesPerCityPhoto()
@@ -114,7 +114,6 @@ class CityDetail extends Component {
                 stores.map((result, i, store) => {
                     let token = store[i][1]
                     if (token !== null) {
-                        console.log("this.state.cityId", this.state.cityId)
                         NativeModules.PostModule.getCityPosts(
                             this.state.cityId,
                             (err) => {
@@ -516,7 +515,8 @@ class CityDetail extends Component {
                 </Modal>
 
 
-                <CustomHeader title={this.state.city} callback = {this.state.city} isHome={false} navigation={this.props.navigation}/>
+                <SpecialHeader title={this.state.city} cityIdFromParent={this.state.cityId}  isHome={false}
+                               navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <Card>
                         <Carousel

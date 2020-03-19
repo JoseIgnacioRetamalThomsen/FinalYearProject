@@ -17,7 +17,7 @@ import {Card} from 'react-native-elements'
 import Settings from "./Settings"
 import AsyncStorage from "@react-native-community/async-storage"
 
-let key
+let email
 
 class Profile extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ class Profile extends Component {
         this.state = {
             avatar_url: null,
             image: '../../img/profile.png',
-            email: key,
+            email: email,
             name: '',
             description: '',
             message: ''
@@ -36,49 +36,45 @@ class Profile extends Component {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
-                    key = store[i][0];
-                    let value = store[i][1]
+                    email = store[i][0];
+                    let token = store[i][1]
 
-                    console.log("key/value in profile " + key + " " + value)
-                    //this.setState({email: key})
-                    if (value !== null) {
+                    if (token !== null) {
                         NativeModules.PhotosModule.getProfilePhoto(
-                            key,
-                            value,
+                            email,
+                            token,
                             (err) => {
-                                console.log("In profile photo " + err)
+                                console.log(err)
                             },
                             (url) => {
-                                if(url == null){
+                                if (url == null) {
                                     this.setState({avatar_url: 'https://storage.googleapis.com/wcity-images-1/profile-1/1896665_1780468.jpg'})
-                                }
-                                    else{
+                                } else {
                                     this.setState({avatar_url: url})
-                                    console.log("successful photo get() " + this.state.avatar_url)
                                 }
 
                             })
                         NativeModules.ProfilesModule.getUser(
-                            value,
-                            key,
+                            token,
+                            email,
                             (err) => {
-                                //if(err.includes("Invalid user")){
-                                // this.setState({message: "Unauthorised user"})
-                                // console.log("In profile!!! Invalid user ")
-                                // }else
-                                console.log("err In profile!!! " + err)
+                                console.log(err)
                             },
                             (email, name, description, userId) => {
-                                if(userId == undefined){
-                                 console.log("null values")
-                                }else{
-                                    this.setState({name: name})
-                                    this.setState({description: description})
-                                    this.setState({userId: userId})
-                                    console.log("successful getUser", userId)
-                                }
-                            })
+                                this.setState({name: name})
+                                this.setState({description: description})
+                                this.setState({userId: userId})
 
+                            })
+                        NativeModules.ProfilesModule.getVisitedCities(
+                            token,
+                            email,
+                            (err) => {
+                                console.log(err)
+                            },
+                            (json) => {
+                                console.log("json", json)
+                            })
                     }
                 })
             })
@@ -89,23 +85,19 @@ class Profile extends Component {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
-                    key = store[i][0];
+                    email = store[i][0];
                     let value = store[i][1]
-                    console.log("key/value in profile " + key + " " + value)
-                    console.log("this.state.image " + this.state.image)
                     if (value !== null) {
                         NativeModules.PhotosModule.uploadProfilePhoto(
-                            key,
+                            email,
                             value,
                             this.state.image,
 
                             (err) => {
-                                console.log("In uploadPhoto " + err)
+                                console.log(err)
                             },
                             (url) => {
                                 this.setState({avatar_url: url})
-                                console.log("avatar_url  is " + this.state.avatar_url)
-                                console.log("successful upload!!!")
                             })
                     }
                 })
@@ -132,7 +124,6 @@ class Profile extends Component {
                                     if (avatar) {
                                         this.setState({image: avatar})
                                         this.updatePhoto()
-                                        console.log('Image base64 string: ', avatar)
                                     }
                                 }
                                 }>
@@ -152,7 +143,7 @@ class Profile extends Component {
                         </Card>
                         <View>
                             <View>
-                                <Text>Email {key} </Text>
+                                <Text>Email {email} </Text>
                             </View>
                             <View>
                                 <Text>Name {this.state.name} </Text>

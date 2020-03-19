@@ -1,21 +1,17 @@
 package com.wcity.grpc.clients;
 
+import com.wcity.grpc.VisitedCities;
 import com.wcity.grpc.objects.City;
 import com.wcity.grpc.objects.Place;
 import com.wcity.grpc.objects.User;
 
-
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -34,7 +30,6 @@ import io.grpc.wcity.profiles.GetAllRequest;
 import io.grpc.wcity.profiles.GetCityRequestP;
 import io.grpc.wcity.profiles.GetPlaceRequestP;
 import io.grpc.wcity.profiles.GetUserRequestP;
-//import io.grpc.wcity.profiles.PlaceRequestP;
 import io.grpc.wcity.profiles.PlaceResponseP;
 import io.grpc.wcity.profiles.UserResponseP;
 import io.grpc.wcity.profiles.ProfilesGrpc;
@@ -42,6 +37,7 @@ import io.grpc.wcity.profiles.VisitCityRequestP;
 import io.grpc.wcity.profiles.VisitCityResponseP;
 import io.grpc.wcity.profiles.VisitPlaceRequestP;
 import io.grpc.wcity.profiles.VisitPlaceResponseP;
+import io.grpc.wcity.profiles.VisitedCitysResponseP;
 import io.grpc.wcity.profiles.VisitedPlacesResponseP;
 import io.grpc.wcity.profiles.VisitedRequestP;
 
@@ -219,7 +215,8 @@ public class ProfilesClient {
         }
         return place;
     }
-//    public City getCity(String token, String name, String cityName, String cityCountry) {
+
+    //    public City getCity(String token, String name, String cityName, String cityCountry) {
 //        GetCityRequestP cityRequestP = GetCityRequestP
 //                .newBuilder()
 //                .setToken(token)
@@ -265,7 +262,7 @@ public class ProfilesClient {
 //        return city;
 //    }
 //
-    public String visitCity(String token, String email, String id) {
+    public boolean visitCity(String token, String email, int id) {
         VisitCityRequestP visitCityRequestP = VisitCityRequestP
                 .newBuilder()
                 .setToken(token)
@@ -274,43 +271,45 @@ public class ProfilesClient {
                 .build();
         VisitCityResponseP response;
 
-        String visitedCity = null;
+        boolean isValid = false;
         try {
             response = stub.visitCity(visitCityRequestP);
-            visitedCity = response.getTimeStamp();
+            isValid = response.getValid();
         } catch (StatusRuntimeException e) {
             e.getMessage();
         }
-        return visitedCity;
+        return isValid;
     }
 
-//    public VisitedCities getVisitedCities(String token, String email) {
-//        VisitedRequestP visitedRequestP = VisitedRequestP
-//                .newBuilder()
-//                .setToken(token)
-//                .setEmail(email)
-//                .build();
-//        // VisitedCitysResponseP response;
-//
-//        VisitedCities visitedCities = null;
-//        try {
-//            response = stub.getVisitedCitys(visitedRequestP);
-//
-//            ArrayList<City> cityList = new ArrayList<>();
-//            for (CityResponseP city : response.getCitysList()) {
-//                cityList.add(new City(city.getValid(), city.getName(), city.getCountry(),
-//                        city.getCreatorEmail(), city.getDescription(), city.getLocation().getLon(),
-//                        city.getLocation().getLat(), city.getId()));
-//            }
-//            visitedCities = new VisitedCities(response.getValid(), response.getEmail(),
-//                    cityList);
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return visitedCities;
-//    }
-//
-//
+    public List<City> getVisitedCities(String token, String email) {
+        VisitedRequestP visitedRequestP = VisitedRequestP
+                .newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .build();
+        VisitedCitysResponseP response;
+        List<City> cityList = null;
+        try {
+            response = stub.getVisitedCitys(visitedRequestP);
+
+            cityList = new ArrayList<>();
+            for (io.grpc.wcity.profiles.City city : response.getCitysList()) {
+                cityList.add(new City(city.getName(), city.getCountry(),
+                        city.getCreatorEmail(), city.getLocation().getLon(),
+                        city.getLocation().getLat(), city.getDescription(), city.getCityId()));
+            }
+
+        } catch (StatusRuntimeException e) {
+            cityList = new ArrayList<>();
+            City city = new City();
+            city.error = e.getMessage();
+            cityList.add(city);
+            //e.getMessage();
+        }
+        return cityList;
+    }
+
+
 //    public Place getPlace(String token, String email, String placeName, String placeCity,
 //                          String placeCountry) {
 //        GetPlaceRequestP placeRequestP = GetPlaceRequestP
@@ -410,28 +409,23 @@ public class ProfilesClient {
 //        }
 //        return visitedPlaces;
 //    }
-// string name = 1;
-//    string country = 2;
-//    string creatorEmail = 3;
-//    Geolocation location = 4;
-//    string description = 5;
-//    int32 cityId = 6;
+
     public List<Place> getCityPlaces(String token, String email, String name,
-                                String country) {
+                                     String country) {
         CreateCityRequestP userRequest = CreateCityRequestP.newBuilder()
                 .setToken(token)
                 .setName(email)
                 .setCity(io.grpc.wcity.profiles.City.newBuilder()
-                .setName(name)
-                .setCountry(country)
-                .build())
-        .build();
+                        .setName(name)
+                        .setCountry(country)
+                        .build())
+                .build();
         VisitedPlacesResponseP response;
-        List <Place> placeList = new ArrayList<>();
+        List<Place> placeList = new ArrayList<>();
         Place placeError;
         try {
             response = stub.getCityPlaces(userRequest);
-            for(io.grpc.wcity.profiles.Place place:response.getPlacesList()) {
+            for (io.grpc.wcity.profiles.Place place : response.getPlacesList()) {
                 placeList.add(
                         new Place(place.getName(), place.getCity(), place.getCountry(),
                                 place.getCreatorEmail(), place.getDescription(),
