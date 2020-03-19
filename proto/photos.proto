@@ -143,5 +143,5 @@ message GetPostsPhotosPerParentRequestP{
 }
 message GetPostsPhotosPerParentResponseP{
     bool success = 1;
-    repeated PostPhoto placesPhoto = 2;
+    repeated PostPhoto placesPhoto = 2;//name wrong
 }

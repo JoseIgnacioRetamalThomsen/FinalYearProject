@@ -49,9 +49,9 @@ func main(){
 	s2 := &postService{dbserverCtx}
 	serviceConn = *s2
 
-	CreateCityPost()
+	//CreateCityPost()
 	//CreatePlacePost()
-	//GetPlacePosts()
+	GetPlacePosts()
 	//GetCityPosts()
 }
 
@@ -102,7 +102,7 @@ func GetPlacePosts(){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := serviceConn.context.dbClient.GetPlacePosts(ctx,&pb.PostsRequest{
-		IndexId:              1,
+		IndexId:              2,
 		XXX_NoUnkeyedLiteral: struct{}{},
 		XXX_unrecognized:     nil,
 		XXX_sizecache:        0,
@@ -115,7 +115,7 @@ func GetCityPosts(){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := serviceConn.context.dbClient.GetCityPosts(ctx,&pb.PostsRequest{
-		IndexId:              2,
+		IndexId:              0,
 
 	})
 	err=err

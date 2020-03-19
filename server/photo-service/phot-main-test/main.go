@@ -7,6 +7,8 @@ import (
 
 	//"io/ioutil"
 
+	//"io/ioutil"
+
 	//"fmt"
 	//"io/ioutil"
 
@@ -89,6 +91,7 @@ GetAllPhotoPerPostParent(tokenEmail,token)
 	check(err)
 	dat=dat
 	//SendPlaceImage(dat,9,tokenEmail,token,7)
+	//SendPostImage(dat,"3",tokenEmail,token,4)
 
 	//SendPost(dat,"17",tokenEmail,token,9);
 //	dat=dat
@@ -210,7 +213,7 @@ func GetPlacePhotos(placeId int,email string,token string){
 	fmt.Println(r)
 }
 
-func SendPost(image []byte,postId string,email string, token string, pi int32){
+func SendPostImage(image []byte,postId string,email string, token string, pi int32){
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	r, err := photoConn.context.dbClient.UploadPostImage(ctx, &pb.PostUploadRequestP{
@@ -218,7 +221,7 @@ func SendPost(image []byte,postId string,email string, token string, pi int32){
 		Image : image,
 		UserEmail: email,
 		Token : token,
-		Type: pb.PostType_City,
+		Type: pb.PostType_CityTypePhoto,
 		ParentId : pi,
 	})
 	if err!= nil{
@@ -250,8 +253,8 @@ func GetAllPhotoPerPostParent(email string, token string){
 	r, err := photoConn.context.dbClient.GetPostsPhotosIdP(ctx,&pb.GetPostsPhotosPerParentRequestP{
 		Email : email,
 		Token : token,
-		Type : pb.PostType_City,
-		ParentId : 9,
+		Type : pb.PostType_CityTypePhoto,
+		ParentId : 0,
 	})
 	err =err
 	fmt.Println(r)

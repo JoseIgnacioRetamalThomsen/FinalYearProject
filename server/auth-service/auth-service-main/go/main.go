@@ -1,7 +1,14 @@
 //go:generate protoc -I ../Login --go_out=plugins=grpc:../Login ../Login/UserLogin.proto
 //go:generate protoc -I . --go_out=plugins=grpc:. UserLogin.proto
 //
-
+/*
+{
+  "Port" : ":50051",
+  "Dbs": ["104.40.206.141:7777","40.118.90.61:7777"],
+  "Pss": ["35.197.216.42:5701"],
+  "Prof": ["35.197.216.42:60051"]
+}
+ */
 package main
 
 import (

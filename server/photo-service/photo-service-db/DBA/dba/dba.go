@@ -153,12 +153,13 @@ func AddPostPhoto(photo pb.AddPostPhotoDBARequest) (int64, string, error) {
 	}
 	defer db.Close()
 
+	log.Printf("insert into %s (%s, %s, %s ,%s, %s ) values (?,?,?,?,?)", POST_TABLE, POST_ID, ALL_URL, ALL_SELECTED, POST_PARENT_TYPE, POST_PARENT_ID)
 	stmtStr := fmt.Sprintf("insert into %s (%s, %s, %s ,%s, %s ) values (?,?,?,?,?)", POST_TABLE, POST_ID, ALL_URL, ALL_SELECTED, POST_PARENT_TYPE, POST_PARENT_ID)
 	stmt, err := db.Prepare(stmtStr)
 	if err != nil {
 		return -1, "", err
 	}
-	res, err := stmt.Run(photo.PostId, photo.Url, photo.Selected, photo.Type.String(), photo.ParentId)
+	res, err := stmt.Run(photo.PostId, photo.Url, photo.Selected,pb.PostType_value[photo.Type.String()]+1, photo.ParentId)
 	if err != nil {
 		return -1, "", err
 	}
@@ -383,7 +384,7 @@ func GetPostsPhotoForOne(request pb.GetPostsPhotosPerParentRequest) ([]*pb.PostP
 	defer db.Close()
 
 
-	rows, _, err := db.Query("select * from %s where %s = '%s' AND %s = %d", POST_TABLE, POST_PARENT_TYPE, request.Type.String(), POST_PARENT_ID, request.ParentId)
+	rows, _, err := db.Query("select * from %s where %s = %d AND %s = %d", POST_TABLE, POST_PARENT_TYPE, pb.PostType_value[request.Type.String()]+1, POST_PARENT_ID, request.ParentId)
 	if err != nil {
 		return nil, err
 	}

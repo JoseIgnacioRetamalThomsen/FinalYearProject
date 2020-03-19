@@ -890,7 +890,7 @@ func (m *PostUploadRequestP) GetType() PostType {
 	if m != nil {
 		return m.Type
 	}
-	return PostType_City
+	return PostType_CityTypePhoto
 }
 
 func (m *PostUploadRequestP) GetParentId() int32 {
@@ -1196,7 +1196,7 @@ func (m *GetPostsPhotosPerParentRequestP) GetType() PostType {
 	if m != nil {
 		return m.Type
 	}
-	return PostType_City
+	return PostType_CityTypePhoto
 }
 
 func (m *GetPostsPhotosPerParentRequestP) GetParentId() int32 {

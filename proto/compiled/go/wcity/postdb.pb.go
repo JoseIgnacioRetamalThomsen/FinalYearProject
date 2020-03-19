@@ -137,7 +137,7 @@ type PlacePostPSDB struct {
 	Body                 string   `protobuf:"bytes,7,opt,name=body,proto3" json:"body,omitempty"`
 	TimeStamp            string   `protobuf:"bytes,8,opt,name=timeStamp,proto3" json:"timeStamp,omitempty"`
 	Likes                []string `protobuf:"bytes,9,rep,name=likes,proto3" json:"likes,omitempty"`
-	MongoId              string   `protobuf:"bytes,10,opt,name=mongoId,json=_id,omitempty,proto3" json:"mongoId,omitempty"`
+	MongoId              string   `protobuf:"bytes,10,opt,name=mongoId,json=_id,omitempty,proto3" json:"mongoId,omitempty" bson:"_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`

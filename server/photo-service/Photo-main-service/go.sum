@@ -33,8 +33,8 @@ github.com/googleapis/gax-go/v2 v2.0.5 h1:sjZBwGj9Jlw33ImPtvFviGYvseOtDM7hkSKB7+
 github.com/googleapis/gax-go/v2 v2.0.5/go.mod h1:DWXyrwAJ9X0FpwwEdw+IPEYBICEFu5mhpdKc/us6bOk=
 github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
-github.com/joseignacioretamalthomsen/wcity v0.1.57 h1:5g0WUQU1dgnhLx0U2RD9u2Bn9DSTwGpwLwn/AN2UkCM=
-github.com/joseignacioretamalthomsen/wcity v0.1.57/go.mod h1:DTmV5tDE35KqABR1/Dtdv1xSFjmZqTs81nTW+OG03o8=
+github.com/joseignacioretamalthomsen/wcity v0.1.60 h1:CxTscb0xri8ed/wv50HpaMDm8F2o7gA9+rXJyYANlQo=
+github.com/joseignacioretamalthomsen/wcity v0.1.60/go.mod h1:DTmV5tDE35KqABR1/Dtdv1xSFjmZqTs81nTW+OG03o8=
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=

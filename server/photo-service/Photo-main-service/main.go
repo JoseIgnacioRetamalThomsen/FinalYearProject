@@ -37,8 +37,9 @@ const (
 	start_url      = "https://storage.googleapis.com/"
 )
 const (
-	DBA_URL = "35.197.221.57:7172"
-	//DBA_URL  = "0.0.0.0:7172"
+	//DBA_URL = "35.197.221.57:7172"
+
+	DBA_URL  = "0.0.0.0:7172"
 	AUTH_URL = "35.197.216.42:50051"
 )
 
@@ -343,7 +344,7 @@ func (s *server) GetPlacePhoto(ctx context.Context, in *pb.PlacePhotoRequestP) (
 
 func (s *server) UploadPostImage(ctx context.Context, in *pb.PostUploadRequestP) (*pb.PostUploadResponseP, error) {
 
-	log.Printf("Received: %v", "Upload place picture")
+	log.Printf("Received: %v", "Upload post picture")
 
 	//check token
 	valid := CheckToken(in.UserEmail, in.Token)

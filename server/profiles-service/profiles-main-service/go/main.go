@@ -27,9 +27,9 @@ const (
 
 )
 const(
-	//url = "0.0.0.0:5777"
+	url = "0.0.0.0:5777"
 	//url="localhost:5777";
-	url = "35.197.221.57:5777"
+	//url = "35.197.221.57:5777"
 	//url = "34.89.92.151:5777"
 )
 
@@ -365,7 +365,7 @@ func (s *server) GetVisitedPlaces(ctx context.Context, in *pb.VisitedRequestP) (
 }
 
 func (s *server) GetCityPlaces(ctx context.Context, in *pb.CreateCityRequestP) (*pb.VisitedPlacesResponseP, error) {
-	log.Printf("Received: %v: %v", "Visited place's", in)
+	log.Printf("Received: %v: %v", "Git city  place's", in)
 	//check token'
 	isToken := CheckToken(in.Name, in.Token)
 	if isToken == false {
