@@ -12,6 +12,7 @@ import SlideAnimation from "react-native-modals/dist/animations/SlideAnimation";
 import PhotoUpload from "react-native-photo-upload";
 import _styles from '../../../styles/Style'
 import MapInput from "../../MapInput";
+import PlaceHeader from "../../PlaceHeader";
 
 export default class PlaceDetail extends Component {
     constructor(props) {
@@ -208,8 +209,6 @@ export default class PlaceDetail extends Component {
                             },
                             (photoList) => {
                                 this.setState({photoMap:photoList})
-                                console.log("???????????????????", photoList)
-
                             })
                     }
                 })
@@ -267,7 +266,8 @@ export default class PlaceDetail extends Component {
                     </ModalContent>
                 </Modal>
 
-                <CustomHeader title={this.state.placeName} isHome={false} navigation={this.props.navigation}/>
+                <PlaceHeader title={this.state.placeName} placeIdFromParent={this.state.placeId}  isHome={false}
+                             navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <Card>
                         <CardItem>

@@ -3,15 +3,15 @@ import {Header, Left, Body, Right, Button, Icon, Title} from 'native-base';
 import {NativeModules, Text, View} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
-class SpecialHeader extends Component {
+class PlaceHeader extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cityId: -999,
+            placeId: -999,
             pressed: false
         }
         this.setState({
-            cityId: this.props.cityIdFromParent
+            placeId: this.props.placeIdFromParent
         })
 
     }
@@ -20,9 +20,7 @@ class SpecialHeader extends Component {
         this.setState({pressed: false})
     }
 
-    returnData(pressed) {
-        this.setState({pressed: pressed});
-    }
+
     render() {
         let {title, isHome} = this.props;
 
@@ -35,8 +33,7 @@ class SpecialHeader extends Component {
                                 <Button transparent onPress={() => this.props.navigation.openDrawer()}>
                                     <Icon name='menu'/>
                                 </Button> :
-                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities',
-                                    {returnData: this.returnData.bind(this)})}>
+                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities')}>
                                     <Icon name='arrow-back'/>
                                 </Button>
                         }
@@ -45,8 +42,8 @@ class SpecialHeader extends Component {
                         <Title>{title}</Title>
                     </Body>
                     <Right>
-                        <Button hasText transparent onPress={() => this.visitCity()}>
-                            <Text> Visited </Text>
+                        <Button hasText transparent onPress={() => this.visitPlace()}>
+                            <Text> Visited this Place </Text>
                         </Button>
                     </Right>
                 </Header>
@@ -60,8 +57,7 @@ class SpecialHeader extends Component {
                                 <Button transparent onPress={() => this.props.navigation.openDrawer()}>
                                     <Icon name='menu'/>
                                 </Button> :
-                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities',
-                                    {returnData: this.returnData.bind(this)})}>
+                                <Button transparent onPress={() =>this.props.navigation.navigate('CityDetail')}>
                                     <Icon name='arrow-back'/>
                                 </Button>
                         }
@@ -75,7 +71,7 @@ class SpecialHeader extends Component {
             )
     }
 
-    visitCity() {
+    visitPlace() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -83,17 +79,16 @@ class SpecialHeader extends Component {
                     let token = store[i][1]
 
                     if (token !== null) {
-                        NativeModules.ProfilesModule.visitCity(
+                        NativeModules.ProfilesModule.visitPlace(
                             token,
                             email,
-                            parseFloat(this.props.cityIdFromParent),
+                            parseFloat(this.props.placeIdFromParent),
                             (err) => {
                                 console.log(err)
                             },
 
                             (isValid) => {
-                                this.setState({pressed: true})
-                                console.log("this.state.pressed should be true", this.state.pressed)
+                                console.log("isValid", isValid)
                             })
                     }
                 })
@@ -103,4 +98,4 @@ class SpecialHeader extends Component {
 
 }
 
-export default SpecialHeader
+export default PlaceHeader

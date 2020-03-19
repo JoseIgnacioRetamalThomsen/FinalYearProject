@@ -174,7 +174,7 @@ export default class DisplayCities extends Component {
                                             onPress={() => this.props.navigation.navigate('CityDetail', {
                                                 cityId: item.cityId,
                                                 name: item.name,
-                                                indexId: item.indexId,
+                                                 indexId: item.indexId,
                                                 country: item.country,
                                                 description: item.description,
                                             })}

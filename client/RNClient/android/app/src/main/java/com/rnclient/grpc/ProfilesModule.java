@@ -175,10 +175,10 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
         Gson gson = new Gson();
         List<City> visitedCities = client.getVisitedCities(token, email);
 
-if (visitedCities.size()==1){
-    errorCallback.invoke(visitedCities.get(0).error);
-    return;
-}
+        if (visitedCities.size() == 1) {
+            errorCallback.invoke(visitedCities.get(0).error);
+            return;
+        }
 
         try {
             successCallback.invoke(gson.toJson(visitedCities));
@@ -241,40 +241,30 @@ if (visitedCities.size()==1){
 //        }
 //    }
 //
-//    @ReactMethod
-//    public void visitPlace(String token, String email, String placeName,
-//                           String placeCity, String placeCountry,
-//                           Callback errorCallback,
-//                           Callback successCallback) {
-//        VisitPlace visitPlace = client.visitPlace(token, email, placeName, placeCity, placeCountry);
-//        try {
-//            //  if (visitPlace.isValid() == true) {
-//            successCallback.invoke(visitPlace.isValid(), visitPlace.getEmail(),
-//                    visitPlace.getPlaceName(), visitPlace.getPlaceCity(), visitPlace.getPlaceCountry());
-//            //            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
-//    @ReactMethod
-//    public void getVisitedPlaces(String token, String email,
-//                                 Callback errorCallback,
-//                                 Callback successCallback) {
-//        VisitedPlaces visitedPlaces = client.getVisitedPlaces(token, email);
-//        try {
-//            //  if (visitedPlaces.isValid() == true) {
-//            successCallback.invoke(visitedPlaces.isValid(), visitedPlaces.getEmail(), visitedPlaces.getVisitedPlaces());
-//            //            } else {
-//            errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
+    @ReactMethod
+    public void visitPlace(String token, String email, int placeId, Callback errorCallback,
+                           Callback successCallback) {
+        boolean isValid = client.visitPlace(token, email, placeId);
+        try {
+            successCallback.invoke(isValid);
+
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void getVisitedPlaces(String token, String email, Callback errorCallback,
+                                 Callback successCallback) {
+        Gson gson = new Gson();
+        List<Place> visitedPlaces = client.getVisitedPlaces(token, email);
+        try {
+            successCallback.invoke(gson.toJson(visitedPlaces));
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
     @ReactMethod
     public void getCityPlaces(String token, String email, String name, String country,
                               Callback errorCallback, Callback successCallback) {

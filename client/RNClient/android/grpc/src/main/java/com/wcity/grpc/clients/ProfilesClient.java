@@ -281,6 +281,30 @@ public class ProfilesClient {
         return isValid;
     }
 
+    public List<Place> getVisitedPlaces(String token, String email) {
+        VisitedRequestP visitedRequestP = VisitedRequestP
+                .newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .build();
+        VisitedPlacesResponseP response;
+        List<Place> placeList = null;
+
+        try {
+            response = stub.getVisitedPlaces(visitedRequestP);
+
+            placeList = new ArrayList<>();
+            for (io.grpc.wcity.profiles.Place place : response.getPlacesList()) {
+                placeList.add(new Place(place.getName(), place.getCity(),
+                        place.getCountry(), place.getCreatorEmail(), place.getDescription(),
+                        place.getLocation().getLat(), place.getLocation().getLon(), place.getPlaceId()));
+            }
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return placeList;
+    }
+
     public List<City> getVisitedCities(String token, String email) {
         VisitedRequestP visitedRequestP = VisitedRequestP
                 .newBuilder()
@@ -361,54 +385,26 @@ public class ProfilesClient {
 //        return place;
 //    }
 //
-//    public VisitPlace visitPlace(String token, String email, String placeName, String placeCity,
-//                                 String placeCountry) {
-//        VisitPlaceRequestP visitedPlaceRequestP = VisitPlaceRequestP
-//                .newBuilder()
-//                .setToken(token)
-//                .setEmail(email)
-//                .setPlaceName(placeName)
-//                .setPlaceCity(placeCity)
-//                .setPlaceCountry(placeCountry)
-//                .build();
-//        VisitPlaceResponseP response;
-//
-//        VisitPlace visitPlace = null;
-//        try {
-//            response = stub.visitPlace(visitedPlaceRequestP);
-//            visitPlace = new VisitPlace(response.getValid(), response.getEmail(),
-//                    response.getPlaceName(), response.getPlaceCity(), response.getPlaceCountry());
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return visitPlace;
-//    }
-//
-//    public VisitedPlaces getVisitedPlaces(String token, String email) {
-//        VisitedRequestP visitedRequestP = VisitedRequestP
-//                .newBuilder()
-//                .setToken(token)
-//                .setEmail(email)
-//                .build();
-//        VisitedPlacesResponseP response;
-//        VisitedPlaces visitedPlaces = null;
-//
-//        try {
-//            response = stub.getVisitedPlaces(visitedRequestP);
-//
-//            ArrayList<Place> placeList = new ArrayList<>();
-//            for (PlaceResponseP place : response.getPlacesList()) {
-//                placeList.add(new Place(place.getValid(), place.getName(), place.getCity(),
-//                        place.getCountry(), place.getCreatorEmail(), place.getDescription(),
-//                        place.getLocation().getLat(), place.getLocation().getLon(), place.getId()));
-//            }
-//            visitedPlaces = new VisitedPlaces(response.getValid(), response.getEmail(),
-//                    placeList);
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return visitedPlaces;
-//    }
+    public boolean visitPlace(String token, String email, int placeId) {
+        VisitPlaceRequestP visitedPlaceRequestP = VisitPlaceRequestP
+                .newBuilder()
+                .setToken(token)
+                .setEmail(email)
+                .setPlaceId(placeId)
+                .build();
+        VisitPlaceResponseP response;
+
+        boolean isValid = false;
+        try {
+            response = stub.visitPlace(visitedPlaceRequestP);
+            isValid = response.getValid();
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return isValid;
+    }
+
+
 
     public List<Place> getCityPlaces(String token, String email, String name,
                                      String country) {

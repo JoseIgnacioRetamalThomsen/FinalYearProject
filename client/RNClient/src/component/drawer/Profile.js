@@ -8,7 +8,7 @@ import {
     ScrollView,
     NativeModules,
 } from 'react-native'
-import {Text} from 'native-base'
+import {Body, CardItem, Text} from 'native-base'
 import CustomHeader from '../CustomHeader'
 import GeoLoc from "../GeoLoc";
 import {IMAGE} from "../../constants/Image";
@@ -16,6 +16,10 @@ import PhotoUpload from "react-native-photo-upload"
 import {Card} from 'react-native-elements'
 import Settings from "./Settings"
 import AsyncStorage from "@react-native-community/async-storage"
+import Carousel from "react-native-snap-carousel";
+import {CardTitle} from "react-native-material-cards";
+import CardAction from "react-native-material-cards/CardAction";
+import CardButton from "react-native-material-cards/CardButton";
 
 let email
 
@@ -28,7 +32,26 @@ class Profile extends Component {
             email: email,
             name: '',
             description: '',
-            message: ''
+            message: '',
+
+            visitedCities:[
+                {
+                    cityId: 0,
+                    name: '',
+                    postId: 0,
+                    country: '',
+                    description: '',
+                }
+            ],
+            getVisitedPlaces:[
+                {
+                    city:'',
+                    country: '',
+                    description: '',
+                    name: '',
+                    id: 0,
+                }
+            ]
         }
     }
 
@@ -73,7 +96,18 @@ class Profile extends Component {
                                 console.log(err)
                             },
                             (json) => {
-                                console.log("json", json)
+                                this.setState({visitedCities:JSON.parse(json)})
+                            })
+
+                        NativeModules.ProfilesModule.getVisitedPlaces(
+                            token,
+                            email,
+                            (err) => {
+                                console.log(err)
+                            },
+                            (placesJson) => {
+                                console.log("placesJson", placesJson)
+                                this.setState({visitedPlaces:JSON.parse(placesJson)})
                             })
                     }
                 })
@@ -105,6 +139,40 @@ class Profile extends Component {
         })
     }
 
+    renderItemVisitedCities = ({item, index}) => {
+        return (
+            <View style={styles.slide}>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.title}>{item.country}</Text>
+                <Text style={styles.title}>{item.description}</Text>
+                <Button title="More"  onPress={() => this.props.navigation.navigate('CityDetail', {
+                    cityId: item.cityId,
+                    name: item.name,
+                    country: item.country,
+                    description: item.description,
+                })}></Button>
+            </View>
+        )
+    }
+
+    renderItemVisitedPlaces = ({item, index}) => {
+        console.log(this.state.cityId)
+        return (
+            <View style={styles.slide}>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.title}>{item.country}</Text>
+                <Text style={styles.title}>{item.description}</Text>
+                <Button title="More"  onPress={() => this.props.navigation.navigate('PlaceDetail', {
+                    placeId: item.id,
+                    name: item.name,
+                    city: item.city,
+                    cityId: 19,
+                    country: item.country,
+                    description: item.description,
+                })}></Button>
+            </View>
+        )
+    }
     render() {
         return (
             <View style={{flex: 1}}>
@@ -155,6 +223,54 @@ class Profile extends Component {
                         <Button style={styles.buttonContainer} title="Edit Profile"
                                 onPress={() => this.props.navigation.navigate("Settings")}/>
                     </View>
+
+                    <Card>
+                        <Carousel
+                            ref={(c) => {
+                                this._carousel = c;
+                            }}
+                            data={this.state.visitedCities}
+                            renderItem={this.renderItemVisitedCities}
+                            sliderWidth={500}
+                            itemWidth={500}
+                        />
+                        <CardItem>
+                            <CardTitle
+                                title={this.state.city}
+                                subtitle={this.state.country}
+                            />
+                        </CardItem>
+
+                        <CardItem>
+                            <Body>
+
+                            </Body>
+                        </CardItem>
+                    </Card>
+
+                    <Card>
+                        <Carousel
+                            ref={(c) => {
+                                this._carousel = c;
+                            }}
+                            data={this.state.visitedPlaces}
+                            renderItem={this.renderItemVisitedPlaces}
+                            sliderWidth={500}
+                            itemWidth={500}
+                        />
+                        <CardItem>
+                            <CardTitle
+                                title={this.state.city}
+                                subtitle={this.state.country}
+                            />
+                        </CardItem>
+
+                        <CardItem>
+                            <Body>
+
+                            </Body>
+                        </CardItem>
+                    </Card>
                 </ScrollView>
             </View>
         )

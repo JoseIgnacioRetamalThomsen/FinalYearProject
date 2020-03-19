@@ -173,6 +173,7 @@ class CityDetail extends Component {
                                 console.log(err)
                             },
                             (placesList) => {
+                                console.log("placesList ", placesList)
                                 this.setState({places: JSON.parse(placesList)})
                             })
                     }
@@ -587,22 +588,22 @@ class CityDetail extends Component {
                                     <Body>
                                         <Text numberOfLines={1} ellipsizeMode={"tail"}>{e.body} </Text>
                                     </Body>
-                                    <CardAction
-                                        separator={true}
-                                        inColumn={false}>
-                                        <CardButton
-                                            onPress={() => this.props.navigation.navigate('PlaceDetail', {
-                                                placeId: e.id,
-                                                name: e.name,
-                                                city: this.state.city,
-                                                cityId: this.state.cityId,
-                                                country: this.state.country,
-                                                description: e.description,
-                                            })}
-                                            title="More About this Place"
-                                            color="blue"
-                                        />
-                                    </CardAction>
+                                    {/*<CardAction*/}
+                                    {/*    separator={true}*/}
+                                    {/*    inColumn={false}>*/}
+                                    {/*    <CardButton*/}
+                                    {/*        onPress={() => this.props.navigation.navigate('PlaceDetail', {*/}
+                                    {/*            placeId: e.id,*/}
+                                    {/*            name: e.name,*/}
+                                    {/*            city: this.state.city,*/}
+                                    {/*            cityId: this.state.cityId,*/}
+                                    {/*            country: this.state.country,*/}
+                                    {/*            description: e.description,*/}
+                                    {/*        })}*/}
+                                    {/*        title="More About this Place"*/}
+                                    {/*        color="blue"*/}
+                                    {/*    />*/}
+                                    {/*</CardAction>*/}
                                 </CardItem>
                             </Card>
                         )
