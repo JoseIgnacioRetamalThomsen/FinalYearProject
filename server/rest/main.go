@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
+	//"strconv"
+
+	//	"strconv"
 
 	"io/ioutil"
 	"log"
@@ -11,16 +13,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 
 	"context"
-
 
 	//"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
-
 )
 
 
@@ -39,63 +39,89 @@ func homeLink(w http.ResponseWriter, r *http.Request) {
 func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Create city")
 
-
-	var city pb.CityRequestP
+    // create the city grpc city object
+	var city pb.City
+	//read body data
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Fprintf(w, "Wrong request, body must contain city data")
 	}
 
+	// create grpc coity using body data
 	json.Unmarshal(reqBody, &city)
 
-	city.Token = r.Header["Token"][0]
-	city.CreatorEmail = r.Header["Email"][0]
+	//create Request
+	var cityRequest pb.CreateCityRequestP
+
+	cityRequest.Token = r.Header["Token"][0]
+	cityRequest.Name = r.Header["Email"][0] // name is email
+	cityRequest.City = &city;
 	fmt.Println(city)
 
-	response,err := CreateCity(city)
+	response,err := CreateCity(cityRequest)
 
+	if err !=nil {
+		fmt.Println(err)
+	}
+
+	//convert reponse into json and send back
 	json.NewEncoder(w).Encode(response)
 
 }
 
+
+
+
 func GetCityRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Get city")
 
+	response, err := GetCity(pb.GetCityRequestP{
+		Token:                r.Header["Token"][0],
+		Name:                 r.Header["Email"][0],
+		CityName:             mux.Vars(r)["name"],
+		CityCountry:          mux.Vars(r)["country"],
+
+	})
+	/*
 	response, err := GetCity(pb.CityRequestP{
 		Token:                r.Header["Token"][0],
 		Name:                 mux.Vars(r)["name"],
 		Country:              mux.Vars(r)["country"],
 		CreatorEmail:         r.Header["Email"][0],
 
-	})
+	})*/
 	if err != nil {
 		log.Printf("Server problem: %s", err)
 		fmt.Fprintf(w, "Server problem: %s", err)
 	}
-	fmt.Println(response)
-	json.NewEncoder(w).Encode(response)
+	fmt.Println(response.City)
+	json.NewEncoder(w).Encode(response.City)
 }
 
-func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
-	log.Printf("Received: %v", "Update city")
 
-	var city pb.CityRequestP
+func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
+	log.Printf("Received: %v", "Update request")
+
+	var request pb.CreateCityRequestP
+	var city pb.City
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Fprintf(w, "Wrong request, body must contain city data")
+		fmt.Fprintf(w, "Wrong request, body must contain request data")
 	}
 	json.Unmarshal(reqBody, &city)
 
-	fmt.Println(city)
+	fmt.Println(request)
 
 
-	city.Token = r.Header["Token"][0]
-	city.CreatorEmail =  r.Header["Email"][0]
-	city.Name =  mux.Vars(r)["name"]
-    city.Country= mux.Vars(r)["country"]
+	request.Token = r.Header["Token"][0]
+	//request.CreatorEmail =  r.Header["Email"][0]
+	request.Name =  mux.Vars(r)["name"]
+    //request.Country= mux.Vars(r)["country"]
 
-    fmt.Println(city)
-    response, err := UpdateCity(city)
+    request.City = &city
+
+    fmt.Println(request)
+    response, err := UpdateCity(request)
 
 	if err != nil {
 		log.Printf("Server problem: %s", err)
@@ -106,6 +132,8 @@ func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
 
 }
 
+
+/*
 func CreatePlaceRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Create place")
 
@@ -185,6 +213,10 @@ func GetPlacePostRequest(w http.ResponseWriter, r *http.Request){
 	json.NewEncoder(w).Encode(response)
 }
 
+
+*/
+
+
 func main() {
 
 	//conect to profiles server
@@ -212,8 +244,11 @@ func main() {
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/city", CreateCityRequest).Methods("POST")
 	router.HandleFunc("/city/{country}/{name}/", GetCityRequest).Methods("GET")
+
 	//put not working
-	router.HandleFunc("/city/{country}/{name}/",UpdateCityRequest).Methods("PUT")
+	router.HandleFunc("/city",UpdateCityRequest).Methods("PUT")
+
+	/*
 	router.HandleFunc("/place", CreatePlaceRequest).Methods("POST")
 	router.HandleFunc("/place/{country}/{city}/{name}/", GetPlaceRequest).Methods("GET")
 	router.HandleFunc("/place/{country}/{city}/{name}/",UpdatePlaceRequest).Methods("PUT")
@@ -223,6 +258,8 @@ func main() {
 	router.HandleFunc("/posts/city/{indexid}/", GetCityPostRequest).Methods("GET")
 
 	router.HandleFunc("/posts/place/{indexid}/", GetPlacePostRequest).Methods("GET")
+
+*/
 
 
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
@@ -271,7 +308,9 @@ func newProfilesServiceContext(endpoint string) (*profileServiceContext, error) 
 const(
 	DEADLINE = 5;
 	)
-func CreateCity(city pb.CityRequestP)(*pb.CityResponseP,error){
+
+
+func CreateCity(city pb.CreateCityRequestP)(*pb.CityResponseP,error){
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
 	defer cancel()
 	r, err := profSerConn.context.dbClient.CreateCity(ctx,&city)
@@ -281,7 +320,10 @@ func CreateCity(city pb.CityRequestP)(*pb.CityResponseP,error){
 	return r,nil
 }
 
-func GetCity(city pb.CityRequestP )(*pb.CityResponseP,error){
+
+
+
+func GetCity(city pb.GetCityRequestP )(*pb.CityResponseP,error){
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
 	defer cancel()
 	r, err := profSerConn.context.dbClient.GetCity(ctx,&city)
@@ -289,12 +331,17 @@ func GetCity(city pb.CityRequestP )(*pb.CityResponseP,error){
 	if err != nil{
 		return nil,err
 	}
-fmt.Println(r.Id)
+
+	fmt.Println(r.City)
 	fmt.Println(r)
 	return r,nil
 }
 
-func UpdateCity(city pb.CityRequestP)(*pb.CityResponseP,error){
+
+
+
+
+func UpdateCity(city pb.CreateCityRequestP)(*pb.CityResponseP,error){
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
 	defer cancel()
 	r, err := profSerConn.context.dbClient.UpdateCity(ctx,&city)
@@ -303,7 +350,7 @@ func UpdateCity(city pb.CityRequestP)(*pb.CityResponseP,error){
 	}
 	return r,nil
 }
-
+/*
 func GetPlace(request pb.PlaceRequestP)(*pb.PlaceResponseP,error){
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
 	defer cancel()
@@ -314,6 +361,9 @@ func GetPlace(request pb.PlaceRequestP)(*pb.PlaceResponseP,error){
 
 	return r,nil
 }
+
+*/
+
 
 
 /*

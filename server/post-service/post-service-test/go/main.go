@@ -102,7 +102,7 @@ func GetPlacePosts(){
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := serviceConn.context.dbClient.GetPlacePosts(ctx,&pb.PostsRequest{
-		IndexId:              2,
+		IndexId:              38,
 		XXX_NoUnkeyedLiteral: struct{}{},
 		XXX_unrecognized:     nil,
 		XXX_sizecache:        0,

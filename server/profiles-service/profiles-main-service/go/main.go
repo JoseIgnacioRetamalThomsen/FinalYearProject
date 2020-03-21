@@ -27,7 +27,7 @@ const (
 
 )
 const(
-	url = "0.0.0.0:5777"
+	url = "0.0.0.0:5777"//this for server
 	//url="localhost:5777";
 	//url = "35.197.221.57:5777"
 	//url = "34.89.92.151:5777"
