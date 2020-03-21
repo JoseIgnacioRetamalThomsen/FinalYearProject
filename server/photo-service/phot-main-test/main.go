@@ -32,10 +32,10 @@ import (
 )
 
 const(
-	//url = "35.197.216.42:30051"
-	url = "0.0.0.0:30051"
-	//url="35.197.216.42:30051";
-	//url = "35.234.146.99:5777"
+	photoUrl = "35.197.216.42:30051"
+	//photoUrl = "0.0.0.0:30051"
+	//photoUrl="35.197.216.42:30051";
+	//photoUrl = "35.234.146.99:5777"
 	token ="ef236fdcb42d55d00703a8737d343574b9766c7a78fd5a268425f6bbe8753b9e"
 	tokenEmail ="a@a.com"
 )
@@ -78,7 +78,7 @@ func main() {
 
 
 	//conect to server
-	dbserverCtx, err := newPhotosServiceContext(url)
+	dbserverCtx, err := newPhotosServiceContext(photoUrl)
 	if err != nil {
 		log.Fatal(err)
 	}

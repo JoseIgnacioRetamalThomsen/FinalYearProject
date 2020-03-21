@@ -5,11 +5,11 @@ go build -o pdba *.go
 ./pdba config.json
 
 # Create image
-sudo docker image build -t joseretamal/photos-service-dba:1.1 .
+sudo docker image build -t joseretamal/photos-service-dba:1.2 .
 
 #push image
 
-sudo docker push joseretamal/photos-service-dba:1.1
+sudo docker push joseretamal/photos-service-dba:1.2
 
 
 # run

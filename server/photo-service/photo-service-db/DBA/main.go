@@ -318,18 +318,6 @@ func main(){
 		configuration.MySQL_pass,
 		configuration.MySQL_db)
 
-
-	res,_ :=dba.GetVIsitedCitysPhotos(pb.GetVisitedCitysDBARequest{
-		CityId:               []int32{1,6},
-
-	})
-	fmt.Println(res)
-
-	res1,_ := dba.GetVisitdPlacePhoto(pb.GetVisitedPlacesPhotoDBARequest{
-		PlaceId:              []int32{5,3},
-
-	})
-	fmt.Println(res1)
 	log.Print("Starting Service")
 	//end test
 	lis, err := net.Listen("tcp", configuration.Port)

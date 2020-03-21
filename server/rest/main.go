@@ -39,6 +39,14 @@ func homeLink(w http.ResponseWriter, r *http.Request) {
 func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Create city")
 
+	r.ParseForm()
+
+	image := []byte(r.Form["image"][0])
+
+	for _,value := range  r.Header{
+		fmt.Println(value)
+	}
+
     // create the city grpc city object
 	var city pb.City
 	//read body data
@@ -64,12 +72,28 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 		fmt.Println(err)
 	}
 
+	cityId := response.City.CityId
+
+	photo , err :=SendCityimage(image, r.Header["Email"][0],r.Header["Token"][0], int(cityId))
+
+
 	//convert reponse into json and send back
-	json.NewEncoder(w).Encode(response)
+	jsonResponse := CityResponseJson{
+		City:   *response.City,
+		Photo: *photo,
+	}
+
+	fmt.Println("next")
+	fmt.Println(jsonResponse)
+
+	json.NewEncoder(w).Encode(jsonResponse)
 
 }
 
-
+type CityResponseJson struct{
+	City pb.City
+	Photo pb.CityPhoto
+}
 
 
 func GetCityRequest(w http.ResponseWriter, r *http.Request){
@@ -133,11 +157,45 @@ func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
 }
 
 
-/*
+
 func CreatePlaceRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Create place")
 
+	 token := r.Header["Token"][0]
+	 email := r.Header["Email"][0]
+
+	 if len(email) ==0 || len(token) == 0  {
+		 http.Error(w, "Wrong request", 400)
+		 return
+	 }
+
+	 var request pb.CreatePlaceRequestP
+	// create the city grpc city object
+	var place pb.Place
+	//read body data
+	reqBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Fprintf(w, "Wrong request, body must contain city data")
+	}
+	request.Place = &place
+
+	request.Token = r.Header["Token"][0]
+	//request.CreatorEmail =  r.Header["Email"][0]
+	request.Name =  mux.Vars(r)["name"]
+
+	// create grpc coity using body data
+	json.Unmarshal(reqBody, &place)
+	response, err := CreatePlace(request)
+
+	placeId := response.Place.PlaceId
+	placeId = placeId
+
+	json.NewEncoder(w).Encode(response)
+
+
 }
+
+/*
 func GetPlaceRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Get place")
 
@@ -235,6 +293,14 @@ func main() {
 	s1 := &postService{dbserverCtx1}
 	serviceConn = *s1
 
+	//connect to photo service
+	dbserverCtx2, err := newPhotosServiceContext(photoUrl)
+	if err != nil {
+		log.Fatal(err)
+	}
+	s3 := &photosServer{dbserverCtx2}
+	photoConn = *s3
+
 
 
 	//GetCity(tokenEmail,token,"san pedro","chile")
@@ -248,9 +314,10 @@ func main() {
 	//put not working
 	router.HandleFunc("/city",UpdateCityRequest).Methods("PUT")
 
-	/*
+
 	router.HandleFunc("/place", CreatePlaceRequest).Methods("POST")
-	router.HandleFunc("/place/{country}/{city}/{name}/", GetPlaceRequest).Methods("GET")
+
+	/*router.HandleFunc("/place/{country}/{city}/{name}/", GetPlaceRequest).Methods("GET")
 	router.HandleFunc("/place/{country}/{city}/{name}/",UpdatePlaceRequest).Methods("PUT")
 
 	//post
@@ -278,6 +345,7 @@ const(
 	//url = "35.234.146.99:5777"
 	token ="a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508"
 	tokenEmail ="a@a.com"
+	photoUrl = "35.197.216.42:30051"
 )
 
 type profileServer struct {
@@ -350,6 +418,19 @@ func UpdateCity(city pb.CreateCityRequestP)(*pb.CityResponseP,error){
 	}
 	return r,nil
 }
+
+
+func CreatePlace(request pb.CreatePlaceRequestP)(*pb.PlaceResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.CreatePlace(ctx,&request)
+	if err != nil{
+		return nil,err
+	}
+
+	return r,nil
+}
+
 /*
 func GetPlace(request pb.PlaceRequestP)(*pb.PlaceResponseP,error){
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
@@ -432,4 +513,55 @@ func GetPlacePosts(request pb.PostsRequest)(*pb.PlacePostsResponse,error){
 		return nil,err
 	}
 	return r,nil
+}
+
+
+/**
+
+Photo
+ */
+
+type photosServer struct {
+	context *photosServiceContext
+}
+
+type photosServiceContext struct {
+	dbClient pb.PhotosServiceClient
+	timeout time.Duration
+}
+var photoConn photosServer
+
+// create connection
+func newPhotosServiceContext(endpoint string) (*photosServiceContext, error) {
+
+	userConn, err := grpc.Dial(
+		endpoint,
+		grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	ctx := &photosServiceContext{
+		dbClient: pb.NewPhotosServiceClient(userConn),
+		timeout:  time.Second*2,
+	}
+	return ctx, nil
+}
+
+
+
+func SendCityimage(image []byte,email string,token string,cityId int)(*pb.CityPhoto,error){
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	r, err := photoConn.context.dbClient.UploadCityPhoto(ctx,&pb.CityUploadRequestP{
+		Token : token,
+		Email : email,
+		CityId : int32(cityId),
+		Image : image,
+	})
+
+	if err!= nil{
+		return nil,err
+	}
+	fmt.Print(r)
+	return r.Photo,nil
 }
