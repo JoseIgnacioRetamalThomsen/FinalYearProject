@@ -14,10 +14,10 @@ export default class DisplayCities extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pressed: false,
+            //pressed: false,
             max: 999999,
+            img: '../../../img/noImage.png',
             cities: [
-
                 {
                     cityId: 0,
                     name: '',
@@ -28,20 +28,18 @@ export default class DisplayCities extends Component {
                     lng: 0.0,
                 },
             ],
-            photoMap:[
-
-            ],
+            photoMap: [],
             isUpdated: false
         }
     }
 
-    // callbackFunction = (lat, lng, city, country) => {
-    //     this.setState({lat: lat})
-    //     this.setState({lng: lng})
-    //     this.setState({city: city})
-    //     this.setState({country: country})
-    //     console.log(this.state.lat, this.state.lng)
-    // }
+    callbackFunction = (lat, lng, city, country) => {
+        this.setState({lat: lat})
+        this.setState({lng: lng})
+        this.setState({city: city})
+        this.setState({country: country})
+        console.log("city is ", this.state.lat, this.state.lng)
+    }
     // shouldComponentUpdate(prevProps, prevState){
     //     console.log("in  shouldComponentUpdate1")
     //     //this.displayCities()
@@ -68,7 +66,7 @@ export default class DisplayCities extends Component {
                             },
 
                             (jsonCityPhotoList) => {
-                                this.setState({photoMap:jsonCityPhotoList})
+                                this.setState({photoMap: jsonCityPhotoList})
 
                             })
                     }
@@ -93,13 +91,13 @@ export default class DisplayCities extends Component {
 
                             (jsonCityList) => {
                                 this.setState({cities: JSON.parse(jsonCityList)})
-                                // this.setState({name: JSON.stringify(jsonCityList.name)})
 
                             })
                     }
                 })
             })
         })
+
         this.getCitiesPhoto()
     }
 
@@ -139,20 +137,24 @@ export default class DisplayCities extends Component {
     }
 
     render() {
+        let image = require('../../../img/noImage.png')
+
         return (
             <View style={{flex: 1}}>
                 {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
                 <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
                     <View style={{flex: 1}}>
-                        {/*<MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}*/}
-                        {/*          parentCallback={this.callbackFunction}/>*/}
+                        <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
+                                  parentCallback={this.callbackFunction}/>
                     </View>
                     {this.state.cities.map((item, index) => {
                         return (
                             <Card key={this.state.cities.cityId}>
                                 <CardItem cardBody>
-
+                                    {/*<Image source={(image)}*/}
+                                    {/*       style={{height: 200, width: null, flex: 1}}*/}
+                                    {/*/>*/}
                                     <Image source={{uri: this.state.photoMap[item.cityId]}}
                                            style={{height: 200, width: null, flex: 1}}
                                     />
@@ -174,7 +176,7 @@ export default class DisplayCities extends Component {
                                             onPress={() => this.props.navigation.navigate('CityDetail', {
                                                 cityId: item.cityId,
                                                 name: item.name,
-                                                 indexId: item.indexId,
+                                                indexId: item.indexId,
                                                 country: item.country,
                                                 description: item.description,
                                             })}

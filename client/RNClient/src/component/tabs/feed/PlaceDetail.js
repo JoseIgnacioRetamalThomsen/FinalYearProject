@@ -117,7 +117,7 @@ export default class PlaceDetail extends Component {
 
                     if (value !== null) {
                         NativeModules.PostModule.createPlacePost(
-                            this.state.cityId,
+                            this.state.placeId,
                             email,
                             this.state.city,
                             this.state.country,
@@ -136,6 +136,8 @@ export default class PlaceDetail extends Component {
                 })
             })
         })
+        this.getPlacePosts()
+        this.getPlaceImages()
     }
 
     getPlacePosts() {
@@ -147,12 +149,11 @@ export default class PlaceDetail extends Component {
 
                     if (value !== null) {
                         NativeModules.PostModule.getPlacePosts(
-                            this.state.cityId,
+                            this.state.placeId,
                             (err) => {
                                 console.log(err)
                             },
                             (postsList) => {
-                                console.log("postsList", postsList)
                                 this.setState({posts: JSON.parse(postsList)})
                             }
                         )
@@ -178,11 +179,10 @@ export default class PlaceDetail extends Component {
                             1,
                             this.state.placeId,
                             (err) => {
-                                console.log("err", err)
+                                console.log(err)
                             },
                             (postUrl) => {
                                 this.setState({postUrl: postUrl})
-                                console.log("postUrl", postUrl)
                             }
                         )
                     }

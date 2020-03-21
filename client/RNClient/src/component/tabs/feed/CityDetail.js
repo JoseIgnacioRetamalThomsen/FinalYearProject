@@ -16,6 +16,7 @@ import SpecialHeader from "../../SpecialHeader";
 
 class CityDetail extends Component {
     constructor(props) {
+        global.isVisitedPlace = true
         super(props);
         this.state = {
             placesPhotoMap: [],
@@ -121,8 +122,6 @@ class CityDetail extends Component {
                             },
                             (cityPosts) => {
                                 this.setState({posts: JSON.parse(cityPosts)})
-                                console.log("cityPosts,,", cityPosts, "!!!!!!")
-
                             })
 
                     }
@@ -173,7 +172,6 @@ class CityDetail extends Component {
                                 console.log(err)
                             },
                             (placesList) => {
-                                console.log("placesList ", placesList)
                                 this.setState({places: JSON.parse(placesList)})
                             })
                     }
@@ -183,7 +181,6 @@ class CityDetail extends Component {
     }
 
     createCityPost() {
-        console.log("here")
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -202,7 +199,6 @@ class CityDetail extends Component {
                                 console.log(err)
                             },
                             (cityPostId) => {
-                                console.log("cityId in  createCityPost ", this.state.cityId)
                                 this.setState({cityPostId: cityPostId})
                                 this.uploadPostImage();
                                 this.setState({isVisible: false})
@@ -310,11 +306,10 @@ class CityDetail extends Component {
                             0,
                             this.state.cityId,
                             (err) => {
-                                console.log("err", err)
+                                console.log(err)
                             },
                             (cityUrl) => {
                                 this.setState({cityUrl: cityUrl})
-                                console.log("cityUrl2222222", cityUrl)
                             })
                     }
                 })

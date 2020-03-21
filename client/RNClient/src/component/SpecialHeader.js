@@ -23,10 +23,32 @@ class SpecialHeader extends Component {
     returnData(pressed) {
         this.setState({pressed: pressed});
     }
-    render() {
+    render() {//global.visitedCityMap[this.props.cityIdFromParent]
         let {title, isHome} = this.props;
+        console.log("this.state.cityId", global.visitedCityMap[this.props.cityIdFromParent])
+        if (global.visitedCityMap[this.props.cityIdFromParent] === true)
 
-        if (this.state.pressed === false)
+            return (
+                <Header style={{backgroundColor: '#007AFF'}}>
+                    <Left>
+                        {
+                            isHome ?
+                                <Button transparent onPress={() => this.props.navigation.openDrawer()}>
+                                    <Icon name='menu'/>
+                                </Button> :
+                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities',
+                                    {returnData: this.returnData.bind(this)})}>
+                                    <Icon name='arrow-back'/>
+                                </Button>
+                        }
+                    </Left>
+                    <Body>
+                        <Title>{title}</Title>
+                    </Body>
+
+                </Header>
+            )
+        else
             return (
                 <Header style={{backgroundColor: '#007AFF'}}>
                     <Left>
@@ -51,28 +73,6 @@ class SpecialHeader extends Component {
                     </Right>
                 </Header>
             )
-        else
-            return (
-                <Header style={{backgroundColor: '#007AFF'}}>
-                    <Left>
-                        {
-                            isHome ?
-                                <Button transparent onPress={() => this.props.navigation.openDrawer()}>
-                                    <Icon name='menu'/>
-                                </Button> :
-                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities',
-                                    {returnData: this.returnData.bind(this)})}>
-                                    <Icon name='arrow-back'/>
-                                </Button>
-                        }
-                    </Left>
-                    <Body>
-                        <Title>{title}</Title>
-                    </Body>
-                    <Right>
-                    </Right>
-                </Header>
-            )
     }
 
     visitCity() {
@@ -92,8 +92,8 @@ class SpecialHeader extends Component {
                             },
 
                             (isValid) => {
-                                this.setState({pressed: true})
-                                console.log("this.state.pressed should be true", this.state.pressed)
+                                global.visitedCityMap[this.props.cityIdFromParent] = true
+                                this.setState({pressed:true})
                             })
                     }
                 })

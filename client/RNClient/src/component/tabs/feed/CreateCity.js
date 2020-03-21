@@ -17,7 +17,7 @@ export default class CreateCity extends React.Component {
         this.state = {
             cities: [
                 {
-                    cityId: "32",
+                    cityId: 0,
                     token: '',
                     name: '',
                     country: '',

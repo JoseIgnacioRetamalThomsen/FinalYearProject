@@ -18,8 +18,6 @@ import Settings from "./Settings"
 import AsyncStorage from "@react-native-community/async-storage"
 import Carousel from "react-native-snap-carousel";
 import {CardTitle} from "react-native-material-cards";
-import CardAction from "react-native-material-cards/CardAction";
-import CardButton from "react-native-material-cards/CardButton";
 
 let email
 
@@ -166,7 +164,6 @@ class Profile extends Component {
                     placeId: item.id,
                     name: item.name,
                     city: item.city,
-                    cityId: 19,
                     country: item.country,
                     description: item.description,
                 })}></Button>

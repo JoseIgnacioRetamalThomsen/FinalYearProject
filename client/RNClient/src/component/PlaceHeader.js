@@ -24,7 +24,7 @@ class PlaceHeader extends Component {
     render() {
         let {title, isHome} = this.props;
 
-        if (this.state.pressed === false)
+        if (global.visitedPlaceMap[this.props.placeIdFromParent] === true)
             return (
                 <Header style={{backgroundColor: '#007AFF'}}>
                     <Left>
@@ -41,11 +41,7 @@ class PlaceHeader extends Component {
                     <Body>
                         <Title>{title}</Title>
                     </Body>
-                    <Right>
-                        <Button hasText transparent onPress={() => this.visitPlace()}>
-                            <Text> Visited this Place </Text>
-                        </Button>
-                    </Right>
+
                 </Header>
             )
         else
@@ -66,6 +62,9 @@ class PlaceHeader extends Component {
                         <Title>{title}</Title>
                     </Body>
                     <Right>
+                        <Button hasText transparent onPress={() => this.visitPlace()}>
+                            <Text> Visited this Place </Text>
+                        </Button>
                     </Right>
                 </Header>
             )
@@ -88,7 +87,8 @@ class PlaceHeader extends Component {
                             },
 
                             (isValid) => {
-                                console.log("isValid", isValid)
+                                global.visitedPlaceMap[this.props.placeIdFromParent] = true
+                                this.setState({pressed:true})
                             })
                     }
                 })

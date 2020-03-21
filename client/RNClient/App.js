@@ -3,7 +3,7 @@ import DisplayCities from "./src/component/tabs/feed/DisplayCities";
 console.disableYellowBox = true
 
 import React from 'react';
-import {Image, Dimensions, View} from 'react-native';
+import {Image, Dimensions, View, NativeModules} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -31,6 +31,7 @@ import Test from "./src/component/Test";
 import DisplayPlaces from "./src/component/tabs/myPosts/DisplayPlaces";
 import CreatePlace from "./src/component/tabs/feed/CreatePlace";
 import PlaceDetail from "./src/component/tabs/feed/PlaceDetail";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -53,7 +54,7 @@ const FeedStack = createStackNavigator({
         screen: CityDetail,
         navigationOptions: navOptionHandler
     },
-    PlaceDetail:{
+    PlaceDetail: {
         screen: PlaceDetail,
         navigationOptions: navOptionHandler
     },
@@ -179,6 +180,51 @@ const MyApp = createSwitchNavigator({
 const AppNavigation = createAppContainer(MyApp);
 
 export default class App extends React.Component {
+
+
+    componentDidMount() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token !== null) {
+                        NativeModules.ProfilesModule.getVisitedCities(
+                            token,
+                            email,
+                            (err) => {
+                                console.log(err)
+                            },
+                            (json) => {
+                                let citiesMap = JSON.parse(json)
+                                citiesMap.forEach(myFunction);
+
+                                function myFunction(item, index) {
+                                    global.visitedCityMap[item.cityId] = true
+                                }
+                            })
+                        NativeModules.ProfilesModule.getVisitedPlaces(
+                            token,
+                            email,
+                            (err) => {
+                                console.log(err)
+                            },
+                            (placesJson) => {
+                                let placesMap = JSON.parse(placesJson)
+                                placesMap.forEach(myFunction)
+
+                                function myFunction(item, index) {
+                                    global.visitedPlaceMap[item.id] = true
+                                }
+                            })
+                    }
+                })
+            })
+        })
+
+    }
+
     render() {
         return (
             <AppNavigation/>
