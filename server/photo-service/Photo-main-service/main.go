@@ -37,9 +37,9 @@ const (
 	start_url      = "https://storage.googleapis.com/"
 )
 const (
-	//DBA_URL = "35.197.221.57:7172"
+	DBA_URL = "35.197.221.57:7172"
 
-	DBA_URL  = "0.0.0.0:7172"
+	//DBA_URL  = "0.0.0.0:7172"
 	AUTH_URL = "35.197.216.42:50051"
 )
 
@@ -521,6 +521,57 @@ func (s *server) GetPlacesPerCityPhotoP(ctx context.Context, in *pb.GetPlacesPho
 		Success:     true,
 		PlacePhotos: res.PlacePhotos,
 	}, nil
+}
+
+func (s *server) GetVisitedCitysPhotos(ctx context.Context, in *pb.GetVisitedCitysImagesRequest) (*pb.GetCitysPhotoResponseP, error) {
+
+	log.Printf("Received: %v", "Get visited citys photos")
+
+	//check token
+	valid := CheckToken(in.Email, in.Token)
+
+	if !valid {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+	res, err := dbaConn.context.dbClient.GetVisitdCityPhotosDBA(ctx,&pb.GetVisitedCitysDBARequest{
+		CityId:               in.CityId,})
+	if err!= nil{
+		return nil,err
+	}
+
+	return &pb.GetCitysPhotoResponseP{
+		Success:              true,
+		CityPhotos:           res.CityPhotos,
+
+	},nil
+
+}
+
+func (s *server) GetVisitedPlacesPhotos(ctx context.Context, in *pb.GetVisitedPlacesPhotosRequest) (*pb.GetVisitedPlacesPhotosResponse, error) {
+
+	log.Printf("Received: %v", "Get visited places photos")
+
+	//check token
+	valid := CheckToken(in.Email, in.Token)
+
+	if !valid {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res,err := dbaConn.context.dbClient.GetVisitedPlacesPhotosDBA(ctx,&pb.GetVisitedPlacesPhotoDBARequest{
+		PlaceId:              in.PlaceId,
+
+	})
+
+	if err!= nil{
+		return nil,err
+	}
+	return &pb.GetVisitedPlacesPhotosResponse{
+		Success:              true,
+		PlacePhotos:          res.PlacePhotos,
+
+	},nil
+
 }
 
 func main() {

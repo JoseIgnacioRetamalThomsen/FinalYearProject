@@ -26,6 +26,8 @@ service PhotosDBAService {
     rpc GetCitysPhotosDBA(GetCitysPhotoRequest) returns (GetCitysPhotoResponse);
     rpc GetPlacesPerCityPhotoDBA(GetPlacesPhotosPerCityRequest) returns (GetPlacesPhotosPerCityResponse);
     rpc GetPostsPhotosIdDBA(GetPostsPhotosPerParentRequest) returns (GetPostsPhotosPerParentResponse);
+    rpc GetVisitdCityPhotosDBA(GetVisitedCitysDBARequest) returns(GetVisitedCitysDBAResponse);
+    rpc GetVisitedPlacesPhotosDBA(GetVisitedPlacesPhotoDBARequest) returns(GetVisitedPlacesPhotosDBAResponse);
 }
 message AddProfilePhotoDBARequest {
     string userEmail = 1;
@@ -120,4 +122,19 @@ message GetPostsPhotosPerParentRequest{
 message GetPostsPhotosPerParentResponse{
     bool success = 1;
     repeated PostPhoto placesPhoto = 2;
+}
+message GetVisitedCitysDBARequest{
+    repeated int32 cityId = 1;
+}
+
+message GetVisitedCitysDBAResponse{
+repeated CitysPhoto cityPhotos = 1;
+}
+
+message GetVisitedPlacesPhotoDBARequest{
+    repeated int32 placeId =3;
+}
+
+message GetVisitedPlacesPhotosDBAResponse{
+    repeated PlacesCityPhotos placePhotos =1;
 }

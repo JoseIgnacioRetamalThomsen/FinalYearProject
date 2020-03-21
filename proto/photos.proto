@@ -26,6 +26,8 @@ service PhotosService {
     rpc GetCitysPhotosP(GetCitysPhotoRequestP) returns (GetCitysPhotoResponseP);
     rpc GetPlacesPerCityPhotoP(GetPlacesPhotosPerCityRequestP) returns (GetPlacesPhotosPerCityResponseP);
     rpc GetPostsPhotosIdP(GetPostsPhotosPerParentRequestP) returns (GetPostsPhotosPerParentResponseP);
+    rpc GetVisitedCitysPhotos(GetVisitedCitysImagesRequest) returns (GetCitysPhotoResponseP);
+    rpc GetVisitedPlacesPhotos(GetVisitedPlacesPhotosRequest) returns (GetVisitedPlacesPhotosResponse);
 
 }
 message ProfilePhotoRequestP {
@@ -144,4 +146,20 @@ message GetPostsPhotosPerParentRequestP{
 message GetPostsPhotosPerParentResponseP{
     bool success = 1;
     repeated PostPhoto placesPhoto = 2;//name wrong
+}
+
+message GetVisitedCitysImagesRequest{
+    string email =1;
+    string token = 2;
+    repeated int32 cityId = 3;
+}
+
+message GetVisitedPlacesPhotosRequest{
+    string email =1;
+    string token = 2;
+    repeated int32 placeId =3;
+}
+message GetVisitedPlacesPhotosResponse{
+    bool success = 1;
+    repeated PlacesCityPhotos placePhotos =2;
 }

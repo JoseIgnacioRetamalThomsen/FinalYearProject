@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 
 	//"io/ioutil"
 
@@ -32,8 +32,8 @@ import (
 )
 
 const(
-	url = "35.197.216.42:30051"
-	//url = "0.0.0.0:30051"
+	//url = "35.197.216.42:30051"
+	url = "0.0.0.0:30051"
 	//url="35.197.216.42:30051";
 	//url = "35.234.146.99:5777"
 	token ="ef236fdcb42d55d00703a8737d343574b9766c7a78fd5a268425f6bbe8753b9e"
@@ -86,10 +86,15 @@ func main() {
 	photoConn = *s2
 
 	//GetCityPostsPhotos(tokenEmail,token)
+	/*
 GetAllPhotoPerPostParent(tokenEmail,token)
 	dat, err := ioutil.ReadFile("img/website.jpg")
 	check(err)
-	dat=dat
+	dat=dat*/
+
+	//GetVisitedCityPhoto(tokenEmail,token);
+	GetVisitedPlacePhoto(tokenEmail,token);
+
 	//SendPlaceImage(dat,9,tokenEmail,token,7)
 	//SendPostImage(dat,"3",tokenEmail,token,4)
 
@@ -270,5 +275,34 @@ func GetCityPostsPhotos(email string, token string){
 		PlaceId : 0,
 	})
 	err =err
+	fmt.Println(r)
+}
+
+func GetVisitedCityPhoto(email string, token string){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := photoConn.context.dbClient.GetVisitedCitysPhotos(ctx,&pb.GetVisitedCitysImagesRequest{
+		Email: email,
+		Token: token,
+		CityId:               []int32{1,6},
+	})
+
+	if err!=nil{panic(err)}
+
+	fmt.Println(r)
+}
+
+func GetVisitedPlacePhoto(email string, token string){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	r, err := photoConn.context.dbClient.GetVisitedPlacesPhotos(ctx,&pb.GetVisitedPlacesPhotosRequest{
+		Email: email,
+		Token: token,
+		PlaceId:               []int32{5,3},
+	})
+
+
+	if err!=nil{panic(err)}
+
 	fmt.Println(r)
 }

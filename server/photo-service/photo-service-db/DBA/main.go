@@ -277,6 +277,34 @@ func (s *server) GetPlacesPerCityPhotoDBA(ctx context.Context, in *pb.GetPlacesP
 	},nil
 }
 
+func (s *server) GetVisitdCityPhotosDBA(ctx context.Context, in *pb.GetVisitedCitysDBARequest) (*pb.GetVisitedCitysDBAResponse, error) {
+	log.Printf("Received: %v", "GEt Visitd City Photos")
+
+	response, err := dba.GetVIsitedCitysPhotos(*in)
+	if err != nil{
+		return nil,err
+	}
+
+	return &pb.GetVisitedCitysDBAResponse{
+		CityPhotos:           response,
+
+	},nil
+}
+
+func (s *server) GetVisitedPlacesPhotosDBA(ctx context.Context, in *pb.GetVisitedPlacesPhotoDBARequest) (*pb.GetVisitedPlacesPhotosDBAResponse, error) {
+	log.Printf("Received: %v", "Get Visitid places photos")
+
+	response, err := dba.GetVisitdPlacePhoto(*in)
+
+	if err != nil{
+		return nil,err
+	}
+	return &pb.GetVisitedPlacesPhotosDBAResponse{
+		PlacePhotos:          response,
+
+	},nil
+
+}
 
 func main(){
 
@@ -290,6 +318,18 @@ func main(){
 		configuration.MySQL_pass,
 		configuration.MySQL_db)
 
+
+	res,_ :=dba.GetVIsitedCitysPhotos(pb.GetVisitedCitysDBARequest{
+		CityId:               []int32{1,6},
+
+	})
+	fmt.Println(res)
+
+	res1,_ := dba.GetVisitdPlacePhoto(pb.GetVisitedPlacesPhotoDBARequest{
+		PlaceId:              []int32{5,3},
+
+	})
+	fmt.Println(res1)
 	log.Print("Starting Service")
 	//end test
 	lis, err := net.Listen("tcp", configuration.Port)

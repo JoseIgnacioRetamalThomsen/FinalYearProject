@@ -405,7 +405,7 @@ func GetPostsPhotoForOne(request pb.GetPostsPhotosPerParentRequest) ([]*pb.PostP
 }
 
 func GetPlacePhotosPerCity(request pb.GetPlacesPhotosPerCityRequest) ([]*pb.PlacesCityPhotos, error) {
-	fmt.Print("Called")
+
 	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
@@ -413,7 +413,7 @@ func GetPlacePhotosPerCity(request pb.GetPlacesPhotosPerCityRequest) ([]*pb.Plac
 		panic(err)
 	}
 	defer db.Close()
-	fmt.Print("Called")
+
 	rows, _, err := db.Query("select * from %s WHERE %s = %d  order by %s ", PLACE_TABLE, PLACE_CITY_ID, request.CityPlaceId, PLACE_ID)
 
 	if err != nil {
@@ -465,3 +465,37 @@ func GetPlacePhotosPerCity(request pb.GetPlacesPhotosPerCityRequest) ([]*pb.Plac
 
 	return list, nil
 }
+
+
+func GetVIsitedCitysPhotos(request pb.GetVisitedCitysDBARequest)([]*pb.CitysPhoto,error){
+
+
+	var list []*pb.CitysPhoto
+
+	for _, value := range request.CityId {
+
+		 c,_ := GetCityPhotos(int((value)))
+		 var temp pb.CitysPhoto;
+		 temp.CitysPhotos =c
+		 list = append(list,&temp);
+
+	}
+
+	return list,nil
+}
+
+func GetVisitdPlacePhoto(request pb.GetVisitedPlacesPhotoDBARequest)([]*pb.PlacesCityPhotos,error){
+ var list []*pb.PlacesCityPhotos
+
+ for _,value := range request.PlaceId{
+ 	c,_ := GetPlacePhotos(int(value))
+ 	var temp pb.PlacesCityPhotos
+ 	temp.PlacePhotos =c
+ 	list = append(list,&temp)
+
+
+ }
+
+ return list,nil
+}
+
