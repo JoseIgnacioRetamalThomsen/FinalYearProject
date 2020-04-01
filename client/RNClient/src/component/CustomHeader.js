@@ -23,7 +23,7 @@ class CustomHeader extends Component {
                     <Title>{title}</Title>
                 </Body>
                 <Right>
-                    <Button  hasText transparent onPress= {() => this.visitCity()}>
+                    <Button hasText transparent onPress= {() => this.visitCity()}>
                     </Button>
                 </Right>
             </Header>

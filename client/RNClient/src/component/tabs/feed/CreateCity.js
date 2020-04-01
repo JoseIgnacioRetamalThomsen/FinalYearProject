@@ -35,11 +35,11 @@ export default class CreateCity extends React.Component {
             isUpdated: true
         }
     }
-    // callbackFunction = (fcity, country) => {
-    //     this.setState({city: fcity})
-    //     this.setState({country: country})
-    //     console.log('!!!!', this.state.fcity, this.state.country)
-    // }
+    callbackFunction = (fcity, country) => {
+        this.setState({city: fcity})
+        this.setState({country: country})
+        console.log('!!!!', this.state.fcity, this.state.country)
+    }
 
     componentDidMount() {
         const city = this.props.navigation.getParam('city', '')
@@ -121,7 +121,7 @@ export default class CreateCity extends React.Component {
                     <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
                     <View style={styles.createContainer}>
                         <View style={{flex: 1, padding: 30}}>
-                            {/*<GeoLoc parentCallback={this.callbackFunction} />*/}
+                            <GeoLoc parentCallback={this.callbackFunction} />
                             <PhotoUpload onPhotoSelect={image => {
                                 if (image) {
                                     this.setState({image: image})

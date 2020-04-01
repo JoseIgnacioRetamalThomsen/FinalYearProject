@@ -97,41 +97,6 @@ export default class DisplayCities extends Component {
         this.getCitiesPhoto()
     }
 
-    updateCity() {
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                stores.map((result, i, store) => {
-                    let key = store[i][0];
-                    let value = store[i][1]
-
-                    if (value !== null) {
-                        // NativeModules.ProfilesModule.updateCity(
-                        //     value,
-                        //     this.state.name,
-                        //     this.state.country,
-                        //     key,
-                        //     this.state.description,
-                        //     this.state.lat,
-                        //     this.state.lng,
-                        //     (err) => {
-                        //         console.log("err in updateCity " + err)
-                        //     },
-                        //     (name, country, email, description, lat, lng, id) => {
-                        //         this.setState({name: name})
-                        //         this.setState({country: country})
-                        //         // this.setState({email: email})
-                        //         this.setState({description: description})
-                        //         this.setState({lat: lat})
-                        //         this.setState({lng: lng})
-                        //         console.log("name, country, email, description, lat, lon id in updateCity is " + name, country, email, description, lat, lng, id)
-                        //     })
-
-                    }
-                })
-            })
-        })
-    }
-
     showAlert(city) {
         console.log("city", city)
         console.log("in alert", this.state.fcity)
@@ -161,13 +126,13 @@ export default class DisplayCities extends Component {
         if (this.state.city !== 'undefined') {
             let newCityList = []
             this.state.cities.forEach(element => {
-                if (element.name.toLowerCase().includes(this.state.city.toLowerCase())) {
+                if (element.name.toLowerCase().includes(this.state.city)) {
                     newCityList.push(element)
                     this.setState({cities: newCityList})
                 }
             })
             this.state.city = 'undefined'
-            if (newCityList.length == 0) {
+            if (newCityList.length === 0) {
                 this.showAlert(this.state.fcity)
             }
         } else {
@@ -176,7 +141,7 @@ export default class DisplayCities extends Component {
 
         return (
             <View style={{flex: 1}}>
-                {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
+                <GeoLoc parentCallback={this.callbackFunction}/>
                 <CustomHeader style={{flex: 1}} title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <View style={{flex: 1}}>
                     <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
