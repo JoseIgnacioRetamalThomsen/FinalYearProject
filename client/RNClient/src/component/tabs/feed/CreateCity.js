@@ -15,6 +15,8 @@ export default class CreateCity extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            isDisabled: true,
+            image: '../../../img/add_image.png',
             cities: [
                 {
                     cityId: 0,
@@ -33,9 +35,25 @@ export default class CreateCity extends React.Component {
             isUpdated: true
         }
     }
+    // callbackFunction = (fcity, country) => {
+    //     this.setState({city: fcity})
+    //     this.setState({country: country})
+    //     console.log('!!!!', this.state.fcity, this.state.country)
+    // }
 
+    componentDidMount() {
+        const city = this.props.navigation.getParam('city', '')
+        const country = this.props.navigation.getParam('country', '')
+        this.setState({
+            city,
+            country,
+        })
+         console.log('!!!!', city, country)
+      //  this.setState({image: '../../../img/add_image.png'})
+    }
 
     createCity() {
+        console.log("ppp", this.state.city, this.state.country)
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -44,7 +62,7 @@ export default class CreateCity extends React.Component {
                     NativeModules.ProfilesModule.createCity(
                         value,
                         key,
-                        this.state.name,
+                        this.state.city,
                         this.state.country,
                         key,
                         89,
@@ -60,7 +78,7 @@ export default class CreateCity extends React.Component {
 
                             this.props.navigation.navigate('CityDetail', {
                                 cityId: this.state.cityId,
-                                name: this.state.name,
+                                name: this.state.city,
                                 indexId: this.state.indexId,
                                 country: this.state.country,
                                 description: this.state.description,
@@ -101,29 +119,41 @@ export default class CreateCity extends React.Component {
             <Root>
                 <View style={{flex: 1}}>
                     <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
-                    <View style={styles.container}>
-                        {/*<GeoLoc parentCallback={this.callbackFunction} />*/}
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.inputs}
-                                placeholder="CreateCity"
-                                underlineColorAndroid='transparent'
-                                onChangeText={(name) => this.setState({name})}
-                            >
+                    <View style={styles.createContainer}>
+                        <View style={{flex: 1, padding: 30}}>
+                            {/*<GeoLoc parentCallback={this.callbackFunction} />*/}
+                            <PhotoUpload onPhotoSelect={image => {
+                                if (image) {
+                                    this.setState({image: image})
+                                    this.setState({isDisabled: false})
+                                }
+                            }
+                            }>
+                                <Image source={{image: this.state.image}}
+                                       style={{
+                                           margin: 10,
+                                           height: 120,
+                                           width: 120,
+                                           // borderRadius: 60,
+                                           borderColor: 'grey',
+                                           borderWidth: 3,
+                                           flex: 0,
+                                           resizeMode: 'cover'
+                                       }}/>
+                            </PhotoUpload>
+                        </View>
+                        <View style={styles.createInputContainer}>
+                            <Text style={styles.inputs} >
                                 {this.state.city}
-                            </TextInput>
+                            </Text>
                         </View>
 
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.inputs}
-                                placeholder="Country"
-                                onChangeText={(country) => this.setState({country})}
-                            >
+                        <View style={styles.createInputContainer}>
+                            <Text style={styles.inputs}>
                                 {this.state.country}
-                            </TextInput>
+                            </Text>
                         </View>
-                        <View style={styles.inputContainer}>
+                        <View style={styles.descInputContainer}>
                             <TextInput
                                 style={styles.inputs}
                                 placeholder="Description"
@@ -132,31 +162,13 @@ export default class CreateCity extends React.Component {
                             </View>
                         </View>
 
-                        <PhotoUpload onPhotoSelect={image => {
-                            if (image) {
-                                this.setState({image: image})
-                            }
-                        }
-                        }>
-                            <Image source={{image: this.state.image}}
-                                   style={{
-                                       height: 120,
-                                       width: 120,
-                                       borderRadius: 60,
-                                       borderColor: 'black',
-                                       borderWidth: 5,
-                                       flex: 0,
-                                       resizeMode: 'cover'
-                                   }}/>
-                        </PhotoUpload>
+                        <View styles={{flex: 1}}>
+                            <TouchableHighlight disabled={this.state.isDisabled} style={[styles.buttonContainer, styles.loginButton] }
+                                                onPress={() => this.createCity()}>
+                                <Text style={styles.loginText}>Submit</Text>
+                            </TouchableHighlight>
+                        </View>
 
-                    </View>
-
-                    <View style={styles.container}>
-                        <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]}
-                                            onPress={() => this.createCity()}>
-                            <Text style={styles.loginText}>Submit</Text>
-                        </TouchableHighlight>
                     </View>
                 </View>
             </Root>

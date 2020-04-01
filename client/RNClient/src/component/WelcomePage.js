@@ -11,7 +11,6 @@ import {logger} from 'react-native-logger'
 export default class WelcomePage extends Component {
     componentDidMount() {
         this.getSavedToken().then(r => logger.log(r))
-        SplashScreen.hide();
     }
     getSavedToken = async () => {
         try {
@@ -27,12 +26,12 @@ export default class WelcomePage extends Component {
                                 key,
                                 (err) => {
                                     logger.log(err)
-                                    console.log("this.token, this.email " + key, value)
+                                    SplashScreen.hide();
                                     this.props.navigation.navigate('auth')
                                 },
                                 (isSuccess) => {
                                     isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
-                                    console.log("isSuccess "+isSuccess)
+                                    SplashScreen.hide();
                                 }
                              )
                         } else {
@@ -50,7 +49,6 @@ export default class WelcomePage extends Component {
     render() {
         return (
             <View>
-                <Text></Text>
             </View>
         )
     }

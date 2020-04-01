@@ -8,6 +8,13 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#DCDCDC'
     },
+    createContainer: {
+        flex: 1,
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#DCDCDC',
+    },
     inputContainer: {
         borderBottomColor: '#F5FCFF',
         backgroundColor: '#FFFFFF',
@@ -18,6 +25,31 @@ export default StyleSheet.create({
         marginBottom: 20,
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    createInputContainer: {
+        flex:0,
+        borderBottomColor: '#F5FCFF',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 30,
+        borderBottomWidth: 1,
+        width: 350,
+        height: 45,
+        marginBottom: 20,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    descInputContainer: {
+        flex:1,
+        borderBottomColor: '#F5FCFF',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 30,
+        borderBottomWidth: 1,
+        width: 350,
+        height: 150,
+        marginBottom: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        textAlign: 'center'
     },
     inputs: {
         height: 45,

@@ -32,6 +32,7 @@ import DisplayPlaces from "./src/component/tabs/myPosts/DisplayPlaces";
 import CreatePlace from "./src/component/tabs/feed/CreatePlace";
 import PlaceDetail from "./src/component/tabs/feed/PlaceDetail";
 import AsyncStorage from "@react-native-community/async-storage";
+import NotFoundCity from "./src/component/tabs/feed/NotFoundCity";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -40,6 +41,10 @@ const navOptionHandler = (navigation) => ({
 const FeedStack = createStackNavigator({
     DisplayCities: {
         screen: DisplayCities,
+        navigationOptions: navOptionHandler
+    },
+    NotFoundCity: {
+        screen: NotFoundCity,
         navigationOptions: navOptionHandler
     },
     CreateCity: {

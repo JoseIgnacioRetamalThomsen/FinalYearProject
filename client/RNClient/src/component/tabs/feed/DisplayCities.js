@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, NativeModules, ScrollView, StyleSheet, View} from 'react-native';
+import {Alert, Image, NativeModules, ScrollView, StyleSheet, View} from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import {Body, CardItem, Icon, Text} from "native-base";
 import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
@@ -14,9 +14,11 @@ export default class DisplayCities extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //pressed: false,
+            isVisible: false,
             max: 999999,
             img: '../../../img/noImage.png',
+            city: 'undefined',
+            fcity: '',
             cities: [
                 {
                     cityId: 0,
@@ -36,20 +38,13 @@ export default class DisplayCities extends Component {
     callbackFunction = (lat, lng, city, country) => {
         this.setState({lat: lat})
         this.setState({lng: lng})
+        this.setState({fcity: city})
         this.setState({city: city})
+
         this.setState({country: country})
-        console.log("city is ", this.state.lat, this.state.lng)
+        console.log("in callbackFunction", this.state.fcity)
     }
-    // shouldComponentUpdate(prevProps, prevState){
-    //     console.log("in  shouldComponentUpdate1")
-    //     //this.displayCities()
-    //
-    //     if (prevState.cities !== this.state.cities) {
-    //         console.log("in  shouldComponentUpdate")
-    //         this.setState({isUpdated: false})
-    //
-    //     }
-    // }
+
     getCitiesPhoto() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
@@ -62,6 +57,7 @@ export default class DisplayCities extends Component {
                             token,
                             email,
                             (err) => {
+                                this.setState({photoMap: require('../../../img/noImage.png')})
                                 console.log(err)
                             },
 
@@ -136,18 +132,58 @@ export default class DisplayCities extends Component {
         })
     }
 
+    showAlert(city) {
+        console.log("city", city)
+        console.log("in alert", this.state.fcity)
+        Alert.alert(
+            'City is not created yet.',
+            ' Would you like to create a city? ',
+            [
+                {
+                    text: 'No',
+                    onPress: () => this.props.navigation.navigate('DisplayCities'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Yes', onPress: () => this.props.navigation.navigate('CreateCity',
+                        { // country: item.country,
+                            city: this.state.fcity,
+                            country: this.state.country,
+                        })
+                }
+            ]
+        );
+    }
+
     render() {
-        let image = require('../../../img/noImage.png')
+        // this.setState({city: this.state.city})
+        console.log("in render", this.state.fcity)
+        if (this.state.city !== 'undefined') {
+            let newCityList = []
+            this.state.cities.forEach(element => {
+                if (element.name.toLowerCase().includes(this.state.city.toLowerCase())) {
+                    newCityList.push(element)
+                    this.setState({cities: newCityList})
+                }
+            })
+            this.state.city = 'undefined'
+            if (newCityList.length == 0) {
+                this.showAlert(this.state.fcity)
+            }
+        } else {
+            //console.log("is undefined")
+        }
 
         return (
             <View style={{flex: 1}}>
                 {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
-                <CustomHeader title="Cities" isHome={true} navigation={this.props.navigation}/>
+                <CustomHeader style={{flex: 1}} title="Cities" isHome={true} navigation={this.props.navigation}/>
+                <View style={{flex: 1}}>
+                    <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
+                              parentCallback={this.callbackFunction}/>
+                </View>
                 <ScrollView style={{flex: 1}}>
-                    <View style={{flex: 1}}>
-                        <MapInput navigation={this.props.navigation} notifyChange={() => this.onClickEvent()}
-                                  parentCallback={this.callbackFunction}/>
-                    </View>
+
                     {this.state.cities.map((item, index) => {
                         return (
                             <Card key={this.state.cities.cityId}>

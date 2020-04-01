@@ -10,8 +10,6 @@ import com.wcity.grpc.CityPostResponse;
 import com.wcity.grpc.PlacePostResponse;
 import com.wcity.grpc.clients.PostClient;
 
-import java.util.List;
-
 
 public class PostModule extends ReactContextBaseJavaModule {
 
@@ -54,7 +52,8 @@ public class PostModule extends ReactContextBaseJavaModule {
 
         String response;
         try {
-            response = client.createPlacePost(indexId, creatorEmail, cityName, countryName, placeName, title, body);
+            response = client.createPlacePost(indexId, creatorEmail, cityName, countryName,
+                    placeName, title, body);
             successCallback.invoke(response);
         } catch (Exception e) {
             errorCallback.invoke(e.getMessage());

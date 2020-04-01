@@ -25,14 +25,15 @@ class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatar_url: null,
+            avatar_url: '../../img/profile.png',
             image: '../../img/profile.png',
             email: email,
             name: '',
             description: '',
             message: '',
-
-            visitedCities:[
+            visitedCitiesPhotoList: [],
+            visitedPlacesPhotoList: [],
+            visitedCities: [
                 {
                     cityId: 0,
                     name: '',
@@ -41,9 +42,9 @@ class Profile extends Component {
                     description: '',
                 }
             ],
-            getVisitedPlaces:[
+            getVisitedPlaces: [
                 {
-                    city:'',
+                    city: '',
                     country: '',
                     description: '',
                     name: '',
@@ -54,6 +55,24 @@ class Profile extends Component {
     }
 
     componentDidMount() {
+        let visitedCities = []
+        let keys = [...global.visitedCityMap.keys()]
+
+        keys.forEach(e => {
+            if (global.visitedCityMap[e] === true) {
+                visitedCities.push(e)
+            }
+        })
+
+        let visitedPlaces = []
+        let pkeys = [...global.visitedPlaceMap.keys()]
+
+        pkeys.forEach(e => {
+            if (global.visitedPlaceMap[e] === true) {
+                visitedPlaces.push(e)
+            }
+        })
+
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -68,12 +87,7 @@ class Profile extends Component {
                                 console.log(err)
                             },
                             (url) => {
-                                if (url == null) {
-                                    this.setState({avatar_url: 'https://storage.googleapis.com/wcity-images-1/profile-1/1896665_1780468.jpg'})
-                                } else {
-                                    this.setState({avatar_url: url})
-                                }
-
+                                this.setState({avatar_url: url})
                             })
                         NativeModules.ProfilesModule.getUser(
                             token,
@@ -94,7 +108,7 @@ class Profile extends Component {
                                 console.log(err)
                             },
                             (json) => {
-                                this.setState({visitedCities:JSON.parse(json)})
+                                this.setState({visitedCities: JSON.parse(json)})
                             })
 
                         NativeModules.ProfilesModule.getVisitedPlaces(
@@ -104,8 +118,34 @@ class Profile extends Component {
                                 console.log(err)
                             },
                             (placesJson) => {
-                                console.log("placesJson", placesJson)
-                                this.setState({visitedPlaces:JSON.parse(placesJson)})
+                                // console.log("placesJson", placesJson)
+                                this.setState({visitedPlaces: JSON.parse(placesJson)})
+                            })
+
+                        NativeModules.PhotosModule.getVisitedCitysPhotos(
+                            email,
+                            token,
+                            visitedCities,
+                            (err) => {
+                                console.log(err)
+                            },
+
+                            (visitedCitiesPhotoList) => {
+                                console.log("visitedPhotoCityList", visitedCitiesPhotoList)
+                                this.setState({visitedCitiesPhotoList: visitedCitiesPhotoList})
+                            })
+
+                        NativeModules.PhotosModule.getVisitedPlacesPhotos(
+                            email,
+                            token,
+                            visitedPlaces,
+                            (err) => {
+                                console.log(err)
+                            },
+
+                            (visitedPlacesPhotoList) => {
+                                console.log("visitedPhotoPlaceList", visitedPlacesPhotoList)
+                                 this.setState({visitedPlacesPhotoList: visitedPlacesPhotoList})
                             })
                     }
                 })
@@ -137,30 +177,45 @@ class Profile extends Component {
         })
     }
 
-    renderItemVisitedCities = ({item, index}) => {
+    renderItemVisitedCities = ({item, map}) => {
         return (
             <View style={styles.slide}>
-                <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.title}>{item.country}</Text>
-                <Text style={styles.title}>{item.description}</Text>
-                <Button title="More"  onPress={() => this.props.navigation.navigate('CityDetail', {
-                    cityId: item.cityId,
-                    name: item.name,
-                    country: item.country,
-                    description: item.description,
-                })}></Button>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View>
+                        <Image source={{uri: this.state.visitedCitiesPhotoList["" + item.cityId]}}
+                               style={{height: 150, width: 112, flex: 1}}/>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>{item.name}</Text>
+                        <Text style={styles.title}>{item.country}</Text>
+                        <Text style={styles.title}>{item.description}</Text>
+                        <Button title="More" onPress={() => this.props.navigation.navigate('CityDetail', {
+                            cityId: item.cityId,
+                            name: item.name,
+                            country: item.country,
+                            description: item.description,
+                        })}></Button>
+
+                    </View>
+
+                </View>
             </View>
         )
     }
 
-    renderItemVisitedPlaces = ({item, index}) => {
-        console.log(this.state.cityId)
+    renderItemVisitedPlaces = ({item, map}) => {
         return (
             <View style={styles.slide}>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View>
+                        <Image source={{uri: this.state.visitedPlacesPhotoList["" + item.id]}}
+                               style={{height: 150, width: 112, flex: 1}}/>
+                    </View>
+                    <View>
                 <Text style={styles.title}>{item.name}</Text>
                 <Text style={styles.title}>{item.country}</Text>
                 <Text style={styles.title}>{item.description}</Text>
-                <Button title="More"  onPress={() => this.props.navigation.navigate('PlaceDetail', {
+                <Button title="More" onPress={() => this.props.navigation.navigate('PlaceDetail', {
                     placeId: item.id,
                     name: item.name,
                     city: item.city,
@@ -168,8 +223,11 @@ class Profile extends Component {
                     description: item.description,
                 })}></Button>
             </View>
+            </View>
+            </View>
         )
     }
+
     render() {
         return (
             <View style={{flex: 1}}>
@@ -186,6 +244,7 @@ class Profile extends Component {
                         <Card containerStyle={styles.cardContainer}>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                 <PhotoUpload onPhotoSelect={avatar => {
+                                    // console.log("Avatar!!   ", avatar)
                                     if (avatar) {
                                         this.setState({image: avatar})
                                         this.updatePhoto()
@@ -203,7 +262,10 @@ class Profile extends Component {
                                                resizeMode: 'cover'
                                            }}/>
                                 </PhotoUpload>
-                                {/*<GeoLoc></GeoLoc>*/}
+                                {/*<View>*/}
+
+                                <GeoLoc></GeoLoc>
+                                {/*    </View>*/}
                             </View>
                         </Card>
                         <View>
@@ -227,6 +289,7 @@ class Profile extends Component {
                                 this._carousel = c;
                             }}
                             data={this.state.visitedCities}
+                            map={this.state.visitedCitiesPhotoList}
                             renderItem={this.renderItemVisitedCities}
                             sliderWidth={500}
                             itemWidth={500}
@@ -251,6 +314,7 @@ class Profile extends Component {
                                 this._carousel = c;
                             }}
                             data={this.state.visitedPlaces}
+                            map = {this.state.visitedPlacesPhotoList}
                             renderItem={this.renderItemVisitedPlaces}
                             sliderWidth={500}
                             itemWidth={500}

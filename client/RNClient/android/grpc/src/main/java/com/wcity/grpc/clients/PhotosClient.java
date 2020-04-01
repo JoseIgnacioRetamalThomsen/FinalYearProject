@@ -33,6 +33,9 @@ import io.grpc.wcity.photo.GetPlacesPhotosPerCityRequestP;
 import io.grpc.wcity.photo.GetPlacesPhotosPerCityResponseP;
 import io.grpc.wcity.photo.GetPostsPhotosPerParentRequestP;
 import io.grpc.wcity.photo.GetPostsPhotosPerParentResponseP;
+import io.grpc.wcity.photo.GetVisitedCitysImagesRequest;
+import io.grpc.wcity.photo.GetVisitedPlacesPhotosRequest;
+import io.grpc.wcity.photo.GetVisitedPlacesPhotosResponse;
 import io.grpc.wcity.photo.PhotosServiceGrpc;
 import io.grpc.wcity.photo.PlacePhotoRequestP;
 import io.grpc.wcity.photo.PlacePhotoResponseP;
@@ -106,10 +109,10 @@ public class PhotosClient {
 
         ProfileUploadResponseP response;
         ProfilePhoto profilePhoto;
-      // boolean isSuccess;
+        // boolean isSuccess;
         try {
             response = stub.uploadProfilePhoto(userData);
-           // isSuccess = response.getSucess();
+            // isSuccess = response.getSucess();
             // if (isSuccess == true)
             profilePhoto = new ProfilePhoto(response.getPhoto().getId(),
                     response.getPhoto().getUserEmail(), response.getPhoto().getUrl(),
@@ -196,7 +199,7 @@ public class PhotosClient {
             }
 
             photoResponse = new PlacePhotoResponse(response.getValid(), response.getPlaceId(),
-                   photoList, response.getActive());
+                    photoList, response.getActive());
 
         } catch (StatusRuntimeException e) {
             e.getMessage();
@@ -271,7 +274,7 @@ public class PhotosClient {
 
         PostUploadResponseP response;
         PostPhoto postPhoto = null;
-       // boolean isSuccess;
+        // boolean isSuccess;
         try {
             response = stub.uploadPostImage(userData);
             //isSuccess = response.getSucess();
@@ -288,7 +291,7 @@ public class PhotosClient {
         return postPhoto;
     }
 
-    public List<CityPhoto> getCitysPhoto (String token, String email) {
+    public List<CityPhoto> getCitysPhoto(String token, String email) {
         GetCitysPhotoRequestP requestP = GetCitysPhotoRequestP.newBuilder()
                 .setToken(token)
                 .setEmail(email)
@@ -297,21 +300,21 @@ public class PhotosClient {
         List<CityPhoto> response = new ArrayList<>();
         GetCitysPhotoResponseP responseP;
 
-        try{
+        try {
             responseP = stub.getCitysPhotosP(requestP);
-            for(CitysPhoto photo: responseP.getCityPhotosList()){
+            for (CitysPhoto photo : responseP.getCityPhotosList()) {
                 io.grpc.wcity.photoShared.CityPhoto cityPhoto = photo.getCitysPhotosList().get(0);
                 response.add(new CityPhoto(cityPhoto.getId(), cityPhoto.getCityId(), cityPhoto.getUrl(),
-                cityPhoto.getTimestamp(), cityPhoto.getSelected()));
+                        cityPhoto.getTimestamp(), cityPhoto.getSelected()));
             }
 
-        }catch(StatusRuntimeException e) {
+        } catch (StatusRuntimeException e) {
             e.getMessage();
         }
         return response;
     }
 
-    public List<PlacePhoto> getPlacesPerCityPhoto (String token, String email, int cityid) {
+    public List<PlacePhoto> getPlacesPerCityPhoto(String token, String email, int cityid) {
         GetPlacesPhotosPerCityRequestP requestP = GetPlacesPhotosPerCityRequestP.newBuilder()
                 .setToken(token)
                 .setEmail(email)
@@ -321,45 +324,95 @@ public class PhotosClient {
         List<PlacePhoto> response = new ArrayList<>();
         GetPlacesPhotosPerCityResponseP responseP;
 
-        try{
+        try {
             responseP = stub.getPlacesPerCityPhotoP(requestP);
-            for(PlacesCityPhotos photo: responseP.getPlacePhotosList()){
+            for (PlacesCityPhotos photo : responseP.getPlacePhotosList()) {
                 io.grpc.wcity.photoShared.PlacePhoto placePhoto = photo.getPlacePhotosList().get(0);
                 response.add(new PlacePhoto(placePhoto.getId(), placePhoto.getPlaceId(), placePhoto.getUrl(),
                         placePhoto.getTimestamp(), placePhoto.getSelected()));
             }
 
-        }catch(StatusRuntimeException e) {
+        } catch (StatusRuntimeException e) {
             e.getMessage();
         }
         return response;
     }
 
 
-    public List<PostPhoto> getPostsPhotosIdP (String token, String email, int type, int parentId) {
+    public List<PostPhoto> getPostsPhotosIdP(String token, String email, int type, int parentId) {
         GetPostsPhotosPerParentRequestP requestP = GetPostsPhotosPerParentRequestP.newBuilder()
                 .setToken(token)
                 .setEmail(email)
-                .setType(PostType.forNumber(type) )
+                .setType(PostType.forNumber(type))
                 .setParentId(parentId)
                 .build();
 
         List<PostPhoto> response = new ArrayList<>();
         GetPostsPhotosPerParentResponseP responseP;
 
-        try{
+        try {
             responseP = stub.getPostsPhotosIdP(requestP);
-            for(io.grpc.wcity.photoShared.PostPhoto photo: responseP.getPlacesPhotoList()){
+            for (io.grpc.wcity.photoShared.PostPhoto photo : responseP.getPlacesPhotoList()) {
                 //PostPhoto postPhoto = photo.getPlacePhotosList().get(0);
                 response.add(new PostPhoto(photo.getId(), photo.getPostId(),
                         photo.getUrl(), photo.getTimestamp(), photo.getSelected()));
             }
 
-        }catch(StatusRuntimeException e) {
+        } catch (StatusRuntimeException e) {
             PostPhoto postPhoto = new PostPhoto();
             postPhoto.setError(e.getMessage());
             e.getMessage();
         }
         return response;
+    }
+
+    public List<CityPhoto> getVisitedCitysPhotos(String email, String token, List<Integer> cityId) {
+
+        GetVisitedCitysImagesRequest requestP = GetVisitedCitysImagesRequest.newBuilder()
+                .setEmail(email)
+                .setToken(token)
+                .addAllCityId(cityId)
+                .build();
+
+        GetCitysPhotoResponseP response;
+        List<CityPhoto> photos = new ArrayList<>();
+
+        try {
+            response = stub.getVisitedCitysPhotos(requestP);
+
+            for (CitysPhoto photo : response.getCityPhotosList()) {
+                io.grpc.wcity.photoShared.CityPhoto temp = photo.getCitysPhotosList().get(0);
+                photos.add(new CityPhoto(temp.getId(), temp.getCityId(), temp.getUrl(),
+                        temp.getTimestamp(), temp.getSelected()));
+            }
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return photos;
+    }
+
+    public List<PlacePhoto> getVisitedPlacesPhotos(String email, String token, List<Integer> placeId) {
+
+        GetVisitedPlacesPhotosRequest requestP = GetVisitedPlacesPhotosRequest.newBuilder()
+                .setEmail(email)
+                .setToken(token)
+                .addAllPlaceId(placeId)
+                .build();
+
+        GetVisitedPlacesPhotosResponse response;
+        List<PlacePhoto> photos = new ArrayList<>();
+
+        try {
+            response = stub.getVisitedPlacesPhotos(requestP);
+
+            for (PlacesCityPhotos photo : response.getPlacePhotosList()) {
+                io.grpc.wcity.photoShared.PlacePhoto temp = photo.getPlacePhotosList().get(0);
+                photos.add(new PlacePhoto(temp.getId(), temp.getPlaceId(), temp.getUrl(),
+                        temp.getTimestamp(), temp.getSelected()));
+            }
+        } catch (StatusRuntimeException e) {
+            e.getMessage();
+        }
+        return photos;
     }
 }

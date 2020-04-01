@@ -5,7 +5,11 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableMap;
+import com.google.common.primitives.Ints;
 import com.google.gson.Gson;
 import com.wcity.grpc.clients.PhotosClient;
 import com.wcity.grpc.objects.CityPhoto;
@@ -17,7 +21,10 @@ import com.wcity.grpc.objects.PostPhotoResponse;
 import com.wcity.grpc.objects.ProfilePhoto;
 import com.wcity.grpc.objects.ProfilePhotoResponse;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import io.grpc.wcity.photoShared.PostType;
 
@@ -114,8 +121,8 @@ public class PhotosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void uploadPlacePhoto(String token, String email, int placeId, String image, int placeCityId, Callback errorCallback,
-                                 Callback successCallback) {
+    public void uploadPlacePhoto(String token, String email, int placeId, String image, int placeCityId,
+                                 Callback errorCallback, Callback successCallback) {
         PlacePhoto response = client.uploadPlacePhoto(token, email, placeId, image, placeCityId);
         try {
             successCallback.invoke(response.getUrl());
@@ -156,8 +163,8 @@ public class PhotosModule extends ReactContextBaseJavaModule {
                               Callback successCallback) {
         List<CityPhoto> response = client.getCitysPhoto(token, email);
         WritableMap map = Arguments.createMap();
-        for(CityPhoto e: response){
-            map.putString(""+ e.getCityId(), e.getUrl());
+        for (CityPhoto e : response) {
+            map.putString("" + e.getCityId(), e.getUrl());
         }
         try {
             successCallback.invoke(map);
@@ -168,11 +175,11 @@ public class PhotosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getPlacesPerCityPhoto(String token, String email, int cityId, Callback errorCallback,
-                              Callback successCallback) {
+                                      Callback successCallback) {
         List<PlacePhoto> response = client.getPlacesPerCityPhoto(token, email, cityId);
         WritableMap map = Arguments.createMap();
-        for(PlacePhoto e: response){
-            map.putString(""+ e.getPlaceId(), e.getUrl());
+        for (PlacePhoto e : response) {
+            map.putString("" + e.getPlaceId(), e.getUrl());
         }
         try {
             successCallback.invoke(map);
@@ -187,14 +194,55 @@ public class PhotosModule extends ReactContextBaseJavaModule {
         List<PostPhoto> response = client.getPostsPhotosIdP(token, email, type, parentId);
 
         WritableMap map = Arguments.createMap();
-        for(PostPhoto e: response){
-            map.putString(""+ e.getPostId(), e.getUrl());
+        for (PostPhoto e : response) {
+            map.putString("" + e.getPostId(), e.getUrl());
         }
 
         try {
             successCallback.invoke(map);
         } catch (Exception e) {
 
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void getVisitedCitysPhotos(String email, String token, ReadableArray cityId, Callback errorCallback,
+                                      Callback successCallback) {
+        List<Integer> list = new ArrayList<>();
+
+      for(Object e: cityId.toArrayList() ){
+          list.add(((Double)e).intValue());
+      }
+
+        List<CityPhoto> response = client.getVisitedCitysPhotos(email, token, list);
+        WritableMap map = Arguments.createMap();
+        for (CityPhoto e : response) {
+            map.putString("" + e.getCityId(), e.getUrl());
+        }
+        try {
+            successCallback.invoke(map);
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void getVisitedPlacesPhotos(String email, String token, ReadableArray placeId, Callback errorCallback,
+                                       Callback successCallback) {
+        List<Integer> list = new ArrayList<>();
+
+        for(Object e: placeId.toArrayList() ){
+            list.add(((Double)e).intValue());
+        }
+        List<PlacePhoto> response = client.getVisitedPlacesPhotos(email, token, list);
+        WritableMap map = Arguments.createMap();
+        for (PlacePhoto e : response) {
+            map.putString("" + e.getPlaceId(), e.getUrl());
+        }
+        try {
+            successCallback.invoke(map);
+        } catch (Exception e) {
             errorCallback.invoke(e.getMessage());
         }
     }
