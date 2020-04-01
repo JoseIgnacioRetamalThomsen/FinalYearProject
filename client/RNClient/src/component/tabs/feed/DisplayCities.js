@@ -126,7 +126,7 @@ export default class DisplayCities extends Component {
         if (this.state.city !== 'undefined') {
             let newCityList = []
             this.state.cities.forEach(element => {
-                if (element.name.toLowerCase().includes(this.state.city)) {
+                if (element.name.includes(this.state.city)) {
                     newCityList.push(element)
                     this.setState({cities: newCityList})
                 }
