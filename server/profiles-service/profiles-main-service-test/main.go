@@ -69,13 +69,13 @@ func main(){
 	}
 	s2 := &profileServer{dbserverCtx}
 	profSerConn = *s2
-
+     GetCity(tokenEmail,token,"Galway","Ireland")
 	//GetAllCitys()
 	//GetAllPlaces()
 	//fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
 //	fmt.Println(GetUser(tokenEmail,token))
 //	fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
-	//fmt.Println(CreateCity(tokenEmail,token,"San Pedro","Chile","Bacn",12,12))
+	//fmt.Println(CreateCity(tokenEmail,token,"galway","ireland","Bacn",12,12))
 	//fmt.Println(GetCity(tokenEmail,token,"galway", "ireland"))
 	//fmt.Println(CreatePlace(tokenEmail,token,"plaza1","san pedro","chile","nada",3,3))
 //fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
@@ -86,7 +86,7 @@ func main(){
 	//fmt.Println(VisitCity(tokenEmail,token,26))
 //fmt.Println(VisitPlace(tokenEmail,token,0))
 //fmt.Println(GetVisitedCity(tokenEmail,token))
-fmt.Println(GetVisitedPlaces(tokenEmail,token))
+//fmt.Println(GetVisitedPlaces(tokenEmail,token))
 //fmt.Println(GetCityPlaces(tokenEmail,token,"san Pedro","chile"))
 }
 
@@ -244,6 +244,25 @@ func GetCityPlaces(email string, token string, cityName string, cityCountry stri
 }
 
 */
+func GetCity(email string,token string,cityName string, cityCounty string )bool{
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	r, err := profSerConn.context.dbClient.GetCity(ctx,&pb.GetCityRequestP{
+		Token:                token,
+		Name:                email,
+		CityName:             cityName,
+		CityCountry:          cityCounty,
+
+	})
+
+	if err != nil{
+		panic(err)
+	}
+	fmt.Println(r)
+	return r.Valid
+}
+
+
 func GetAllCitys(){
 
 	// initialize a pb.Rectangle
@@ -315,7 +334,7 @@ func CreatePlace(email string, token string, name string, city string,country st
 */
 
 func CreateCity(email string,token string,cityName string,cityCountry string,cityDescription string,lat float32,lon float32)bool{
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	r, err := profSerConn.context.dbClient.CreateCity(ctx,&pb.CreateCityRequestP{
 		Token:                token,

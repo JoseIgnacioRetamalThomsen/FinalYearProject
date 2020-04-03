@@ -41,7 +41,7 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 
 	r.ParseForm()
 
-	image := []byte(r.Form["image"][0])
+	//image := []byte(r.Form["image"][0])
 
 	for _,value := range  r.Header{
 		fmt.Println(value)
@@ -72,15 +72,15 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 		fmt.Println(err)
 	}
 
-	cityId := response.City.CityId
+	//cityId := response.City.CityId
 
-	photo , err :=SendCityimage(image, r.Header["Email"][0],r.Header["Token"][0], int(cityId))
+	//photo , err :=SendCityimage(image, r.Header["Email"][0],r.Header["Token"][0], int(cityId))
 
 
 	//convert reponse into json and send back
 	jsonResponse := CityResponseJson{
 		City:   *response.City,
-		Photo: *photo,
+		Photo: pb.CityPhoto{},//*photo,
 	}
 
 	fmt.Println("next")

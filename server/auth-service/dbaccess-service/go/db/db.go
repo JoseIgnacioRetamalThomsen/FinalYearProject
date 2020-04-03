@@ -1,5 +1,8 @@
+// Contains functions to acess the database
 package db
 
+// Use the Ziutec driver:
+//  https://github.com/ziutek/mymysql.
 
 import (
 	"errors"
@@ -8,16 +11,24 @@ import (
 	_ "github.com/ziutek/mymysql/native"
 	"log"
 )
+
+// Configuration for connect to the database.
 type Configuration struct {
-	Port string
-	Coneection_type    string
-	MySQL_socket string
-	MySQL_user string
-	MySQL_pass string
-	MySQL_db string
+	Port            string
+	Coneection_type string
+	MySQL_socket    string
+	MySQL_user      string
+	MySQL_pass      string
+	MySQL_db        string
 }
+
+// The database confection.
 var db mysql.Conn
 
+// The database configuraion.
+var configuration Configuration
+
+// Name of tables and rows in mysql.
 const (
 	tableUsers      = "Users"
 	rowID           = "Id"
@@ -29,6 +40,7 @@ const (
 	rowSessionKey   = "SessionKey"
 )
 
+// Use data
 type user struct {
 	id           int64
 	email        string
@@ -37,22 +49,36 @@ type user struct {
 	isEmail      bool
 }
 
+// session data
+type Session struct {
+	SessionKey   string
+	Email        string
+	LoginTime    string
+	LastSeemTime string
+}
+
+
+// Get salt fomr session data.
 func (u *user) GetSalt() []byte {
 	return u.salt
 }
 
+// Get hashed password from session data.
 func (u *user) GetHashedPassword() []byte {
 	return u.passwordHash
 }
 
+// Get email from user.
 func (u *user) GetEmail() string {
 	return u.email
 }
 
-func (u *user) GetId() int64{
+// Get id from user.
+func (u *user) GetId() int64 {
 	return u.id
 }
 
+// Create a new user.
 func NewUser(email string, hashedPassword []byte, salt []byte, isEmail bool) *user {
 
 	u := user{email: email, passwordHash: hashedPassword,
@@ -61,6 +87,7 @@ func NewUser(email string, hashedPassword []byte, salt []byte, isEmail bool) *us
 	return &u
 }
 
+// Create a new user with id.
 func NewUserId(id int64, email string, hashedPassword []byte, salt []byte, isEmail bool) *user {
 
 	u := user{id: id, email: email, passwordHash: hashedPassword,
@@ -73,19 +100,13 @@ func NewUserEmty() *user {
 	return &u
 }
 
-type Session struct {
-	SessionKey   string
-	Email        string
-	LoginTime    string
-	LastSeemTime string
-}
 
+// Create a new seassion.
 func NewSeassion(sessionKey string, email string, loginTime string, lastSeemtime string) *Session {
 	s := Session{SessionKey: sessionKey, Email: email, LoginTime: loginTime, LastSeemTime: lastSeemtime}
 	return &s
 }
 
-var configuration Configuration
 // create connection to database
 func SetupConnection(connectionType string, socket string, user string, pass string, database string) (bool, error) {
 	configuration.Coneection_type = connectionType
@@ -93,7 +114,7 @@ func SetupConnection(connectionType string, socket string, user string, pass str
 	configuration.MySQL_user = user
 	configuration.MySQL_pass = pass
 	configuration.MySQL_db = database
-	log.Printf("Error: %v", configuration)
+	log.Printf("Connected to database: %v", configuration)
 	//db = mysql.New(connectionType, "", socket, user, pass, database)
 
 	return true, nil
@@ -103,7 +124,7 @@ func SetupConnection(connectionType string, socket string, user string, pass str
 //Returns true if user is created.
 //Auto id and isEmail false.
 func AddUser(u user) (int64, error) {
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -116,7 +137,7 @@ func AddUser(u user) (int64, error) {
 		return -1, err
 	}
 	res, err := stmt.Run(u.email, u.passwordHash, u.salt)
-		if err != nil {
+	if err != nil {
 		return -1, err
 	}
 	return int64(res.InsertId()), nil
@@ -124,7 +145,7 @@ func AddUser(u user) (int64, error) {
 
 // Return user data.
 func GetUser(email string) (user, error) {
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -133,18 +154,19 @@ func GetUser(email string) (user, error) {
 
 	rows, _, err := db.Query("select * from Users where Email = '%s'", email)
 	if err != nil {
-		return *NewUserEmty(),err
+		return *NewUserEmty(), err
 	}
-	if len(rows) <=0 {
-		return *NewUserEmty(),err
+	if len(rows) <= 0 {
+		return *NewUserEmty(), err
 	}
 
 	u := NewUserId(rows[0].Int64(0), rows[0].Str(1), rows[0][2].([]byte), rows[0][3].([]byte), rows[0].Bool(4))
 	return *u, nil
 }
 
+// Used when the user confirm the email.
 func ConfirmEmail(email string) (int64, error) {
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -167,8 +189,9 @@ func ConfirmEmail(email string) (int64, error) {
 	return int64(res.InsertId()), nil
 }
 
+// Update the user account.
 func UpdateUser(u user) (int64, error) {
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -176,19 +199,19 @@ func UpdateUser(u user) (int64, error) {
 	defer db.Close()
 	stmtStr := fmt.Sprintf("UPDATE %s SET %s = ?, %s = ?, %s = ?  WHERE %s = ?", tableUsers, rowPasswordHash, rowPasswordSalt, rowIsEmail, rowEmail)
 	stmt, err := db.Prepare(stmtStr)
-		if err != nil {
+	if err != nil {
 		return -1, err
 	}
 	_, res, err := stmt.Exec(u.passwordHash, u.salt, u.isEmail, u.email)
 	if err != nil {
 		return -1, err
 	}
-		return int64(res.InsertId()), nil
+	return int64(res.InsertId()), nil
 }
 
 // If user email exist all data of that user will be wiped out.
 func DelUser(email string) int64 {
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -204,10 +227,9 @@ func DelUser(email string) int64 {
 
 }
 
-
-
-func CreateSession(key string, email string) (string,string,string,string,error){
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+// Create a new session using actual time.
+func CreateSession(key string, email string) (string, string, string, string, error) {
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -218,25 +240,26 @@ func CreateSession(key string, email string) (string,string,string,string,error)
 	//checkError(err)
 	if err != nil {
 
-		return "","","","",err
+		return "", "", "", "", err
 
 	}
 	_, res, err := stmt.Exec(key, email)
 	if err != nil {
-		return "","","","",err
+		return "", "", "", "", err
 	}
-	is,sess, err := GetSession(key)
+	is, sess, err := GetSession(key)
 	res.InsertId()
 
 	if is {
-		return sess.SessionKey,sess.Email, sess.LoginTime,sess.LastSeemTime,nil
+		return sess.SessionKey, sess.Email, sess.LoginTime, sess.LastSeemTime, nil
 	}
-	return "","","","",err//
+	return "", "", "", "", err //
 
 }
 
+// Returns a session using the key.
 func GetSession(key string) (bool, Session, error) {
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -249,15 +272,16 @@ func GetSession(key string) (bool, Session, error) {
 	}
 	res = res
 
-	if len(rows) <=0 {
+	if len(rows) <= 0 {
 		return false, Session{}, nil
 	}
-		s := NewSeassion(rows[0].Str(0), rows[0].Str(1), rows[0].Str(2), rows[0].Str(3))
+	s := NewSeassion(rows[0].Str(0), rows[0].Str(1), rows[0].Str(2), rows[0].Str(3))
 	return true, *s, nil
 }
 
+// Delete a session.
 func DeleteSession(key string) (int64, error) {
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)
@@ -276,8 +300,10 @@ func DeleteSession(key string) (int64, error) {
 	return int64(res.InsertId()), nil
 }
 
-func DeleteAllSession(email string) (int64,error){
-	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket , configuration.MySQL_user, configuration.MySQL_pass , configuration.MySQL_db )
+// Delete all sessions for a user.
+// Used when logout from everywhere.
+func DeleteAllSession(email string) (int64, error) {
+	db = mysql.New(configuration.Coneection_type, "", configuration.MySQL_socket, configuration.MySQL_user, configuration.MySQL_pass, configuration.MySQL_db)
 	err := db.Connect()
 	if err != nil {
 		panic(err)

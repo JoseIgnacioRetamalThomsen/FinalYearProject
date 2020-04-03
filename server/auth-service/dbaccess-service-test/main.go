@@ -8,6 +8,8 @@ import (
 	// _ "github.com/ziutek/mymysql/thrsafe" // Thread safe engine
 
 	"context"
+	"fmt"
+
 	//"net"
 
 	pb "github.com/joseignacioretamalthomsen/wcity"
@@ -18,32 +20,35 @@ import (
 )
 
 const (
-	//address     = "35.197.216.42:7777"
+//	address     = "35.197.216.42:7777"
 	//address     = "40.118.90.61:7777"
-	address     = "localhost:7777"
-
+	//address     = "localhost:7777"
+address = "104.40.206.141:7777"
 )
 
 func main() {
 
-	//fmt.Print(CreateUser("e5613tfh", []byte("123456"),[]byte("123346")))
-	GetUser("e5613tfh")
+	//fmt.Print(CreateUser("e5613tfhhhh", []byte("12345h6"),[]byte("12334h6")))
+	//GetUser("e5613tfh")
 //	UpdateUser("e560",[]byte("12345678"),[]byte("123345678"))
 	//CreateSession("e560","1234556789")
-	//fmt.Print(GetSession("e560","12345567898"))
+	fmt.Print(GetSession("e560","12345567898"))
 	//fmt.Print(DeleteSession("e560","1234556"))
 
 }
 
 func GetUser(email string){
 	// Set up a connection to the server.
+	log.Println("meesage")
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	log.Println("meesage")
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 	c := pb.NewUserAuthDBClient(conn)
 
+	log.Println("meesage")
 	// Contact the server and print out its response.
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)

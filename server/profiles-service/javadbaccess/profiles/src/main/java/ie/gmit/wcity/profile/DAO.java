@@ -585,7 +585,8 @@ public class DAO implements AutoCloseable {
 	public static void main(String... args) throws Exception {
 		try (DAO dao = new DAO("bolt://172.17.0.1:7687", "neo4j", "test")) {
 			
-			
+		City temp =	dao.getCity("san Pedro", "Chile");
+	System.out.println(temp);
 			//  City city = City.newBuilder().setName("Galway").setCountry("Ireland").build();
 			 // dao.createCity(city);
 			
@@ -595,9 +596,9 @@ public class DAO implements AutoCloseable {
 			
 			//System.out.println(dao.visitCity(VisitCityRequestPDB.newBuilder().setCityId(26).setUserEmail("email").build()));
 			
-			System.out.println(dao.getVisitedCitys("email"));
+			//System.out.println(dao.getVisitedCitys("email"));
 			 
-			/*
+		/*
 			BlockingQueue<CityOrBuilder> queue = new ArrayBlockingQueue<CityOrBuilder>(1000);
 			dao.getAllCitys(null,queue);
 			while(true) {
