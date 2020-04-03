@@ -6,7 +6,7 @@ import {
     TouchableHighlight, TouchableOpacity
 } from 'react-native';
 import styles from '../../../styles/Style'
-import CustomHeader from "../../CustomHeader";
+import CustomHeader from "../../headers/CustomHeader";
 import LoadImage from "../../LoadImage";
 import {Root} from "native-base";
 import {onClickAddImage, onSelectedImage} from '../../functions'

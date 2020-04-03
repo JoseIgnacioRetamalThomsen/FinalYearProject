@@ -2,14 +2,13 @@ import React, {Component} from 'react';
 import {Alert, Image, NativeModules, ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import {Body, CardItem, Icon, Text} from "native-base";
-import {Card, CardTitle} from "react-native-material-cards";
-import ActionButton from "react-native-action-button";
-import CreateCity from "./CreateCity";
-import CityDetail from "./CityDetail";
-import HomeHeader from "../../headers/HomeHeader";
-import Style from "../../../styles/Style";
-
-export default class DisplayCities extends Component {
+import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
+import CustomHeader from "../headers/CustomHeader";
+import MapInput from "../MapInput";
+import CreateCity from "../tabs/feed/CreateCity";
+import CityDetail from "../tabs/feed/CityDetail";
+import Style from "../../styles/Style";
+export default class SearchCity extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -57,7 +56,7 @@ export default class DisplayCities extends Component {
                             token,
                             email,
                             (err) => {
-                                this.setState({photoMap: require('../../../img/noImage.png')})
+                                this.setState({photoMap: require('../../img/noImage.png')})
                                 console.log(err)
                             },
 
@@ -105,42 +104,63 @@ export default class DisplayCities extends Component {
             ' Would you like to create a city? ',
             [
                 {
-                    text: 'No',
-                    onPress: () => this.props.navigation.navigate('DisplayCities'),
-                    style: 'cancel',
-                },
-                {
                     text: 'Yes', onPress: () => this.props.navigation.navigate('CreateCity',
                         { // country: item.country,
                             city: this.state.fcity,
                             country: this.state.country,
                         })
+                },
+                {
+                    text: 'No',
+                    onPress: () => this.props.navigation.navigate('DisplayCities'),
+                    style: 'cancel',
+
                 }
             ]
         );
     }
-    onClickEvent(){
-        console.log("clicked")
-    }
-    render() {
+
+    getCity(){
+        console.log("in render", this.state.city, this.state.country)
         if (this.state.city !== 'undefined') {
             let newCityList = []
             this.state.cities.forEach(element => {
-                if (element.name.includes(this.state.city)) {
+                if (element.name.includes(this.state.city) && element.country.includes(this.state.country)) {
                     newCityList.push(element)
                     this.setState({cities: newCityList})
                 }
             })
             this.state.city = 'undefined'
             if (newCityList.length === 0) {
-                this.showAlert(this.state.fcity)
+                this.showAlert(this.state.city)
             }
         } else {
             //console.log("is undefined")
         }
+    }
+
+    render() {
+        if (this.state.city === 'undefined') {
+            return (
+            <View style={Style.view}>
+                <CustomHeader style={{flex: 0.4}} title="Search City" isHome={false} navigation={this.props.navigation}/>
+                <View style={{flex: 0.4}}>
+                    <MapInput navigation={this.props.navigation} notifyChange={() => this.getCity()}
+                              parentCallback={this.callbackFunction}/>
+                </View>
+            </View>
+        )
+        }
+        else{
+
+
         return (
             <View style={Style.view}>
-                <HomeHeader style={{flex: 1}} title="Cities" isHome={true} navigation={this.props.navigation}/>
+                <CustomHeader style={{flex: 0.4}} title="Found City" isHome={false} navigation={this.props.navigation}/>
+                {/*<View style={{flex: 0.4}}>*/}
+                {/*    <MapInput navigation={this.props.navigation} notifyChange={() => this.getCity()}*/}
+                {/*              parentCallback={this.callbackFunction}/>*/}
+                {/*</View>*/}
                 <ScrollView style={{flex: 1}}>
 
                     {this.state.cities.map((item, index) => {
@@ -152,11 +172,11 @@ export default class DisplayCities extends Component {
                                 country: item.country,
                                 description: item.description,
                             })}>
-                                <Card style = {Style.cardContainer} key={this.state.cities.cityId} pointerEvents="none">
+                                <Card style={Style.cardContainer} key={this.state.cities.cityId} pointerEvents="none">
                                     <CardItem cardBody>
                                         <Image source={{uri: this.state.photoMap[item.cityId]}}
-                                                 style={{height: 200, width: null, flex: 1}}
-                                    />
+                                               style={{height: 200, width: null, flex: 1}}
+                                        />
                                     </CardItem>
                                     <CardItem>
                                         <CardTitle
@@ -172,17 +192,12 @@ export default class DisplayCities extends Component {
                                 </Card>
                             </TouchableOpacity>
                         )
+
                     })}
                 </ScrollView>
-                <ActionButton buttonColor='#007AFF'>
-                    <ActionButton.Item buttonColor='#007AFF' title="Add a city"
-                                       onPress={() => this.props.navigation.navigate('CreateCity')}>
-                        <Icon name="md-create" style={Style.actionButtonIcon}/>
-                    </ActionButton.Item>
-                </ActionButton>
             </View>
 
-        );
+        )
+        }
     }
 }
-

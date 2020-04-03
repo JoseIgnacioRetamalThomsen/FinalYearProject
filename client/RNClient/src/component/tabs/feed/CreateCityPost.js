@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Button, Text, View, Card, TextInput, TouchableHighlight, NativeModules, ScrollView, Image} from "react-native";
-import CustomHeader from "../../CustomHeader";
+import CustomHeader from "../../headers/CustomHeader";
 import {Root} from "native-base";
 
 import styles from '../../../styles/Style'

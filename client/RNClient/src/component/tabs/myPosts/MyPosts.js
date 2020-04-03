@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, TextInput} from 'react-native';
-import CustomHeader from '../../CustomHeader'
+import CustomHeader from '../../headers/CustomHeader'
 import PlusButton from "../../PlusButton";
 import Place from '../../Place'
 import DisplayPlace from "../../DisplayPlace";

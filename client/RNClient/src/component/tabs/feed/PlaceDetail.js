@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
 import {Dimensions, Image, NativeModules, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
-import CustomHeader from "../../CustomHeader";
+import Style from '../../../styles/Style'
 import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
 import {Body, CardItem, Icon} from "native-base";
 import Carousel from "react-native-snap-carousel";
 import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
 import Modal, {ModalContent} from 'react-native-modals';
-import {Button} from "react-native-elements";
+import {Button, Divider} from "react-native-elements";
 import SlideAnimation from "react-native-modals/dist/animations/SlideAnimation";
 import PhotoUpload from "react-native-photo-upload";
-import _styles from '../../../styles/Style'
-import MapInput from "../../MapInput";
-import PlaceHeader from "../../PlaceHeader";
+import PlaceHeader from "../../headers/PlaceHeader"
+
+const {width: viewportWidth} = Dimensions.get('window')
 
 export default class PlaceDetail extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -36,7 +37,7 @@ export default class PlaceDetail extends Component {
             //post
             postTitle: '',
             postDescription: '',
-            postMongoId:'',
+            postMongoId: '',
             postImage: '',
             postUrl: '',
             posts: [
@@ -100,8 +101,8 @@ export default class PlaceDetail extends Component {
 
     _renderItem = ({item, index}) => {
         return (
-            <View style={styles.slide}>
-                <Text style={styles.title}>{item.timestamp}</Text>
+            <View style={Style.slide}>
+                <Text style={Style.title}>{item.timestamp}</Text>
                 <Image source={{uri: item.url}}
                        style={{height: 200, width: null, flex: 1}}/>
             </View>
@@ -208,7 +209,7 @@ export default class PlaceDetail extends Component {
                                 console.log(err)
                             },
                             (photoList) => {
-                                this.setState({photoMap:photoList})
+                                this.setState({photoMap: photoList})
                             })
                     }
                 })
@@ -218,7 +219,7 @@ export default class PlaceDetail extends Component {
 
     render() {
         return (
-            <View style={{flex: 1}}>
+            <View style={Style.view}>
 
                 <Modal
                     visible={this.state.isVisible}
@@ -260,16 +261,26 @@ export default class PlaceDetail extends Component {
                                    }}/>
                         </PhotoUpload>
 
-                        <Button title= "Add place post" onPress={() => this.createPlacePost()}>
+                        <Button title="Add place post" onPress={() => this.createPlacePost()}>
 
                         </Button>
                     </ModalContent>
                 </Modal>
 
-                <PlaceHeader title={this.state.placeName} placeIdFromParent={this.state.placeId}  isHome={false}
+                <PlaceHeader title={this.state.placeName} placeIdFromParent={this.state.placeId} isHome={false}
                              navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
-                    <Card>
+                    <Card style={Style.cardContainer}>
+                        <Carousel
+                            ref={(c) => {
+                                this._carousel = c;
+                            }}
+                            data={this.state.images}
+                            renderItem={this._renderItem}
+                            sliderWidth={viewportWidth / 1.055}
+                            itemWidth={viewportWidth}
+
+                        />
                         <CardItem>
                             <CardTitle
                                 title={this.state.placeName}
@@ -279,17 +290,9 @@ export default class PlaceDetail extends Component {
 
                         <CardItem cardBody>
                             <Image source={this.state.img}
-                                   style={{height: 200, width: null, flex: 1}}/>
+                                   style={{height: 20, width: null, flex: 1}}/>
                         </CardItem>
-                        <Carousel
-                            ref={(c) => {
-                                this._carousel = c;
-                            }}
-                            data={this.state.images}
-                            renderItem={this._renderItem}
-                            sliderWidth={500}
-                            itemWidth={500}
-                        />
+
                         <CardItem>
                             <Body>
                                 <Text>{this.state.description} </Text>
@@ -297,21 +300,22 @@ export default class PlaceDetail extends Component {
                             <CardAction
                                 separator={true}
                                 inColumn={false}>
-                                <CardButton
-                                    onPress={() => this.props.navigation.navigate('CreateCity')}
-                                    title="Edit"
-                                    color="blue"
-                                />
                             </CardAction>
                         </CardItem>
                     </Card>
 
-                    <View style={{flex: 1}}>
+                    {/*Posts about the place*/}
+                    <Divider style={{backgroundColor: 'black'}}/>
+                    <Text style={Style.heading}> Posts about {this.state.placeName}</Text>
+                    <Divider style={{backgroundColor: 'black'}}/>
 
-                    </View>
                     {this.state.posts.map((item, index) => {
                         return (
-                            <Card key={this.state.posts.placePostId}>
+                            <Card style = {Style.cardContainer} key={this.state.posts.placePostId}>
+                                <CardItem cardBody style={Style.cardContainer}>
+                                    <Image source={{uri: this.state.photoMap[item.mongoId]}}
+                                           style={{height: 200, width: null, flex: 1}}/>
+                                </CardItem>
                                 <CardItem>
                                     <CardTitle
                                         title={item.title}
@@ -319,25 +323,11 @@ export default class PlaceDetail extends Component {
                                     />
                                 </CardItem>
 
-                                <CardItem cardBody>
-                                    <Image source={{uri: this.state.photoMap[item.mongoId]}}
-                                           style={{height: 200, width: null, flex: 1}}/>
-                                </CardItem>
                                 <CardItem>
                                     <Body>
                                         <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.body} </Text>
                                         <Text>{item.timeStamp} </Text>
                                     </Body>
-
-                                    {/*<CardAction*/}
-                                    {/*    separator={true}*/}
-                                    {/*    inColumn={false}>*/}
-                                    {/*    <CardButton*/}
-                                    {/*        onPress={() => this.props.navigation.navigate('PlacePostDetail')}*/}
-                                    {/*        title="More"*/}
-                                    {/*        color="blue"*/}
-                                    {/*    />*/}
-                                    {/*</CardAction>*/}
                                 </CardItem>
                             </Card>
                         )
@@ -348,7 +338,7 @@ export default class PlaceDetail extends Component {
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this place"
                                        onPress={() => this.setState({isVisible: true})}>
-                        <Icon name="md-create" style={styles.actionButtonIcon}/>
+                        <Icon name="md-create" style={Style.actionButtonIcon}/>
                     </ActionButton.Item>
                 </ActionButton>
 
@@ -357,15 +347,3 @@ export default class PlaceDetail extends Component {
         )
     }
 }
-const styles = StyleSheet.create({
-    actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'white',
-
-    },
-    container: {
-        height: 550,
-        width: 550,
-    }
-})

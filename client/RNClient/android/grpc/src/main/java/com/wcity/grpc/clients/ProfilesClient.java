@@ -216,27 +216,31 @@ public class ProfilesClient {
         return place;
     }
 
-    //    public City getCity(String token, String name, String cityName, String cityCountry) {
-//        GetCityRequestP cityRequestP = GetCityRequestP
-//                .newBuilder()
-//                .setToken(token)
-//                .setName(name)
-//                .setCityName(cityName)
-//                .setCityCountry(cityCountry)
-//                .build();
-//        CityResponseP response;
-//
-//        City city = null;
-//        try {
-//            response = stub.getCity(cityRequestP);
-//            city = new City(response.getValid(), response.getName(), response.getCountry(),
-//                    response.getCreatorEmail(), response.getDescription(), response.getLocation().getLat(), response.getLocation().getLon(), response.getId());
-//        } catch (StatusRuntimeException e) {
-//            e.getMessage();
-//        }
-//        return city;
-//    }
-//
+        public City getCity(String token, String email, String cityName, String cityCountry) {
+        GetCityRequestP cityRequestP = GetCityRequestP
+                .newBuilder()
+                .setToken(token)
+                .setName(email)
+                .setCityName(cityName)
+                .setCityCountry(cityCountry)
+                .build();
+        CityResponseP response;
+
+        City city = null;
+        try {
+            response = stub.getCity(cityRequestP);
+            city = new City(response.getCity().getName(), response.getCity().getCountry(),
+                    response.getCity().getCreatorEmail(), response.getCity().getLocation().getLat(),
+                    response.getCity().getLocation().getLon(), response.getCity().getDescription(),
+                    response.getCity().getCityId());
+        } catch (StatusRuntimeException e) {
+            city = new City();
+            city.error = e.getMessage();
+            e.getMessage();
+        }
+        return city;
+    }
+
 //    public City updateCity(String token, String name, String country,
 //                           String creatorEmail, String description, GeolocationP location) {
 //        CityRequestP cityRequestP = CityRequestP

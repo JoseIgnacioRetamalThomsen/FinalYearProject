@@ -41,7 +41,7 @@ export default class MapInput extends React.Component {
 
                     this.sendData()
                     //console.log("in map", this.state.city)
-                     //this.props.notifyChange(details.geometry.location)
+                     this.props.notifyChange(details.geometry.location)
                 }}
                 query={{
                     // available options: https://developers.google.com/places/web-service/autocomplete

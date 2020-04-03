@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {Button, NativeModules, TextInput, View} from 'react-native';
-import CustomHeader from '../CustomHeader'
-import styles from "../../styles/Style";
+import {Button, Image, NativeModules, TextInput, View} from 'react-native';
+import CustomHeader from '../headers/CustomHeader'
 import AsyncStorage from "@react-native-community/async-storage";
+import Style from "../../styles/Style";
+import Card from "react-native-material-cards/Card";
+import {Body, CardItem, Text} from "native-base";
 
 class Settings extends Component {
     constructor(props) {
@@ -47,24 +49,29 @@ class Settings extends Component {
     }
 
     render() {
-
         return (
-
             <View style={{flex: 1}}>
                 <CustomHeader title="Settings" navigation={this.props.navigation}/>
+                <View style={Style.view}>
+                    <Card style={Style.cardContainer}>
+                        <CardItem>
+                            <TextInput
+                                style={Style.text}
+                                placeholder="Name"
+                                onChangeText={(name) => this.setState({name})}/>
+                        </CardItem>
 
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="Name"
-                        onChangeText={(name) => this.setState({name})}/>
-                    <TextInput
-                        style={styles.inputs}
-                        placeholder="Description"
-                        onChangeText={(description) => this.setState({description})}/>
-                    <Button title="Save changes"
-                            onPress={() => this.onClickListener()}/>
+                        <CardItem>
+                            <TextInput
+                                style={Style.text}
+                                placeholder="Description"
+                                onChangeText={(description) => this.setState({description})}/>
+                        </CardItem>
+                        <CardItem>
+                            <Button style={Style.btnPressStyle} title="Save changes"
+                                    onPress={() => this.onClickListener()}/>
+                        </CardItem>
+                    </Card>
                 </View>
             </View>
         )

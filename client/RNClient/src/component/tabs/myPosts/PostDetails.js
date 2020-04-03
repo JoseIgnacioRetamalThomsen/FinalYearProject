@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { Text } from 'native-base';
-import CustomHeader from '../../CustomHeader'
+import CustomHeader from '../../headers/CustomHeader'
 
 class PostDetails extends Component {
     render() {

@@ -3,15 +3,15 @@ import {Header, Left, Body, Right, Button, Icon, Title} from 'native-base';
 import {NativeModules, Text, View} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
-class PlaceHeader extends Component {
+class SpecialHeader extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            placeId: -999,
+            cityId: -999,
             pressed: false
         }
         this.setState({
-            placeId: this.props.placeIdFromParent
+            cityId: this.props.cityIdFromParent
         })
 
     }
@@ -20,11 +20,14 @@ class PlaceHeader extends Component {
         this.setState({pressed: false})
     }
 
-
-    render() {
+    returnData(pressed) {
+        this.setState({pressed: pressed});
+    }
+    render() {//global.visitedCityMap[this.props.cityIdFromParent]
         let {title, isHome} = this.props;
+        console.log("this.state.cityId", global.visitedCityMap[this.props.cityIdFromParent])
+        if (global.visitedCityMap[this.props.cityIdFromParent] === true)
 
-        if (global.visitedPlaceMap[this.props.placeIdFromParent] === true)
             return (
                 <Header style={{backgroundColor: '#007AFF'}}>
                     <Left>
@@ -33,7 +36,8 @@ class PlaceHeader extends Component {
                                 <Button transparent onPress={() => this.props.navigation.openDrawer()}>
                                     <Icon name='menu'/>
                                 </Button> :
-                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities')}>
+                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities',
+                                    {returnData: this.returnData.bind(this)})}>
                                     <Icon name='arrow-back'/>
                                 </Button>
                         }
@@ -53,7 +57,8 @@ class PlaceHeader extends Component {
                                 <Button transparent onPress={() => this.props.navigation.openDrawer()}>
                                     <Icon name='menu'/>
                                 </Button> :
-                                <Button transparent onPress={() =>this.props.navigation.navigate('CityDetail')}>
+                                <Button transparent onPress={() =>this.props.navigation.navigate('DisplayCities',
+                                    {returnData: this.returnData.bind(this)})}>
                                     <Icon name='arrow-back'/>
                                 </Button>
                         }
@@ -62,15 +67,15 @@ class PlaceHeader extends Component {
                         <Title>{title}</Title>
                     </Body>
                     <Right>
-                        <Button hasText transparent onPress={() => this.visitPlace()}>
-                            <Text> Visited this Place </Text>
+                        <Button hasText transparent onPress={() => this.visitCity()}>
+                            <Icon name='checkbox'> </Icon>
                         </Button>
                     </Right>
                 </Header>
             )
     }
 
-    visitPlace() {
+    visitCity() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -78,16 +83,16 @@ class PlaceHeader extends Component {
                     let token = store[i][1]
 
                     if (token !== null) {
-                        NativeModules.ProfilesModule.visitPlace(
+                        NativeModules.ProfilesModule.visitCity(
                             token,
                             email,
-                            parseFloat(this.props.placeIdFromParent),
+                            parseFloat(this.props.cityIdFromParent),
                             (err) => {
                                 console.log(err)
                             },
 
                             (isValid) => {
-                                global.visitedPlaceMap[this.props.placeIdFromParent] = true
+                                global.visitedCityMap[this.props.cityIdFromParent] = true
                                 this.setState({pressed:true})
                             })
                     }
@@ -98,4 +103,4 @@ class PlaceHeader extends Component {
 
 }
 
-export default PlaceHeader
+export default SpecialHeader

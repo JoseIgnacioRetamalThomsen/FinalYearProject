@@ -4,7 +4,7 @@ import styles from "../../../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
 import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'react-native-material-cards'
 import {Body, CardItem, Text, Title, Root} from "native-base";
-import CustomHeader from "../../CustomHeader";
+import CustomHeader from "../../headers/CustomHeader";
 import PhotoUpload from "react-native-photo-upload";
 
 export default class CreatePlace extends React.Component {

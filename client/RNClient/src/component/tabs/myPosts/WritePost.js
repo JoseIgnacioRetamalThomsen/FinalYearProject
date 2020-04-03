@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Text, View} from "react-native";
-import CustomHeader from "../../CustomHeader";
+import CustomHeader from "../../headers/CustomHeader";
 import {Root} from "native-base";
 import MapInput from "../../MapInput";
 

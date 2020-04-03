@@ -16,8 +16,9 @@ export default class GeoLoc extends Component {
             country: '',
         }
     }
+
     sendData = () => {
-        this.props.parentCallback(this.state.city, this.state.country, this.state.latitude, this.state.longitude)
+        this.props.parentCallback(this.state.latitude, this.state.longitude, this.state.city, this.state.country)
     }
 
     componentDidMount() {
@@ -29,7 +30,7 @@ export default class GeoLoc extends Component {
                 });
                 Geocoder.from(position.coords.latitude, position.coords.longitude)
                     .then(json => {
-                       // console.log(json);
+                        // console.log(json);
                         // json.results[0].address_components[1].long_name;//address_components[0] GMIT
                         //var user_city = results[0].address_components.filter(ac=>~ac.types.indexOf('locality'))[0].long_name
                         let city = json.results[0].address_components.filter(ac => ~ac.types.indexOf('locality'))[0].long_name
@@ -41,7 +42,7 @@ export default class GeoLoc extends Component {
                             country: country
                         })
                         this.sendData()
-                       //console.log("!!!!", city, country)
+                        //console.log("!!!!", city, country)
                     })
                     .catch(error => console.warn(error));
             },
@@ -70,6 +71,7 @@ export default class GeoLoc extends Component {
         }
         return (
             <View>
+                <Text> {text}</Text>
             </View>
         )
     }

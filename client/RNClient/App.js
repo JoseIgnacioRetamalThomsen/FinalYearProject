@@ -27,12 +27,11 @@ import WelcomePage from "./src/component/WelcomePage";
 import MapInput from "./src/component/MapInput";
 import CreateCity from "./src/component/tabs/feed/CreateCity";
 import CreateCityPost from "./src/component/tabs/feed/CreateCityPost";
-import Test from "./src/component/Test";
 import DisplayPlaces from "./src/component/tabs/myPosts/DisplayPlaces";
 import CreatePlace from "./src/component/tabs/feed/CreatePlace";
 import PlaceDetail from "./src/component/tabs/feed/PlaceDetail";
 import AsyncStorage from "@react-native-community/async-storage";
-import NotFoundCity from "./src/component/tabs/feed/NotFoundCity";
+import SearchCity from "./src/component/drawer/SearchCity";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -43,8 +42,8 @@ const FeedStack = createStackNavigator({
         screen: DisplayCities,
         navigationOptions: navOptionHandler
     },
-    NotFoundCity: {
-        screen: NotFoundCity,
+    DisplayCity: {
+        screen: SearchCity,
         navigationOptions: navOptionHandler
     },
     CreateCity: {
@@ -141,6 +140,10 @@ const MainStack = createStackNavigator({
     },
     Settings: {
         screen: Settings,
+        navigationOptions: navOptionHandler
+    },
+    DisplayCity: {
+        screen: SearchCity,
         navigationOptions: navOptionHandler
     },
 }, {initialRouteName: 'Home'})

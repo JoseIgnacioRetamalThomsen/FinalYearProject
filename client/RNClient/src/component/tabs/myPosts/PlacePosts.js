@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Image, ScrollView, StyleSheet, NativeModules} from 'react-native';
-import CustomHeader from '../../CustomHeader'
+import CustomHeader from '../../headers/CustomHeader'
 import MapInput from "../../MapInput";
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 import {

@@ -6,10 +6,10 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
-    NativeModules,
+    NativeModules, TouchableOpacity, Dimensions,
 } from 'react-native'
 import {Body, CardItem, Text} from 'native-base'
-import CustomHeader from '../CustomHeader'
+import CustomHeader from '../headers/CustomHeader'
 import GeoLoc from "../GeoLoc";
 import {IMAGE} from "../../constants/Image";
 import PhotoUpload from "react-native-photo-upload"
@@ -18,15 +18,17 @@ import Settings from "./Settings"
 import AsyncStorage from "@react-native-community/async-storage"
 import Carousel from "react-native-snap-carousel";
 import {CardTitle} from "react-native-material-cards";
+import Style from '../../styles/Style'
 
+const {width: viewWidth} = Dimensions.get('window')
 let email
 
 class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            avatar_url: '../../img/profile.png',
-            image: '../../img/profile.png',
+            avatar_url: '',
+            image: '',
             email: email,
             name: '',
             description: '',
@@ -145,7 +147,7 @@ class Profile extends Component {
 
                             (visitedPlacesPhotoList) => {
                                 console.log("visitedPhotoPlaceList", visitedPlacesPhotoList)
-                                 this.setState({visitedPlacesPhotoList: visitedPlacesPhotoList})
+                                this.setState({visitedPlacesPhotoList: visitedPlacesPhotoList})
                             })
                     }
                 })
@@ -179,69 +181,135 @@ class Profile extends Component {
 
     renderItemVisitedCities = ({item, map}) => {
         return (
-            <View style={styles.slide}>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View>
-                        <Image source={{uri: this.state.visitedCitiesPhotoList["" + item.cityId]}}
-                               style={{height: 150, width: 112, flex: 1}}/>
-                    </View>
-                    <View>
-                        <Text style={styles.title}>{item.name}</Text>
-                        <Text style={styles.title}>{item.country}</Text>
-                        <Text style={styles.title}>{item.description}</Text>
-                        <Button title="More" onPress={() => this.props.navigation.navigate('CityDetail', {
-                            cityId: item.cityId,
-                            name: item.name,
-                            country: item.country,
-                            description: item.description,
-                        })}></Button>
+            <View>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('CityDetail', {
+                    cityId: item.cityId,
+                    name: item.name,
+                    country: item.country,
+                    description: item.description,
+                })}>
+                <Image source={{uri: this.state.visitedCitiesPhotoList["" + item.cityId]}}
+                       style={Style.cardPhoto}/>
 
-                    </View>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.title}>{item.country}</Text>
+                <Text style={styles.title}>{item.description}</Text>
 
-                </View>
+            </TouchableOpacity>
             </View>
         )
     }
 
     renderItemVisitedPlaces = ({item, map}) => {
         return (
-            <View style={styles.slide}>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View>
-                        <Image source={{uri: this.state.visitedPlacesPhotoList["" + item.id]}}
-                               style={{height: 150, width: 112, flex: 1}}/>
-                    </View>
-                    <View>
-                <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.title}>{item.country}</Text>
-                <Text style={styles.title}>{item.description}</Text>
-                <Button title="More" onPress={() => this.props.navigation.navigate('PlaceDetail', {
+            <View>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {
                     placeId: item.id,
                     name: item.name,
                     city: item.city,
                     country: item.country,
                     description: item.description,
-                })}></Button>
-            </View>
-            </View>
+                })}>
+
+
+                <Image source={{uri: this.state.visitedPlacesPhotoList["" + item.id]}}
+                       style={Style.cardPhoto}/>
+
+                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.title}>{item.city}</Text>
+                <Text style={styles.title}>{item.country}</Text>
+                <Text style={styles.title}>{item.description}</Text>
+
+                </TouchableOpacity>
             </View>
         )
     }
 
     render() {
-        return (
-            <View style={{flex: 1}}>
-                <CustomHeader title="Profile" navigation={this.props.navigation}/>
-                <ScrollView style={styles.scroll}>
-                    <ImageBackground
-                        style={styles.headerBackgroundImage}
-                        blurRadius={10}
-                        source={{
-                            //uri: avatarBackground,
-                        }}
-                    />
-                    <View style={styles.headerContainer}>
-                        <Card containerStyle={styles.cardContainer}>
+        if (this.state.avatar_url === '') {
+            return (
+                <View style={Style.view}>
+                    <CustomHeader title="Profile" navigation={this.props.navigation}/>
+                    <ScrollView style={Style.view}>
+
+                        <Card style={Style.cardContainer}>
+                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                <PhotoUpload onPhotoSelect={avatar => {
+                                    if (avatar) {
+                                        this.setState({image: avatar})
+                                        this.updatePhoto()
+                                    }
+                                }
+                                }>
+                                    <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={Style.profilePhoto}/>
+                                </PhotoUpload>
+                                <GeoLoc></GeoLoc>
+                            </View>
+                            <View>
+                                <CardItem>
+                                    <Text>Email: {email} </Text>
+                                </CardItem>
+                                <CardItem>
+                                    <Text>Name: {this.state.name} </Text>
+                                </CardItem>
+                                <CardItem>
+                                    <Text>Description: {this.state.description} </Text>
+                                </CardItem>
+                            </View>
+                            <Button title="Edit Profile" style={[Style.buttonContainer, Style.loginButton] }
+                                    onPress={() => this.props.navigation.navigate("Settings")}/>
+                        </Card>
+
+                        {/*Visited Cities card*/}
+
+                            <Card style={Style.cardContainer}>
+                                <Carousel
+                                    ref={(c) => {
+                                        this._carousel = c;
+                                    }}
+                                    data={this.state.visitedCities}
+                                    map={this.state.visitedCitiesPhotoList}
+                                    renderItem={this.renderItemVisitedCities}
+                                    sliderWidth={viewWidth / 1.2}
+                                    itemWidth={viewWidth}
+                                />
+                                <CardItem>
+                                    <CardTitle
+                                        title={this.state.city}
+                                        subtitle={this.state.country}
+                                    />
+                                </CardItem>
+                            </Card>
+
+
+                        {/*Visited Places card*/}
+                            <Card style={Style.cardContainer} >
+                                <Carousel
+                                    ref={(c) => {
+                                        this._carousel = c;
+                                    }}
+                                    data={this.state.visitedPlaces}
+                                    map={this.state.visitedPlacesPhotoList}
+                                    renderItem={this.renderItemVisitedPlaces}
+                                    sliderWidth={viewWidth / 1.2}
+                                    itemWidth={viewWidth}
+                                />
+                                <CardItem>
+                                    <CardTitle
+                                        title={this.state.city}
+                                        subtitle={this.state.country}
+                                    />
+                                </CardItem>
+                            </Card>
+                    </ScrollView>
+                </View>
+            )
+        } else {
+            return (
+                <View style={Style.view}>
+                    <CustomHeader title="Profile" navigation={this.props.navigation}/>
+                    <ScrollView style={Style.view}>
+                        <Card style={Style.cardContainer}>
                             <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                 <PhotoUpload onPhotoSelect={avatar => {
                                     // console.log("Avatar!!   ", avatar)
@@ -252,89 +320,76 @@ class Profile extends Component {
                                 }
                                 }>
                                     <Image source={{uri: this.state.avatar_url}}
-                                           style={{
-                                               height: 120,
-                                               width: 120,
-                                               borderRadius: 60,
-                                               borderColor: 'black',
-                                               borderWidth: 5,
-                                               flex: 0,
-                                               resizeMode: 'cover'
-                                           }}/>
+                                           style={Style.profilePhoto}/>
                                 </PhotoUpload>
-                                {/*<View>*/}
-
                                 <GeoLoc></GeoLoc>
-                                {/*    </View>*/}
                             </View>
+                            <View>
+                                <CardItem>
+                                    <Text>Email: {email} </Text>
+                                </CardItem>
+                                <CardItem>
+                                    <Text>Name: {this.state.name} </Text>
+                                </CardItem>
+                                <CardItem>
+                                    <Text>Description: {this.state.description} </Text>
+                                </CardItem>
+                            </View>
+                            <Button style={styles.buttonContainer} title="Edit Profile"
+                                    onPress={() => this.props.navigation.navigate("Settings")}/>
                         </Card>
-                        <View>
-                            <View>
-                                <Text>Email {email} </Text>
-                            </View>
-                            <View>
-                                <Text>Name {this.state.name} </Text>
-                            </View>
-                            <View>
-                                <Text>Description {this.state.description} </Text>
-                            </View>
-                        </View>
-                        <Button style={styles.buttonContainer} title="Edit Profile"
-                                onPress={() => this.props.navigation.navigate("Settings")}/>
-                    </View>
 
-                    <Card>
-                        <Carousel
-                            ref={(c) => {
-                                this._carousel = c;
-                            }}
-                            data={this.state.visitedCities}
-                            map={this.state.visitedCitiesPhotoList}
-                            renderItem={this.renderItemVisitedCities}
-                            sliderWidth={500}
-                            itemWidth={500}
-                        />
-                        <CardItem>
-                            <CardTitle
-                                title={this.state.city}
-                                subtitle={this.state.country}
-                            />
-                        </CardItem>
+                        {/*Visited Cities card*/}
+                            <Card style={Style.cardContainer}>
+                                <Carousel
+                                    ref={(c) => {
+                                        this._carousel = c;
+                                    }}
+                                    data={this.state.visitedCities}
+                                    map={this.state.visitedCitiesPhotoList}
+                                    renderItem={this.renderItemVisitedCities}
+                                    sliderWidth={viewWidth / 1.2}
+                                    itemWidth={viewWidth}
+                                />
+                                <CardItem>
+                                    <CardTitle
+                                        title={this.state.city}
+                                        subtitle={this.state.country}
+                                    />
+                                </CardItem>
 
-                        <CardItem>
-                            <Body>
+                                <CardItem>
+                                    <Body>
 
-                            </Body>
-                        </CardItem>
-                    </Card>
+                                    </Body>
+                                </CardItem>
+                            </Card>
 
-                    <Card>
-                        <Carousel
-                            ref={(c) => {
-                                this._carousel = c;
-                            }}
-                            data={this.state.visitedPlaces}
-                            map = {this.state.visitedPlacesPhotoList}
-                            renderItem={this.renderItemVisitedPlaces}
-                            sliderWidth={500}
-                            itemWidth={500}
-                        />
-                        <CardItem>
-                            <CardTitle
-                                title={this.state.city}
-                                subtitle={this.state.country}
-                            />
-                        </CardItem>
+                        {/*Visited Places card*/}
 
-                        <CardItem>
-                            <Body>
+                            <Card style={Style.cardContainer} >
+                                <Carousel
+                                    ref={(c) => {
+                                        this._carousel = c;
+                                    }}
+                                    data={this.state.visitedPlaces}
+                                    map={this.state.visitedPlacesPhotoList}
+                                    renderItem={this.renderItemVisitedPlaces}
+                                    sliderWidth={viewWidth / 1.2}
+                                    itemWidth={viewWidth}
+                                />
+                                <CardItem>
+                                    <CardTitle
+                                        title={this.state.city}
+                                        subtitle={this.state.country}
+                                    />
+                                </CardItem>
+                            </Card>
+                    </ScrollView>
+                </View>
+            )
+        }
 
-                            </Body>
-                        </CardItem>
-                    </Card>
-                </ScrollView>
-            </View>
-        )
     }
 }
 

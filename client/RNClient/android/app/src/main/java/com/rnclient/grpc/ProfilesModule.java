@@ -122,24 +122,22 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     }
 
 
-//    @ReactMethod
-//    public void getCity(String token, String name, String country, String creatorEmail,
-//                        String description, float lat, float lon, Callback errorCallback,
-//                        Callback successCallback) {
-//        City city = client.getCity(token, name, country, creatorEmail, description,
-//                GeolocationP.newBuilder().setLat(lat).setLon(lon).build());
-//        try {
-//            //if (city.isValid() == true) {
-//            successCallback.invoke(city.getName(), city.getCountry(), city.getCreatorEmail(),
-//                    city.getDescription(), city.getLat(), city.getLon(), city.getId());
-////            } else {
-////                errorCallback.invoke("Invalid user");
-////            }
-//        } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
-//        }
-//    }
-//
+    @ReactMethod
+    public void getCity(String token, String email, String name, String country,
+                        Callback errorCallback, Callback successCallback) {
+        City city = client.getCity(token, email, name, country);
+        if (city.error!=null) {
+            errorCallback.invoke(city.error);
+            return;
+        }
+        try {
+            successCallback.invoke(city.getName(), city.getCountry(), city.getCreatorEmail(),
+                    city.getLat(), city.getLon(), city.getDescription(), city.getId());
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
 //    @ReactMethod
 //    public void updateCity(String token, String name, String country, String creatorEmail,
 //                           String description, float lat, float lon, Callback errorCallback,

@@ -1,15 +1,21 @@
-import React, {Component} from 'react';
-import {Animated, View, Image, SafeAreaView, ScrollView, NativeModules} from 'react-native';
-import {Text, List, ListItem, Root, ActionSheet} from 'native-base';
+import React, {Component} from 'react'
+import {Animated, View, Image, SafeAreaView, ScrollView, NativeModules} from 'react-native'
+import {Text, List, ListItem, Root} from 'native-base'
 import {IMAGE} from '../constants/Image'
-import GeoLoc from "./GeoLoc";
+import GeoLoc from "./GeoLoc"
 import AsyncStorage from '@react-native-community/async-storage'
 import PhotoUpload from 'react-native-photo-upload'
+import Style from '../styles/Style'
 
 class SideMenu extends Component {
     constructor(props) {
-        super(props);
+        super(props)
+        this.state = {
+            avatar_url: '',
+
+        }
     }
+
     componentDidMount() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
@@ -25,8 +31,8 @@ class SideMenu extends Component {
                                 console.log(err)
                             },
                             (url) => {
-                                    this.setState({avatar_url: url})
-                                    console.log("url", url)
+                                this.setState({avatar_url: url})
+                                console.log("url", url)
 
                             })
                     }
@@ -35,7 +41,31 @@ class SideMenu extends Component {
         })
     }
 
-     logout() {
+    updatePhoto() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+                    if (token !== null) {
+                        NativeModules.PhotosModule.uploadProfilePhoto(
+                            email,
+                            token,
+                            this.state.avatar_url,
+
+                            (err) => {
+                                console.log(err)
+                            },
+                            (url) => {
+                                this.setState({avatar_url: url})
+                            })
+                    }
+                })
+            })
+        })
+    }
+
+    logout() {
         try {
             AsyncStorage.getAllKeys((err, keys) => {
                 AsyncStorage.multiGet(keys, (err, stores) => {
@@ -48,12 +78,12 @@ class SideMenu extends Component {
                             (err) => {
                                 this.props.navigation.navigate('auth')
                                 console.log("Deleted email & token ", key, value)
-                                 AsyncStorage.clear()
+                                AsyncStorage.clear()
 
                             },
-                             (isSuccess) => {
+                            (isSuccess) => {
                                 isSuccess ? this.props.navigation.navigate('auth') : this.props.navigation.navigate('app')
-                                 AsyncStorage.clear()
+                                AsyncStorage.clear()
                             })
                     })
                 })
@@ -65,41 +95,93 @@ class SideMenu extends Component {
     }
 
     render() {
-        return (
-            <Root>
-            <SafeAreaView style={{flex: 1}}>
-                <Animated.View style={{height: 150, alignItems: 'center', justifyContent: 'center'}}>
-                    <PhotoUpload onPhotoSelect={avatar => {
-                        if (avatar) {
-                            // console.log('Image base64 string: ', avatar)
-                        }
-                    }}>
-                       <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={{height: 120, width: 120, borderRadius: 60,  resizeMode:'cover'}}/>
-                        </PhotoUpload>
-                    <GeoLoc/>
-                </Animated.View>
-                <ScrollView>
-                    <List>
-                        <ListItem onPress={() => this.props.navigation.navigate('Profile')}>
-                            <Text>
-                                Profile
-                            </Text>
-                        </ListItem>
-                        <ListItem onPress={() => this.props.navigation.navigate('Settings')}>
-                            <Text>
-                                Settings
-                            </Text>
-                        </ListItem>
-                        <ListItem noBorder>
-                            <Text onPress={() => this.logout()}>
-                                Log out
-                            </Text>
-                        </ListItem>
-                    </List>
-                </ScrollView>
-            </SafeAreaView>
-            </Root>
-        )
+        if (this.state.avatar_url === '') {
+            return (
+                <Root>
+                    <SafeAreaView style={{flex: 1}}>
+                        <Animated.View style={{height: 150, alignItems: 'center', justifyContent: 'center'}}>
+                            <PhotoUpload onPhotoSelect={avatar => {
+                                if (avatar) {
+                                    this.setState({avatar_url: avatar})
+                                    this.updatePhoto()
+                                }
+                            }}>
+                                <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={Style.profilePhoto}/>
+                            </PhotoUpload>
+                            <GeoLoc/>
+                        </Animated.View>
+                        <ScrollView>
+                            <List>
+                                <ListItem style ={{borderColor:'#0080ff'}} onPress={() => this.props.navigation.navigate('Profile')}>
+                                    <Text>
+                                        Profile
+                                    </Text>
+                                </ListItem>
+                                <ListItem style ={{borderColor:'#0080ff'}} onPress={() => this.props.navigation.navigate('Settings')}>
+                                    <Text>
+                                        Settings
+                                    </Text>
+                                </ListItem>
+                                <ListItem style ={{borderColor:'#0080ff'}} onPress={() => this.props.navigation.navigate('DisplayCity')}>
+                                    <Text>
+                                        Search City
+                                    </Text>
+                                </ListItem>
+                                <ListItem noBorder>
+                                    <Text onPress={() => this.logout()}>
+                                        Log out
+                                    </Text>
+                                </ListItem>
+                            </List>
+                        </ScrollView>
+                    </SafeAreaView>
+                </Root>
+            )
+        } else {
+            return (
+                <Root>
+                    <SafeAreaView style={{flex: 1}}>
+                        <Animated.View style={{height: 150, alignItems: 'center', justifyContent: 'center'}}>
+                            <PhotoUpload onPhotoSelect={avatar => {
+                                if (avatar) {
+                                    this.setState({avatar_url: avatar})
+                                    this.updatePhoto()
+                                }
+                            }}>
+
+                                <Image source={{uri: this.state.avatar_url}}
+                                       style={Style.profilePhoto}/>
+                            </PhotoUpload>
+                            <GeoLoc/>
+                        </Animated.View>
+                        <ScrollView>
+                            <List>
+                                <ListItem style ={{borderColor:'#0080ff'}} onPress={() => this.props.navigation.navigate('Profile')}>
+                                    <Text>
+                                        Profile
+                                    </Text>
+                                </ListItem>
+                                <ListItem style ={{borderColor:'#0080ff'}} onPress={() => this.props.navigation.navigate('Settings')}>
+                                    <Text>
+                                        Settings
+                                    </Text>
+                                </ListItem>
+                                <ListItem style ={{borderColor:'#0080ff'}} onPress={() => this.props.navigation.navigate('DisplayCity')}>
+                                    <Text>
+                                        Search City
+                                    </Text>
+                                </ListItem>
+                                <ListItem noBorder>
+                                    <Text onPress={() => this.logout()}>
+                                        Log out
+                                    </Text>
+                                </ListItem>
+                            </List>
+                        </ScrollView>
+                    </SafeAreaView>
+                </Root>
+            )
+        }
     }
 }
 

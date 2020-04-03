@@ -5,11 +5,9 @@ import AsyncStorage from "@react-native-community/async-storage";
 import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'react-native-material-cards'
 import {Body, CardItem, Text, Title, Root} from "native-base";
 import ActionButton from "react-native-action-button";
-import CustomHeader from "../../CustomHeader";
-import MapInput from "../../MapInput";
-import LoadImage from "../../LoadImage";
-import GeoLoc from "../../GeoLoc";
+import CustomHeader from "../../headers/CustomHeader";
 import PhotoUpload from "react-native-photo-upload";
+import Style from '../../../styles/Style'
 
 export default class CreateCity extends React.Component {
     constructor(props) {
@@ -35,7 +33,9 @@ export default class CreateCity extends React.Component {
             isUpdated: true
         }
     }
-    callbackFunction = (fcity, country) => {
+    callbackFunction = (lat, lng, fcity, country) => {
+        this.setState({lat: lat})
+        this.setState({lng: lng})
         this.setState({city: fcity})
         this.setState({country: country})
         console.log('!!!!', this.state.fcity, this.state.country)
@@ -48,8 +48,6 @@ export default class CreateCity extends React.Component {
             city,
             country,
         })
-         console.log('!!!!', city, country)
-      //  this.setState({image: '../../../img/add_image.png'})
     }
 
     createCity() {
@@ -74,7 +72,6 @@ export default class CreateCity extends React.Component {
                         },
                         (cityId) => {
                             this.setState({cityId: cityId})
-                            this.uploadCityPhoto();
 
                             this.props.navigation.navigate('CityDetail', {
                                 cityId: this.state.cityId,
@@ -84,6 +81,7 @@ export default class CreateCity extends React.Component {
                                 description: this.state.description,
                             })
                         })
+                    this.uploadCityPhoto()
                 })
             })
         })
@@ -121,7 +119,7 @@ export default class CreateCity extends React.Component {
                     <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
                     <View style={styles.createContainer}>
                         <View style={{flex: 1, padding: 30}}>
-                            <GeoLoc parentCallback={this.callbackFunction} />
+
                             <PhotoUpload onPhotoSelect={image => {
                                 if (image) {
                                     this.setState({image: image})
@@ -130,18 +128,12 @@ export default class CreateCity extends React.Component {
                             }
                             }>
                                 <Image source={{image: this.state.image}}
-                                       style={{
-                                           margin: 10,
-                                           height: 120,
-                                           width: 120,
-                                           // borderRadius: 60,
-                                           borderColor: 'grey',
-                                           borderWidth: 3,
-                                           flex: 0,
-                                           resizeMode: 'cover'
-                                       }}/>
+                                       style={Style.profilePhoto}/>
                             </PhotoUpload>
                         </View>
+
+
+
                         <View style={styles.createInputContainer}>
                             <Text style={styles.inputs} >
                                 {this.state.city}
@@ -163,12 +155,11 @@ export default class CreateCity extends React.Component {
                         </View>
 
                         <View styles={{flex: 1}}>
-                            <TouchableHighlight disabled={this.state.isDisabled} style={[styles.buttonContainer, styles.loginButton] }
+                            <TouchableHighlight disabled={this.state.isDisabled} style={[styles.buttonContainer, styles.loginButton]}
                                                 onPress={() => this.createCity()}>
                                 <Text style={styles.loginText}>Submit</Text>
                             </TouchableHighlight>
                         </View>
-
                     </View>
                 </View>
             </Root>

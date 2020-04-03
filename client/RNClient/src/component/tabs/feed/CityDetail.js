@@ -1,18 +1,26 @@
 import React, {Component} from 'react';
-import {Dimensions, Image, NativeModules, ScrollView, StyleSheet, TextInput, View} from 'react-native';
+import {
+    Dimensions,
+    Image,
+    NativeModules,
+    ScrollView,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 import {Body, CardItem, Icon, Text} from 'native-base';
-import CustomHeader from '../../CustomHeader'
-import MapInput from "../../MapInput";
-import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
+import {Card, CardTitle} from "react-native-material-cards";
 import ActionButton from "react-native-action-button";
 import AsyncStorage from "@react-native-community/async-storage";
 import Carousel from 'react-native-snap-carousel';
-import CreatePlace from './CreatePlace'
+import Style from '../../../styles/Style'
 import Modal, {ModalContent} from 'react-native-modals';
 import SlideAnimation from "react-native-modals/dist/animations/SlideAnimation";
 import PhotoUpload from "react-native-photo-upload";
 import {Button, Divider} from "react-native-elements";
-import SpecialHeader from "../../SpecialHeader";
+import SpecialHeader from "../../headers/SpecialHeader";
+
+const {width: viewWidth} = Dimensions.get('window')
 
 class CityDetail extends Component {
     constructor(props) {
@@ -371,8 +379,8 @@ class CityDetail extends Component {
 
     _renderItem = ({item, index}) => {
         return (
-            <View style={styles.slide}>
-                <Text style={styles.title}>{item.timestamp}</Text>
+            <View style={Style.slide}>
+                <Text style={Style.title}>{item.timestamp}</Text>
                 <Image source={{uri: item.url}}
                        style={{height: 200, width: null, flex: 1}}/>
             </View>
@@ -380,40 +388,46 @@ class CityDetail extends Component {
     }
 
     renderItemPlaces = ({item, index}) => {
-        return (
-            <View style={styles.slide}>
-
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View>
-                        <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
-                               style={{height: 150, width: 112, flex: 1}}/>
-                    </View>
-
-                    <View>
-                        <Text style={styles.title}>{item.name}</Text>
-                        <Text style={styles.title}>{item.city}</Text>
-
-                        <Button
-                            onPress={() => this.props.navigation.navigate('PlaceDetail', {
-                                placeId: item.id,
-                                name: item.name,
-                                city: this.state.city,
-                                cityId: this.state.cityId,
-                                country: this.state.country,
-                                description: item.description,
-                            })}
-                            title="More"
-                            color="blue"
-                        />
-                    </View>
+        if (item.id == "") {
+            return (
+                <View style={Style.carouselContainer}>
+                    <Text> No places created yet</Text>
                 </View>
-            </View>
-        )
+            )
+        } else {
+            return (
+                <View style={Style.carouselContainer}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {
+                        placeId: item.id,
+                        name: item.name,
+                        city: this.state.city,
+                        cityId: this.state.cityId,
+                        country: this.state.country,
+                        description: item.description,
+                    })}>
+
+                        <View>
+                            <View>
+                                <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
+                                       style={Style.cardPhoto}/>
+                            </View>
+
+                            <View>
+                                <Text style={Style.title}>{item.name}</Text>
+                                <Text style={Style.text}>{item.description}</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            )
+        }
+
     }
 
     render() {
+        console.log("cityPostTitle", this.state.cityPostTitle)
         return (
-            <View style={{flex: 1}}>
+            <View style={Style.view}>
                 {/*create city Post*/}
                 <Modal
                     visible={this.state.isVisible}
@@ -510,19 +524,18 @@ class CityDetail extends Component {
                     </ModalContent>
                 </Modal>
 
-
-                <SpecialHeader title={this.state.city} cityIdFromParent={this.state.cityId}  isHome={false}
+                <SpecialHeader title={this.state.city} cityIdFromParent={this.state.cityId} isHome={false}
                                navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
-                    <Card>
+                    <Card style={Style.cardContainer}>
                         <Carousel
                             ref={(c) => {
                                 this._carousel = c;
                             }}
                             data={this.state.images}
                             renderItem={this._renderItem}
-                            sliderWidth={500}
-                            itemWidth={500}
+                            sliderWidth={viewWidth / 1.055}
+                            itemWidth={viewWidth}
                         />
                         <CardItem>
                             <CardTitle
@@ -535,21 +548,16 @@ class CityDetail extends Component {
                             <Body>
                                 <Text>{this.state.description} </Text>
                             </Body>
-                            {/*<CardAction*/}
-                            {/*    separator={true}*/}
-                            {/*    inColumn={false}>*/}
-                            {/*    <CardButton*/}
-                            {/*        onPress={() => this.props.navigation.navigate('CreateCity')}*/}
-                            {/*        title="Edit"*/}
-                            {/*        color="blue"*/}
-                            {/*    />*/}
-                            {/*</CardAction>*/}
+
                         </CardItem>
                     </Card>
 
+                    <Divider style={{backgroundColor: 'black', margin: 10}}/>
+
+                    {/*Places*/}
+                    <Text style={Style.heading}> Places in {this.state.city} </Text>
                     <Divider style={{backgroundColor: 'black'}}/>
-                    <Text style={{textAlign: 'center'}}> Places </Text>
-                    <Divider style={{backgroundColor: 'black'}}/>
+
                     <Carousel
                         ref={(c) => {
                             this._carousel = c;
@@ -557,65 +565,47 @@ class CityDetail extends Component {
                         data={this.state.places}
                         index={this.state.placesPhotoMap}
                         renderItem={this.renderItemPlaces}
-                        sliderWidth={500}
-                        itemWidth={500}
+                        sliderWidth={viewWidth / 1.055}
+                        itemWidth={viewWidth}
                     />
 
+
+                    {/*Posts*/}
                     <Divider style={{backgroundColor: 'black'}}/>
-                    <Text style={{textAlign: 'center'}}> Posts </Text>
+                    <Text style={Style.heading}> Posts about {this.state.city}</Text>
                     <Divider style={{backgroundColor: 'black'}}/>
 
                     {this.state.posts.map((e, index) => {
                         return (
-                            <Card key={this.state.posts.postId}>
+                            <Card style={Style.cardContainer} key={this.state.posts.postId}>
                                 <CardItem cardBody>
                                     <Image source={{uri: this.state.postsPhotoMap[e.mongoId]}}
-                                           style={{height: 200, width: null, flex: 1}}/>
+                                           style={Style.cardPhoto}/>
                                 </CardItem>
 
                                 <CardItem>
-                                    <CardTitle
-                                        title={e.title}
-                                    />
+                                    <Text style={Style.title}>{e.title} </Text>
                                 </CardItem>
 
                                 <CardItem>
                                     <Body>
-                                        <Text numberOfLines={1} ellipsizeMode={"tail"}>{e.body} </Text>
+                                        <Text style={Style.text} numberOfLines={1}
+                                              ellipsizeMode={"tail"}>{e.body} </Text>
                                     </Body>
-                                    {/*<CardAction*/}
-                                    {/*    separator={true}*/}
-                                    {/*    inColumn={false}>*/}
-                                    {/*    <CardButton*/}
-                                    {/*        onPress={() => this.props.navigation.navigate('PlaceDetail', {*/}
-                                    {/*            placeId: e.id,*/}
-                                    {/*            name: e.name,*/}
-                                    {/*            city: this.state.city,*/}
-                                    {/*            cityId: this.state.cityId,*/}
-                                    {/*            country: this.state.country,*/}
-                                    {/*            description: e.description,*/}
-                                    {/*        })}*/}
-                                    {/*        title="More About this Place"*/}
-                                    {/*        color="blue"*/}
-                                    {/*    />*/}
-                                    {/*</CardAction>*/}
                                 </CardItem>
                             </Card>
                         )
                     })}
 
-
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
-
                                        onPress={() => this.setState({isVisible: true})}>
-                        <Icon name="md-create" style={styles.actionButtonIcon}/>
+                        <Icon name="md-create" style={Style.actionButtonIcon}/>
                     </ActionButton.Item>
                     <ActionButton.Item buttonColor='#007AFF' title="Add a place"
-
                                        onPress={() => this.setState({isVisible2: true})}>
-                        <Icon name="md-create" style={styles.actionButtonIcon}/>
+                        <Icon name="md-create" style={Style.actionButtonIcon}/>
                     </ActionButton.Item>
                 </ActionButton>
             </View>
@@ -625,11 +615,3 @@ class CityDetail extends Component {
 }
 
 export default CityDetail
-const styles = StyleSheet.create({
-    actionButtonIcon: {
-        fontSize: 20,
-        height: 22,
-        color: 'white',
-
-    },
-})

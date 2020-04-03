@@ -96,8 +96,6 @@ export default class Place extends React.Component {
     }
     render() {
         return (
-            // <View style={{flex: 1}}>
-
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                         <TextInput
                             style={styles.inputs}
