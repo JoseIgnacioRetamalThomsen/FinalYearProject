@@ -8,6 +8,7 @@ import CreateCity from "./CreateCity";
 import CityDetail from "./CityDetail";
 import HomeHeader from "../../headers/HomeHeader";
 import Style from "../../../styles/Style";
+import {IMAGE} from "../../../constants/Image";
 
 export default class DisplayCities extends Component {
     constructor(props) {
@@ -42,7 +43,6 @@ export default class DisplayCities extends Component {
         this.setState({city: city})
 
         this.setState({country: country})
-        console.log("in callbackFunction", this.state.fcity)
     }
 
     getCitiesPhoto() {
@@ -87,7 +87,6 @@ export default class DisplayCities extends Component {
 
                             (jsonCityList) => {
                                 this.setState({cities: JSON.parse(jsonCityList)})
-
                             })
                     }
                 })
@@ -119,9 +118,15 @@ export default class DisplayCities extends Component {
             ]
         );
     }
-    onClickEvent(){
+
+    onClickEvent() {
         console.log("clicked")
     }
+
+    renderPhoto = ({item, index}) => {
+        // if()
+    }
+
     render() {
         if (this.state.city !== 'undefined') {
             let newCityList = []
@@ -138,51 +143,84 @@ export default class DisplayCities extends Component {
         } else {
             //console.log("is undefined")
         }
+
         return (
             <View style={Style.view}>
                 <HomeHeader style={{flex: 1}} title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
-
                     {this.state.cities.map((item, index) => {
-                        return (
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('CityDetail', {
-                                cityId: item.cityId,
-                                name: item.name,
-                                indexId: item.indexId,
-                                country: item.country,
-                                description: item.description,
-                            })}>
-                                <Card style = {Style.cardContainer} key={this.state.cities.cityId} pointerEvents="none">
-                                    <CardItem cardBody>
-                                        <Image source={{uri: this.state.photoMap[item.cityId]}}
-                                                 style={{height: 200, width: null, flex: 1}}
-                                    />
-                                    </CardItem>
-                                    <CardItem>
-                                        <CardTitle
-                                            title={item.name}
-                                            subtitle={item.country}
-                                        />
-                                    </CardItem>
-                                    <CardItem>
-                                        <Body>
-                                            <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.description} </Text>
-                                        </Body>
-                                    </CardItem>
-                                </Card>
-                            </TouchableOpacity>
-                        )
+                        console.log("!!!!!!!!!", this.state.photoMap[item.cityId])
+                        if (this.state.photoMap[item.cityId] !== 'undefined') {
+                            return (
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CityDetail', {
+                                    cityId: item.cityId,
+                                    name: item.name,
+                                    indexId: item.indexId,
+                                    country: item.country,
+                                    description: item.description,
+                                })}>
+                                    <Card style={Style.cardContainer} key={this.state.cities.cityId}
+                                          pointerEvents="none">
+                                        <CardItem cardBody>
+                                            <Image source={{uri: this.state.photoMap[item.cityId]}}
+                                                   style={{height: 200, width: null, flex: 1}}
+                                            />
+                                        </CardItem>
+                                        <CardItem>
+                                            <CardTitle
+                                                title={item.name}
+                                                subtitle={item.country}
+                                            />
+                                        </CardItem>
+                                        <CardItem>
+                                            <Body>
+                                                <Text numberOfLines={1}
+                                                      ellipsizeMode={"tail"}>{item.description} </Text>
+                                            </Body>
+                                        </CardItem>
+                                    </Card>
+                                </TouchableOpacity>
+                            )
+                        } else if (this.state.photoMap[item.cityId] === 'undefined') {
+                            return (
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('CityDetail', {
+                                    cityId: item.cityId,
+                                    name: item.name,
+                                    indexId: item.indexId,
+                                    country: item.country,
+                                    description: item.description,
+                                })}>
+                                    <Card style={Style.cardContainer} key={this.state.cities.cityId}
+                                          pointerEvents="none">
+                                        <CardItem cardBody>
+                                            <Image source={IMAGE.NO_IMG}
+                                                   style={{height: 200, width: null, flex: 1}}/>
+                                        </CardItem>
+                                        <CardItem>
+                                            <CardTitle
+                                                title={item.name}
+                                                subtitle={item.country}
+                                            />
+                                        </CardItem>
+                                        <CardItem>
+                                            <Body>
+                                                <Text numberOfLines={1}
+                                                      ellipsizeMode={"tail"}>{item.description} </Text>
+                                            </Body>
+                                        </CardItem>
+                                    </Card>
+                                </TouchableOpacity>
+                            )
+                        }
                     })}
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Add a city"
-                                       onPress={() => this.props.navigation.navigate('CreateCity')}>
+                                       onPress={() => this.props.navigation.navigate('SearchCity')}>
                         <Icon name="md-create" style={Style.actionButtonIcon}/>
                     </ActionButton.Item>
                 </ActionButton>
             </View>
-
-        );
+        )
     }
 }
-

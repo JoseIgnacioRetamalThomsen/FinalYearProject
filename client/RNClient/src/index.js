@@ -4,8 +4,8 @@ export * from './CustomHeader'
 export * from './tabs/feed/DisplayCityPosts'
 export * from './tabs/feed/CityDetail'
 
-export * from './tabs/myPosts/MyPosts'
-export * from './tabs/myPosts/PostDetails'
+export * from './tabs/myCity/MyPosts'
+export * from './tabs/myCity/PostDetails'
 
 export * from './drawer/Profile'
 export * from './drawer/Setting'

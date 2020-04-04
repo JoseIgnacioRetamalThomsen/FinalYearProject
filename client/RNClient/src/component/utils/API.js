@@ -10,6 +10,7 @@ import {
 import MapView  from 'react-native-maps'
 import _ from 'lodash'
 import Geolocation from '@react-native-community/geolocation';
+import{constants} from '../../constants/Constants'
 
 export default class API extends Component {
 
@@ -40,7 +41,7 @@ export default class API extends Component {
     }
     async onChangeDestination(destination){
         this.setState({destination})
-        const apiUrl = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyAB7wbhzqnnlXl3k1ugJgQ_tjS3Ks6Jycc' +
+        const apiUrl = constants.apiUri +
             '&input=${destination}&location=${this.state.latitude}, ${this.state.longitude}' +
             '&radius=2000';
         try{

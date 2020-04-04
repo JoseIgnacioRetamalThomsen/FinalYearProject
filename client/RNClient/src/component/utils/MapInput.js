@@ -1,5 +1,6 @@
 import React from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import {constants} from '../../constants/Constants'
 
 export default class MapInput extends React.Component {
 
@@ -45,7 +46,7 @@ export default class MapInput extends React.Component {
                 }}
                 query={{
                     // available options: https://developers.google.com/places/web-service/autocomplete
-                    key: 'AIzaSyAB7wbhzqnnlXl3k1ugJgQ_tjS3Ks6Jycc',
+                    key: constants.apiKey,
                     language: 'en', // language of the results
                     types: '(cities)' // default: 'geocode'
                 }}

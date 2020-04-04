@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
+import {constants} from '../../constants/Constants'
 
-Geocoder.init("AIzaSyAB7wbhzqnnlXl3k1ugJgQ_tjS3Ks6Jycc", {language: "en"});
+Geocoder.init(constants.apiKey, {language: "en"});
 
 export default class GeoLoc extends Component {
     constructor(props) {
@@ -63,15 +64,11 @@ export default class GeoLoc extends Component {
     }
 
     render() {
-        let text = '';
         if (this.state.error) {
-            text = this.state.error;
-        } else if (this.state.city) {
-            text = this.state.city
+            this.state.city = this.state.error;
         }
         return (
             <View>
-                <Text> {text}</Text>
             </View>
         )
     }

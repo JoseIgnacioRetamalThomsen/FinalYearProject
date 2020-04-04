@@ -6,11 +6,11 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
-    NativeModules, TouchableOpacity, Dimensions,
+    NativeModules, TouchableOpacity, Dimensions, SafeAreaView,
 } from 'react-native'
 import {Body, CardItem, Text} from 'native-base'
 import CustomHeader from '../headers/CustomHeader'
-import GeoLoc from "../GeoLoc";
+import GeoLoc from "../utils/GeoLoc";
 import {IMAGE} from "../../constants/Image";
 import PhotoUpload from "react-native-photo-upload"
 import {Card} from 'react-native-elements'
@@ -27,6 +27,7 @@ class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userId: -999,
             avatar_url: '',
             image: '',
             email: email,
@@ -54,6 +55,11 @@ class Profile extends Component {
                 }
             ]
         }
+    }
+
+    callbackFunction = (lat, lng, city, country) => {
+        this.setState({city: city})
+        this.setState({country: country})
     }
 
     componentDidMount() {
@@ -101,7 +107,6 @@ class Profile extends Component {
                                 this.setState({name: name})
                                 this.setState({description: description})
                                 this.setState({userId: userId})
-
                             })
                         NativeModules.ProfilesModule.getVisitedCities(
                             token,
@@ -188,14 +193,13 @@ class Profile extends Component {
                     country: item.country,
                     description: item.description,
                 })}>
-                <Image source={{uri: this.state.visitedCitiesPhotoList["" + item.cityId]}}
-                       style={Style.cardPhoto}/>
+                    <Image source={{uri: this.state.visitedCitiesPhotoList["" + item.cityId]}}
+                           style={Style.cardPhoto}/>
 
-                <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.title}>{item.country}</Text>
-                <Text style={styles.title}>{item.description}</Text>
+                    <Text style={styles.title}>{item.name}, {item.country}</Text>
+                    <Text numberOfLines={1} ellipsizeMode={"tail"} style={styles.title}>{item.description}</Text>
 
-            </TouchableOpacity>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -212,13 +216,12 @@ class Profile extends Component {
                 })}>
 
 
-                <Image source={{uri: this.state.visitedPlacesPhotoList["" + item.id]}}
-                       style={Style.cardPhoto}/>
+                    <Image source={{uri: this.state.visitedPlacesPhotoList["" + item.id]}}
+                           style={Style.cardPhoto}/>
 
-                <Text style={styles.title}>{item.name}</Text>
-                <Text style={styles.title}>{item.city}</Text>
-                <Text style={styles.title}>{item.country}</Text>
-                <Text style={styles.title}>{item.description}</Text>
+                    <Text style={styles.title}>{item.name}</Text>
+                    <Text style={styles.title}>{item.city}, {item.country}</Text>
+                    <Text numberOfLines={1} ellipsizeMode={"tail"} style={styles.title}>{item.description}</Text>
 
                 </TouchableOpacity>
             </View>
@@ -226,170 +229,111 @@ class Profile extends Component {
     }
 
     render() {
-        if (this.state.avatar_url === '') {
-            return (
-                <View style={Style.view}>
-                    <CustomHeader title="Profile" navigation={this.props.navigation}/>
-                    <ScrollView style={Style.view}>
-
-                        <Card style={Style.cardContainer}>
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <PhotoUpload onPhotoSelect={avatar => {
-                                    if (avatar) {
-                                        this.setState({image: avatar})
-                                        this.updatePhoto()
-                                    }
-                                }
-                                }>
-                                    <Image source={IMAGE.ICON_DEFAULT_PROFILE} style={Style.profilePhoto}/>
-                                </PhotoUpload>
-                                <GeoLoc></GeoLoc>
-                            </View>
-                            <View>
-                                <CardItem>
-                                    <Text>Email: {email} </Text>
-                                </CardItem>
-                                <CardItem>
-                                    <Text>Name: {this.state.name} </Text>
-                                </CardItem>
-                                <CardItem>
-                                    <Text>Description: {this.state.description} </Text>
-                                </CardItem>
-                            </View>
-                            <Button title="Edit Profile" style={[Style.buttonContainer, Style.loginButton] }
-                                    onPress={() => this.props.navigation.navigate("Settings")}/>
-                        </Card>
-
-                        {/*Visited Cities card*/}
-
-                            <Card style={Style.cardContainer}>
-                                <Carousel
-                                    ref={(c) => {
-                                        this._carousel = c;
-                                    }}
-                                    data={this.state.visitedCities}
-                                    map={this.state.visitedCitiesPhotoList}
-                                    renderItem={this.renderItemVisitedCities}
-                                    sliderWidth={viewWidth / 1.2}
-                                    itemWidth={viewWidth}
-                                />
-                                <CardItem>
-                                    <CardTitle
-                                        title={this.state.city}
-                                        subtitle={this.state.country}
-                                    />
-                                </CardItem>
-                            </Card>
-
-
-                        {/*Visited Places card*/}
-                            <Card style={Style.cardContainer} >
-                                <Carousel
-                                    ref={(c) => {
-                                        this._carousel = c;
-                                    }}
-                                    data={this.state.visitedPlaces}
-                                    map={this.state.visitedPlacesPhotoList}
-                                    renderItem={this.renderItemVisitedPlaces}
-                                    sliderWidth={viewWidth / 1.2}
-                                    itemWidth={viewWidth}
-                                />
-                                <CardItem>
-                                    <CardTitle
-                                        title={this.state.city}
-                                        subtitle={this.state.country}
-                                    />
-                                </CardItem>
-                            </Card>
-                    </ScrollView>
-                </View>
-            )
-        } else {
-            return (
-                <View style={Style.view}>
-                    <CustomHeader title="Profile" navigation={this.props.navigation}/>
-                    <ScrollView style={Style.view}>
-                        <Card style={Style.cardContainer}>
-                            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <PhotoUpload onPhotoSelect={avatar => {
-                                    // console.log("Avatar!!   ", avatar)
-                                    if (avatar) {
-                                        this.setState({image: avatar})
-                                        this.updatePhoto()
-                                    }
-                                }
-                                }>
-                                    <Image source={{uri: this.state.avatar_url}}
-                                           style={Style.profilePhoto}/>
-                                </PhotoUpload>
-                                <GeoLoc></GeoLoc>
-                            </View>
-                            <View>
-                                <CardItem>
-                                    <Text>Email: {email} </Text>
-                                </CardItem>
-                                <CardItem>
-                                    <Text>Name: {this.state.name} </Text>
-                                </CardItem>
-                                <CardItem>
-                                    <Text>Description: {this.state.description} </Text>
-                                </CardItem>
-                            </View>
-                            <Button style={styles.buttonContainer} title="Edit Profile"
-                                    onPress={() => this.props.navigation.navigate("Settings")}/>
-                        </Card>
-
-                        {/*Visited Cities card*/}
-                            <Card style={Style.cardContainer}>
-                                <Carousel
-                                    ref={(c) => {
-                                        this._carousel = c;
-                                    }}
-                                    data={this.state.visitedCities}
-                                    map={this.state.visitedCitiesPhotoList}
-                                    renderItem={this.renderItemVisitedCities}
-                                    sliderWidth={viewWidth / 1.2}
-                                    itemWidth={viewWidth}
-                                />
-                                <CardItem>
-                                    <CardTitle
-                                        title={this.state.city}
-                                        subtitle={this.state.country}
-                                    />
-                                </CardItem>
-
-                                <CardItem>
-                                    <Body>
-
-                                    </Body>
-                                </CardItem>
-                            </Card>
-
-                        {/*Visited Places card*/}
-
-                            <Card style={Style.cardContainer} >
-                                <Carousel
-                                    ref={(c) => {
-                                        this._carousel = c;
-                                    }}
-                                    data={this.state.visitedPlaces}
-                                    map={this.state.visitedPlacesPhotoList}
-                                    renderItem={this.renderItemVisitedPlaces}
-                                    sliderWidth={viewWidth / 1.2}
-                                    itemWidth={viewWidth}
-                                />
-                                <CardItem>
-                                    <CardTitle
-                                        title={this.state.city}
-                                        subtitle={this.state.country}
-                                    />
-                                </CardItem>
-                            </Card>
-                    </ScrollView>
-                </View>
-            )
+        if (this.state.description === 'null') {
+            this.setState({description: 'No description provided'})
         }
+        if (this.state.name === 'null') {
+            this.setState({name: 'No name provided'})
+        }
+        return (
+            <View style={Style.view}>
+                <CustomHeader title="Profile" navigation={this.props.navigation}/>
+                <ScrollView style={Style.view}>
+                    <Card style={Style.cardContainer}>
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                            <PhotoUpload onPhotoSelect={avatar => {
+                                if (avatar) {
+                                    this.setState({image: avatar})
+                                    this.updatePhoto()
+                                }
+                            }
+                            }>
+                                {this.displayPhoto()}
+                            </PhotoUpload>
+                            <CardItem>
+                                {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
+                                <Text style={Style.title}>{this.state.city}, {this.state.country} </Text>
+                            </CardItem>
+                        </View>
+                        <View>
+                            <CardItem>
+                                <Text style={Style.title}>Email: </Text>
+                                <Text> {email} </Text>
+                            </CardItem>
 
+                            <CardItem>
+                                <Text style={Style.title}>Name: </Text>
+                                <Text>{this.state.name} </Text>
+                            </CardItem>
+                            <CardItem>
+                                <Text style={Style.title}>Description: </Text>
+                                <Text> {this.state.description} </Text>
+                            </CardItem>
+                        </View>
+                        <TouchableOpacity style={Style.btnPressStyle}
+                                          onPress={() => this.props.navigation.navigate("Settings", {userId: this.state.userId})}>
+                            <Text style={Style.txtStyle}>Edit Profile</Text>
+                        </TouchableOpacity>
+                    </Card>
+
+                    {/*Visited Cities card*/}
+                    <Card style={Style.cardContainer}>
+                        <View style={{flex: 1}}>
+                            <Text style={Style.title}> Visited Cities</Text>
+                        </View>
+                        <Carousel
+                            ref={(c) => {
+                                this._carousel = c;
+                            }}
+                            data={this.state.visitedCities}
+                            map={this.state.visitedCitiesPhotoList}
+                            renderItem={this.renderItemVisitedCities}
+                            sliderWidth={viewWidth / 1.2}
+                            itemWidth={viewWidth}
+                        />
+                        <CardItem>
+                            <CardTitle
+                                title={this.state.city}
+                                subtitle={this.state.country}
+                            />
+                        </CardItem>
+                    </Card>
+
+                    {/*Visited Places card*/}
+
+                    <Card style={Style.cardContainer}>
+                        <View style={{flex: 1}}>
+                            <Text style={Style.title}> Visited Places</Text>
+                        </View>
+                        <Carousel
+                            ref={(c) => {
+                                this._carousel = c;
+                            }}
+                            data={this.state.visitedPlaces}
+                            map={this.state.visitedPlacesPhotoList}
+                            renderItem={this.renderItemVisitedPlaces}
+                            sliderWidth={viewWidth / 1.2}
+                            itemWidth={viewWidth}
+                        />
+                        <CardItem>
+                            <CardTitle
+                                title={this.state.city}
+                                subtitle={this.state.country}
+                            />
+                        </CardItem>
+                    </Card>
+                </ScrollView>
+            </View>
+        )
+    }
+
+    displayPhoto() {
+        if (this.state.avatar_url === '') {
+            return (<Image source={IMAGE.ICON_DEFAULT_PROFILE} style={Style.profilePhoto}/>)
+        } else {
+            return (<Image source={{uri: this.state.avatar_url}}
+                           style={Style.profilePhoto}/>)
+        }
     }
 }
 

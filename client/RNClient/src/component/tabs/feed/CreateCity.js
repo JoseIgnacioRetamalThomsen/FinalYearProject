@@ -8,6 +8,7 @@ import ActionButton from "react-native-action-button";
 import CustomHeader from "../../headers/CustomHeader";
 import PhotoUpload from "react-native-photo-upload";
 import Style from '../../../styles/Style'
+import {IMAGE} from "../../../constants/Image";
 
 export default class CreateCity extends React.Component {
     constructor(props) {
@@ -33,6 +34,7 @@ export default class CreateCity extends React.Component {
             isUpdated: true
         }
     }
+
     callbackFunction = (lat, lng, fcity, country) => {
         this.setState({lat: lat})
         this.setState({lng: lng})
@@ -117,50 +119,45 @@ export default class CreateCity extends React.Component {
             <Root>
                 <View style={{flex: 1}}>
                     <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
-                    <View style={styles.createContainer}>
-                        <View style={{flex: 1, padding: 30}}>
 
-                            <PhotoUpload onPhotoSelect={image => {
-                                if (image) {
-                                    this.setState({image: image})
-                                    this.setState({isDisabled: false})
-                                }
+
+                    <Card style={styles.createContainer}>
+                        <PhotoUpload onPhotoSelect={image => {
+                            if (image) {
+                                this.setState({image: image})
+                                this.setState({isDisabled: false})
                             }
-                            }>
-                                <Image source={{image: this.state.image}}
-                                       style={Style.profilePhoto}/>
-                            </PhotoUpload>
-                        </View>
+                        }
+                        }>
+                            <Image source={IMAGE.UPLOAD_IMG} style={{height:100}}/>
+                        </PhotoUpload>
 
-
-
-                        <View style={styles.createInputContainer}>
-                            <Text style={styles.inputs} >
+                        <CardItem style={styles.createInputContainer}>
+                            <Text style={styles.inputs}>
                                 {this.state.city}
                             </Text>
-                        </View>
+                        </CardItem>
 
-                        <View style={styles.createInputContainer}>
+                        <CardItem style={styles.createInputContainer}>
                             <Text style={styles.inputs}>
                                 {this.state.country}
                             </Text>
-                        </View>
-                        <View style={styles.descInputContainer}>
+                        </CardItem>
+                        <CardItem style={styles.descInputContainer}>
                             <TextInput
                                 style={styles.inputs}
-                                placeholder="Description"
+                                placeholder="Enter description"
                                 onChangeText={(description) => this.setState({description})}/>
                             <View style={styles.container}>
                             </View>
-                        </View>
+                        </CardItem>
 
-                        <View styles={{flex: 1}}>
-                            <TouchableHighlight disabled={this.state.isDisabled} style={[styles.buttonContainer, styles.loginButton]}
-                                                onPress={() => this.createCity()}>
-                                <Text style={styles.loginText}>Submit</Text>
-                            </TouchableHighlight>
-                        </View>
-                    </View>
+                        <TouchableHighlight disabled={this.state.isDisabled}
+                                            style={[styles.buttonContainer, styles.loginButton]}
+                                            onPress={() => this.createCity()}>
+                            <Text style={styles.loginText}>Submit</Text>
+                        </TouchableHighlight>
+                    </Card>
                 </View>
             </Root>
         )

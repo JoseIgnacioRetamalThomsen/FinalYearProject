@@ -20,15 +20,15 @@ import PhotoUpload from "react-native-photo-upload";
 import {Button, Divider} from "react-native-elements";
 import SpecialHeader from "../../headers/SpecialHeader";
 import {IMAGE} from "../../../constants/Image";
+import GeoLoc from "../../utils/GeoLoc";
 
 const {width: viewWidth} = Dimensions.get('window')
 
-class CityDetail extends Component {
+class YourCityDetail extends Component {
     constructor(props) {
         global.isVisitedPlace = true
         super(props);
         this.state = {
-            clicked: false,
             placesPhotoMap: [],
             postsPhotoMap: [],
             //city
@@ -96,28 +96,67 @@ class CityDetail extends Component {
         }
     }
 
-    componentDidMount() {
+    callbackFunction = (lat, lng, city, country) => {
+        this.setState({city: city})
+        this.setState({country: country})
+    }
+    getCitiesPhoto() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
 
-        const cityId = this.props.navigation.getParam('cityId', '')
-        const indexId = this.props.navigation.getParam('indexId', '')
-        const city = this.props.navigation.getParam('name', '')
-        const country = this.props.navigation.getParam('country', '')
-        const description = this.props.navigation.getParam('description', '')
-        const img = this.props.navigation.getParam('img', '')
+                    if (token !== null) {
+                        NativeModules.PhotosModule.getCitysPhoto(
+                            token,
+                            email,
+                            (err) => {
+                                this.setState({photoMap: require('../../../img/noImage.png')})
+                                console.log(err)
+                            },
 
-        this.setState({
-            cityId,
-            city,
-            country,
-            description,
-            img
+                            (jsonCityPhotoList) => {
+                                this.setState({photoMap: jsonCityPhotoList})
+
+                            })
+                    }
+                })
+            })
         })
-        this.setState({cityId: cityId})
-        this.getCityImages()
-        this.getCityPlaces()
-        this.getPlacesPerCityPhoto()
-        this.getCityPosts()
-        this.getPostsPhotosIdP()
+    }
+
+    componentDidMount() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token != null) {
+                        NativeModules.ProfilesModule.getCity(
+                            email,
+                            token,
+                            this.state.city,
+                            this.state.country,
+                            (err) => {
+                                console.log(err)
+                            },
+                            (city, country, email, lat, lng, description, id) => {
+                                this.setState({city: city})
+                                this.setState({country: country})
+                                this.setState({email: email})
+                                this.setState({lat: lat})
+                                this.setState({lng: lng})
+                                this.setState({description: description})
+                                console.log("successful in getCity values " + city, country, email, description, id)
+
+                            })
+                    }
+                })
+            })
+        })
+        this.getCitiesPhoto()
     }
 
     getCityPosts() {
@@ -222,7 +261,6 @@ class CityDetail extends Component {
     }
 
     createPlace() {
-        this.setState({clicked: true})
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -382,31 +420,20 @@ class CityDetail extends Component {
     }
 
     _renderItem = ({item, index}) => {
-        if (item.url !== '') {
-            return (
-                <View style={Style.slide}>
-                    <Text style={Style.title}>{item.timestamp}</Text>
-                    <Image source={{uri: item.url}}
-                           style={{height: 200, width: null, flex: 1}}/>
-                </View>
-            )
-        } else {
-            return (
-                <View style={Style.slide}>
-                    <Text style={Style.title}>{item.timestamp}</Text>
-                    <Image source={IMAGE.NO_IMG}
-                           style={{height: 200, width: null, flex: 1}}/>
-                </View>
-            )
-        }
+        return (
+            <View style={Style.slide}>
+                <Text style={Style.title}>{item.timestamp}</Text>
+                <Image source={{uri: item.url}}
+                       style={{height: 200, width: null, flex: 1}}/>
+            </View>
+        )
     }
 
     renderItemPlaces = ({item, index}) => {
-        console.log("item.id", item.id)
         if (item.id == "") {
             return (
                 <View style={Style.carouselContainer}>
-                    <Text style={Style.title}> No places created yet</Text>
+                    <Text> places created yet</Text>
                 </View>
             )
         } else {
@@ -436,140 +463,144 @@ class CityDetail extends Component {
                 </View>
             )
         }
+
     }
 
     render() {
         return (
-            <View style={Style.view}>
-                {/*create city Post*/}
-                <Modal style={Style.modal}
-                       visible={this.state.isVisible}
-                       modalAnimation={new SlideAnimation({
-                           slideFrom: 'bottom',
-                       })}
-                       onTouchOutside={() => {
-                           this.setState({isVisible: false});
-                       }}
-                >
-                    <ModalContent style={Style.modalContent}>
-                        <TextInput
-                            placeholder="Title"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(cityPostTitle) => this.setState({cityPostTitle})}/>
+                <View style={Style.view}>
+                    {/*create city Post*/}
+                    <Modal
+                        visible={this.state.isVisible}
+                        modalAnimation={new SlideAnimation({
+                            slideFrom: 'bottom',
+                        })}
+                        onTouchOutside={() => {
+                            this.setState({isVisible: false});
+                        }}
+                    >
+                        <ModalContent style={{
+                            width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6
+                        }}>
+                            <TextInput
+                                placeholder="Title"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(cityPostTitle) => this.setState({cityPostTitle})}/>
 
-                        <TextInput
-                            placeholder="Description"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(cityPostBody) => this.setState({cityPostBody})}/>
+                            <TextInput
+                                placeholder="Description"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(cityPostBody) => this.setState({cityPostBody})}/>
 
-                        <PhotoUpload onPhotoSelect={cityPostImage => {
-                            if (cityPostImage) {
-                                this.setState({cityPostImage: cityPostImage})
+                            <PhotoUpload onPhotoSelect={cityPostImage => {
+                                if (cityPostImage) {
+                                    this.setState({cityPostImage: cityPostImage})
+                                }
                             }
-                        }
-                        }>
-                            {this.displayPhoto()}
-                        </PhotoUpload>
+                            }>
+                                <Image source={IMAGE.UPLOAD_IMG}/>
+                            </PhotoUpload>
 
+                            <Button title="Add city post" style={{height: 200, width: 200, borderColor: 'black'}}
+                                    onPress={() => this.createCityPost()}>
 
-                        <TouchableOpacity style={Style.modalbtn}
-                                          onPress={() => this.createCityPost()}>
-                            <Text style={Style.txtStyle}>Add city post</Text>
-                        </TouchableOpacity>
-                    </ModalContent>
+                            </Button>
+                        </ModalContent>
 
-                </Modal>
+                    </Modal>
 
-                {/*create place*/}
-                <Modal style={Style.modal}
-                       visible={this.state.isVisible2}
-                       modalAnimation={new SlideAnimation({
-                           slideFrom: 'bottom',
-                       })}
-                       onTouchOutside={() => {
-                           this.setState({isVisible2: false});
-                       }}
-                >
-                    <ModalContent style={Style.modalContent}>
-                        <TextInput
-                            placeholder="Title"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(placeName) => this.setState({placeName})}/>
+                    {/*create place*/}
+                    <Modal
+                        visible={this.state.isVisible2}
+                        modalAnimation={new SlideAnimation({
+                            slideFrom: 'bottom',
+                        })}
+                        onTouchOutside={() => {
+                            this.setState({isVisible2: false});
+                        }}
+                    >
+                        <ModalContent style={{
+                            width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6
+                        }}>
+                            <TextInput
+                                placeholder="Title"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(placeName) => this.setState({placeName})}/>
 
-                        <TextInput
-                            placeholder="Description"
-                            underlineColorAndroid='transparent'
-                            onChangeText={(placeDescription) => this.setState({placeDescription})}/>
+                            <TextInput
+                                placeholder="Description"
+                                underlineColorAndroid='transparent'
+                                onChangeText={(placeDescription) => this.setState({placeDescription})}/>
 
-                        <PhotoUpload onPhotoSelect={placeImage => {
-                            if (placeImage) {
-                                this.setState({placeImage: placeImage})
+                            <PhotoUpload onPhotoSelect={placeImage => {
+                                if (placeImage) {
+                                    this.setState({placeImage: placeImage})
+                                }
                             }
-                        }
-                        }>
-                            {this.displayPhoto()}
-                        </PhotoUpload>
+                            }>
+                                <Image source={IMAGE.UPLOAD_IMG}/>
+                            </PhotoUpload>
 
-                        <TouchableOpacity style={Style.modalbtn}
-                                          onPress={() => this.createPlace()}>
-                            <Text style={Style.txtStyle}>Edit Profile</Text>
-                        </TouchableOpacity>
-                    </ModalContent>
-                </Modal>
+                            <Button title="Add a place" style={Style.btnPressStyle} onPress={() => this.createPlace()}>
 
-                <SpecialHeader title={this.state.city} cityIdFromParent={this.state.cityId} isHome={false}
-                               navigation={this.props.navigation}/>
-                <ScrollView style={{flex: 1}}>
-                    <Card style={Style.cardContainer}>
+                            </Button>
+                        </ModalContent>
+                    </Modal>
+
+                        <SpecialHeader title={this.state.city} isHome={true}
+                                       navigation={this.props.navigation}/>
+                        <GeoLoc parentCallback={this.callbackFunction}/>
+
+                        <ScrollView style={{flex: 1}}>
+                        <Card style={Style.cardContainer}>
+                            <Carousel
+                                ref={(c) => {
+                                    this._carousel = c;
+                                }}
+                                data={this.state.images}
+                                renderItem={this._renderItem}
+                                sliderWidth={viewWidth / 1.055}
+                                itemWidth={viewWidth}
+                            />
+                            <CardItem>
+                                <CardTitle
+                                    title={this.state.city}
+                                    subtitle={this.state.country}
+                                />
+                            </CardItem>
+
+                            <CardItem>
+                                <Body>
+                                    <Text>{this.state.description} </Text>
+                                </Body>
+
+                            </CardItem>
+                        </Card>
+
+                        <Divider style={{backgroundColor: 'black', margin: 10}}/>
+
+                        {/*Places*/}
+                        <Text style={Style.heading}> Places in {this.state.city} </Text>
+                        <Divider style={{backgroundColor: 'black'}}/>
+
                         <Carousel
                             ref={(c) => {
                                 this._carousel = c;
                             }}
-                            data={this.state.images}
-                            renderItem={this._renderItem}
+                            data={this.state.places}
+                            index={this.state.placesPhotoMap}
+                            renderItem={this.renderItemPlaces}
                             sliderWidth={viewWidth / 1.055}
                             itemWidth={viewWidth}
                         />
-                        <CardItem>
-                            <CardTitle
-                                title={this.state.city}
-                                subtitle={this.state.country}
-                            />
-                        </CardItem>
-
-                        <CardItem>
-                            <Body>
-                                <Text>{this.state.description} </Text>
-                            </Body>
-
-                        </CardItem>
-                    </Card>
-
-                    <Divider style={{backgroundColor: 'black', margin: 10}}/>
-
-                    {/*Places*/}
-                    <Text style={Style.heading}> Places in {this.state.city} </Text>
-                    <Divider style={{backgroundColor: 'black'}}/>
-
-                    <Carousel
-                        ref={(c) => {
-                            this._carousel = c;
-                        }}
-                        data={this.state.places}
-                        index={this.state.placesPhotoMap}
-                        renderItem={this.renderItemPlaces}
-                        sliderWidth={viewWidth / 1.055}
-                        itemWidth={viewWidth}
-                    />
 
 
-                    {/*Posts*/}
-                    <Divider style={{backgroundColor: 'black'}}/>
-                    <Text style={Style.heading}> Posts about {this.state.city}</Text>
-                    <Divider style={{backgroundColor: 'black'}}/>
+                        {/*Posts*/}
+                        <Divider style={{backgroundColor: 'black'}}/>
+                        <Text style={Style.heading}> Posts about {this.state.city}</Text>
+                        <Divider style={{backgroundColor: 'black'}}/>
 
-                    {this.state.posts.map((e, index) => {
-                        if (this.state.posts.postId !== 'undefined') {
+                        {this.state.posts.map((e, index) => {
                             return (
                                 <Card style={Style.cardContainer} key={this.state.posts.postId}>
                                     <CardItem cardBody>
@@ -589,44 +620,22 @@ class CityDetail extends Component {
                                     </CardItem>
                                 </Card>
                             )
-                        } else if (this.state.posts.postId === 'undefined') {
-                            return (
-                                <View>
-                                    <Text>
-                                        No posts yet
-                                    </Text>
-                                </View>
-                            )
-                        }
-                    })}
+                        })}
 
-                </ScrollView>
-                <ActionButton buttonColor='#007AFF'>
-                    <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
-                                       onPress={() => this.setState({isVisible: true})}>
-                        <Icon name="md-create" style={Style.actionButtonIcon}/>
-                    </ActionButton.Item>
-                    <ActionButton.Item buttonColor='#007AFF' title="Add a place"
-                                       onPress={() => this.setState({isVisible2: true})}>
-                        <Icon name="md-create" style={Style.actionButtonIcon}/>
-                    </ActionButton.Item>
-                </ActionButton>
-            </View>
-
+                    </ScrollView>
+                    <ActionButton buttonColor='#007AFF'>
+                        <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
+                                           onPress={() => this.setState({isVisible: true})}>
+                            <Icon name="md-create" style={Style.actionButtonIcon}/>
+                        </ActionButton.Item>
+                        <ActionButton.Item buttonColor='#007AFF' title="Add a place"
+                                           onPress={() => this.setState({isVisible2: true})}>
+                            <Icon name="md-create" style={Style.actionButtonIcon}/>
+                        </ActionButton.Item>
+                    </ActionButton>
+                </View>
         )
-    }
-
-    displayPhoto() {
-        if (this.state.cityPostImage !== '') {
-            return <Image style={Style.uploadPhoto} source={{cityPostImage: this.state.cityPostImage}}/>
-        } else return <Image source={IMAGE.UPLOAD_IMG}/>
-    }
-
-    displayMessage() {
-        if (this.state.cityPostImage !== '') {
-            return <Image style={Style.uploadPhoto} source={{cityPostImage: this.state.cityPostImage}}/>
-        } else return <Image source={IMAGE.UPLOAD_IMG}/>
     }
 }
 
-export default CityDetail
+export default YourCityDetail

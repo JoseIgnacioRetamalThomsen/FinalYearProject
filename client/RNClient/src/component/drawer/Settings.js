@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Image, NativeModules, TextInput, View} from 'react-native';
+import {Button, Image, NativeModules, TextInput, TouchableOpacity, View} from 'react-native';
 import CustomHeader from '../headers/CustomHeader'
 import AsyncStorage from "@react-native-community/async-storage";
 import Style from "../../styles/Style";
@@ -10,37 +10,42 @@ class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userId: 0,
+            userId: -999,
             avatar_url: '',
             name: '',
             description: '',
         }
     }
-
-    onClickListener() {
+    componentDidMount() {
+        const userId = this.props.navigation.getParam('userId', '')
+        this.setState({
+            userId,
+        })
+    }
+    updateUser() {
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
-                    let key = store[i][0];
-                    let value = store[i][1]
-                    console.log("key/value in settings " + key + " " + value)
+                    let email = store[i][0];
+                    let token = store[i][1]
 
-                    if (value !== null) {
+                    if (token !== null) {
                         NativeModules.ProfilesModule.updateUser(
-                            value,
-                            key,
-                            key,
+                            token,
+                            email,
+                            email,
                             this.state.name,
                             this.state.description,
                             this.state.userId,
                             (err) => {
-                                console.log("error In settings " + err)
+                                console.log(err)
                             },
                             (email, name, description, userId) => {
                                 this.setState({name: name})
                                 this.setState({description: description})
-                                this.userId({description: userId})
+                                //this.userId({userId: userId})
                                 console.log("successful!!!" + this.state.name, this.state.description)
+                                this.props.navigation.navigate("Profile")
                             })
                     }
                 })
@@ -52,7 +57,7 @@ class Settings extends Component {
         return (
             <View style={{flex: 1}}>
                 <CustomHeader title="Settings" navigation={this.props.navigation}/>
-                <View style={Style.view}>
+                {/*<View style={Style.view}>*/}
                     <Card style={Style.cardContainer}>
                         <CardItem>
                             <TextInput
@@ -68,11 +73,13 @@ class Settings extends Component {
                                 onChangeText={(description) => this.setState({description})}/>
                         </CardItem>
                         <CardItem>
-                            <Button style={Style.btnPressStyle} title="Save changes"
-                                    onPress={() => this.onClickListener()}/>
+                            <TouchableOpacity style={Style.btnPressStyle}
+                                              onPress={() => this.updateUser()}>
+                                <Text style={Style.txtStyle}>Save changes</Text>
+                            </TouchableOpacity>
                         </CardItem>
                     </Card>
-                </View>
+                {/*</View>*/}
             </View>
         )
     }

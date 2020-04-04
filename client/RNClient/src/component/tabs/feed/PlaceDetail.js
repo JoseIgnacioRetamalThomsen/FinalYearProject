@@ -334,7 +334,6 @@ export default class PlaceDetail extends Component {
                     })}
                 </ScrollView>
 
-
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this place"
                                        onPress={() => this.setState({isVisible: true})}>
@@ -343,7 +342,6 @@ export default class PlaceDetail extends Component {
                 </ActionButton>
 
             </View>
-
         )
     }
 }

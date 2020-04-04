@@ -1,5 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native'
-import {OtherConstants} from '../constants/OtherConstants'
+import {constants} from '../constants/Constants'
 
 const {width: width} = Dimensions.get('window')
 export default StyleSheet.create({
@@ -95,9 +95,19 @@ export default StyleSheet.create({
     btnPressStyle: {
         backgroundColor: '#007AFF',
         height: 50,
-        width: OtherConstants.width - 60,
+        width: constants.width - 60,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderRadius: 10
+    },
+    modalbtn: {
+        backgroundColor: '#007AFF',
+        height: 50,
+        width: constants.width /1.45,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        borderColor: 'black'
     },
     txtStyle: {
         color: '#ffffff'
@@ -105,7 +115,7 @@ export default StyleSheet.create({
     itemImage: {
         backgroundColor: '#2f455c',
         height: 150,
-        width: OtherConstants.width - 60,
+        width: constants.width - 60,
         borderRadius: 8,
         resizeMode: 'contain'
     },
@@ -148,6 +158,20 @@ export default StyleSheet.create({
         borderRadius: 60,
         margin: 10,
         padding: 10,
+        marginTop: 30,
+        borderColor: '#0080ff',
+        borderWidth: 0.5,
+        flex: 0,
+        resizeMode: 'cover',//contain?
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    uploadPhoto:{
+        height: 120,
+        width: 120,
+        margin: 10,
+        padding: 10,
+        marginTop: 30,
         borderColor: '#0080ff',
         borderWidth: 0.5,
         flex: 0,
@@ -177,5 +201,15 @@ export default StyleSheet.create({
         textAlign: 'left',
         marginLeft: 10,
         marginBottom: 10,
+    },
+    modal:{
+
+    },
+    modalContent:{
+        borderWidth:3,
+        borderColor:'#0080ff',
+        backgroundColor:'#FFF',
+        width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6,
+
     }
 })

@@ -3,11 +3,11 @@ import {Alert, Image, NativeModules, ScrollView, StyleSheet, TouchableOpacity, V
 import AsyncStorage from "@react-native-community/async-storage";
 import {Body, CardItem, Icon, Text} from "native-base";
 import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
-import CustomHeader from "../headers/CustomHeader";
-import MapInput from "../MapInput";
-import CreateCity from "../tabs/feed/CreateCity";
-import CityDetail from "../tabs/feed/CityDetail";
-import Style from "../../styles/Style";
+import CustomHeader from "../../headers/CustomHeader";
+import MapInput from "../../utils/MapInput";
+import CreateCity from "./CreateCity";
+import CityDetail from "./CityDetail";
+import Style from "../../../styles/Style";
 export default class SearchCity extends Component {
     constructor(props) {
         super(props);
@@ -56,7 +56,7 @@ export default class SearchCity extends Component {
                             token,
                             email,
                             (err) => {
-                                this.setState({photoMap: require('../../img/noImage.png')})
+                                this.setState({photoMap: require('../../../img/noImage.png')})
                                 console.log(err)
                             },
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Image, ScrollView, FlatList, StyleSheet, NativeModules} from 'react-native';
 import CustomHeader from '../../headers/CustomHeader'
-import MapInput from "../../MapInput";
+import MapInput from "../../utils/MapInput";
 import {GooglePlacesAutocomplete} from "react-native-google-places-autocomplete";
 import {
     Card,

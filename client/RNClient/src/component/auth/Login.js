@@ -7,7 +7,7 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native'
-import LoginModule from '../Modules'
+import LoginModule from '../utils/Modules'
 import styles from '../../styles/Style'
 import AsyncStorage from '@react-native-community/async-storage'
 import {logger} from "react-native-logger"

@@ -1,37 +1,27 @@
-import DisplayCities from "./src/component/tabs/feed/DisplayCities";
-
 console.disableYellowBox = true
 
+import DisplayCities from "./src/component/tabs/feed/DisplayCities";
 import React from 'react';
-import {Image, Dimensions, View, NativeModules} from 'react-native';
+import {Image, Dimensions, NativeModules} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {IMAGE} from './src/constants/Image'
-
-import DisplayCityPosts from './src/component/tabs/feed/DisplayCityPosts'
-import MyPosts from './src/component/tabs/myPosts/MyPosts'
 import CityDetail from './src/component/tabs/feed/CityDetail'
-import PostDetails from './src/component/tabs/myPosts/PostDetails'
-import SideMenu from './src/component/SideMenu'
+import SideMenu from './src/component/utils/SideMenu'
 import Profile from './src/component/drawer/Profile'
 import Settings from './src/component/drawer/Settings'
 import Login from './src/component/auth/Login'
 import Register from './src/component/auth/Register'
 import RestorePassword from './src/component/auth/RestorePassword'
-import LoadImage from './src/component/LoadImage'
-import WritePost from "./src/component/tabs/myPosts/WritePost";
-import Post from "./src/component/tabs/myPosts/Post";
-import WelcomePage from "./src/component/WelcomePage";
-import MapInput from "./src/component/MapInput";
+import WelcomePage from "./src/component/utils/WelcomePage";
 import CreateCity from "./src/component/tabs/feed/CreateCity";
-import CreateCityPost from "./src/component/tabs/feed/CreateCityPost";
-import DisplayPlaces from "./src/component/tabs/myPosts/DisplayPlaces";
-import CreatePlace from "./src/component/tabs/feed/CreatePlace";
 import PlaceDetail from "./src/component/tabs/feed/PlaceDetail";
 import AsyncStorage from "@react-native-community/async-storage";
-import SearchCity from "./src/component/drawer/SearchCity";
+import SearchCity from "./src/component/tabs/feed/SearchCity";
+import YourCityDetail from "./src/component/tabs/myCity/YourCityDetail";
+import SpecialHeader from "./src/component/headers/SpecialHeader";
 
 const navOptionHandler = (navigation) => ({
     header: null
@@ -46,12 +36,12 @@ const FeedStack = createStackNavigator({
         screen: SearchCity,
         navigationOptions: navOptionHandler
     },
-    CreateCity: {
-        screen: CreateCity,
+    SearchCity: {
+        screen: SearchCity,
         navigationOptions: navOptionHandler
     },
-    CreatePlace: {
-        screen: CreatePlace,
+    CreateCity: {
+        screen: CreateCity,
         navigationOptions: navOptionHandler
     },
     CityDetail: {
@@ -62,40 +52,15 @@ const FeedStack = createStackNavigator({
         screen: PlaceDetail,
         navigationOptions: navOptionHandler
     },
-    DisplayCityPosts: {
-        screen: DisplayCityPosts,
-        navigationOptions: navOptionHandler
-    },
-    CreateCityPost: {
-        screen: CreateCityPost,
-        navigationOptions: navOptionHandler
-    }
 })
 
 const MyPostsStack = createStackNavigator({
-
-    MyPosts: {
-        screen: MyPosts,
+    YourCityDetail: {
+        screen: YourCityDetail,
         navigationOptions: navOptionHandler
     },
-    SearchDetail: {
-        screen: PostDetails,
-        navigationOptions: navOptionHandler
-    },
-    MapInput: {
-        screen: MapInput,
-        navigationOptions: navOptionHandler
-    },
-    Post: {
-        screen: Post,
-        navigationOptions: navOptionHandler
-    },
-    WritePost: {
-        screen: WritePost,
-        navigationOptions: navOptionHandler
-    },
-    LoadImage: {
-        screen: LoadImage,
+    SpecialHeader: {
+        screen: SpecialHeader,
         navigationOptions: navOptionHandler
     },
 })
@@ -104,7 +69,7 @@ const MainTabs = createBottomTabNavigator({
     Feed: {
         screen: FeedStack,
         navigationOptions: {
-            tabBarLabel: 'Cities',
+            tabBarLabel: 'Feed',
             tabBarIcon: ({tintColor}) => (
                 <Image
                     source={IMAGE.ICON_FEED}
@@ -114,13 +79,13 @@ const MainTabs = createBottomTabNavigator({
             )
         }
     },
-    MyPosts: {
+    MyCity: {
         screen: MyPostsStack,
         navigationOptions: {
-            tabBarLabel: 'Places',
+            tabBarLabel: 'My City',
             tabBarIcon: ({tintColor}) => (
                 <Image
-                    source={IMAGE.ICON_DEFAULT_PROFILE}
+                    source={IMAGE.ICON_HOME}
                     resizeMode="contain"
                     style={{width: 20, height: 20}}
                 />
@@ -142,10 +107,10 @@ const MainStack = createStackNavigator({
         screen: Settings,
         navigationOptions: navOptionHandler
     },
-    DisplayCity: {
-        screen: SearchCity,
-        navigationOptions: navOptionHandler
-    },
+    // Logout: {
+    //     screen: Logout,
+    //     navigationOptions: navOptionHandler
+    // },
 }, {initialRouteName: 'Home'})
 
 const appDrawer = createDrawerNavigator({
@@ -174,7 +139,6 @@ const authStack = createStackNavigator({
 })
 
 const MyApp = createSwitchNavigator({
-
         loading: {
             screen: WelcomePage
         },
@@ -182,7 +146,7 @@ const MyApp = createSwitchNavigator({
         auth: authStack
     },
     {
-        initialRouteName: 'loading'//change back to loading
+        initialRouteName: 'loading'
     })
 
 const AppNavigation = createAppContainer(MyApp);
