@@ -1,4 +1,8 @@
+// main package
 package main
+
+// provide acces to mysql database, use round_robin for load balancing read
+// from slaves, all write are done to one master.
 
 import (
 	"context"
@@ -14,24 +18,29 @@ import (
 var dbConn clientDB
 var dbConnLB clientDBLoadBalancing
 
+// Normal client context.
 type clientDB struct {
 	context *dbClientContext
 }
 
+// load balancer client context
 type clientDBLoadBalancing struct {
 	context *dbClientContextLoadBalancing
 }
 
+// Normal conection struc.
 type dbClientContext struct {
 	dbClient pb.UserAuthDBClient
-	timeout time.Duration
-}
-type dbClientContextLoadBalancing struct {
-	dbClient pb.UserAuthDBClient
-	timeout time.Duration
+	timeout  time.Duration
 }
 
-// create connection
+// load balancig conectio strucn
+type dbClientContextLoadBalancing struct {
+	dbClient pb.UserAuthDBClient
+	timeout  time.Duration
+}
+
+// create normal connection
 func newDBContext(endpoint string) (*dbClientContext, error) {
 	userConn, err := grpc.Dial(
 		endpoint,
@@ -46,6 +55,7 @@ func newDBContext(endpoint string) (*dbClientContext, error) {
 	return ctx, nil
 }
 
+// create load balancing conection
 func newDBContextLoadBalancing() (*dbClientContextLoadBalancing, error) {
 	userConn, err := grpc.Dial(
 		fmt.Sprintf("%s:///%s", dbConnectionScheme, exampleServiceName),
@@ -63,84 +73,94 @@ func newDBContextLoadBalancing() (*dbClientContextLoadBalancing, error) {
 	return ctx, nil
 }
 
-// load balancing
-func getUser(email string) (string,[]byte,[]byte,error){
+// Get users, user load balancing connection.
+func getUser(email string) (string, []byte, []byte, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	r, err := dbConnLB.context.dbClient.GetUser(ctx, &pb.UserDBRequest{Email: email})
 	if err != nil {
 
-		return "",nil,nil, errors.New("could not get user")
+		return "", nil, nil, errors.New("could not get user")
 	}
 
-	return r.GetEmail(),r.GetPasswordHash(), r.GetPasswordSalt(),nil
+	return r.GetEmail(), r.GetPasswordHash(), r.GetPasswordSalt(), nil
 }
 
-
-
-func addUser(email string, hashedPassword []byte, salt []byte) (string,int64,error){
+// add a new user , normal conection, always to master.
+func addUser(email string, hashedPassword []byte, salt []byte) (string, int64, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hashedPassword,PasswordSalt:salt})
+	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hashedPassword, PasswordSalt: salt})
 	if err != nil {
-		return email,-1, err
+		return email, -1, err
 	}
-	return r.GetEmail(),r.GetId(),nil
+	return r.GetEmail(), r.GetId(), nil
 
 }
 
-func updateUser(email string, hash []byte, salt []byte) (string,[]byte,[]byte,error) {
+// update user , normal connection, always to master.
+func updateUser(email string, hash []byte, salt []byte) (string, []byte, []byte, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email,PasswordHash:hash,PasswordSalt:salt})
+	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hash, PasswordSalt: salt})
 	if err != nil {
-		return "", nil,nil,err
+		return "", nil, nil, err
 	}
-	return r.Email,r.PasswordHash,r.PasswordSalt,nil
+	return r.Email, r.PasswordHash, r.PasswordSalt, nil
 }
 
-func CreateSession(email string, token string) (bool, error){
+// Create user seasion, normal conection, always to master.
+func CreateSession(email string, token string) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	_, err := dbConn.context.dbClient.CreateSeassion(ctx,&pb.UserSessionRequest{Email:email,Token:token})
-	if err != nil{
-       return false,err
+	_, err := dbConn.context.dbClient.CreateSeassion(ctx, &pb.UserSessionRequest{Email: email, Token: token})
+	if err != nil {
+		return false, err
 	}
 
-    return true,nil
+	return true, nil
 
 }
 
-//load balancib
-func CheckToken(email string, token string) (bool,error){
+// Check token, use load balancing connection.
+func CheckToken(email string, token string) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	res,err := dbConnLB.context.dbClient.GetSeassion(ctx, &pb.UserSessionRequest{Email:email,Token:token})
-	if err!=nil{
-		return false,err
+	res, err := dbConnLB.context.dbClient.GetSeassion(ctx, &pb.UserSessionRequest{Email: email, Token: token})
+	if err != nil {
+		return false, err
 	}
-	if res.Token == token{
-		return true,nil
+	if res.Token == token {
+		return true, nil
 	}
 	return false, nil
 }
 
-func DeleteToken(email string,token string) (bool,error){
+// Delete tocken, use normal connection, always to master,
+func DeleteToken(email string, token string) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	res,err := dbConn.context.dbClient.DeleteSession(ctx, &pb.UserSessionRequest{Email:email,Token:token})
-	if err !=nil{
+	res, err := dbConn.context.dbClient.DeleteSession(ctx, &pb.UserSessionRequest{Email: email, Token: token})
+	if err != nil {
 		return false, err
 	}
-	return res.Success , nil
+	return res.Success, nil
 }
 
 //resolver
 type databasesResolverBuilder struct{}
 
+//resolver struct
+type databaseResolver struct {
+	target     resolver.Target
+	cc         resolver.ClientConn
+	addrsStore map[string][]string
+}
+
+// resolver implementation
 func (*databasesResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOption) (resolver.Resolver, error) {
 	r := &databaseResolver{
 		target: target,
@@ -152,14 +172,11 @@ func (*databasesResolverBuilder) Build(target resolver.Target, cc resolver.Clien
 	r.start()
 	return r, nil
 }
+
+// resolver implementation
 func (*databasesResolverBuilder) Scheme() string { return dbConnectionScheme }
 
-type databaseResolver struct {
-	target     resolver.Target
-	cc         resolver.ClientConn
-	addrsStore map[string][]string
-}
-
+// resolver implementation
 func (r *databaseResolver) start() {
 	addrStrs := r.addrsStore[r.target.Endpoint]
 	addrs := make([]resolver.Address, len(addrStrs))
@@ -169,5 +186,8 @@ func (r *databaseResolver) start() {
 	r.cc.UpdateState(resolver.State{Addresses: addrs})
 }
 
+// resolver implementation
 func (*databaseResolver) ResolveNow(o resolver.ResolveNowOption) {}
-func (*databaseResolver) Close(){}
+
+// resolver implementation
+func (*databaseResolver) Close() {}

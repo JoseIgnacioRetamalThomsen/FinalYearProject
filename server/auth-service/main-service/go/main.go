@@ -1,15 +1,9 @@
-//go:generate protoc -I ../Login --go_out=plugins=grpc:../Login ../Login/UserLogin.proto
-//go:generate protoc -I . --go_out=plugins=grpc:. UserLogin.proto
-//
-/*
-{
-  "Port" : ":50051",
-  "Dbs": ["104.40.206.141:7777","40.118.90.61:7777"],
-  "Pss": ["35.197.216.42:5701"],
-  "Prof": ["35.197.216.42:60051"]
-}
- */
+// main package provide end points.
 package main
+
+//Provide main service for authentication.
+// React native app and rest api use endpoint for provide authentication.
+// User dba, profile service and hash service.
 
 import (
 	"context"
@@ -27,139 +21,130 @@ import (
 	"os"
 )
 
+// the public port.
 const (
 	port = ":50051"
-
 )
 
+// configuration
 const (
 	dbConnectionScheme = "dbConnectionScheme"
 	exampleServiceName = "ie.gmit.wcity.auth"
 )
 
+// configuration
 type Configuration struct {
 	Port string
-	Dbs    []string
-	Pss   []string
+	Dbs  []string
+	Pss  []string
 	Prof [] string
 }
 
-
-//first addrs is the master
-//var db_addrs = []string{"104.40.206.141:7777","40.118.90.61:7777"}
-//var ps_addrs = []string{"40.118.90.61:5701","51.124.149.63:5701"}
-
-//var ps_addrs = []string{"35.197.216.42:5701","localhost:5701"}
-//grpc server
+// the server.
 type server struct {
 	pb.UnimplementedUserAuthenticationServer
 }
 
-/*
-Init client connections
-*/
-
-//https://stackoverflow.com/questions/56067076/grpc-connection-management-in-golang
-// this type contains state of the server
-/**
-*  End Points
- */
+// End Point:
 func (s *server) LoginUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
-
 
 	log.Printf("Received: %v", "LoginUser  called")
 	//get user data from database
-	email, hash , salt ,err := getUser(in.GetEmail())
-	if(err != nil){
+	email, hash, salt, err := getUser(in.GetEmail())
+	if err != nil {
 		//user do not exist
-		return &pb.UserResponse{IsUser: false}, status.Error(codes.NotFound,"user not found")
+		return &pb.UserResponse{IsUser: false}, status.Error(codes.NotFound, "user not found")
 	}
-	email= email
+	email = email
 	// user hash service for check password
-	isValid := validate(in.HashPassword,hash,salt)
+	isValid := validate(in.HashPassword, hash, salt)
 	if isValid {
 		token := GenerateSecureToken(32)
 		is, err := CreateSession(in.Email, token)
 		if err != nil {
-			return nil, status.Error(codes.Internal,"db problem")
+			return nil, status.Error(codes.Internal, "db problem")
 		}
 
-		return &pb.UserResponse{IsUser : is ,Token:token},nil
+		return &pb.UserResponse{IsUser: is, Token: token}, nil
 	}
 	return &pb.UserResponse{IsUser: false, Token: ""}, nil
 }
 
+// End Point:
 // return false if user is updated
 func (s *server) CreateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 
-
 	log.Printf("Received: %v", "create user")
-	if(len(in.HashPassword) <=6){
-		return nil, status.Error(codes.InvalidArgument,"Invalid password")
+	if len(in.HashPassword) <= 6 {
+		return nil, status.Error(codes.InvalidArgument, "Invalid password")
 	}
 	hash, salt := hash(in.HashPassword)
 
-	email,id, err := addUser(in.Email,hash,salt)
+	email, id, err := addUser(in.Email, hash, salt)
 
 	id = id
-	if err!=nil{
-		return nil, status.Error(codes.Internal,"database problem")
+	if err != nil {
+		return nil, status.Error(codes.Internal, "database problem")
 	}
 	token := GenerateSecureToken(32)
 	is, err := CreateSession(in.Email, token)
 	if err != nil {
-		return nil, status.Error(codes.Internal,"db problem")
+		return nil, status.Error(codes.Internal, "db problem")
 	}
 
 	// add to profiles db
-	 CreateUser(email,token,"Plese input your name","Your description")
+	CreateUser(email, token, "Plese input your name", "Your description")
 	/*if res == false{
 		log.Printf("can create: %v", err)
 		return nil,status.Error(codes.Internal,"cant create")
 	}
-*/
+	*/
 
-	return &pb.UserResponse{ IsUser: is, Token: token}, nil
+	return &pb.UserResponse{IsUser: is, Token: token}, nil
 }
 
-func (s *server) UpdateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error){
+// End Point:  Update user.
+func (s *server) UpdateUser(ctx context.Context, in *pb.UserRequest) (*pb.UserResponse, error) {
 	log.Printf("Received: %v", "Update user")
 	hash, salt := hash(in.HashPassword)
 	// if user exist we update
-	email,pass,salt, err := updateUser(in.Email,hash,salt)
+	email, pass, salt, err := updateUser(in.Email, hash, salt)
 
-	pass =pass
-	salt =salt
-	if err!=nil{
-		return nil, status.Error(codes.InvalidArgument,"Can't create or update.")
+	pass = pass
+	salt = salt
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Can't create or update.")
 	}
 	token := GenerateSecureToken(32)
 	is, err := CreateSession(email, token)
 	if err != nil {
-		return nil, status.Error(codes.Internal,"database problem")
+		return nil, status.Error(codes.Internal, "database problem")
 	}
 
 	return &pb.UserResponse{IsUser: is, Token: token}, nil
 }
 
-func (s *server) CheckToken (ctx context.Context, in *pb.LogRequest) (*pb.LogResponse, error){
+// End Point:  Check token
+func (s *server) CheckToken(ctx context.Context, in *pb.LogRequest) (*pb.LogResponse, error) {
 	log.Printf("Received: %v", "Check token")
-	is,err := CheckToken(in.Email,in.Token)
-	if err !=nil{
-		return &pb.LogResponse{Sucess:false},nil
+	is, err := CheckToken(in.Email, in.Token)
+	if err != nil {
+		return &pb.LogResponse{Sucess: false}, nil
 	}
-	return &pb.LogResponse{Sucess:is},nil
+	return &pb.LogResponse{Sucess: is}, nil
 }
 
+// End Point: Log out a user, basically delete the token from database
 func (s *server) Logout(ctx context.Context, in *pb.LogRequest) (*pb.LogResponse, error) {
 	log.Printf("Received: %v", "Logout")
-    suc,err := DeleteToken(in.Email,in.Token)
-    if err != nil{
-    	return nil,err
+	suc, err := DeleteToken(in.Email, in.Token)
+	if err != nil {
+		return nil, err
 	}
-	return &pb.LogResponse{Sucess:suc},nil
+	return &pb.LogResponse{Sucess: suc}, nil
 }
 
+// Generate a token.
 func GenerateSecureToken(length int) string {
 	b := make([]byte, length)
 	if _, err := rand.Read(b); err != nil {
@@ -168,15 +153,16 @@ func GenerateSecureToken(length int) string {
 	return hex.EncodeToString(b)
 }
 
-
-
-//init resolvers
+//init resolvers.
 func init() {
 	resolver.Register(&databasesResolverBuilder{})
 }
+
+// Server configuration.
 var configuration Configuration
 
-func readConfig(fileName string){
+// reads config file.
+func readConfig(fileName string) {
 	file, _ := os.Open(fileName)
 	defer file.Close()
 	decoder := json.NewDecoder(file)
@@ -187,6 +173,7 @@ func readConfig(fileName string){
 	}
 }
 
+//Acces to services and provide server.
 func main() {
 
 	args := os.Args[1]
@@ -226,31 +213,6 @@ func main() {
 	}
 	s4 := &profileServer{profilesCtx}
 	profSerConn = *s4
-	//fmt.Print("helloworld")
-	//x,y := hash("helloworld678")
-     //fmt.Print(x,y)
-	//a,b,c := addUser("7777",x,y)
-	//fmt.Print(a,b,c)
-	//email,pass,salt,err :=getUser("email756")
-	//err=err
-	//fmt.Print(email,pass,salt)
-
-
-
-
-
-//	email,hash,salt,err := getUser("myEmail1")
-	//if(err != nil){
-		//user do not exits
-
-//	}
-	//fmt.Print(email)
-	//hash=hash
-	//salt=salt
-//	fmt.Print(validate("helloworld",hash,salt))
-	//email=email
-	//x,y := hash("12344567")
-	//updateUser("Emailu3i",x,y)
 
 	//fmt.Print("Service started")
 	log.Printf("Started: %v", " service")
@@ -265,7 +227,3 @@ func main() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
-
-
-
-

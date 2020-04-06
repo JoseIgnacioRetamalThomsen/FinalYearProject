@@ -1,4 +1,7 @@
+// main package
 package main
+
+// Access to profile service, create user in neo4j database when user is created.
 
 import (
 	"context"
@@ -8,14 +11,18 @@ import (
 	"time"
 )
 
+// the profile service.
 type profileServer struct {
 	context *profileServiceContext
 }
 
+// Profile service connection  struct.
 type profileServiceContext struct {
 	prosClient pb.ProfilesClient
-	timeout time.Duration
+	timeout    time.Duration
 }
+
+// The profile conection.
 var profSerConn profileServer
 
 // create connection
@@ -28,22 +35,22 @@ func newProfilesServiceContext(endpoint string) (*profileServiceContext, error) 
 	}
 	ctx := &profileServiceContext{
 		prosClient: pb.NewProfilesClient(userConn),
-		timeout:  time.Second,
+		timeout:    time.Second,
 	}
 	return ctx, nil
 }
 
-func CreateUser(email string,token string,name string,description string)bool{
+// create user in profile service.
+func CreateUser(email string, token string, name string, description string) bool {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := profSerConn.context.prosClient.CreateUser(ctx,&pb.UserRequestP{
-		Token:                token,
-		Email:                email,
-		Name:                 name,
-		Description:          description,
-
+	r, err := profSerConn.context.prosClient.CreateUser(ctx, &pb.UserRequestP{
+		Token:       token,
+		Email:       email,
+		Name:        name,
+		Description: description,
 	})
-	if err != nil{
+	if err != nil {
 		log.Printf("Received: %v", err)
 		return false
 	}
