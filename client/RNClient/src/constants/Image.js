@@ -4,8 +4,9 @@ const IMAGE = {
     ICON_FEED: require('../img/post.png'),
     ICON_POST: require('../img/post.png'),
     NO_IMG: require('../img/noImage.png'),
+    NO_POSTS: require('../img/noPosts.jpg'),
+    NO_PLACES: require('../img/noPlaces.jpg'),
     UPLOAD_IMG: require('../img/addImage.png'),
-    ICON_CITY: require('../img/city.png'),
     ICON_HOME: require('../img/home.png'),
 
 }

@@ -97,7 +97,6 @@ class CityDetail extends Component {
     }
 
     componentDidMount() {
-
         const cityId = this.props.navigation.getParam('cityId', '')
         const indexId = this.props.navigation.getParam('indexId', '')
         const city = this.props.navigation.getParam('name', '')
@@ -107,11 +106,13 @@ class CityDetail extends Component {
 
         this.setState({
             cityId,
+            indexId,
             city,
             country,
             description,
             img
         })
+        console.log("this.state.city!!", city)
         this.setState({cityId: cityId})
         this.getCityImages()
         this.getCityPlaces()
@@ -167,6 +168,7 @@ class CityDetail extends Component {
     }
 
     getCityPlaces() {
+        console.log("this.state.city,", this.state.city)
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -184,6 +186,7 @@ class CityDetail extends Component {
                             },
                             (placesList) => {
                                 this.setState({places: JSON.parse(placesList)})
+                                console.log("placesList", placesList)
                             })
                     }
                 })
@@ -213,7 +216,7 @@ class CityDetail extends Component {
                                 this.setState({cityPostId: cityPostId})
                                 this.uploadPostImage();
                                 this.setState({isVisible: false})
-
+                                this.props.navigation.navigate('DisplayCities')
                             })
                     }
                 })
@@ -247,7 +250,8 @@ class CityDetail extends Component {
                             this.setState({isVisible2: false})
                             this.getCityPlaces()
                             this.getPlacesPerCityPhoto()
-                            //this.props.navigation.navigate('DisplayPlaces')
+                            this.props.navigation.navigate('DisplayCities')
+                            console.log("placeId", placeId)
                         })
                 })
             })
@@ -402,39 +406,46 @@ class CityDetail extends Component {
     }
 
     renderItemPlaces = ({item, index}) => {
-        console.log("item.id", item.id)
-        if (item.id == "") {
-            return (
-                <View style={Style.carouselContainer}>
-                    <Text style={Style.title}> No places created yet</Text>
-                </View>
-            )
-        } else {
-            return (
-                <View style={Style.carouselContainer}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {
-                        placeId: item.id,
-                        name: item.name,
-                        city: this.state.city,
-                        cityId: this.state.cityId,
-                        country: this.state.country,
-                        description: item.description,
-                    })}>
+        return (
+            <View style={Style.carouselContainer}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {
+                    placeId: item.id,
+                    name: item.name,
+                    city: this.state.city,
+                    cityId: this.state.cityId,
+                    country: this.state.country,
+                    description: item.description,
+                })}>
+
+                    <View>
+                        <View>
+                            <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
+                                   style={Style.cardPhoto}/>
+                        </View>
 
                         <View>
-                            <View>
-                                <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
-                                       style={Style.cardPhoto}/>
-                            </View>
-
-                            <View>
-                                <Text style={Style.title}>{item.name}</Text>
-                                <Text style={Style.text}>{item.description}</Text>
-                            </View>
+                            <Text style={Style.title}>{item.name}</Text>
+                            <Text style={Style.text}>{item.description}</Text>
                         </View>
-                    </TouchableOpacity>
-                </View>
-            )
+                    </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    onClickPlace() {
+        if (this.state.placeName === '' || this.state.placeDescription === '' || this.state.placeImage === '') {
+            alert("Please upload image and provide title & description")
+        } else {
+            this.createPlace()
+        }
+    }
+
+    onClickPost() {
+        if (this.state.cityPostTitle === '' || this.state.cityPostBody === '' || this.state.cityPostImage === '') {
+            alert("Please upload image and provide title & description")
+        } else {
+            this.createCityPost()
         }
     }
 
@@ -468,12 +479,11 @@ class CityDetail extends Component {
                             }
                         }
                         }>
-                            {this.displayPhoto()}
+                            {this.displayCityPostPhoto()}
                         </PhotoUpload>
 
-
                         <TouchableOpacity style={Style.modalbtn}
-                                          onPress={() => this.createCityPost()}>
+                                          onPress={() => this.onClickPost()}>
                             <Text style={Style.txtStyle}>Add city post</Text>
                         </TouchableOpacity>
                     </ModalContent>
@@ -507,19 +517,19 @@ class CityDetail extends Component {
                             }
                         }
                         }>
-                            {this.displayPhoto()}
+                            {this.displayPlacePostPhoto()}
                         </PhotoUpload>
 
                         <TouchableOpacity style={Style.modalbtn}
-                                          onPress={() => this.createPlace()}>
-                            <Text style={Style.txtStyle}>Edit Profile</Text>
+                                          onPress={() => this.onClickPlace()}>
+                            <Text style={Style.txtStyle}>Create Place</Text>
                         </TouchableOpacity>
                     </ModalContent>
                 </Modal>
 
                 <SpecialHeader title={this.state.city} cityIdFromParent={this.state.cityId} isHome={false}
                                navigation={this.props.navigation}/>
-                <ScrollView style={{flex: 1}}>
+                <ScrollView style={{flex: 1}} keyboardShouldPersistTaps='handled'>
                     <Card style={Style.cardContainer}>
                         <Carousel
                             ref={(c) => {
@@ -551,6 +561,9 @@ class CityDetail extends Component {
                     <Text style={Style.heading}> Places in {this.state.city} </Text>
                     <Divider style={{backgroundColor: 'black'}}/>
 
+
+                    {this.displayPlaces()}
+
                     <Carousel
                         ref={(c) => {
                             this._carousel = c;
@@ -561,15 +574,22 @@ class CityDetail extends Component {
                         sliderWidth={viewWidth / 1.055}
                         itemWidth={viewWidth}
                     />
-
-
                     {/*Posts*/}
                     <Divider style={{backgroundColor: 'black'}}/>
                     <Text style={Style.heading}> Posts about {this.state.city}</Text>
                     <Divider style={{backgroundColor: 'black'}}/>
 
                     {this.state.posts.map((e, index) => {
-                        if (this.state.posts.postId !== 'undefined') {
+                        if (this.state.posts[index].mongoId === '') {
+                            return (
+                                <Card style={Style.cardContainer} key={this.state.posts.postId}>
+                                    <CardItem cardBody>
+                                        <Image source={IMAGE.NO_POSTS}
+                                               style={Style.noPostsPhoto}/>
+                                    </CardItem>
+                                </Card>
+                            )
+                        } else {
                             return (
                                 <Card style={Style.cardContainer} key={this.state.posts.postId}>
                                     <CardItem cardBody>
@@ -589,17 +609,8 @@ class CityDetail extends Component {
                                     </CardItem>
                                 </Card>
                             )
-                        } else if (this.state.posts.postId === 'undefined') {
-                            return (
-                                <View>
-                                    <Text>
-                                        No posts yet
-                                    </Text>
-                                </View>
-                            )
                         }
                     })}
-
                 </ScrollView>
                 <ActionButton buttonColor='#007AFF'>
                     <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
@@ -616,16 +627,29 @@ class CityDetail extends Component {
         )
     }
 
-    displayPhoto() {
+    displayCityPostPhoto() {
         if (this.state.cityPostImage !== '') {
             return <Image style={Style.uploadPhoto} source={{cityPostImage: this.state.cityPostImage}}/>
         } else return <Image source={IMAGE.UPLOAD_IMG}/>
     }
 
-    displayMessage() {
-        if (this.state.cityPostImage !== '') {
-            return <Image style={Style.uploadPhoto} source={{cityPostImage: this.state.cityPostImage}}/>
+    displayPlacePostPhoto() {
+        if (this.state.placeImage !== '') {
+            return <Image style={Style.uploadPhoto} source={{placeImage: this.state.placeImage}}/>
         } else return <Image source={IMAGE.UPLOAD_IMG}/>
+    }
+
+    displayPlaces() {
+        if (this.state.places.length === 0) {
+            return (
+                <Card style={Style.cardContainer} key={this.state.posts.postId}>
+                    <CardItem cardBody>
+                        <Image source={IMAGE.NO_PLACES}
+                               style={Style.noPostsPhoto}/>
+                    </CardItem>
+                </Card>
+            )
+        }
     }
 }
 

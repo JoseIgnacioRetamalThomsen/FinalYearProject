@@ -113,19 +113,17 @@ class SideMenu extends Component {
                         }}>
                             {this.displayPhoto()}
                         </PhotoUpload>
-                        {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
+                        <GeoLoc parentCallback={this.callbackFunction}/>
                         <CardItem>
-                            <Text > {this.state.city}, {this.state.country} </Text>
+                            <Text> {this.state.city}, {this.state.country} </Text>
                         </CardItem>
                     </Animated.View>
                     <ScrollView>
                         <List>
                             <ListItem style={{
-                                borderColor: '#0080ff', borderBottomColor: "0080ff",
                                 borderBottomWidth: 1
-                            }} />
+                            }}/>
                             <ListItem style={{
-                                borderColor: '#0080ff', borderBottomColor: "0080ff",
                                 borderBottomWidth: 1
                             }} onPress={() => this.props.navigation.navigate('Profile')}>
                                 <Text>
@@ -133,7 +131,7 @@ class SideMenu extends Component {
                                 </Text>
                             </ListItem>
                             <ListItem style={{
-                                borderColor: '#0080ff', borderBottomColor: "0080ff",
+
                                 borderBottomWidth: 1
                             }} onPress={() => this.props.navigation.navigate('Settings')}>
                                 <Text>
@@ -141,10 +139,7 @@ class SideMenu extends Component {
                                 </Text>
                             </ListItem>
 
-                            <ListItem style={{
-                                borderColor: '#0080ff', borderBottomColor: "0080ff",
-                                borderBottomWidth: 1
-                            }} >
+                            <ListItem noBorder>
                                 <Text onPress={() => this.logout()}>
                                     Log out
                                 </Text>

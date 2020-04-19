@@ -97,8 +97,6 @@ export default class DisplayCities extends Component {
     }
 
     showAlert(city) {
-        console.log("city", city)
-        console.log("in alert", this.state.fcity)
         Alert.alert(
             'City is not created yet.',
             ' Would you like to create a city? ',
@@ -117,14 +115,6 @@ export default class DisplayCities extends Component {
                 }
             ]
         );
-    }
-
-    onClickEvent() {
-        console.log("clicked")
-    }
-
-    renderPhoto = ({item, index}) => {
-        // if()
     }
 
     render() {
@@ -148,9 +138,10 @@ export default class DisplayCities extends Component {
             <View style={Style.view}>
                 <HomeHeader style={{flex: 1}} title="Cities" isHome={true} navigation={this.props.navigation}/>
                 <ScrollView style={{flex: 1}}>
+
                     {this.state.cities.map((item, index) => {
-                        console.log("!!!!!!!!!", this.state.photoMap[item.cityId])
-                        if (this.state.photoMap[item.cityId] !== 'undefined') {
+                        if (this.state.photoMap[item.cityId] !== 'undefined\
+                        ') {
                             return (
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CityDetail', {
                                     cityId: item.cityId,
@@ -181,7 +172,7 @@ export default class DisplayCities extends Component {
                                     </Card>
                                 </TouchableOpacity>
                             )
-                        } else if (this.state.photoMap[item.cityId] === 'undefined') {
+                        } else {
                             return (
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CityDetail', {
                                     cityId: item.cityId,

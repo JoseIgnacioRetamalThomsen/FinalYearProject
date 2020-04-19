@@ -107,6 +107,7 @@ class Profile extends Component {
                                 this.setState({name: name})
                                 this.setState({description: description})
                                 this.setState({userId: userId})
+                                console.log("llllllll", email, name, description, userId)
                             })
                         NativeModules.ProfilesModule.getVisitedCities(
                             token,
@@ -251,7 +252,7 @@ class Profile extends Component {
                                 {this.displayPhoto()}
                             </PhotoUpload>
                             <CardItem>
-                                {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
+                                <GeoLoc parentCallback={this.callbackFunction}/>
                                 <Text style={Style.title}>{this.state.city}, {this.state.country} </Text>
                             </CardItem>
                         </View>
@@ -291,12 +292,6 @@ class Profile extends Component {
                             sliderWidth={viewWidth / 1.2}
                             itemWidth={viewWidth}
                         />
-                        <CardItem>
-                            <CardTitle
-                                title={this.state.city}
-                                subtitle={this.state.country}
-                            />
-                        </CardItem>
                     </Card>
 
                     {/*Visited Places card*/}
@@ -315,12 +310,6 @@ class Profile extends Component {
                             sliderWidth={viewWidth / 1.2}
                             itemWidth={viewWidth}
                         />
-                        <CardItem>
-                            <CardTitle
-                                title={this.state.city}
-                                subtitle={this.state.country}
-                            />
-                        </CardItem>
                     </Card>
                 </ScrollView>
             </View>

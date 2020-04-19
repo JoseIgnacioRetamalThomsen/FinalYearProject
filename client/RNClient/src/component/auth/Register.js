@@ -69,16 +69,6 @@ export default class Register extends Component {
                                 console.log("this.state.email, token" + this.state.email, token)
                                 this.props.navigation.navigate('app')
                             } catch (e) {
-                                console.log("Error ", e);
-                                // try {
-                                //     value = await AsyncStorage.getItem(this.state.email)
-                                //     console.log("value in get" + value)
-                                // } catch (e) {
-                                // }
-                                // console.log("asyncstorage " + await AsyncStorage.getItem(this.state.email))
-                                // console.log("value " + value)
-                                // console.log("token" + token)
-                                //this.setState({message: 'Success'})
                                 this.props.navigation.navigate('app')
                             }
                         } else this.setState({message: 'Email is already registered'})

@@ -73,13 +73,30 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
     public void getUser(String token, String email, Callback errorCallback,
                         Callback successCallback) {
         User user = client.getUser(token, email);
-        if (user == null) errorCallback.invoke("error8");
+        //if (user == null) errorCallback.invoke("error");
         try {
             successCallback.invoke(user.getEmail(), user.getName(), user.getDescription(),
                     user.getUserId());
 
         } catch (Exception e) {
-//            errorCallback.invoke(e.getMessage());
+            errorCallback.invoke(e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void createUser(String token, String email, String userEmail, String name,
+                           String description, int userId,
+                           Callback errorCallback, Callback successCallback) {
+        User user = client.updateUser(token, email, userEmail, name, description, userId);
+        try {
+            //  if (user.isValid() == true) {
+            successCallback.invoke(user.getEmail(), user.getName(), user.getDescription(),
+                    user.getUserId());
+//            } else {
+//                errorCallback.invoke("Invalid user");
+//            }
+        } catch (Exception e) {
+            errorCallback.invoke(e.getMessage());
         }
     }
 

@@ -1,5 +1,15 @@
 import React, {Component} from 'react';
-import {Dimensions, Image, NativeModules, ScrollView, StyleSheet, Text, TextInput, View} from "react-native";
+import {
+    Dimensions,
+    Image,
+    NativeModules,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from "react-native";
 import Style from '../../../styles/Style'
 import {Card, CardAction, CardButton, CardTitle} from "react-native-material-cards";
 import {Body, CardItem, Icon} from "native-base";
@@ -11,6 +21,7 @@ import {Button, Divider} from "react-native-elements";
 import SlideAnimation from "react-native-modals/dist/animations/SlideAnimation";
 import PhotoUpload from "react-native-photo-upload";
 import PlaceHeader from "../../headers/PlaceHeader"
+import {IMAGE} from "../../../constants/Image";
 
 const {width: viewportWidth} = Dimensions.get('window')
 
@@ -217,6 +228,14 @@ export default class PlaceDetail extends Component {
         })
     }
 
+    onClick() {
+        if (this.state.placeName == '' || this.state.postTitle == '' || this.state.postDescription == '') {
+            alert("Please upload image and provide title & description")
+        } else {
+            this.createPlacePost()
+        }
+    }
+
     render() {
         return (
             <View style={Style.view}>
@@ -230,9 +249,7 @@ export default class PlaceDetail extends Component {
                         this.setState({isVisible: false});
                     }}
                 >
-                    <ModalContent style={{
-                        width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6
-                    }}>
+                    <ModalContent style={Style.modalContent}>
                         <TextInput
                             placeholder="Title"
                             underlineColorAndroid='transparent'
@@ -249,27 +266,19 @@ export default class PlaceDetail extends Component {
                             }
                         }
                         }>
-                            <Image source={{image: this.state.postImage}}
-                                   style={{
-                                       height: 120,
-                                       width: 120,
-                                       borderRadius: 60,
-                                       borderColor: 'black',
-                                       borderWidth: 5,
-                                       flex: 0,
-                                       resizeMode: 'cover'
-                                   }}/>
+                            {this.displayPhoto()}
                         </PhotoUpload>
+                        <TouchableOpacity style={Style.modalbtn}
+                                          onPress={() => this.onClick()}>
+                            <Text style={Style.txtStyle}>Add place post</Text>
+                        </TouchableOpacity>
 
-                        <Button title="Add place post" onPress={() => this.createPlacePost()}>
-
-                        </Button>
                     </ModalContent>
                 </Modal>
 
                 <PlaceHeader title={this.state.placeName} placeIdFromParent={this.state.placeId} isHome={false}
                              navigation={this.props.navigation}/>
-                <ScrollView style={{flex: 1}}>
+                <ScrollView style={{flex: 1}} keyboardShouldPersistTaps='handled'>
                     <Card style={Style.cardContainer}>
                         <Carousel
                             ref={(c) => {
@@ -310,27 +319,39 @@ export default class PlaceDetail extends Component {
                     <Divider style={{backgroundColor: 'black'}}/>
 
                     {this.state.posts.map((item, index) => {
-                        return (
-                            <Card style = {Style.cardContainer} key={this.state.posts.placePostId}>
-                                <CardItem cardBody style={Style.cardContainer}>
-                                    <Image source={{uri: this.state.photoMap[item.mongoId]}}
-                                           style={{height: 200, width: null, flex: 1}}/>
-                                </CardItem>
-                                <CardItem>
-                                    <CardTitle
-                                        title={item.title}
-                                        subtitle={item.creatorEmail}
-                                    />
-                                </CardItem>
+                        if (this.state.posts[index].mongoId === '') {
+                            return (
+                                <Card style={Style.cardContainer} key={this.state.posts.postId}>
+                                    <CardItem cardBody>
+                                        <Image source={IMAGE.NO_POSTS}
+                                               style={Style.noPostsPhoto}/>
+                                    </CardItem>
+                                </Card>
+                            )
+                        } else {
+                            return (
+                                <Card style={Style.cardContainer} key={this.state.posts.placePostId}>
+                                    <CardItem cardBody style={Style.cardContainer}>
+                                        <Image source={{uri: this.state.photoMap[item.mongoId]}}
+                                               style={{height: 200, width: null, flex: 1}}/>
+                                    </CardItem>
+                                    <CardItem>
+                                        <CardTitle
+                                            title={item.title}
+                                            subtitle={item.creatorEmail}
+                                        />
+                                    </CardItem>
 
-                                <CardItem>
-                                    <Body>
-                                        <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.body} </Text>
-                                        <Text>{item.timeStamp} </Text>
-                                    </Body>
-                                </CardItem>
-                            </Card>
-                        )
+                                    <CardItem>
+                                        <Body>
+                                            <Text numberOfLines={1} ellipsizeMode={"tail"}>{item.body} </Text>
+                                            <Text>{item.postDescription} </Text>
+                                        </Body>
+                                    </CardItem>
+                                </Card>
+                            )
+                        }
+
                     })}
                 </ScrollView>
 
@@ -340,8 +361,25 @@ export default class PlaceDetail extends Component {
                         <Icon name="md-create" style={Style.actionButtonIcon}/>
                     </ActionButton.Item>
                 </ActionButton>
-
             </View>
         )
+    }
+
+    displayPhoto() {
+        if (this.state.postImage === '') {
+            return (<Image style={Style.uploadPhoto} source={IMAGE.UPLOAD_IMG}/>)
+        } else {
+            return (
+                <Image source={{image: this.state.postImage}}
+                       style={{
+                           height: 120,
+                           width: 120,
+                           borderColor: 'black',
+                           borderWidth: 2,
+                           flex: 0,
+                           resizeMode: 'cover'
+                       }}/>
+            )
+        }
     }
 }

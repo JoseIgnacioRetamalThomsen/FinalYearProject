@@ -12,6 +12,7 @@ export default StyleSheet.create({
     view: {
         flex: 1,
         backgroundColor: '#DCDCDC',
+        marginBottom:10
     },
     createContainer: {
         flex: 1,
@@ -32,13 +33,13 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     createInputContainer: {
-        flex: 0,
+        flex: 1,
         borderBottomColor: '#F5FCFF',
         backgroundColor: '#FFFFFF',
         borderRadius: 30,
         borderBottomWidth: 1,
         width: 350,
-        height: 45,
+        maxHeight: 50,
         marginBottom: 20,
         flexDirection: 'row',
         alignItems: 'center'
@@ -50,7 +51,7 @@ export default StyleSheet.create({
         borderRadius: 30,
         borderBottomWidth: 1,
         width: 350,
-        height: 150,
+        maxHeight: 50,
         marginBottom: 20,
         flexDirection: 'row',
         alignItems: 'center',
@@ -103,7 +104,7 @@ export default StyleSheet.create({
     modalbtn: {
         backgroundColor: '#007AFF',
         height: 50,
-        width: constants.width /1.45,
+        width: constants.width / 1.45,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
@@ -132,11 +133,13 @@ export default StyleSheet.create({
         width: '100%',
     },
     cardContainer: {
+        borderColor: '#0080ff',
         backgroundColor: '#FFF',
         borderWidth: 1,
         flex: 1,
         margin: 10,
         padding: 0,
+        marginBottom: 25,
     },
     carouselContainer: {
         flexDirection: 'row',
@@ -146,6 +149,12 @@ export default StyleSheet.create({
         margin: 10,
         padding: 0,
         width: width / 1.09,
+    },
+    noPostsPhoto: {
+        height: 350,
+        width: width / 1.095,
+        flex: 1,
+
     },
     cardPhoto: {
         height: 200,
@@ -166,13 +175,15 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    uploadPhoto:{
-        height: 120,
-        width: 120,
+    uploadPhoto: {
+        height: 150,
+        width: 150,
         margin: 10,
         padding: 10,
-        marginTop: 30,
+        marginTop: 40,
+        marginBottom: 50,
         borderColor: '#0080ff',
+        borderRadius: 10,
         borderWidth: 0.5,
         flex: 0,
         resizeMode: 'cover',//contain?
@@ -202,13 +213,11 @@ export default StyleSheet.create({
         marginLeft: 10,
         marginBottom: 10,
     },
-    modal:{
-
-    },
-    modalContent:{
-        borderWidth:3,
-        borderColor:'#0080ff',
-        backgroundColor:'#FFF',
+    modal: {},
+    modalContent: {
+        borderWidth: 1,
+        borderColor: '#0080ff',
+        backgroundColor: '#FFF',
         width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6,
 
     }

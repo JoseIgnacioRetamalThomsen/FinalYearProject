@@ -44,7 +44,7 @@ class Settings extends Component {
                                 this.setState({name: name})
                                 this.setState({description: description})
                                 //this.userId({userId: userId})
-                                console.log("successful!!!" + this.state.name, this.state.description)
+                                console.log("successful!!!" + email, name, description, userId)
                                 this.props.navigation.navigate("Profile")
                             })
                     }
@@ -57,7 +57,6 @@ class Settings extends Component {
         return (
             <View style={{flex: 1}}>
                 <CustomHeader title="Settings" navigation={this.props.navigation}/>
-                {/*<View style={Style.view}>*/}
                     <Card style={Style.cardContainer}>
                         <CardItem>
                             <TextInput
@@ -79,7 +78,6 @@ class Settings extends Component {
                             </TouchableOpacity>
                         </CardItem>
                     </Card>
-                {/*</View>*/}
             </View>
         )
     }

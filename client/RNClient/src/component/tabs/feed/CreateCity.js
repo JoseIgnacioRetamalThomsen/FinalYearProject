@@ -14,8 +14,7 @@ export default class CreateCity extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isDisabled: true,
-            image: '../../../img/add_image.png',
+            image: '',
             cities: [
                 {
                     cityId: 0,
@@ -53,7 +52,6 @@ export default class CreateCity extends React.Component {
     }
 
     createCity() {
-        console.log("ppp", this.state.city, this.state.country)
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -114,22 +112,39 @@ export default class CreateCity extends React.Component {
         })
     }
 
+    onClick() {
+        console.log("mmmm", this.state.description, this.state.image)
+        if (this.state.description === 'undefined' || this.state.image === '') {
+            alert("Please upload photo and provide description")
+        } else {
+            this.createCity()
+        }
+    }
+
+    displayPhoto() {
+        if (this.state.image === '') {
+            return (<Image source={IMAGE.UPLOAD_IMG}
+                           style={Style.uploadPhoto}/>)
+        } else {
+            return (<Image source={{uri: this.state.image}}
+                           style={Style.uploadPhoto}/>)
+        }
+    }
+
     render() {
         return (
             <Root>
                 <View style={{flex: 1}}>
                     <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
 
-
                     <Card style={styles.createContainer}>
-                        <PhotoUpload onPhotoSelect={image => {
+                        <PhotoUpload  onPhotoSelect={image => {
                             if (image) {
                                 this.setState({image: image})
-                                this.setState({isDisabled: false})
                             }
                         }
                         }>
-                            <Image source={IMAGE.UPLOAD_IMG} style={{height:100}}/>
+                            {this.displayPhoto()}
                         </PhotoUpload>
 
                         <CardItem style={styles.createInputContainer}>
@@ -143,18 +158,17 @@ export default class CreateCity extends React.Component {
                                 {this.state.country}
                             </Text>
                         </CardItem>
+
                         <CardItem style={styles.descInputContainer}>
                             <TextInput
                                 style={styles.inputs}
                                 placeholder="Enter description"
                                 onChangeText={(description) => this.setState({description})}/>
-                            <View style={styles.container}>
-                            </View>
                         </CardItem>
 
-                        <TouchableHighlight disabled={this.state.isDisabled}
+                        <TouchableHighlight
                                             style={[styles.buttonContainer, styles.loginButton]}
-                                            onPress={() => this.createCity()}>
+                                            onPress={() => this.onClick()}>
                             <Text style={styles.loginText}>Submit</Text>
                         </TouchableHighlight>
                     </Card>
