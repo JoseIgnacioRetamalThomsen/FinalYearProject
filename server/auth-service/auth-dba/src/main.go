@@ -45,6 +45,8 @@ func readConfig(fileName string) {
 }
 
 // End point:Add new user.
+// Create a new user in the database. When the user creates the account, it will create
+// the profile automatically in the profiles database.
 func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
 	log.Printf("Received: %v , from: %v", "Get user", in.String())
 	u := db.NewUser(in.Email, in.PasswordHash, in.PasswordSalt, false)
@@ -57,6 +59,7 @@ func (s *server) AddUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBR
 }
 
 // End point: GEt user data.
+// Returns the user data used to authenticate the user.
 func (s *server) GetUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
 	log.Printf("Received: %v , from: %v", "Get user", in.String())
 	u, err := db.GetUser(in.Email)
@@ -68,6 +71,7 @@ func (s *server) GetUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBR
 }
 
 // End point: update user data.
+//Update the user data, is used for changing the password.
 func (s *server) UpdateUser(ctx context.Context, in *pb.UserDBRequest) (*pb.UserDBResponse, error) {
 	log.Printf("Received: %v", "Update user")
 	u := db.NewUser(in.Email, in.PasswordHash, in.PasswordSalt, false)
@@ -81,6 +85,7 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.UserDBRequest) (*pb.User
 }
 
 // End point: create a new seassion.
+// Create a new session in the database. Used when the user login using the password.
 func (s *server) CreateSeassion(ctx context.Context, in *pb.UserSessionRequest) (*pb.UserSessionResponse, error) {
 
 	key, email, d1, d2, err := db.CreateSession(in.Token, in.Email)
@@ -92,6 +97,8 @@ func (s *server) CreateSeassion(ctx context.Context, in *pb.UserSessionRequest) 
 }
 
 // End point: Get a session.
+// Return a user session if exist.  Used to check if the session exists so the user can
+//log in without the password.
 func (s *server) GetSeassion(ctx context.Context, in *pb.UserSessionRequest) (*pb.UserSessionResponse, error) {
 	is, se, err := db.GetSession(in.Token)
 	if err != nil {
@@ -106,6 +113,7 @@ func (s *server) GetSeassion(ctx context.Context, in *pb.UserSessionRequest) (*p
 }
 
 // End point: Delete a session.
+// Delete user session if exits. Used when the user logs out from the device.
 func (s *server) DeleteSession(ctx context.Context, in *pb.UserSessionRequest) (*pb.UserDeleteSessionResponse, error) {
 	res, err := db.DeleteSession(in.Token)
 	if err != nil {
