@@ -1,6 +1,7 @@
 // main package
 package main
 
+// Conects to hash service
 // Provide hashing using the hash service.
 
 import (

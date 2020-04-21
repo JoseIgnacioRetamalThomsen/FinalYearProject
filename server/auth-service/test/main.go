@@ -9,6 +9,7 @@ import (
 
 	"context"
 	"fmt"
+	"strconv"
 
 	//"net"
 
@@ -29,12 +30,13 @@ address = "104.40.206.141:7777"
 func main() {
 
 	//fmt.Print(CreateUser("e5613tfhhhh", []byte("12345h6"),[]byte("12334h6")))
-	//GetUser("e5613tfh")
-//	UpdateUser("e560",[]byte("12345678"),[]byte("123345678"))
-	//CreateSession("e560","1234556789")
-	fmt.Print(GetSession("e560","12345567898"))
-	//fmt.Print(DeleteSession("e560","1234556"))
-
+//	GetUser("e5613tfh")
+	//UpdateUser("e5613tfhhhh",[]byte("12345678"),[]byte("123345678"))
+	for i := 0; i < 1000; i++ {
+		CreateSession("e560", "1234556789"+ strconv.Itoa(i))
+		//fmt.Print(GetSession("e560","1234556789"))
+		fmt.Print(DeleteSession("e560","1234556789" + strconv.Itoa(i)))
+	}
 }
 
 func GetUser(email string){
