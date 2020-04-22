@@ -135,7 +135,7 @@ func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
 
 
 func CreatePlaceRequest(w http.ResponseWriter, r *http.Request){
-	log.Printf("Received: %v", "Create place")
+
 
 	token := r.Header["Token"][0]
 	email := r.Header["Email"][0]

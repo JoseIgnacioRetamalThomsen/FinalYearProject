@@ -22,11 +22,6 @@ import (
 )
 
 
-
-
-
-
-
 func homeLink(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome home!")
 }
@@ -60,7 +55,7 @@ func UpdatePlaceRequest(w http.ResponseWriter, r *http.Request){
 func CreateCityPostRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Craete city post")
 
-	var post pb.CityPost
+	var post pb.CityPostCreateUser
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Fprintf(w, "Wrong request, body must contain city data")
@@ -110,11 +105,15 @@ func GetPlacePostRequest(w http.ResponseWriter, r *http.Request){
 
 */
 
-
 func main() {
 
+	// read configuration
+	args := os.Args[1]
+	readConfig(args)
+
+	fmt.Print(configuration.Auth[0])
 	//conect to profiles server
-	dbserverCtx, err := newProfilesServiceContext(url)
+	dbserverCtx, err := newProfilesServiceContext(configuration.Profiles[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -122,7 +121,7 @@ func main() {
 	ProfSerConn = *s2
 
 	//conect to  post server
-	dbserverCtx1, err := newPostServiceContext(POST_url)
+	dbserverCtx1, err := newPostServiceContext(configuration.Post[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -130,19 +129,57 @@ func main() {
 	serviceConn = *s1
 
 	//connect to photo service
-	dbserverCtx2, err := newPhotosServiceContext(photoUrl)
+	dbserverCtx2, err := newPhotosServiceContext(configuration.Photo[0])
 	if err != nil {
 		log.Fatal(err)
 	}
 	s3 := &photosServer{dbserverCtx2}
 	photoConn = *s3
 
+	//connect to auth service
+	dbserverCtx3, err := newAuthServiceContext(configuration.Auth[0])
+	if err != nil {
+		log.Fatal(err)
+	}
+	s4 := &authService{dbserverCtx3}
+	authConn = *s4
+
+	//start load balance connection
+	dbserverCtxLB, err := newDBContextLoadBalancing()
+	if err != nil {
+		log.Fatal(err)
+	}
+	s5 := &clientDBLoadBalancing{dbserverCtxLB}
+	dbConnLB = *s5
+
+	log.Printf("Received: %v", "here")
+
+
+
+
+	//log.Printf("Received: %v", "here")
+	//err, user:= loginUser(pb.UserRequest{
+	//	Email:                "email116",
+	//	HashPassword:         "password",
+	//	Name:                 "user1",
+	//
+	//})
+	//if err!=nil{
+	//	panic(err)
+	//}
+	//log.Printf("Received: %v", user)
 
 
 	//GetCity(tokenEmail,token,"san pedro","chile")
 
-	//profiles
+
+
+
 	router := mux.NewRouter().StrictSlash(true)
+	//auth
+	router.HandleFunc("/user", CreateNewUser).Methods("POST")
+
+	//profiles
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/city", CreateCityRequest).Methods("POST")
 	router.HandleFunc("/city/{country}/{name}/", GetCityRequest).Methods("GET")
@@ -172,6 +209,8 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 	//log.Fatal(http.ListenAndServe(":8080", router))
 }
+
+
 
 
 ///********************* Profiles
