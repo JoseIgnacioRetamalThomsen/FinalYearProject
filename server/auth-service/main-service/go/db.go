@@ -50,7 +50,7 @@ func newDBContext(endpoint string) (*dbClientContext, error) {
 	}
 	ctx := &dbClientContext{
 		dbClient: pb.NewUserAuthDBClient(userConn),
-		timeout:  time.Second,
+		timeout:  time.Second*MAX_CON_TIME,
 	}
 	return ctx, nil
 }
@@ -76,7 +76,7 @@ func newDBContextLoadBalancing() (*dbClientContextLoadBalancing, error) {
 // Get users, user load balancing connection.
 func getUser(email string) (string, []byte, []byte, error) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	r, err := dbConnLB.context.dbClient.GetUser(ctx, &pb.UserDBRequest{Email: email})
 	if err != nil {
@@ -90,7 +90,7 @@ func getUser(email string) (string, []byte, []byte, error) {
 // add a new user , normal conection, always to master.
 func addUser(email string, hashedPassword []byte, salt []byte) (string, int64, error) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	r, err := dbConn.context.dbClient.AddUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hashedPassword, PasswordSalt: salt})
 	if err != nil {
@@ -103,7 +103,7 @@ func addUser(email string, hashedPassword []byte, salt []byte) (string, int64, e
 // update user , normal connection, always to master.
 func updateUser(email string, hash []byte, salt []byte) (string, []byte, []byte, error) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	r, err := dbConn.context.dbClient.UpdateUser(ctx, &pb.UserDBRequest{Email: email, PasswordHash: hash, PasswordSalt: salt})
 	if err != nil {
@@ -114,7 +114,7 @@ func updateUser(email string, hash []byte, salt []byte) (string, []byte, []byte,
 
 // Create user seasion, normal conection, always to master.
 func CreateSession(email string, token string) (bool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	_, err := dbConn.context.dbClient.CreateSeassion(ctx, &pb.UserSessionRequest{Email: email, Token: token})
 	if err != nil {
@@ -127,7 +127,7 @@ func CreateSession(email string, token string) (bool, error) {
 
 // Check token, use load balancing connection.
 func CheckToken(email string, token string) (bool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	res, err := dbConnLB.context.dbClient.GetSeassion(ctx, &pb.UserSessionRequest{Email: email, Token: token})
 	if err != nil {
@@ -141,7 +141,7 @@ func CheckToken(email string, token string) (bool, error) {
 
 // Delete tocken, use normal connection, always to master,
 func DeleteToken(email string, token string) (bool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	res, err := dbConn.context.dbClient.DeleteSession(ctx, &pb.UserSessionRequest{Email: email, Token: token})
 	if err != nil {
@@ -161,7 +161,7 @@ type databaseResolver struct {
 }
 
 // resolver implementation
-func (*databasesResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOption) (resolver.Resolver, error) {
+func (*databasesResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
 	r := &databaseResolver{
 		target: target,
 		cc:     cc,
@@ -187,7 +187,7 @@ func (r *databaseResolver) start() {
 }
 
 // resolver implementation
-func (*databaseResolver) ResolveNow(o resolver.ResolveNowOption) {}
+func (*databaseResolver) ResolveNow(o resolver.ResolveNowOptions) {}
 
 // resolver implementation
 func (*databaseResolver) Close() {}

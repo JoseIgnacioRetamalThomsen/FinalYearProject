@@ -26,6 +26,7 @@ const (
 	port = ":50051"
 )
 
+const MAX_CON_TIME =30;
 // configuration
 const (
 	dbConnectionScheme = "dbConnectionScheme"
@@ -214,6 +215,8 @@ func main() {
 	s4 := &profileServer{profilesCtx}
 	profSerConn = *s4
 
+
+	CreateUser("use45","token","name","description");
 	//fmt.Print("Service started")
 	log.Printf("Started: %v", " service")
 

@@ -34,7 +34,7 @@ func newClientContext(endpoint string) (*passClientContext, error) {
 	}
 	ctx := &passClientContext{
 		psClient: pb.NewPasswordServiceClient(userConn),
-		timeout:  time.Second,
+		timeout:  time.Second*MAX_CON_TIME,
 	}
 	return ctx, nil
 }
@@ -42,7 +42,7 @@ func newClientContext(endpoint string) (*passClientContext, error) {
 //hash service, validate a password.
 func validate(pass string, hash []byte, salt []byte) bool {
 	// Set up a connection to the server.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	r, err := psCon.context.psClient.Validate(ctx, &pb.ValidateRequest{Password: pass, HasshedPassword: hash, Salt: salt})
 	if err != nil {
@@ -54,7 +54,7 @@ func validate(pass string, hash []byte, salt []byte) bool {
 
 //hash service, hash a password
 func hash(pass string) ([]byte, []byte) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
 	r, err := psCon.context.psClient.Hash(ctx, &pb.HashRequest{Password: pass})
 	if err != nil {

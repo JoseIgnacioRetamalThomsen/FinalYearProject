@@ -69,10 +69,10 @@ func main(){
 	}
 	s2 := &profileServer{dbserverCtx}
 	profSerConn = *s2
-     GetCity(tokenEmail,token,"Galway","Ireland")
+    // GetCity(tokenEmail,token,"Galway","Ireland")
 	//GetAllCitys()
 	//GetAllPlaces()
-	//fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
+	fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
 //	fmt.Println(GetUser(tokenEmail,token))
 //	fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
 	//fmt.Println(CreateCity(tokenEmail,token,"galway","ireland","Bacn",12,12))
@@ -92,7 +92,7 @@ func main(){
 
 
 func CreateUser(email string,name string, description string,token string) (bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 	r, err := profSerConn.context.dbClient.CreateUser(ctx,&pb.CreateUserRequestP{
 		Token:                token,

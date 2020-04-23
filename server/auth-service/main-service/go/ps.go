@@ -35,20 +35,25 @@ func newProfilesServiceContext(endpoint string) (*profileServiceContext, error) 
 	}
 	ctx := &profileServiceContext{
 		prosClient: pb.NewProfilesClient(userConn),
-		timeout:    time.Second,
+		timeout:    time.Second*MAX_CON_TIME,
 	}
 	return ctx, nil
 }
 
 // create user in profile service.
 func CreateUser(email string, token string, name string, description string) bool {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*MAX_CON_TIME)
 	defer cancel()
-	r, err := profSerConn.context.prosClient.CreateUser(ctx, &pb.UserRequestP{
+	r, err := profSerConn.context.prosClient.CreateUser(ctx, &pb.CreateUserRequestP{
 		Token:       token,
 		Email:       email,
-		Name:        name,
-		Description: description,
+		User: &pb.User{
+			Email:                email,
+			Name:                 name,
+			Descripiton:          description,
+			UserId:               0,
+
+		},
 	})
 	if err != nil {
 		log.Printf("Received: %v", err)
