@@ -4,12 +4,14 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"net"
+	"strings"
 
 	//"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
 	"log"
-	"net"
+
 	"time"
 
 	//"errors"
@@ -25,9 +27,10 @@ const (
 
 )
 const(
-	//url = "0.0.0.0:5777"
+	url = "0.0.0.0:5777"//this for server
 	//url="localhost:5777";
-	url = "35.234.146.99:5777"
+	//url = "35.197.221.57:5777"
+	//url = "34.89.92.151:5777"
 )
 
 type neo4jDB struct {
@@ -66,7 +69,7 @@ const(
 	email = "user1@email.com"
 	description = "first user"
 
-	cityName = "galway"
+	cityName = "galway1"
 	cityUserEmail = email
 	cityLon =45
 	cityLat = 54
@@ -91,45 +94,50 @@ const(
 	tokenEmail ="G00341964@gmit.ie"
 )
 
-func (s *server) CreateUser(ctx context.Context, in *pb.UserRequestP) (*pb.UserResponseP, error) {
+func (s *server) CreateUser(ctx context.Context, in *pb.CreateUserRequestP) (*pb.UserResponseP, error) {
 
 	log.Printf("Received: %v", "create user")
-	//check token
+/*	//check token
 	//isToken := CheckToken(in.Email,in.Token)
-/*
+
 	if isToken == false{
 		return nil,status.Error(codes.PermissionDenied,"Invalid token")
 	}
 */
-	bool, err := CreateUser(in.GetEmail(),in.GetName(),in.GetDescription())
+	res, err := CreateUser(*in.User)
 	if err != nil {
 		log.Fatal(err)
-		panic(err)
+		return nil,err
 	}
 	return &pb.UserResponseP{
-		Email:                in.GetEmail(),
-		Valid:                bool,
+		Valid:                res.Valid,
+		User:                 res.User,
+		XXX_NoUnkeyedLiteral: struct{}{},
 	}, nil
 }
 
-func (s *server) GetUser(ctx context.Context, in *pb.UserRequestP) (*pb.UserResponseP, error) {
+func (s *server) GetUser(ctx context.Context, in *pb.GetUserRequestP) (*pb.UserResponseP, error) {
 
 	log.Printf("Received: %v", "get user")
 	//check token
 	isToken := CheckToken(in.Email,in.Token)
-
 	if isToken == false{
 		return nil,status.Error(codes.PermissionDenied,"Invalid token")
 	}
-
-	res, err := GetUser(in.GetEmail())
+	res, err := GetUser(pb.GetUserRequestPDB{
+		Email:                strings.ToLower(in.Email),
+		})
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
-	return &res,nil
+	return &pb.UserResponseP{
+		Valid:                res.Valid,
+		User:                 res.User,
+
+	},nil
 }
 
-func (s *server) UpdateUser(ctx context.Context, in *pb.UserRequestP) (*pb.UserResponseP, error) {
+func (s *server) UpdateUser(ctx context.Context, in *pb.CreateUserRequestP) (*pb.UserResponseP, error) {
 	log.Printf("Received: %v", "update user")
 	//check token
 	isToken := CheckToken(in.Email,in.Token)
@@ -138,96 +146,288 @@ func (s *server) UpdateUser(ctx context.Context, in *pb.UserRequestP) (*pb.UserR
 		return nil,status.Error(codes.PermissionDenied,"Invalid token")
 	}
 
-	res,err := UpdateUser(in.Email,in.Name,in.Description)
+	res,err := UpdateUser(*in.User)
 	//nothing to do if error, so restart service
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
 	return &pb.UserResponseP{
-		Valid:                res,
-		Email:                in.Email,
-		Name:                 in.Name,
-		Description:          in.Description,
+		Valid:                true,
+		User:                 res.User,
 
 	},nil
 }
 
-func (s *server) CreateCity(ctx context.Context, in *pb.CityRequestP) (*pb.CityResponseP, error) {
+func (s *server) CreateCity(ctx context.Context, in *pb.CreateCityRequestP) (*pb.CityResponseP, error) {
 	log.Printf("Received: %v", "create city")
 	//check token
-	isToken := CheckToken(in.CreatorEmail,in.Token)
+	isToken := CheckToken(in.Name,in.Token)
 
 	if isToken == false{
 		return nil,status.Error(codes.PermissionDenied,"Invalid token")
 	}
 
-	res, err := CreateCity(in.Name,in.Country,in.CreatorEmail,in.Location.Lat,in.Location.Lon,in.Description)
-	//nothing to do if error, so restart service
+	res, err := CreateCity(*in.City)
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
-	return &res,nil
+	return &pb.CityResponseP{
+		Valid:                res.Valid,
+		City:                 res.City,
+	},nil
 }
 
-func (s *server) GetCity(ctx context.Context, in *pb.CityRequestP) (*pb.CityResponseP, error) {
+func (s *server) GetCity(ctx context.Context, in *pb.GetCityRequestP) (*pb.CityResponseP, error) {
 	log.Printf("Received: %v", "get city")
 	//check token
-	isToken := CheckToken(in.CreatorEmail,in.Token)
+	isToken := CheckToken(in.Name,in.Token)
 
 	if isToken == false{
 		return nil,status.Error(codes.PermissionDenied,"Invalid token")
 	}
 
-	res, err :=GetCity(in.Name,in.Country)
-	if err != nil {
-		return &pb.CityResponseP{
-			Valid:                false,
-			Name:                 res.Name,
-			Country:             res.Country,
-			CreatorEmail:         res.CreatorEmail,
-			Description:          res.Description,
-			Location:             &pb.GeolocationP{Lat:res.Location.GetLat(),Lon:res.Location.GetLon()},
+	res, err :=GetCity(pb.CityRequestPDB{
+		Name:                 strings.ToLower(in.CityName),
+		Country:              strings.ToLower(in.CityCountry),
 
-		},nil
+	})
+	if err != nil {
+		return nil,err
 	}
 
 	return &pb.CityResponseP{
-		Valid:                true,
-		Name:                 res.Name,
-		Country:             res.Country,
-		CreatorEmail:         res.CreatorEmail,
-		Description:          res.Description,
-		Location:             &pb.GeolocationP{Lat:res.Location.GetLat(),Lon:res.Location.GetLon()},
-
+		Valid:                res.Valid,
+		City:                 res.City,
 	},nil
 }
 
-func (s *server) CreatePlace(ctx context.Context, in *pb.PlaceRequestP) (*pb.PlaceResponseP, error) {
+func (s *server) CreatePlace(ctx context.Context, in *pb.CreatePlaceRequestP) (*pb.PlaceResponseP, error) {
 	log.Printf("Received: %v", "create place")
 	//check token
-	isToken := CheckToken(in.CreatorEmail,in.Token)
+	isToken := CheckToken(in.Name,in.Token)
 
 	if isToken == false{
 		return nil,status.Error(codes.PermissionDenied,"Invalid token")
 	}
 
-	res, err := CreatePlace(in.Name, in.City,in.Country,in.Description,in.CreatorEmail,in.Location.GetLat(),in.Location.GetLon())
+	res, err := CreatePlace(*in.Place)
+
+	if err != nil{
+		return nil,err
+	}
+	return &pb.PlaceResponseP{
+		Valid:                res.Valid,
+		Place:                res.Place,
+	},nil
+}
+
+func (s *server) UpdateCity(ctx context.Context, in *pb.CreateCityRequestP) (*pb.CityResponseP, error) {
+	log.Printf("Received: %v", "update city")
+
+	//check token
+	isToken := CheckToken(in.Name,in.Token)
+
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+
+	res, err := UpdateCity(*in.City)
 	if err!= nil{
 		panic(err)
 	}
 
-	return &pb.PlaceResponseP{
+	return &pb.CityResponseP{
 		Valid:                res,
-		Name:                 in.Name,
 		City:                 in.City,
-		Country:              in.Country,
-		CreatorEmail:         in.CreatorEmail,
-		Description:          in.Description,
-		Location:             &pb.GeolocationP{Lat:in.Location.GetLat(),Lon:in.Location.GetLon()},
 	},nil
 }
 
-func main(){
+func (s *server) UpdatePlace(ctx context.Context, in *pb.CreatePlaceRequestP) (*pb.PlaceResponseP, error) {
+	log.Printf("Received: %v", "Update place")
+	//check token
+	isToken := CheckToken(in.Name,in.Token)
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+	res, err := UpdatePlace(*in.Place)
+	if err!= nil{
+		return nil,err
+	}
+	return &pb.PlaceResponseP{
+		Valid:                res,
+		Place:                in.Place,
+	},nil
+}
+
+
+
+func (s *server) GetPlace(ctx context.Context, in *pb.GetPlaceRequestP) (*pb.PlaceResponseP, error) {
+	log.Printf("Received: %v", "Get place")
+	//check token
+	isToken := CheckToken(in.Email,in.Token)
+
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+
+	res, err := GetPlace(pb.PlaceRequestPDB{
+		Name:                 strings.ToLower(in.PlaceName),
+		City:                  strings.ToLower(in.PlaceCity),
+		Country:               strings.ToLower(in.PlaceCountry),
+
+	})
+	if err!= nil{
+		return nil, err
+	}
+	return &pb.PlaceResponseP{
+		Valid:                true,
+		Place:                res,},nil
+}
+
+func (s *server) VisitCity(ctx context.Context, in *pb.VisitCityRequestP) (*pb.VisitCityResponseP, error) {
+	log.Printf("Received: %v: %v", "Visir city", in)
+	//check token
+	isToken := CheckToken(in.Email,in.Token)
+	if isToken == false{
+		return nil,status.Error(codes.PermissionDenied,"Invalid token")
+	}
+		res,err := VisitCity(pb.VisitCityRequestPDB{
+			UserEmail:            strings.ToLower(in.Email),
+			CityId:               in.Id,
+
+		})
+	if err!= nil{
+		return nil,err
+	}
+		return &pb.VisitCityResponseP{
+			Valid:                res.Valid,
+			TimeStamp:            res.TimeStamp,
+
+		},nil
+}
+
+func (s *server) VisitPlace(ctx context.Context, in *pb.VisitPlaceRequestP) (*pb.VisitPlaceResponseP, error) {
+	log.Printf("Received: %v: %v", "Visir city", in)
+	//check token
+	isToken := CheckToken(in.Email, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res,err := VisitPlace(pb.VisitPlaceRequestPDB{
+		UserEmail:            strings.ToLower(in.Email),
+		PlaceId:              in.PlaceId,
+
+	})
+	if err!= nil{
+		return nil,err
+	}
+	return &pb.VisitPlaceResponseP{
+		Valid:                res.Valid,
+		TimeStamp:            res.TimeStamp,
+	},nil
+}
+
+
+func (s *server) GetVisitedCitys(ctx context.Context, in *pb.VisitedRequestP) (*pb.VisitedCitysResponseP, error) {
+	log.Printf("Received: %v: %v", "Visited city's", in.Email)
+	//check token'
+	isToken := CheckToken(in.Email, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+	res,err := GetVisitedCitys(in.Email)
+	if err!= nil{
+		return nil,err
+	}
+	return &pb.VisitedCitysResponseP{
+		Valid:                true,
+		Citys:                res.Citys,
+		},nil
+}
+
+func (s *server) GetVisitedPlaces(ctx context.Context, in *pb.VisitedRequestP) (*pb.VisitedPlacesResponseP, error) {
+	log.Printf("Received: %v: %v", "Visited place's", in.Email)
+	//check token'
+	isToken := CheckToken(in.Email, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+	res, err := GetVisitedPlaces(in.Email)
+	if err != nil {
+		return nil,err
+	}
+
+	return &pb.VisitedPlacesResponseP{
+		Valid:                true,
+		Places:               res.Places,
+	},nil
+}
+
+func (s *server) GetCityPlaces(ctx context.Context, in *pb.CreateCityRequestP) (*pb.VisitedPlacesResponseP, error) {
+	log.Printf("Received: %v: %v", "Git city  place's", in)
+	//check token'
+	isToken := CheckToken(in.Name, in.Token)
+	if isToken == false {
+		return nil, status.Error(codes.PermissionDenied, "Invalid token")
+	}
+
+	res,err := GetPlacesCity(pb.CityRequestPDB{
+		Name:                 in.City.Name,
+		Country:              in.City.Country,
+	})
+	if err != nil {
+		return nil,err
+	}
+
+	return &pb.VisitedPlacesResponseP{
+		Valid:                true,
+		Places:               res.Places,
+	},nil
+}
+
+
+
+func (s *server) GetAllCitys(in *pb.GetAllRequest, stream pb.Profiles_GetAllCitysServer) error {
+	// create a channel, that is like a blocking queue
+	ch := make(chan CityResult)
+
+
+	go GetAllCitysDBA(in,ch)
+	for i := range ch {
+		if i.Err != nil{
+			return i.Err
+		}
+		if err := stream.Send(i.City); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *server) GetAllPlaces(in *pb.GetAllRequest, stream pb.Profiles_GetAllPlacesServer) error {
+	// create a channel, that is like a blocking queue
+	ch := make(chan PlaceResult)
+
+	// Get all places in different thread
+	go GetAllPlacesDBA(in,ch)
+
+	// send results back async
+	for i := range ch {
+		//send the error if
+		if i.Err != nil{
+			return i.Err
+		}
+		// get next place from stream
+		if err := stream.Send(i.Place); err != nil {
+			return err
+		}
+	}
+	// all finish with no errors
+	return nil
+}
+
+func main() {
 	//conect to neo4j db
 	dbserverCtx, err := newNeo4jDBContext(url)
 	if err != nil {
@@ -245,7 +445,65 @@ func main(){
 	s1 := &authClient{psserverCtx}
 	prsCon = *s1
 
-	//fmt.Println(CheckToken(tokenEmail,token))
+
+	//get city
+//	r, _ := GetCity("galway", "ireland");
+	//fmt.Print(r.Country + "\n" + r.Name + "\n" + r.GetCreatorEmail() + "\n" + r.Description)
+//	fmt.Println("\nid :", r.Id)
+//	fmt.Println(CheckToken(tokenEmail,token))
+
+/*
+	for i := 0; i < 1; i++ {
+		//crete user
+		res, errr := CreateUser(email, name, description)
+		if errr != nil {
+			panic(errr)
+		}
+		fmt.Print(res)
+
+		//create city
+		a, _ := CreateCity(cityName, cityCountry, cityUserEmail, cityLat, cityLon, cityDescription)
+		fmt.Print(a.Id)
+
+		//get city
+		r, _ := GetCity(cityName, cityCountry);
+		fmt.Print(r.Country + "\n" + r.Name + "\n" + r.GetCreatorEmail() + "\n" + r.Description)
+		fmt.Println(r.Id)
+
+		//create place
+		r1, _ := CreatePlace(placeName, placeCity, placeCountry, placeDescription, placeCreatorEmail, placeLat, placeLon)
+		fmt.Println(r1)
+		//get place
+		r2, _ := GetPlace(placeName, placeCity, placeCountry)
+		fmt.Println(r2)
+
+		r3, _ := VisitPlace(email, placeName, placeCity, placeCountry1)
+		fmt.Println(r3)
+		r4, _ := GetVisitedPlaces(email)
+		fmt.Println(r4.GetPlaces()[0].Name)
+		//fmt.Println(r4.GetPlaces()[1].Name)
+		for _, value := range r4.GetPlaces() {
+			fmt.Println(value.Name)
+		}
+		r5, _ := VisitCity(email, cityName, cityCountry);
+		fmt.Println(r5)
+		r6, _ := GetVisitedCitys(email)
+		for _, value := range r6.GetCitys() {
+			fmt.Println(value.Name)
+		}
+	}*/
+//	b11, err := UpdateUser(email, "new Nax", "New descdffadfsa")
+//	fmt.Println(b11)
+
+	//b1, err := UpdateCity("galway", "ireland", "user1@email.com", "this is the last", 7.8, 77)
+	//fmt.Println(b1)
+	//b2, err := UpdatePlace("gmit", "galway", "ireland", "user1@email.com", "very very last", 4, 4)
+	//fmt.Println(b2)
+/*
+	r7, err := GetPlacesCity("galway", "ireland")
+	for _, value := range r7.GetPlaces() {
+		fmt.Println(value.Name)
+	}*/
 
 	//start server
 	lis, err := net.Listen("tcp", port)
@@ -257,65 +515,8 @@ func main(){
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-	////crete user
-	//res , errr := CreateUser(email,name,description)
-	//if errr != nil {
-	//	panic(errr)
-	//}
-	//fmt.Print(res)
-	//
-	////get user
-	//n,e,d,err := GetUser(email)
-	//fmt.Print(n +"\n")
-	//fmt.Print(e +"\n")
-	//fmt.Print(d +"\n")
-	//
-	////create city
-	//a,b,err :=CreateCity(cityName,cityCountry,cityUserEmail,cityLat,cityLon,cityDescription)
-	//fmt.Print(a)
-	//fmt.Print(b)
-	//
-	////get city
-	//r,err := GetCity(cityName,cityCountry);
-	//fmt.Print(r.Country + "\n" +r.Name +"\n" +r.GetCreatorEmail() +"\n" +r.Description)
-	//fmt.Println(r.GetLocation())
-	//
-	////create place
-	//r1,err := CreatePlace(placeName,placeCity,placeCountry,placeDescription,placeCreatorEmail,placeLat,placeLon)
-	//fmt.Println(r1)
-	////get place
-	//r2,err := GetPlace(placeName,placeCity,placeCountry)
-	//fmt.Println(r2)
-	//
-	//
-	//r3, err := VisitPlace(email,placeName,placeCity, placeCountry1)
-	//fmt.Println(r3)
-	//r4,err := GetVisitedPlaces(email)
-	//fmt.Println(r4.GetPlaces()[0].Name)
-	////fmt.Println(r4.GetPlaces()[1].Name)
-	//for _, value := range r4.GetPlaces(){
-	//	fmt.Println(value.Name)
-	//}
-	//r5,err := VisitCity(email,cityName,cityCountry);
-	//fmt.Println(r5)
-	//r6,err := GetVisitedCitys(email)
-	//for _, value := range r6.GetCitys(){
-	//	fmt.Println(value.Name)
-	//}
-	//b11,err := UpdateUser(email,"new Nax","New descdffadfsa")
-	//fmt.Println(b11)
-	//
-	//b1,err := UpdateCity("galway","ireland","user1@email.com","this is the last" ,7.8,77)
-	//fmt.Println(b1)
-	//b2,err := UpdatePlace("gmit","galway","ireland","user1@email.com","very very last",4,4)
-	//fmt.Println(b2)
-	//
-	//r7,err := GetPlacesCity("galway","ireland")
-	//for _,value := range r7.GetPlaces(){
-	//	fmt.Println(value.Name)
-	}
 
-
+}
 	//check token
 
 // password service client

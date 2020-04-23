@@ -1,119 +1,152 @@
+//Jose I. Retamal
+//GMIT 2020
+
 syntax = "proto3";
 
-
 package wcity;
+
+import "profiles_shared.proto";
 
 option java_multiple_files = true;
 option java_package = "io.grpc.wcity.profiles";
 option java_outer_classname = "ProfilesProto";
 option objc_class_prefix = "RPC";
 
-service Profiles{
+// Define server interface
+// For conetion from profiles main service to front end
+service Profiles {
 
-    rpc CreateUser(UserRequestP) returns (UserResponseP);
-    rpc GetUser(UserRequestP) returns (UserResponseP);
-    rpc UpdateUser(UserRequestP) returns (UserResponseP);
-    rpc CreateCity(CityRequestP) returns  (CityResponseP);
-    rpc CreatePlace(PlaceRequestP) returns (PlaceResponseP);
-    rpc UpdateCity(CityRequestP) returns (CityResponseP);
-    rpc UpdatePlace(PlaceRequestP) returns (CityResponseP);
-    rpc GetCity(CityRequestP) returns (CityResponseP);
-    rpc GetPlace(PlaceRequestP) returns (PlaceResponseP);
-    rpc VisitCity(VisitCityRequestP) returns (VisitCityResponseP);
-    rpc VisitPlace(VisitPlaceRequestP) returns (VisitPlaceResponseP);
-    rpc GetVisitedCitys(VisitedRequestP) returns (VisitedCitysResponseP);
-    rpc GetVisitedPlaces(VisitedRequestP) returns (VisitedPlacesResponseP);
-    rpc GetCityPlaces(CityRequestP) returns (VisitedPlacesResponseP); 
+    // Search for city,place
+    //
+    // Given a serach frase it will return desidere amount of matches.
+    rpc SearchAllDBA (SearchAllRequest) returns (stream SearchAllResult);
 
+    // Returns all citys on the database
+    //
+    // The amount of city's can be huge so they are return
+    // as a one way stream, a limit can be set.
+    rpc GetAllCitys (GetAllRequest) returns (stream City);
 
+    // Returns all places on the database
+    //
+    // The amount of city's can be huge so they are return
+    // as a one way stream, a limit can be set.
+    rpc GetAllPlaces (GetAllRequest) returns (stream Place);
+
+    // Create a new user
+    //
+    // Users are only created when a user create a new account
+    // on the auth service. When user create account auth service
+    // will use this method to create the account in the neo4j db.
+    rpc CreateUser (CreateUserRequestP) returns (UserResponseP);
+
+    // Get User
+    //
+    // Returns all data for the requested user, the request
+    // must contain the user email wich is the unique identifier.
+    rpc GetUser (GetUserRequestP) returns (UserResponseP);
+
+    // Update user data
+    //
+    // Must include the user email, the only data that can be updated
+    // at the moment is user description.
+    rpc UpdateUser (CreateUserRequestP) returns (UserResponseP);
+
+    // Create a new city
+    //
+    // Users create citys, the city is identify by name and country,
+    // after the city is created it will have a id which is a integer.
+    // The id is used for add post and places to the city.
+    rpc CreateCity (CreateCityRequestP) returns (CityResponseP);
+
+    //
+    //
+    //
+    rpc CreatePlace (CreatePlaceRequestP) returns (PlaceResponseP);
+    rpc UpdateCity (CreateCityRequestP) returns (CityResponseP);
+    rpc UpdatePlace (CreatePlaceRequestP) returns (PlaceResponseP);
+    rpc GetCity (GetCityRequestP) returns (CityResponseP);
+    //  request only need : email, token,name,city and country in request
+    rpc GetPlace (GetPlaceRequestP) returns (PlaceResponseP);
+    rpc VisitCity (VisitCityRequestP) returns (VisitCityResponseP);
+    rpc VisitPlace (VisitPlaceRequestP) returns (VisitPlaceResponseP);
+    rpc GetVisitedCitys (VisitedRequestP) returns (VisitedCitysResponseP);
+    rpc GetVisitedPlaces (VisitedRequestP) returns (VisitedPlacesResponseP);
+    // reques only need email,tokem, city name and city coutry
+    rpc GetCityPlaces (CreateCityRequestP) returns (VisitedPlacesResponseP);
 }
-message GeolocationP{
-    float lon = 1;
-    float lat = 2;
+
+message CreateUserRequestP {
+    string token = 1;
+    string email = 2;
+    User user = 3;
 }
-message UserRequestP{
-  string token = 1;
-  string email = 2;
-  string name = 3;
-  string description = 4;
+message GetUserRequestP {
+    string token = 1;
+    string email = 2;
 }
-message UserResponseP{
-  bool valid = 1;
-  string email = 2;
-  string name = 3;
-  string description = 4;
+message UserResponseP {
+    bool valid = 1;
+    User user = 2;
 }
-message CityRequestP{
-  string token =1;
-  string name = 2;
-  string country =3;
-  string creatorEmail = 4;
-  string description = 5;
-  GeolocationP location =6;
+message CreateCityRequestP {
+    string token = 1;
+    string name = 2;//bug email
+    City city = 3;
 }
-message CityResponseP{
-  bool valid =1;
-  string name = 2;
-  string country =3;
-  string creatorEmail = 4;
-  string description = 5;
-  GeolocationP location =6;
+message GetCityRequestP {
+    string token = 1;
+    string name = 2;//bug email
+    string cityName = 3;
+    string cityCountry = 4;
 }
-message PlaceRequestP{
-  string token  = 1;
-  string name = 2;
-  string city = 3;
-  string country =4;
-  string creatorEmail =5;
-  string description =6;
-  GeolocationP location =7;
+message CityResponseP {
+    bool valid = 1;
+    City city = 2;
 }
-message PlaceResponseP{
-  bool valid  = 1;
-  string name = 2;
-  string city = 3;
-  string country =4;
-  string creatorEmail =5;
-  string description =6;
-  GeolocationP location =7;
+message CreatePlaceRequestP {
+    string token = 1;
+    string name = 2;//bug email
+    Place place = 3;
 }
-message VisitCityRequestP{
-  string token = 1;
-  string email = 2;
-  string cityName = 3;
-  string cityCountry = 4;
+message GetPlaceRequestP {
+    string token = 1;
+    string email = 2;
+    string placeName = 3;
+    string placeCity = 4;
+    string placeCountry = 5;
 }
-message VisitCityResponseP{
-  bool valid = 1;
-  string email = 2;
-  string cityName = 3;
-  string cityCountry = 4;
+message PlaceResponseP {
+    bool valid = 1;
+    Place place = 2;
 }
-message VisitPlaceRequestP{
-  string token = 1;
-  string email = 2;
-  string placeName = 3;
-  string placeCity = 4;
-  string placeCountry = 5;
+message VisitCityRequestP {
+    string token = 1;
+    string email = 2;
+    int32 id = 3;
 }
-message VisitPlaceResponseP{
-  bool  valid = 1;
-  string email = 2;
-  string placeName = 3;
-  string placeCity = 4;
-  string placeCountry = 5;
+message VisitCityResponseP {
+    bool valid = 1;
+    string timeStamp = 2;
 }
-message VisitedRequestP{
-  string token = 1;
-  string email =2;
+message VisitPlaceRequestP {
+    string token = 1;
+    string email = 2;
+    int32 placeId = 3;
 }
-message VisitedCitysResponseP{
-  bool valid =1;
-  string email = 2;
-  repeated CityResponseP citys = 3;
+message VisitPlaceResponseP {
+    bool valid = 1;
+    string timeStamp = 2;
 }
-message VisitedPlacesResponseP{
-  bool valid =1;
-  string email =2;
-  repeated PlaceResponseP places =3;
+message VisitedRequestP {
+    string token = 1;
+    string email = 2;
+}
+message VisitedCitysResponseP {
+    bool valid = 1;
+    repeated City citys = 3;
+}
+message VisitedPlacesResponseP {
+    bool valid = 1;
+    repeated Place places = 3;
 }

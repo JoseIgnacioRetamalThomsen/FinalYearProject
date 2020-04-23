@@ -3,228 +3,253 @@ package main
 import (
 	"context"
 	pb "github.com/joseignacioretamalthomsen/wcity"
-	"strconv"
+	"io"
+	"log"
 	"strings"
 	"time"
 )
 
-func GetPlacesCity(cityName string, cityCountry string)(pb.VisitedPlacesResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+const(
+	CON_DEADLINE = 30;
+)
+func GetPlacesCity(request pb.CityRequestPDB)(*pb.VisitedPlacesResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.GetCityPlaces(ctx,&pb.CityRequestPDB{
-		Name:                 strings.ToLower(cityName),
-		Country:              strings.ToLower(cityCountry)})
+	r, err := dbConn.context.dbClient.GetCityPlaces(ctx,&request)
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
-	return *r,nil
+	return r,nil
 }
 
-func UpdatePlace(name string, city string, country string,creatorEmail string, description string, lat float32, lon float32)(bool, error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func UpdatePlace(place pb.Place)(bool, error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.UpdatePlaceRequest(ctx,&pb.PlacePDB{
-		Name:                 strings.ToLower(name),
-		City:                 strings.ToLower(city),
-		Country:              strings.ToLower(country),
-		CreatorEmail:         strings.ToLower(creatorEmail),
-		Location:             &pb.GeolocationPDB{
-			Lon:                  lat,
-			Lat:                  lon},
-		Description:          description})
+	r, err := dbConn.context.dbClient.UpdatePlaceRequest(ctx,&place)
 	if err != nil {
-		panic(err)
+		return false,err
 	}
 	return r.Valid,nil
 }
 
-func UpdateCity(name string, country string, creatorEmail string, description string, lat float32 , lon float32)(bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func UpdateCity(city pb.City)(bool,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.UpdateCityRequest(ctx,&pb.CityPDB{
-		Name:    strings.ToLower(name),
-		Country:              strings.ToLower(country),
-		CreatorEmail:         strings.ToLower(creatorEmail),
-		Location:             &pb.GeolocationPDB{
-			Lon:                  lat,
-			Lat:                  lon,
-
-		},
-		Description:          strings.ToLower(description),
-		Places:               nil,
-
-	})
-	if err != nil {
-		panic(err)
-	}
-	return r.Valid,nil
-
-}
-
-func UpdateUser(email string,name string, description string)(bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := dbConn.context.dbClient.UpdateUserRequest(ctx, &pb.CreateUserRequestPDB{
-		Email: strings.ToLower(email),
-		Name: strings.ToLower(name),
-		Description:description})
+	r, err := dbConn.context.dbClient.UpdateCityRequest(ctx,&city)
 	if err != nil {
 		return false,nil
 	}
-	res, err := strconv.ParseBool(r.Valied)
+	return r.Valid,nil
 
-	return res,nil
 }
-func GetVisitedCitys(email string)(pb.VisitedCitysResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+
+func UpdateUser(user pb.User)(*pb.CreateUserResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
+	defer cancel()
+	r, err := dbConn.context.dbClient.UpdateUserRequest(ctx, &user)
+	if err != nil {
+		return nil,err
+	}
+
+	return &pb.CreateUserResponsePDB{
+		Valid:                r.Valid,
+		User:                 &user,
+		},nil
+}
+func GetVisitedCitys(email string)(*pb.VisitedCitysResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.GetVisitedCitys(ctx,&pb.VisitedCitysRequestPDB{
 		Email:           strings.ToLower(email)})
 	if err !=nil{
-		panic(err)
+		return nil,err
 	}
-	return *r, nil
+	return r, nil
 }
 
-func VisitCity(email string, cityName string, cityCountry string)(pb.VisitCityResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func VisitCity(request pb.VisitCityRequestPDB)(*pb.VisitCityResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.VisitCity(ctx,&pb.VisitCityRequestPDB{
-		Email:                strings.ToLower(email),
-		CityName:             strings.ToLower(cityName),
-		CityCountry:          strings.ToLower(cityCountry)})
+	r, err := dbConn.context.dbClient.VisitCity(ctx,&request)
 	if err !=nil{
-		panic(err)
+		return nil,err
 	}
 
-	return *r,nil
+	return r,nil
 
 }
 
-func GetVisitedPlaces(email string)(pb.VisitedPlacesResponsePDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GetVisitedPlaces(email string)(*pb.VisitedPlacesResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), 10*CON_DEADLINE*time.Second)
 	defer cancel()
 	r, err := dbConn.context.dbClient.GetVisitedPlaces(ctx,&pb.VisitedPlacesRequestPDB{
 		Email:  strings.ToLower(email)})
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
 
-	return *r,nil
+	return r,nil
 }
 
-func VisitPlace(email string, placeName string, placeCity string, placeCountry string)(pb.VisitPlaceResponsePDB,error){
+func VisitPlace(request pb.VisitPlaceRequestPDB)(*pb.VisitPlaceResponsePDB,error){
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(),CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.VisitPlace(ctx,&pb.VisitPlaceRequestPDB{
-		Email:strings.ToLower(email),
-		PlaceName: strings.ToLower(placeName),
-		PlaceCity:strings.ToLower(placeCity),
-		PlaceCountry:strings.ToLower(placeCountry)})
+	r, err := dbConn.context.dbClient.VisitPlace(ctx,&request)
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
 
-	return *r,nil
+	return r,nil
 }
 
-func GetPlace(name string, city string,country string)(pb.PlacePDB,error){
+func GetPlace(request pb.PlaceRequestPDB)(*pb.Place,error){
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.GetPlace(ctx,&pb.PlaceRequestPDB{
-		Name:strings.ToLower(name),
-		City:strings.ToLower(city),
-		Country:strings.ToLower(country)})
+	r, err := dbConn.context.dbClient.GetPlace(ctx,&request)
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
 
-	return *r,nil
+	return r,nil
 }
 
-func CreatePlace(name string, city string, country string, description string, creatorEmail string, lat float32, lon float32)(bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func CreatePlace(place pb.Place)(*pb.PlaceResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.CreatePlaceRequest(ctx,&pb.PlacePDB{
-		Name:strings.ToLower(name),
-		City:strings.ToLower(city),
-		Country:strings.ToLower(country),
-		Description:description,
-		CreatorEmail:strings.ToLower(creatorEmail),
-		Location: &pb.GeolocationPDB{Lat:lat,Lon:lon}})
+	r, err := dbConn.context.dbClient.CreatePlaceRequest(ctx,&place)
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
-	return r.Valid , nil
+	return r, nil
 }
 
-func GetCity(name string, country string)(pb.CityPDB,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GetCity(request pb.CityRequestPDB)(*pb.CityResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.GetCity(ctx,&pb.CityRequestPDB{
-		Name:strings.ToLower(name),
-		Country:strings.ToLower(country)})
+	r, err := dbConn.context.dbClient.GetCity(ctx,&request)
 	if err != nil {
-		return pb.CityPDB{}, err
+		return nil, err
 	}
-	return *r,nil
+	return r,nil
 }
 
-func CreateCity(name string, country string, creatorEmail string, lat float32,lon float32, description string) (pb.CityResponseP,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func CreateCity(city pb.City) (*pb.CityResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
-	r, err := dbConn.context.dbClient.CreateCity(ctx, &pb.CityPDB{ Name: strings.ToLower(name),
-		Country:strings.ToLower(country),
-		CreatorEmail:strings.ToLower(creatorEmail),
-		Description:description,
-		Location:&pb.GeolocationPDB{Lat:lat,Lon:lon}})
+	r, err := dbConn.context.dbClient.CreateCity(ctx, &city)
 	if err != nil {
-		panic(err)
+		return nil,err
 	}
-	return pb.CityResponseP{
+	return r,nil
+}
+
+func CreateUser(user pb.User) (*pb.CreateUserResponsePDB,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
+	defer cancel()
+	r, err := dbConn.context.dbClient.CreateUser(ctx, &user)
+	if err != nil {
+		return nil, err
+	}
+
+
+	return &pb.CreateUserResponsePDB{
 		Valid:                r.Valid,
-		Name:                 r.Name,
-		Country:              r.Country,
-		CreatorEmail:         creatorEmail,
-		Description:          description,
-		Location:             &pb.GeolocationP{Lat:lat,Lon:lon},
-
+		User:                 r.User,
 	},nil
 }
 
-func CreateUser(email string,name string, description string) (bool,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := dbConn.context.dbClient.CreateUser(ctx, &pb.CreateUserRequestPDB{
-		Email: strings.ToLower(email),
-		Name: strings.ToLower(name),
-		Description:description})
-	if err == nil {
-		return false, err
-	}
-	res, err := strconv.ParseBool(r.Valied)
-
-	return res,nil
-}
-
-func GetUser(email string)(pb.UserResponseP,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+func GetUser(request pb.GetUserRequestPDB)(*pb.UserResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
 	defer cancel()
 
-	r, err := dbConn.context.dbClient.GetUser(ctx, &pb.GetUserRequestPDB{Email: strings.ToLower(email)})
+	r, err := dbConn.context.dbClient.GetUser(ctx, &request)
 	if err != nil {
-		return pb.UserResponseP{Valid:false},nil
+		return nil,err
 	}
-	return pb.UserResponseP{
-		Valid:                true,
-		Email:                r.Email,
-		Name:                 r.Name,
-		Description:          r.Description,
-		},nil
-	//r.Email, r.Name,r.Description,nil
+	return &pb.UserResponseP{
+		Valid:                r.Valid,
+		User:                 r.User,
+			},nil
+}
+
+//structs to pass in channels from dba to main
+// need for pass the error
+type CityResult struct{
+	City *pb.City
+	Err error
+}
+type PlaceResult struct{
+	Place *pb.Place
+	Err error
+}
+
+func GetAllCitysDBA(in *pb.GetAllRequest,c chan CityResult)(*pb.UserResponseP,error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
+	defer cancel()
+
+	stream, err := dbConn.context.dbClient.GetAllCitysDBA(ctx, &pb.GetAllRequest{Max: 100})
+
+	if err != nil {
+		panic(err)
+	}
+	for {
+		city, err := stream.Recv()
+		if err == io.EOF {
+
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.ListFeatures(_) = _, %v", ctx, err)
+			c <- CityResult{
+				City: nil,
+				Err:   err,
+			}
+		}
+		log.Println(city)
+		c <- CityResult{
+			City: city,
+			Err:   nil,
+		}
+
+	}
+	close(c)
+	return nil,nil
 }
 
 
+func GetAllPlacesDBA(in *pb.GetAllRequest,c chan PlaceResult)(*pb.UserResponseP,error) {
 
+	ctx, cancel := context.WithTimeout(context.Background(), CON_DEADLINE*time.Second)
+	defer cancel()
+
+	stream, err := dbConn.context.dbClient.GetAllPlacesDBA(ctx, &pb.GetAllRequest{Max: 100})
+
+	if err != nil {
+		panic(err)
+	}
+	for {
+		place, err := stream.Recv()
+		if err == io.EOF {
+
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.AllPLaces = _, %v", ctx, err)
+			c <- PlaceResult{
+				Place: nil,
+				Err:   err,
+			}
+		}
+
+		c <- PlaceResult{
+			Place: place,
+			Err:   nil,
+		}
+
+	}
+	close(c)
+	return nil,nil
+}

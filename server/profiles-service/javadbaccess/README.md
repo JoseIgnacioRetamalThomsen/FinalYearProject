@@ -7,13 +7,13 @@ Compile is done using maven in id
 navigate to docker folder
 
 `
-sudo docker image build -t joseretamal/profiles-dba:1.1 .
+sudo docker image build -t joseretamal/profiles-dba:1.7 .
 `
 
 # run docker image
 ``
 
- sudo docker  run -d -p  5777:5777 --restart always --name na joseretamal/profiles-dba:1.1
+ sudo docker  run -d -p  5777:5777 --restart always --name na joseretamal/profiles-dba:1.6
 
 
 
@@ -27,7 +27,7 @@ sudo docker container rm --force na
 # push to docker hub
 
 `
-sudo docker push joseretamal/profiles-dba:1.1
+sudo docker push joseretamal/profiles-dba:1.7
 `
 
 
