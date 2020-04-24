@@ -177,7 +177,11 @@ func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
 	//auth
+	router.HandleFunc("/user", GetUser).Methods("GET")
 	router.HandleFunc("/user", CreateNewUser).Methods("POST")
+	router.HandleFunc("/user", UptadeUserEndPoint).Methods("PUT")
+	router.HandleFunc("/login", LoginEndPoint).Methods("POST")
+	router.HandleFunc("/login", LogoutEndPoint).Methods("DELETE")
 
 	//profiles
 	router.HandleFunc("/", homeLink)
@@ -204,11 +208,18 @@ func main() {
 
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
 	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS","DELETE"})
 
 	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 	//log.Fatal(http.ListenAndServe(":8080", router))
 }
+
+
+
+
+
+
+
 
 
 

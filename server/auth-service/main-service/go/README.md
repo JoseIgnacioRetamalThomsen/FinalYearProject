@@ -24,6 +24,9 @@ sudo docker image build -t joseretamal/auth-service:1.1 .
 ``
  sudo docker container run --publish 50051:50051 --detach --name as joseretamal/auth-service:1.0
 ``
+
+sudo docker container run --publish 50051:50051 --detach --name as joseretamal/auth-service:7.1 -v /home/pepe/conf/:/usr/src/myapp/
+
 better for auto restart
 
 `

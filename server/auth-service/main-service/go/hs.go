@@ -58,7 +58,7 @@ func hash(pass string) ([]byte, []byte) {
 	defer cancel()
 	r, err := psCon.context.psClient.Hash(ctx, &pb.HashRequest{Password: pass})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("Error: %v", err)
 	}
 	return r.GetHashedPassword(), r.GetSalt()
 }
