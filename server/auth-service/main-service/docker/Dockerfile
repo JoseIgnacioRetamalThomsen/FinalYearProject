@@ -5,5 +5,5 @@ WORKDIR /usr/src/myapp
 
 EXPOSE 50051
 
-ENTRYPOINT ["./main", "config.json"]
+ENTRYPOINT ["./c/main", "config.json"]
 
