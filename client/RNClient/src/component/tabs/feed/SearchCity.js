@@ -143,8 +143,8 @@ export default class SearchCity extends Component {
         if (this.state.city === 'undefined') {
             return (
             <View style={Style.view}>
-                <CustomHeader style={{flex: 1}} title="Search City" isHome={false} navigation={this.props.navigation}/>
-                <View style={{flex: 1}}>
+                <CustomHeader style={{flex: 0.4}} title="Search City" isHome={false} navigation={this.props.navigation}/>
+                <View style={{flex: 0.4}}>
                     <MapInput navigation={this.props.navigation} notifyChange={() => this.getCity()}
                               parentCallback={this.callbackFunction}/>
                 </View>

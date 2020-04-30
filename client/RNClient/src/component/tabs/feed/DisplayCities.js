@@ -17,7 +17,7 @@ export default class DisplayCities extends Component {
 
             isVisible: false,
             max: 999999,
-            img: '',
+            img: '../../../img/noImage.png',
             city: 'undefined',
             fcity: '',
             cities: [
@@ -117,7 +117,6 @@ export default class DisplayCities extends Component {
         );
     }
 
-
     render() {
         if (this.state.city !== 'undefined') {
             let newCityList = []
@@ -141,7 +140,8 @@ export default class DisplayCities extends Component {
                 <ScrollView style={{flex: 1}}>
 
                     {this.state.cities.map((item, index) => {
-                        if (this.state.photoMap[item.cityId] !== 'undefined') {
+                        if (this.state.photoMap[item.cityId] !== 'undefined\
+                        ') {
                             return (
                                 <TouchableOpacity onPress={() => this.props.navigation.navigate('CityDetail', {
                                     cityId: item.cityId,

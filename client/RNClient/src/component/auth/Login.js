@@ -30,7 +30,7 @@ class Login extends Component {
         this.setState({hiddenPassword: !this.state.hiddenPassword});
     }
 
-     onClickListenerLogin() {
+    async onClickListenerLogin() {
         let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
         let isCorrectEmail = emailRegex.test(this.state.email)
 
@@ -52,22 +52,20 @@ class Login extends Component {
                 (err) => {
                     this.setState({message: 'Incorrect email or password' + err})
                 },
-                (token) => {
+                async (token) => {
                     let value
                     if (token === "StatusRuntimeException") {
                         this.setState({message: 'Server is unavailable'})
-                    } else if (token === "") {
-                        this.setState({message: 'User is not registered'})
                     } else if (token === "User is not registered") {
-                        this.setState({message: 'Incorrect password'})
+                        this.setState({message: 'User is not registered'})
                     } else {
                         try {
-                            AsyncStorage.setItem(this.state.email, token)
+                            await AsyncStorage.setItem(this.state.email, token)
                         } catch (e) {
                             logger.log(e)
                         }
                         try {
-                            value = AsyncStorage.getItem(this.state.email)
+                            value = await AsyncStorage.getItem(this.state.email)
                         } catch (e) {
                         }
                         this.setState({token: value})

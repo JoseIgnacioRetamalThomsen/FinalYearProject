@@ -29,7 +29,7 @@ export default class Register extends Component {
         this.setState({hiddenPassword: !this.state.hiddenPassword});
     }
 
-     onClickListener() {
+    async onClickListener() {
         let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
         let isCorrectEmail = emailRegex.test(this.state.email)
 

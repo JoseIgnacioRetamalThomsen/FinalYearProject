@@ -15,7 +15,6 @@ export default class CreateCity extends React.Component {
         super(props)
         this.state = {
             image: '',
-            description:'',
             cities: [
                 {
                     cityId: 0,
@@ -115,7 +114,7 @@ export default class CreateCity extends React.Component {
 
     onClick() {
         console.log("mmmm", this.state.description, this.state.image)
-        if (this.state.description === undefined || this.state.image === '') {
+        if (this.state.description === 'undefined' || this.state.image === '') {
             alert("Please upload photo and provide description")
         } else {
             this.createCity()
@@ -138,7 +137,7 @@ export default class CreateCity extends React.Component {
                 <View style={{flex: 1}}>
                     <CustomHeader title="Create city" isHome={false} navigation={this.props.navigation}/>
 
-                    <Card style={styles.createContainer} >
+                    <Card style={styles.createContainer}>
                         <PhotoUpload  onPhotoSelect={image => {
                             if (image) {
                                 this.setState({image: image})

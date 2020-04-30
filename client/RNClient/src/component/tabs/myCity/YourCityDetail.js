@@ -431,31 +431,41 @@ class YourCityDetail extends Component {
     }
 
     renderItemPlaces = ({item, index}) => {
-        return (
-            <View style={Style.carouselContainer}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {
-                    placeId: item.id,
-                    name: item.name,
-                    city: this.state.city,
-                    cityId: this.state.cityId,
-                    country: this.state.country,
-                    description: item.description,
-                })}>
+        console.log("@id@", item.id)
+        if (item.id == "") {
+            return (
+                <View style={Style.carouselContainer}>
+                    <Text>No places created yet</Text>
+                </View>
+            )
+        } else {
+            return (
+                <View style={Style.carouselContainer}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {
+                        placeId: item.id,
+                        name: item.name,
+                        city: this.state.city,
+                        cityId: this.state.cityId,
+                        country: this.state.country,
+                        description: item.description,
+                    })}>
 
-                    <View>
                         <View>
-                            <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
-                                   style={Style.cardPhoto}/>
-                        </View>
+                            <View>
+                                <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
+                                       style={Style.cardPhoto}/>
+                            </View>
 
-                        <View>
-                            <Text style={Style.title}>{item.name}</Text>
-                            <Text style={Style.text}>{item.description}</Text>
+                            <View>
+                                <Text style={Style.title}>{item.name}</Text>
+                                <Text style={Style.text}>{item.description}</Text>
+                            </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
-        )
+                    </TouchableOpacity>
+                </View>
+            )
+        }
+
     }
 
     render() {
@@ -572,11 +582,8 @@ class YourCityDetail extends Component {
                     <Divider style={{backgroundColor: 'black', margin: 10}}/>
 
                     {/*Places*/}
-
                     <Text style={Style.heading}> Places in {this.state.city} </Text>
                     <Divider style={{backgroundColor: 'black'}}/>
-
-                    {this.displayPlaces()}
 
                     <Carousel
                         ref={(c) => {
@@ -641,19 +648,6 @@ class YourCityDetail extends Component {
                 </ActionButton>
             </View>
         )
-    }
-    displayPlaces() {
-        console.log("this.state.places.length", this.state.places.length)
-        if (this.state.places.length === 0) {
-            return (
-                <Card style={Style.cardContainer} key={this.state.posts.postId}>
-                    <CardItem cardBody>
-                        <Image source={IMAGE.NO_PLACES}
-                               style={Style.noPostsPhoto}/>
-                    </CardItem>
-                </Card>
-            )
-        }
     }
 }
 

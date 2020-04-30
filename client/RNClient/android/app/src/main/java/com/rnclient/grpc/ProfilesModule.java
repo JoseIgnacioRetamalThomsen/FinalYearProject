@@ -30,7 +30,7 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
 
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
-    private static final String IP_ADDRESS = "35.197.216.214";
+    private static final String IP_ADDRESS = "35.197.216.42";
     private static final int PORT_NUMBER = 60051;
     private static ProfilesClient client;
 
@@ -285,9 +285,9 @@ public class ProfilesModule extends ReactContextBaseJavaModule {
                               Callback errorCallback, Callback successCallback) {
         Gson gson = new Gson();
         List<Place> placeList = client.getCityPlaces(token, email, name, country);
-        if(placeList.get(0).error != null){
-            errorCallback.invoke(placeList.get(0).error); return;
-        }
+//        if(placeList.get(0).error != null){
+//            errorCallback.invoke(placeList.get(0).error); return;
+//        }
         try {
             successCallback.invoke(gson.toJson(placeList));
         } catch (Exception e) {
