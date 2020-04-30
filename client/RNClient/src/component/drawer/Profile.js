@@ -107,7 +107,6 @@ class Profile extends Component {
                                 this.setState({name: name})
                                 this.setState({description: description})
                                 this.setState({userId: userId})
-                                console.log("llllllll", email, name, description, userId)
                             })
                         NativeModules.ProfilesModule.getVisitedCities(
                             token,
@@ -126,7 +125,6 @@ class Profile extends Component {
                                 console.log(err)
                             },
                             (placesJson) => {
-                                // console.log("placesJson", placesJson)
                                 this.setState({visitedPlaces: JSON.parse(placesJson)})
                             })
 
@@ -139,7 +137,6 @@ class Profile extends Component {
                             },
 
                             (visitedCitiesPhotoList) => {
-                                console.log("visitedPhotoCityList", visitedCitiesPhotoList)
                                 this.setState({visitedCitiesPhotoList: visitedCitiesPhotoList})
                             })
 
@@ -152,7 +149,6 @@ class Profile extends Component {
                             },
 
                             (visitedPlacesPhotoList) => {
-                                console.log("visitedPhotoPlaceList", visitedPlacesPhotoList)
                                 this.setState({visitedPlacesPhotoList: visitedPlacesPhotoList})
                             })
                     }
@@ -253,7 +249,7 @@ class Profile extends Component {
                             </PhotoUpload>
                             <CardItem>
                                 <GeoLoc parentCallback={this.callbackFunction}/>
-                                <Text style={Style.title}>{this.state.city}, {this.state.country} </Text>
+                                <Text style={Style.title}>{this.state.city} {this.state.country} </Text>
                             </CardItem>
                         </View>
                         <View>

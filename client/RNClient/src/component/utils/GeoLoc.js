@@ -43,7 +43,6 @@ export default class GeoLoc extends Component {
                             country: country
                         })
                         this.sendData()
-                        //console.log("!!!!", city, country)
                     })
                     .catch(error => console.warn(error));
             },

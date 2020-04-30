@@ -23,6 +23,8 @@ import SearchCity from "./src/component/tabs/feed/SearchCity";
 import YourCityDetail from "./src/component/tabs/myCity/YourCityDetail";
 import SpecialHeader from "./src/component/headers/SpecialHeader";
 
+const {width: width} = Dimensions.get('window')
+const {height: height} = Dimensions.get('window')
 const navOptionHandler = (navigation) => ({
     header: null
 })
@@ -74,7 +76,7 @@ const MainTabs = createBottomTabNavigator({
                 <Image
                     source={IMAGE.ICON_FEED}
                     resizeMode="contain"
-                    style={{width: 20, height: 20}}
+                    style={{width: width/20, height: height/20}}
                 />
             )
         }
@@ -87,7 +89,7 @@ const MainTabs = createBottomTabNavigator({
                 <Image
                     source={IMAGE.ICON_HOME}
                     resizeMode="contain"
-                    style={{width: 20, height: 20}}
+                    style={{width: width/15, height: height/15}}
                 />
             )
         }

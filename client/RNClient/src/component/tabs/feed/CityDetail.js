@@ -34,12 +34,12 @@ class CityDetail extends Component {
             //city
             isVisible: false,
             isVisible2: false,
-            cityId: -99,
-            indexId: 0,
-            city: '',
-            country: '',
+            cityId: this.props.navigation.getParam('cityId', ''),
+            indexId: this.props.navigation.getParam('indexId', ''),
+            city: this.props.navigation.getParam('name', ''),
+            country: this.props.navigation.getParam('country', ''),
             email: '',
-            description: '',
+            description: this.props.navigation.getParam('description', ''),
             lat: 0,
             lon: 0,
             cityImage: '',
@@ -98,22 +98,21 @@ class CityDetail extends Component {
 
     componentDidMount() {
         const cityId = this.props.navigation.getParam('cityId', '')
-        const indexId = this.props.navigation.getParam('indexId', '')
         const city = this.props.navigation.getParam('name', '')
+        const indexId = this.props.navigation.getParam('indexId', '')
         const country = this.props.navigation.getParam('country', '')
         const description = this.props.navigation.getParam('description', '')
         const img = this.props.navigation.getParam('img', '')
 
         this.setState({
-            cityId,
-            indexId,
-            city,
-            country,
-            description,
+            cityId: cityId,
+            city:city,
+            indexId:indexId,
+            country:country,
+            description:description,
             img
         })
-        console.log("this.state.city!!", city)
-        this.setState({cityId: cityId})
+
         this.getCityImages()
         this.getCityPlaces()
         this.getPlacesPerCityPhoto()
@@ -128,7 +127,7 @@ class CityDetail extends Component {
                     let token = store[i][1]
                     if (token !== null) {
                         NativeModules.PostModule.getCityPosts(
-                            this.state.cityId,
+                            parseInt(this.state.cityId),
                             (err) => {
                                 console.log(err)
                             },
@@ -150,7 +149,7 @@ class CityDetail extends Component {
                     let email = store[i][0];
                     let token = store[i][1]
 
-                    if (token != null) {
+                    if (token !== null) {
                         NativeModules.PhotosModule.getCityImage(
                             token,
                             email,
@@ -168,14 +167,13 @@ class CityDetail extends Component {
     }
 
     getCityPlaces() {
-        console.log("this.state.city,", this.state.city)
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
                     let email = store[i][0];
                     this.setState({email: email})
                     let token = store[i][1]
-                    if (token != null) {
+                    if (token !== null) {
                         NativeModules.ProfilesModule.getCityPlaces(
                             token,
                             email,
@@ -186,7 +184,7 @@ class CityDetail extends Component {
                             },
                             (placesList) => {
                                 this.setState({places: JSON.parse(placesList)})
-                                console.log("placesList", placesList)
+                                console.log("placesList", this.state.places)
                             })
                     }
                 })
@@ -203,7 +201,7 @@ class CityDetail extends Component {
 
                     if (value !== null) {
                         NativeModules.PostModule.createCityPost(
-                            this.state.cityId,
+                            parseInt(this.state.cityId),
                             email,
                             this.state.city,
                             this.state.country,
@@ -243,6 +241,7 @@ class CityDetail extends Component {
                         this.state.placeDescription,
                         (err) => {
                             console.log(err)
+                            console.log("here")
                         },
                         (placeId) => {
                             this.setState({placeId: placeId})
@@ -270,7 +269,7 @@ class CityDetail extends Component {
                             email,
                             parseInt(this.state.placeId),
                             this.state.placeImage,
-                            this.state.cityId,
+                            parseInt(this.state.cityId),
                             (err) => {
                                 console.log(err)
                             },
@@ -320,7 +319,7 @@ class CityDetail extends Component {
                             this.state.cityPostId,
                             this.state.cityPostImage,
                             0,
-                            this.state.cityId,
+                            parseInt(this.state.cityId),
                             (err) => {
                                 console.log(err)
                             },
@@ -344,7 +343,7 @@ class CityDetail extends Component {
                         NativeModules.PhotosModule.getPlacesPerCityPhoto(
                             token,
                             email,
-                            this.state.cityId,
+                            parseInt(this.state.cityId),
                             (err) => {
                                 console.log(err)
                             },
@@ -370,7 +369,7 @@ class CityDetail extends Component {
                             token,
                             email,
                             0,
-                            this.state.cityId,
+                            parseInt(this.state.cityId),
                             (err) => {
                                 console.log(err)
                             },

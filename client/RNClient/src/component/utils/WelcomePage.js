@@ -3,14 +3,22 @@ import SplashScreen from 'react-native-splash-screen'
 import {
     NativeModules,
     View,
-    Text,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage'
-import {logger} from 'react-native-logger'
+
 
 export default class WelcomePage extends Component {
-    componentDidMount() {
-        this.getSavedToken().then(r => logger.log(r))
+     componentDidMount() {
+         this.getSavedToken().then(token => {
+            if (token === undefined || token === null || token === "") {
+                SplashScreen.hide()
+                this.props.navigation.navigate('auth')
+
+            }
+            console.log("r", token)
+        })
+
+
     }
     getSavedToken = async () => {
         try {
@@ -20,18 +28,19 @@ export default class WelcomePage extends Component {
                         let email = store[i][0];
                         let token = store[i][1]
                         console.log("email/token in welcome page  " + email + " " + token)
-                        if (token !== null) {
+                        if (token !== null || token !== undefined || token !== '') {
                             NativeModules.LoginModule.checkToken(
                                 token,
                                 email,
                                 (err) => {
-                                    logger.log(err)
+                                    console.log("e", err)
                                     SplashScreen.hide();
                                     this.props.navigation.navigate('auth')
                                 },
                                 (isSuccess) => {
+                                    SplashScreen.hide()
                                     isSuccess ? this.props.navigation.navigate('app') : this.props.navigation.navigate('auth')
-                                    SplashScreen.hide();
+
                                 }
                              )
                         } else {
@@ -41,7 +50,7 @@ export default class WelcomePage extends Component {
                 });
             });
         } catch (error) {
-            logger.log(error)
+            console.log("gg",error)
         }
         this.props.navigation.navigate("auth")
     }

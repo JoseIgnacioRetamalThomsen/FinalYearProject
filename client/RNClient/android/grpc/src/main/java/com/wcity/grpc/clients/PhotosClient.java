@@ -99,7 +99,7 @@ public class PhotosClient {
         return photoResponse;
     }
 
-    @TargetApi(11)
+
     public ProfilePhoto uploadProfilePhoto(String email, String token, String image) {
         ProfileUploadRequestP userData = ProfileUploadRequestP.newBuilder()
                 .setEmail(email)
