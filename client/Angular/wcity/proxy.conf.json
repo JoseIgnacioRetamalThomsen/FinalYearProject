@@ -1,0 +1,6 @@
+{
+    "/user": {
+      "target": "http://35.197.242.214:9371",
+      "secure": false
+    }
+  }
