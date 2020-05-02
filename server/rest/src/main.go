@@ -153,7 +153,7 @@ func main() {
 	s5 := &clientDBLoadBalancing{dbserverCtxLB}
 	dbConnLB = *s5
 
-	log.Printf("Received: %v", "here")
+
 
 
 
@@ -207,11 +207,21 @@ func main() {
 */
 
 
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
-	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS","DELETE"})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With","Content-Type","Accept", "Accept-Language", "Content-Language", "Origin"})
+	//originsOk := handlers.AllowedOrigins([]string{os.Getenv("*")})
+	originsOk1 := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
-	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
+	//	headersOk := handlers.AllowedHeaders([]string{"*"})
+////	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+//	originsOk := handlers.AllowedOrigins([]string{"*"})
+//	//originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
+//	//originsOk := handlers.AllowedOrigins([]string{os.Getenv("*")})
+//	methodsOk := handlers.AllowedMethods([]string{"*"})
+	//methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS","DELETE"})
+
+	log.Printf("Server started at : %v", configuration.Port)
+	log.Fatal(http.ListenAndServe(configuration.Port, handlers.CORS(/*originsOk,*/ headersOk, methodsOk,originsOk1)(router)))
 	//log.Fatal(http.ListenAndServe(":8080", router))
 }
 

@@ -32,7 +32,11 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request) {
 	if err!=nil{
 		http.Error(w, "Wrong request: "+err.Error(), 500)
 	}
-
+	//w.Header().Add("Access-Control-Allow-Headers" ,"X-Requested-With,Content-Type,Accept, Accept-Language, Content-Language, Origin")
+	//w.Header().Add("Access-Control-Allow-Headers" ,"*")
+	//w.Header().Add("Access-Control-Allow-Headers" ,"Content-Type")
+	//w.Header().Add("Access-Control-Allow-Methods","GET,POST,OPTIONS")
+	//w.Header().Add("Access-Control-Allow-Origin","*")
 	// send response
 	json.NewEncoder(w).Encode(response)
 }
