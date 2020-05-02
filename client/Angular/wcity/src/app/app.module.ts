@@ -40,6 +40,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { ReactiveFormsModule} from '@angular/forms';
 import { TopBarComponent } from './top-bar/top-bar.component';
+import { UploaderComponent } from './uploader/uploader.component';
 
 
 
@@ -48,6 +49,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
     AppComponent,
     LoginComponent,
     TopBarComponent,
+    UploaderComponent,
     
   ],
   imports: [
