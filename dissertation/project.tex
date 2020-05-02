@@ -1,4 +1,5 @@
-\documentclass[12pt,a4paper,oneside,openany]{book}
+\documentclass[11pt,a4paper,oneside,openany]{book}
+
 
 \usepackage{xcolor}
 \usepackage{minted}
@@ -20,7 +21,17 @@
 \usepackage[toc,page]{appendix}
 \usepackage{listings}
 \usepackage{pythontex}
+
 \usepackage{hyperref}
+
+\usepackage{float}
+
+\usepackage{url}
+
+\makeatletter
+\setlength{\@fptop}{0pt}
+\makeatother
+
 
 %% Change these:
 \newcommand{\projecttitle}{ World Cities and Places - \\ A Microservices Application}
@@ -84,11 +95,13 @@
    \input{content/about.tex}
   \setcounter{page}{2}
   \tableofcontents
+  \listoffigures
   
     \input{content/introduction.tex}
  	\input{content/context.tex}
   \input{content/methodology.tex}
   \input{content/tecreview.tex}
+  \input{content/systemdesign.tex}
   \input{content/sysevaluation.tex}
   \input{content/conclusion.tex}
   \bibliographystyle{ieeetr}
