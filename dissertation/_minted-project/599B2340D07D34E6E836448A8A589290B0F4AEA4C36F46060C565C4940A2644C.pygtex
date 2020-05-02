@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} curl \PYGZhy{}fsSL https://download.docker.com/linux/ubuntu/gpg \PYG{p}{|} sudo apt\PYGZhy{}key add \PYGZhy{}software\PYGZhy{}properties\PYGZhy{}common
+\end{Verbatim}

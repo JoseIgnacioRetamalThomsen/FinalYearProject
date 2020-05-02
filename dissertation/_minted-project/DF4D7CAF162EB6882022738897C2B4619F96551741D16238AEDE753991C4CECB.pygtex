@@ -1,0 +1,42 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYG{err}{\PYGZdl{}} \PYG{c+c1}{// Sample storage\PYGZhy{}quickstart creates a Google Cloud Storage bucket.}
+	\PYG{k+kn}{package} \PYG{n+nx}{main}
+	
+	\PYG{k+kn}{import} \PYG{p}{(}
+	\PYG{l+s}{\PYGZdq{}context\PYGZdq{}}
+	\PYG{l+s}{\PYGZdq{}fmt\PYGZdq{}}
+	\PYG{l+s}{\PYGZdq{}log\PYGZdq{}}
+	\PYG{l+s}{\PYGZdq{}time\PYGZdq{}}
+	
+	\PYG{l+s}{\PYGZdq{}cloud.google.com/go/storage\PYGZdq{}}
+	\PYG{p}{)}
+	
+	\PYG{k+kd}{func} \PYG{n+nx}{main}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+		\PYG{n+nx}{ctx} \PYG{o}{:=} \PYG{n+nx}{context}\PYG{p}{.}\PYG{n+nx}{Background}\PYG{p}{()}
+		
+		\PYG{c+c1}{// Sets your Google Cloud Platform project ID.}
+		\PYG{n+nx}{projectID} \PYG{o}{:=} \PYG{l+s}{\PYGZdq{}YOUR\PYGZus{}PROJECT\PYGZus{}ID\PYGZdq{}}
+		
+		\PYG{c+c1}{// Creates a client.}
+		\PYG{n+nx}{client}\PYG{p}{,} \PYG{n+nx}{err} \PYG{o}{:=} \PYG{n+nx}{storage}\PYG{p}{.}\PYG{n+nx}{NewClient}\PYG{p}{(}\PYG{n+nx}{ctx}\PYG{p}{)}
+		\PYG{k}{if} \PYG{n+nx}{err} \PYG{o}{!=} \PYG{k+kc}{nil} \PYG{p}{\PYGZob{}}
+			\PYG{n+nx}{log}\PYG{p}{.}\PYG{n+nx}{Fatalf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Failed to create client: \PYGZpc{}v\PYGZdq{}}\PYG{p}{,} \PYG{n+nx}{err}\PYG{p}{)}
+		\PYG{p}{\PYGZcb{}}
+		
+		\PYG{c+c1}{// Sets the name for the new bucket.}
+		\PYG{n+nx}{bucketName} \PYG{o}{:=} \PYG{l+s}{\PYGZdq{}my\PYGZhy{}new\PYGZhy{}bucket\PYGZdq{}}
+		
+		\PYG{c+c1}{// Creates a Bucket instance.}
+		\PYG{n+nx}{bucket} \PYG{o}{:=} \PYG{n+nx}{client}\PYG{p}{.}\PYG{n+nx}{Bucket}\PYG{p}{(}\PYG{n+nx}{bucketName}\PYG{p}{)}
+		
+		\PYG{c+c1}{// Creates the new bucket.}
+		\PYG{n+nx}{ctx}\PYG{p}{,} \PYG{n+nx}{cancel} \PYG{o}{:=} \PYG{n+nx}{context}\PYG{p}{.}\PYG{n+nx}{WithTimeout}\PYG{p}{(}\PYG{n+nx}{ctx}\PYG{p}{,} \PYG{n+nx}{time}\PYG{p}{.}\PYG{n+nx}{Second}\PYG{o}{*}\PYG{l+m+mi}{10}\PYG{p}{)}
+		\PYG{k}{defer} \PYG{n+nx}{cancel}\PYG{p}{()}
+		\PYG{k}{if} \PYG{n+nx}{err} \PYG{o}{:=} \PYG{n+nx}{bucket}\PYG{p}{.}\PYG{n+nx}{Create}\PYG{p}{(}\PYG{n+nx}{ctx}\PYG{p}{,} \PYG{n+nx}{projectID}\PYG{p}{,} \PYG{k+kc}{nil}\PYG{p}{);} \PYG{n+nx}{err} \PYG{o}{!=} \PYG{k+kc}{nil} \PYG{p}{\PYGZob{}}
+			\PYG{n+nx}{log}\PYG{p}{.}\PYG{n+nx}{Fatalf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Failed to create bucket: \PYGZpc{}v\PYGZdq{}}\PYG{p}{,} \PYG{n+nx}{err}\PYG{p}{)}
+		\PYG{p}{\PYGZcb{}}
+		
+		\PYG{n+nx}{fmt}\PYG{p}{.}\PYG{n+nx}{Printf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Bucket \PYGZpc{}v created.\PYGZbs{}n\PYGZdq{}}\PYG{p}{,} \PYG{n+nx}{bucketName}\PYG{p}{)}
+	\PYG{p}{\PYGZcb{}}
+	
+\end{Verbatim}

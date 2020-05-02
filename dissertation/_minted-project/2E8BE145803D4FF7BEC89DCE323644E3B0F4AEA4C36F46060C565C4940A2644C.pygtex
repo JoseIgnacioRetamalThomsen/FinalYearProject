@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+		mysql\PYGZgt{} CHANGE MASTER TO
+		\PYG{n+nv}{MASTER\PYGZus{}HOST}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}104.40.206.141\PYGZsq{}},
+		\PYG{n+nv}{MASTER\PYGZus{}USER}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}repl\PYGZsq{}},
+		\PYG{n+nv}{MASTER\PYGZus{}PASSWORD}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}password\PYGZsq{}},
+		\PYG{n+nv}{MASTER\PYGZus{}LOG\PYGZus{}FILE}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}mysql\PYGZhy{}bin.000160\PYGZsq{}},
+		\PYG{n+nv}{MASTER\PYGZus{}LOG\PYGZus{}POS}\PYG{o}{=} \PYG{l+m}{2439}\PYG{p}{;}
+\end{Verbatim}

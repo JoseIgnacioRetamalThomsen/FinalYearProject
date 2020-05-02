@@ -1,0 +1,97 @@
+//Jose I. Retamal
+//GMIT 2020
+
+//Define shared object for photo service
+
+syntax = "proto3";
+
+package wcity;
+
+option java_multiple_files = true;
+option java_package = "io.grpc.wcity.photoShared";
+option java_outer_classname = "PhotoSharedProto";
+option objc_class_prefix = "RPC";
+
+// Profile Photo
+//
+// Contains all data for display  a profile picture.
+message ProfilePhoto {
+
+    //Photo id, unique identifier of this image
+    int32 id = 1;
+    //User email is global unique identifier of the user
+    string userEmail = 2;
+    // url of the picture in the server,
+    // used for display the picture
+    string url = 3;
+    //Time of upload
+    string timestamp = 4;
+    // true if is the fist image
+    bool selected = 5;
+}
+
+// City Photo
+//
+// Contains all data for display  a city picture.
+message CityPhoto {
+
+    //Photo id, unique identifier of this image
+    int32 id = 1;
+    // Unique identifier of the city, is the neo4jid
+    int32 cityId = 2;
+    // url of the picture in the server,
+    // used for display the picture
+    string url = 3;
+    //Time of upload
+    string timestamp = 4;
+    // true if is the fist image
+    bool selected = 5;
+}
+
+// Place Photo
+//
+// Contains all data for display  a place picture.
+message PlacePhoto {
+
+    //Photo id, unique identifier of this image
+    int32 id = 1;
+    // Unique identifier of the place, is the neo4jid
+    int32 placeId = 2;
+    // url of the picture in the server,
+    // used for display the picture
+    string url = 3;
+    //Time of upload
+    string timestamp = 4;
+    // true if is the fist image
+    bool selected = 5;
+    //City of the place
+    int32 placeCityId = 6;
+}
+
+// Post Photo
+//
+// Contains all data for display  a post picture.
+message PostPhoto {
+    int32 id = 1;
+    string postId = 2;
+    string url = 3;
+    string timestamp = 4;
+    bool selected = 5;
+}
+
+// All photos for all citys
+
+message CitysPhoto{
+    int32 cityId = 1;
+    repeated CityPhoto  citysPhotos= 2;
+}
+
+message PlacesCityPhotos{
+    int32 cityId =1;
+    int32 placeId =2;
+    repeated PlacePhoto placePhotos =3;
+}
+enum PostType{
+    CityTypePhoto = 0;
+    PlaceTypePhoto = 1;
+}

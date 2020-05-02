@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo docker logs hash\PYGZhy{}service
+\end{Verbatim}

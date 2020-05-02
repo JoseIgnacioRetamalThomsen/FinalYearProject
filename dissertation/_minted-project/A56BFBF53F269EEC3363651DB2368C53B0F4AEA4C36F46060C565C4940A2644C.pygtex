@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGZdl{} sudo mysql \PYGZhy{}u root
+	mysql\PYGZgt{}GRANT REPLICATION SLAVE ON *.* TO \PYG{l+s+s1}{\PYGZsq{}slave\PYGZus{}user\PYGZsq{}}@\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}\PYGZsq{}} IDENTIFIED BY \PYG{l+s+s1}{\PYGZsq{}password\PYGZsq{}}\PYG{p}{;}
+	FLUSH PRIVILEGES\PYG{p}{;}
+\end{Verbatim}

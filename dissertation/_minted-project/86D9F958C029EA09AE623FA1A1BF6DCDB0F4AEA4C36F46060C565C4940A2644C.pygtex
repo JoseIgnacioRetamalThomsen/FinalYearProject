@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGZdl{} gcloud iam service\PYGZhy{}accounts keys create \PYG{o}{[}FILE\PYGZus{}NAME\PYG{o}{]}.json \PYGZhy{}\PYGZhy{}iam\PYGZhy{}account \PYG{o}{[}NAME\PYG{o}{]}@\PYG{o}{[}PROJECT\PYGZus{}ID\PYG{o}{]}.iam.gserviceaccount.com
+\end{Verbatim}

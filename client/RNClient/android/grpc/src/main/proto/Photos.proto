@@ -1,0 +1,165 @@
+//Jose I. Retamal
+//GMIT 2020
+
+//Define interface for connect to main photo service
+
+syntax = "proto3";
+
+package wcity;
+
+import "photo_shared.proto";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.wcity.photo";
+option java_outer_classname = "PhotoProto";
+option objc_class_prefix = "RPC";
+
+service PhotosService {
+    rpc GetProfilePhoto (ProfilePhotoRequestP) returns (ProfilePhotoResponseP);
+    rpc UploadProfilePhoto (ProfileUploadRequestP) returns (ProfileUploadResponseP);
+    rpc UploadCityPhoto (CityUploadRequestP) returns (CityUploadResponseP);
+    rpc GetCityImage (CityPhotoRequestP) returns (CityPhotoResponseP);
+    rpc GetPlacePhoto (PlacePhotoRequestP) returns (PlacePhotoResponseP);
+    rpc UploadPlacePhoto (PlaceUploadRequestP) returns (PlaceUploadResponseP);
+    rpc GetPostImage (PostPhotoRequestP) returns (PostPhotoResponseP);
+    rpc UploadPostImage (PostUploadRequestP) returns (PostUploadResponseP);
+    rpc GetCitysPhotosP(GetCitysPhotoRequestP) returns (GetCitysPhotoResponseP);
+    rpc GetPlacesPerCityPhotoP(GetPlacesPhotosPerCityRequestP) returns (GetPlacesPhotosPerCityResponseP);
+    rpc GetPostsPhotosIdP(GetPostsPhotosPerParentRequestP) returns (GetPostsPhotosPerParentResponseP);
+    rpc GetVisitedCitysPhotos(GetVisitedCitysImagesRequest) returns (GetCitysPhotoResponseP);
+    rpc GetVisitedPlacesPhotos(GetVisitedPlacesPhotosRequest) returns (GetVisitedPlacesPhotosResponse);
+
+}
+message ProfilePhotoRequestP {
+    string email = 1;
+    string token = 2;
+}
+message ProfilePhotoResponseP {
+    string email = 1;
+    bool valid = 2;
+    repeated ProfilePhoto photos = 3;
+}
+message ProfileUploadRequestP {
+    string email = 1;
+    string token = 2;
+    bytes image = 3;
+}
+message ProfileUploadResponseP {
+    bool sucess = 1;
+    ProfilePhoto photo = 2;
+}
+// request for all pictures of the city
+message CityPhotoRequestP {
+    string token = 1;
+    string email = 2;
+    int32 cityId = 3; // neo4j id
+}
+message CityPhotoResponseP {
+    bool valid = 1;
+    int32 cityID = 2;
+    repeated CityPhoto photos = 3;
+    int32 active = 4; //indicate active photo in the city
+}
+message CityUploadRequestP {
+    string token = 1;
+    string email = 2;
+    int32 cityId = 3; // neo4j id
+    bytes image = 4;
+}
+message CityUploadResponseP {
+    bool sucess = 1;
+    CityPhoto photo = 2;
+}
+//request all for a place
+message PlacePhotoRequestP {
+    string token = 1;
+    string email = 2;
+    int32 placeId = 3;
+    int32 placeCityId = 4;
+}
+message PlacePhotoResponseP {
+    bool valid = 1;
+    int32 placeId = 2;
+    repeated PlacePhoto photos = 3;
+    bool active = 4;
+}
+message PlaceUploadRequestP {
+    string token = 1;
+    string email = 2;
+    int32 placeId = 3;
+    bytes image = 4;
+    int32 placeCityId = 5;
+}
+message PlaceUploadResponseP {
+    bool success = 1;
+    PlacePhoto photo = 2;
+}
+//name is city or place name
+message PostPhotoRequestP {
+    string token = 1;
+    string userEmail = 2;
+    string postId = 3;
+
+}
+message PostPhotoResponseP {
+    bool valid = 1;
+    string postId = 2;
+    string userEmail = 3;
+    repeated PostPhoto photos = 4;
+}
+message PostUploadRequestP {
+    string token = 1;
+    string postId = 2;
+    string userEmail = 3;
+    bytes image = 4;
+    PostType type =5;
+    int32 parentId =6;
+}
+message PostUploadResponseP{
+    bool sucess = 1;
+    PostPhoto photo = 2;
+}
+message GetCitysPhotoRequestP{
+    string email =1;
+    string token =2;
+}
+message GetCitysPhotoResponseP{
+    bool success =1 ;
+    repeated CitysPhoto cityPhotos = 2;
+}
+message GetPlacesPhotosPerCityRequestP{
+    string email =1;
+    string token = 2 ;
+    int32 placeId = 3;//cityid
+}
+message GetPlacesPhotosPerCityResponseP{
+    bool success = 1;
+    repeated PlacesCityPhotos placePhotos =2;
+}
+message GetPostsPhotosPerParentRequestP{
+    string email = 1;
+    string token =2;
+    PostType type =3;
+    int32 parentId =4;
+
+}
+message GetPostsPhotosPerParentResponseP{
+    bool success = 1;
+    repeated PostPhoto placesPhoto = 2;//name wrong
+}
+
+message GetVisitedCitysImagesRequest{
+    string email =1;
+    string token = 2;
+    repeated int32 cityId = 3;
+}
+
+message GetVisitedPlacesPhotosRequest{
+    string email =1;
+    string token = 2;
+    repeated int32 placeId =3;
+}
+message GetVisitedPlacesPhotosResponse{
+    bool success = 1;
+    repeated PlacesCityPhotos placePhotos =2;
+}

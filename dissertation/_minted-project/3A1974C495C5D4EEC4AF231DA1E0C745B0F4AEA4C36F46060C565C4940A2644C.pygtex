@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo docker image build \PYGZhy{}t joseretamal/hash\PYGZhy{}service:1.0 .
+\end{Verbatim}

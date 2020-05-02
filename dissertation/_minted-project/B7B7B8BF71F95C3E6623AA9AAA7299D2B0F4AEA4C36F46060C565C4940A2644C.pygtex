@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGZdl{} ENV \PYG{n+nv}{GOOGLE\PYGZus{}APPLICATION\PYGZus{}CREDENTIALS}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}[PATH]\PYGZdq{}}
+\end{Verbatim}

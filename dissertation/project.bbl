@@ -1,0 +1,36 @@
+\begin{thebibliography}{1}
+
+\bibitem{sdpost}
+S.~Dhruv, ``Pros and cons of using postgresql for application development.''
+  \url{https://www.aalpha.net/blog/pros-and-cons-of-using-postgresql-for-application-development/}.
+\newblock [Online; accessed 12-Novemer-2019].
+
+\bibitem{einstein}
+A.~Einsteion, ``{Zur Elektrodynamik bewegter K{\"o}rper}. ({German}) [{On} the
+  electrodynamics of moving bodies],'' {\em Annalen der Physik}, vol.~322,
+  no.~10, pp.~891--921, 1905.
+
+\bibitem{latexcompanion}
+M.~Goossens, F.~Mittelbach, and A.~Samarin, {\em The \LaTeX\ Companion}.
+\newblock Reading, Massachusetts: Addison-Wesley, 1993.
+
+\bibitem{knuthwebsite}
+D.~Knuth, ``Knuth: Computers and typesetting.''
+
+\bibitem{lbpcmysql}
+L.~Beatty, ``The pros and cons of mysql.''
+  \url{https://www.smartfile.com/blog/the-pros-and-cons-of-mysql/}.
+\newblock [Online; accessed 12-Novemer-2019].
+
+\bibitem{gdbad}
+M.~Wu, ``What are the major advantages of using a graph database?.''
+  \url{https://dzone.com/articles/what-are-the-pros-and-cons-of-using-a-graph-databa}.
+\newblock [Online; accessed 29-Novemer-2019].
+
+\bibitem{gdbcomparison}
+solid IT, ``System properties comparison datastax enterprise vs. neo4j vs.
+  tigergraph.''
+  \url{https://db-engines.com/en/system/Datastax+Enterprise%3BNeo4j%3BTigerGraph}.
+\newblock [Online; accessed 29-Novemer-2019].
+
+\end{thebibliography}

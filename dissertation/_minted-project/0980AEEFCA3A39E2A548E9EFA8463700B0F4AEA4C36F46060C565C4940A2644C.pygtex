@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo docker run \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}\PYGZhy{}name neo4j \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}p7474:7474 \PYGZhy{}p7687:7687 \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}d \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}v \PYG{n+nv}{\PYGZdl{}HOME}/neo4j/data:/data \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}v \PYG{n+nv}{\PYGZdl{}HOME}/neo4j/logs:/logs \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}v \PYG{n+nv}{\PYGZdl{}HOME}/neo4j/import:/var/lib/neo4j/import \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}v \PYG{n+nv}{\PYGZdl{}HOME}/neo4j/plugins:/plugins \PYG{l+s+se}{\PYGZbs{}}
+\PYGZhy{}\PYGZhy{}env \PYG{n+nv}{NEO4J\PYGZus{}AUTH}\PYG{o}{=}neo4j/test \PYG{l+s+se}{\PYGZbs{}}
+neo4j:latest
+\end{Verbatim}
