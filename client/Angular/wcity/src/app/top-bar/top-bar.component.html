@@ -1,0 +1,26 @@
+<mat-toolbar  class="toolbar">
+    <span class="title">Galway City Tour</span>
+  
+  
+    <input class="toolbarMainSearchBar" type="text" name="lname" placeholder="Seach" [(ngModel)]="searchText">
+  
+    <button mat-icon-button id="seachButton" (click)="search()">
+      <mat-icon svgIcon="search-icon"></mat-icon>
+    </button>
+  
+  
+      <button mat-button class="toolbarMainButton" [routerLink]="['/home']">Home</button>
+      <button mat-button class="toolbarMainButton" [routerLink]="['/places/0']">Places</button>
+  
+      <div *ngIf="!isLoggedIn">
+        <button mat-button class="toolbarLoginButton" [routerLink]="['/sign']">Sign in/Sign up</button>
+      </div>
+  
+      <div *ngIf="isLoggedIn" class="nameLogout">
+        <button mat-button class="toolbarMainButton" [routerLink]="['/my']">{{user.name}}</button>
+        <button class="x" mat-button class="toolbarLoginButton" (click)="logOut()">/ log out</button>
+      </div>
+  
+  
+  
+  </mat-toolbar>

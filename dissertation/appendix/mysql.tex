@@ -1,0 +1,153 @@
+\chapter{MySql}
+
+\section{Install Mysql in Linux Using Command Line}	
+
+
+\subsection{Install MySQL-shell}
+
+\begin{itemize}
+	
+\item Make sure you do not skip the step for updating package information for the MySQL APT repository: 
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo apt-get update
+	\end{minted}
+	
+	\item Install MySQL Shell with this command: 
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo apt-get install mysql-shell
+	\end{minted}
+\end{itemize}
+
+\subsection{Install MySql server}
+
+\begin{itemize}
+	
+
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo apt-get install mysql-server
+	\end{minted}
+	
+
+\end{itemize}
+
+\subsection{Uninstall MySql server}
+
+\begin{itemize}
+	
+	
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo apt-get remove --purge mysql*
+	$ sudo apt-get purge mysql*
+	$ sudo apt-get autoremove
+	$ sudo apt-get autoclean
+	$  sudo apt-get remove dbconfig-mysql
+	$ sudo apt-get dist-upgrade
+	\end{minted}
+	
+	
+\end{itemize}
+
+\subsection{Setup Replication}
+\label{appendix:SetupReplication}
+
+https://www.digitalocean.com/community/tutorials/how-to-set-up-master-slave-replication-in-mysql
+
+\subsubsection{setup master}
+
+\begin{itemize}
+	
+	
+	\item Edit the mysql config file,for open the file using vi:
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
+	\end{minted}
+	\item make the followings changes to the the file, if the field are missing they must be added or if they are commented un commented:
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	server-id       = 1
+	log_bin                 = /var/log/mysql/mysql-bin.log
+	binlog_do_db  = replica1
+	sudo mysql_secure_installation
+	\end{minted}
+	
+	\item Restart MySQL:
+		\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo service mysql restart
+	\end{minted}
+	
+	\item Create user for replication and give permissions:
+		\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo mysql -u root
+	mysql>GRANT REPLICATION SLAVE ON *.* TO 'slave_user'@'%' IDENTIFIED BY 'password';
+	FLUSH PRIVILEGES;
+	\end{minted}
+	
+	\item Get master status, after select the database in one MySQL seasiion :
+			\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	 mysql>FLUSH TABLES WITH READ LOCK;
+	\end{minted}
+	
+	\item then open another MySQL seasion(keep the other open):
+	
+	\item Get master status, after select the database in one MySQL seasiion :
+	\begin{minted}[tabsize=2,breaklines]{bash}
+	mysql>SHOW MASTER STATUS;
+	| File             | Position | Binlog_Do_DB | 
+	+------------------+----------+--------------+--
+	| mysql-bin.0001580 |      154 | user_login   |          
+	+------------------+----------+--------------+----
+	\end{minted}
+	
+	Note the file (mysql-bin-0001580) and the position.
+	
+	\item After take note of file name and position  tables can be unlocked :
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	mysql>UNLOCK TABLES;
+	\end{minted}
+	
+	\subsubsection{setup slave}
+	
+	\item Edit slave config file :
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo vi /etc/mysql/my.cnf
+	\end{minted}
+		
+	Make the following modifications:
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	server-id               = 2
+	relay-log               = /var/log/mysql/mysql-relay-bin.log
+	log_bin                 = /var/log/mysql/mysql-bin.log
+	binlog_do_db            = newdatabase
+	\end{minted}
+	
+	\item Restart MySQL service :
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo service mysql restart
+	
+	\end{minted}
+			\item Config slave in mysql shell:
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+		mysql> CHANGE MASTER TO
+		MASTER_HOST='104.40.206.141',
+		MASTER_USER='repl',
+		MASTER_PASSWORD='password',
+		MASTER_LOG_FILE='mysql-bin.000160',
+		MASTER_LOG_POS= 2439;
+		\end{minted}
+	
+	\item Start slave
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	mysql> START SLAVE;
+		\end{minted}
+	
+	\item Check status
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	mysql> SHOW SLAVE STATUS\G
+	\end{minted}
+	
+\end{itemize}

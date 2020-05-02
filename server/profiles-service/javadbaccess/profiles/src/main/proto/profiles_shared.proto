@@ -1,0 +1,69 @@
+//Jose I. Retamal
+//GMIT 2020
+
+//Define interface for connect to profiles database
+
+syntax = "proto3";
+
+package wcity;
+
+option java_multiple_files = true;
+option java_package = "io.grpc.wcity.profiles";
+option java_outer_classname = "ProfilesSharedProto";
+option objc_class_prefix = "RPC";
+
+message User{
+    string email = 1;
+    string name = 2;
+    string descripiton = 3;
+    int32 userId = 4;
+}
+message CityMin{
+    string name = 1;
+    string country = 2;
+    string creatorEmail = 3;
+}
+message Geolocation{
+    float lon = 1;
+    float lat = 2;
+}
+message City{
+    string name = 1;
+    string country = 2;
+    string creatorEmail = 3;
+    Geolocation location = 4;
+    string description = 5;
+    int32 cityId = 6;
+}
+message PlaceMin{
+    string name = 1;
+    string city = 2;
+    string country = 3;
+    string creatorEmail = 4;
+    int32 placeId = 5;
+}
+message Place{
+    string name = 1;
+    string city = 2;
+    string country = 3;
+    string creatorEmail = 4;
+    Geolocation location = 5;
+    string description = 6;
+    int32 placeId = 7;
+}
+message SearchAllResult{
+    int32 id = 1;
+    string name = 2;
+    PlaceOrCity type = 3;
+}
+enum PlaceOrCity{
+    CityType = 0;
+    PlaceType = 1;
+}
+message GetAllRequest{
+    int32 max = 1;
+}
+message SearchAllRequest{
+    int32 max = 1;
+    string search = 2;
+}

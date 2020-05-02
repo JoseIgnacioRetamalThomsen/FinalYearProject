@@ -1,0 +1,152 @@
+\chapter{Docker}
+  
+\section{Install Docker in Ubuntu Using Command Line}	
+  	
+  
+\subsection{Setup repository}
+\begin{itemize}
+\item Update packages 
+	
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo apt-get update
+\end{minted}
+
+\item Install packages to allow apt to use a repository over HTTPS:
+
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo apt-get install \
+	apt-transport-https \
+	ca-certificates \
+	curl \
+	gnupg-agent \
+	software-properties-common
+\end{minted}
+
+\item Add Docker’s official GPG key :
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -software-properties-common
+\end{minted}
+
+
+\item Verify that you now have the key with the fingerprint 9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88, by searching for the last 8 characters of the fingerprint.
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo apt-key fingerprint 0EBFCD88
+\end{minted}
+
+
+\item set up the stable repository:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo add-apt-repository \
+	"deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+	$(lsb_release -cs) \
+	stable"
+\end{minted}
+
+\end{itemize}
+
+\subsection{Install Docker Community}
+\begin{itemize}
+	
+\item Install the latest version of Docker Engine - Community and container, or go to the next step to install a specific version:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+\end{minted}
+
+\item Verify that Docker Engine - Community is installed correctly by running the hello-world image.
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker run hello-world
+\end{minted}
+	
+\end{itemize}
+
+
+\section{Run Image Using Docker Hub}	
+
+\begin{itemize}
+\item  Create repository in Docker Hub.
+
+https://docs.docker.com/docker-hub/repos/
+\item  Build Image (Local machine):
+	
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker image build -t docker-hub-user-name/image-name:version-tag .  
+\end{minted}
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker image build -t joseretamal/hash-service:1.0 . 
+\end{minted}
+
+\item  Push Image (Local machine):
+
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker push docker-hub-user-name/image-name:version-tag
+\end{minted}
+
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker push  joseretamal/hash-service:1.0  
+\end{minted}
+
+\item  Pull Image (Remote machine):
+
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker pull docker-hub-user-name/image-name:version-tag  
+\end{minted}
+
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker pull joseretamal/hash-service:1.0  
+\end{minted}
+
+\item  Run image (Remote machine):
+
+\subitem Opening a port and restart on crash or reboot:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker run -d -p internal-port:open-port --restart always --name instance-name user-name/image-name:version-tag  
+\end{minted}
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker run -d -p 5151:5151 --restart always --name hash-service joseretamal/hash-service:1.0  
+\end{minted}
+
+\subitem Allowing instance to full network acess (allows acess to local host):
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker run -d -p  --network="host" --restart always --name instance-name  user-name/image-name:version-tag 
+\end{minted}
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker run -d -p  --network="host" --restart always --name hash-service joseretamal/hash-service:1.0 
+\end{minted}
+
+\item Stop instance: (Remote machine):
+
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker rm --force instance-name
+\end{minted}
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker rm --force hash-service
+\end{minted}
+
+\item Check logs: (Remote machine):
+
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker logs instance-name
+\end{minted}
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker logs hash-service
+\end{minted}
+
+\item Bash into the container: (Remote machine):
+
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker exec -it instance-name bash
+\end{minted}
+Example:
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker exec -it hash-service bash
+\end{minted}
+
+\end{itemize}
+	
