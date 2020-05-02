@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo docker run \PYGZhy{}d \PYGZhy{}p \PYG{l+m}{5151}:5151 \PYGZhy{}\PYGZhy{}restart always \PYGZhy{}\PYGZhy{}name hash\PYGZhy{}service joseretamal/hash\PYGZhy{}service:1.0
+\end{Verbatim}

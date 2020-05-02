@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo docker run \PYGZhy{}d \PYGZhy{}p  \PYGZhy{}\PYGZhy{}network\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}host\PYGZdq{}} \PYGZhy{}\PYGZhy{}restart always \PYGZhy{}\PYGZhy{}name instance\PYGZhy{}name  user\PYGZhy{}name/image\PYGZhy{}name:version\PYGZhy{}tag
+\end{Verbatim}

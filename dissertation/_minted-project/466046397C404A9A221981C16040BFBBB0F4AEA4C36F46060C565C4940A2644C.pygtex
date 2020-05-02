@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	 mysql\PYGZgt{}FLUSH TABLES WITH READ LOCK\PYG{p}{;}
+\end{Verbatim}

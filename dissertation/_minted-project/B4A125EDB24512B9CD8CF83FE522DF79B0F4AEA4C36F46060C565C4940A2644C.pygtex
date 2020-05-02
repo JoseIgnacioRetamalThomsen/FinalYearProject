@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	mysql\PYGZgt{} START SLAVE\PYG{p}{;}
+\end{Verbatim}

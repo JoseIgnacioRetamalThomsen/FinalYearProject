@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	server\PYGZhy{}id               \PYG{o}{=} \PYG{l+m}{2}
+	relay\PYGZhy{}log               \PYG{o}{=} /var/log/mysql/mysql\PYGZhy{}relay\PYGZhy{}bin.log
+	\PYG{n+nv}{log\PYGZus{}bin}                 \PYG{o}{=} /var/log/mysql/mysql\PYGZhy{}bin.log
+	\PYG{n+nv}{binlog\PYGZus{}do\PYGZus{}db}            \PYG{o}{=} newdatabase
+\end{Verbatim}

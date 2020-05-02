@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	server\PYGZhy{}id       \PYG{o}{=} \PYG{l+m}{1}
+	\PYG{n+nv}{log\PYGZus{}bin}                 \PYG{o}{=} /var/log/mysql/mysql\PYGZhy{}bin.log
+	\PYG{n+nv}{binlog\PYGZus{}do\PYGZus{}db}  \PYG{o}{=} replica1
+	sudo mysql\PYGZus{}secure\PYGZus{}installation
+\end{Verbatim}

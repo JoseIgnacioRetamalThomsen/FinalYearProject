@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo docker rm \PYGZhy{}\PYGZhy{}force instance\PYGZhy{}name
+\end{Verbatim}

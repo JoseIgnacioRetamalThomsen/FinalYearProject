@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo apt\PYGZhy{}get install \PYG{l+s+se}{\PYGZbs{}}
+	apt\PYGZhy{}transport\PYGZhy{}https \PYG{l+s+se}{\PYGZbs{}}
+	ca\PYGZhy{}certificates \PYG{l+s+se}{\PYGZbs{}}
+	curl \PYG{l+s+se}{\PYGZbs{}}
+	gnupg\PYGZhy{}agent \PYG{l+s+se}{\PYGZbs{}}
+	software\PYGZhy{}properties\PYGZhy{}common
+\end{Verbatim}

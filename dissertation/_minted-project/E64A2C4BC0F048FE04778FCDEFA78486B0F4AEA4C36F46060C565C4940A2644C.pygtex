@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGZdl{} sudo apt\PYGZhy{}get remove \PYGZhy{}\PYGZhy{}purge mysql*
+	\PYGZdl{} sudo apt\PYGZhy{}get purge mysql*
+	\PYGZdl{} sudo apt\PYGZhy{}get autoremove
+	\PYGZdl{} sudo apt\PYGZhy{}get autoclean
+	\PYGZdl{}  sudo apt\PYGZhy{}get remove dbconfig\PYGZhy{}mysql
+	\PYGZdl{} sudo apt\PYGZhy{}get dist\PYGZhy{}upgrade
+\end{Verbatim}

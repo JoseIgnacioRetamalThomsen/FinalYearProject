@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGZdl{} sudo service mysql restart
+	
+\end{Verbatim}

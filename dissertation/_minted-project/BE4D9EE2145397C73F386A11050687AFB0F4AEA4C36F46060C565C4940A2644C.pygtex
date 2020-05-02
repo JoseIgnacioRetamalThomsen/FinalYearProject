@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGZdl{} gcloud projects add\PYGZhy{}iam\PYGZhy{}policy\PYGZhy{}binding \PYG{o}{[}PROJECT\PYGZus{}ID\PYG{o}{]} \PYGZhy{}\PYGZhy{}member \PYG{l+s+s2}{\PYGZdq{}serviceAccount:[NAME]@[PROJECT\PYGZus{}ID].iam.gserviceaccount.com\PYGZdq{}} \PYGZhy{}\PYGZhy{}role \PYG{l+s+s2}{\PYGZdq{}roles/owner\PYGZdq{}}
+\end{Verbatim}

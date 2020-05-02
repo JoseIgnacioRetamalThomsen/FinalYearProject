@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdl{} sudo add\PYGZhy{}apt\PYGZhy{}repository \PYG{l+s+se}{\PYGZbs{}}
+	\PYG{l+s+s2}{\PYGZdq{}deb [arch=amd64] https://download.docker.com/linux/ubuntu \PYGZbs{}}
+\PYG{l+s+s2}{	}\PYG{k}{\PYGZdl{}(}lsb\PYGZus{}release \PYGZhy{}cs\PYG{k}{)}\PYG{l+s+s2}{ \PYGZbs{}}
+\PYG{l+s+s2}{	stable\PYGZdq{}}
+\end{Verbatim}

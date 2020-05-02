@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+	\PYGZdl{} sudo apt\PYGZhy{}get install mysql\PYGZhy{}server
+\end{Verbatim}
