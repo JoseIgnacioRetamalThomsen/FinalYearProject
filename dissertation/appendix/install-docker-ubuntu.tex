@@ -45,17 +45,18 @@ $ sudo add-apt-repository \
 \end{itemize}
 
 \subsection{Install Docker Community}
+
 \begin{itemize}
 	
-\item Install the latest version of Docker Engine - Community and container, or go to the next step to install a specific version:
-\begin{minted}[linenos,tabsize=2,breaklines]{bash}
-$ sudo apt-get install docker-ce docker-ce-cli containerd.io
-\end{minted}
-
-\item Verify that Docker Engine - Community is installed correctly by running the hello-world image.
-\begin{minted}[linenos,tabsize=2,breaklines]{bash}
-$ sudo docker run hello-world
-\end{minted}
+	\item Install the latest version of Docker Engine - Community and container, or go to the next step to install a specific version:
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+	\end{minted}
+	
+	\item Verify that Docker Engine - Community is installed correctly by running the hello-world image.
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo docker run hello-world
+	\end{minted}
 	
 \end{itemize}
 
@@ -71,7 +72,9 @@ https://docs.docker.com/docker-hub/repos/
 \begin{minted}[linenos,tabsize=2,breaklines]{bash}
 $ sudo docker image build -t docker-hub-user-name/image-name:version-tag .  
 \end{minted}
+
 Example:
+
 \begin{minted}[linenos,tabsize=2,breaklines]{bash}
 $ sudo docker image build -t joseretamal/hash-service:1.0 . 
 \end{minted}
@@ -83,6 +86,7 @@ $ sudo docker push docker-hub-user-name/image-name:version-tag
 \end{minted}
 
 Example:
+
 \begin{minted}[linenos,tabsize=2,breaklines]{bash}
 $ sudo docker push  joseretamal/hash-service:1.0  
 \end{minted}
@@ -94,6 +98,7 @@ $ sudo docker pull docker-hub-user-name/image-name:version-tag
 \end{minted}
 
 Example:
+
 \begin{minted}[linenos,tabsize=2,breaklines]{bash}
 $ sudo docker pull joseretamal/hash-service:1.0  
 \end{minted}
