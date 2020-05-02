@@ -23,9 +23,15 @@ type CityResponse struct {
 func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Create city")
 
-	r.ParseForm()
+	err2 := r.ParseForm()
 
+	if(err2!=nil){
+		fmt.Print("err:",err2)
+	}
 	//image := []byte(r.Form["image"][0])
+
+
+
 
 	for _,value := range  r.Header{
 		fmt.Println(value)
@@ -56,21 +62,34 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 		fmt.Println(err)
 	}
 
-	//cityId := response.City.CityId
+	if val, ok := r.Form["image"]; ok {
+		image := []byte(val[0])
 
-	//photo , err :=SendCityimage(image, r.Header["Email"][0],r.Header["Token"][0], int(cityId))
+		cityId := response.City.CityId
 
+		photo , err :=SendCityimage(image, r.Header["Email"][0],r.Header["Token"][0], int(cityId))
+		if err !=nil {
+			fmt.Println(err)
+		}
+		jsonResponse := CityResponseJson{
+			City:   *response.City,
+			Photo: *photo,
+		}
 
-	//convert reponse into json and send back
-	jsonResponse := CityResponseJson{
-		City:   *response.City,
-		Photo: pb.CityPhoto{},//*photo,
+		json.NewEncoder(w).Encode(jsonResponse)
+	}else {
+
+		//convert reponse into json and send back
+		jsonResponse := CityResponseJson{
+			City:  *response.City,
+			Photo: pb.CityPhoto{}, //*photo,
+		}
+
+		fmt.Println("next")
+		fmt.Println(jsonResponse)
+
+		json.NewEncoder(w).Encode(jsonResponse)
 	}
-
-	fmt.Println("next")
-	fmt.Println(jsonResponse)
-
-	json.NewEncoder(w).Encode(jsonResponse)
 
 }
 

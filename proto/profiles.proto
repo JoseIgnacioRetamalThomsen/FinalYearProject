@@ -59,22 +59,57 @@ service Profiles {
     // The id is used for add post and places to the city.
     rpc CreateCity (CreateCityRequestP) returns (CityResponseP);
 
+    // Create a new place
     //
-    //
-    //
+    // Places are creates by users, they belong to a city.
     rpc CreatePlace (CreatePlaceRequestP) returns (PlaceResponseP);
+
+    //Update a City
+    //
+    // Update city fields
     rpc UpdateCity (CreateCityRequestP) returns (CityResponseP);
+
+    //Update a Place
+    //
+    //
     rpc UpdatePlace (CreatePlaceRequestP) returns (PlaceResponseP);
+
+    //Get City data
+    //
+    //Request for get all data from a city
     rpc GetCity (GetCityRequestP) returns (CityResponseP);
+
+    // Get A place
+    //
     //  request only need : email, token,name,city and country in request
     rpc GetPlace (GetPlaceRequestP) returns (PlaceResponseP);
+
+    // Visit City
+    //
+    // User can mark a city as visit only once.
     rpc VisitCity (VisitCityRequestP) returns (VisitCityResponseP);
+
+    //Visit Place
+    //
+    //User can mark place as visit
     rpc VisitPlace (VisitPlaceRequestP) returns (VisitPlaceResponseP);
+
+    // Get Visited Citys
+    //
+    // Return all visited city's for a user
     rpc GetVisitedCitys (VisitedRequestP) returns (VisitedCitysResponseP);
+
+    // GEt Visit Places
+    //
+    //Return all visited Places for a user
     rpc GetVisitedPlaces (VisitedRequestP) returns (VisitedPlacesResponseP);
+
+    // Get all places from a city
+    //
     // reques only need email,tokem, city name and city coutry
     rpc GetCityPlaces (CreateCityRequestP) returns (VisitedPlacesResponseP);
 }
+
 
 message CreateUserRequestP {
     string token = 1;

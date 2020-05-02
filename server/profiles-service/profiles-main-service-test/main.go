@@ -29,10 +29,10 @@ const (
 )
 const(
 	//url = "0.0.0.0:60051"
-	url="35.197.216.42:60051";
+	url="35.197.242.214:60051";
 	//url = "35.234.146.99:5777"
-	token ="fafcad212731804df628c349717a30855872de34449093dbc7616d2411af1ec7"
-	tokenEmail ="g00341964@gmit.ie"
+	token ="c88456850079c8b6046a1203b30fb97fea679fe7314ad5cee6885cc35162736c"
+	tokenEmail ="resttest@user.com"
 )
 
 type profileServer struct {
@@ -72,10 +72,10 @@ func main(){
     // GetCity(tokenEmail,token,"Galway","Ireland")
 	//GetAllCitys()
 	//GetAllPlaces()
-	fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
+	//fmt.Println(CreateUser(tokenEmail,"namef","description4",token))
 //	fmt.Println(GetUser(tokenEmail,token))
 //	fmt.Println(UpdateUser(tokenEmail,"pepe","student",token))
-	//fmt.Println(CreateCity(tokenEmail,token,"galway","ireland","Bacn",12,12))
+	fmt.Println(CreateCity(tokenEmail,token,"galway","ireland","Bacn",12,12))
 	//fmt.Println(GetCity(tokenEmail,token,"galway", "ireland"))
 	//fmt.Println(CreatePlace(tokenEmail,token,"plaza1","san pedro","chile","nada",3,3))
 //fmt.Println(UpdateCity(tokenEmail,token,"San Pedro","Chile","Bafome",12,12))
