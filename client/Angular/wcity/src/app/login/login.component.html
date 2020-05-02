@@ -1,0 +1,102 @@
+<div class="main-cointainer">
+
+  <mat-accordion>
+
+    <mat-expansion-panel>
+
+      <mat-expansion-panel-header>
+
+        <mat-panel-title>
+          Sign In
+        </mat-panel-title>
+
+        <mat-panel-description>
+          Use your account.
+        </mat-panel-description>
+
+      </mat-expansion-panel-header>
+
+
+      <form class="SignInForm" (submit)="onSignIn()">
+
+        <div class="form-container">
+
+          <mat-form-field>
+
+            <input matInput placeholder="Email address" required name="emailIn" [formControl]="email">
+            <mat-error *ngIf="email.invalid">{{ getErrorMessageEmail()}}</mat-error>
+
+          </mat-form-field>
+
+          <mat-form-field>
+
+            <input matInput placeholder="Enter your password" [type]="hide ? 'password' : 'text'" [formControl]="password"
+              name="password">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error *ngIf="password.invalid">{{getErrorMessagePassword()}}</mat-error>
+
+          </mat-form-field>
+
+        </div>
+
+        <mat-error *ngIf="wrongDataMessage">{{signinErrorMessage}}</mat-error>
+
+        <button mat-raised-button color="accent" type="submit">Sign In</button>
+
+      </form>
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel >
+
+      <mat-expansion-panel-header>
+
+        <mat-panel-title>
+          Sign Up
+        </mat-panel-title>
+
+        <mat-panel-description>
+          Create your account
+        </mat-panel-description>
+
+      </mat-expansion-panel-header>
+
+      <form class="SignUpForm" (submit)="onSignUp()" #postForm="ngForm">
+
+        <div class="form-container">
+
+          <mat-form-field>
+
+            <input matInput placeholder="Email address" required [formControl]="email" name="emailIn">
+            <mat-error *ngIf="email.invalid">{{ getErrorMessageEmail()}}</mat-error>
+
+          </mat-form-field>
+
+          <mat-form-field>
+
+            <input matInput placeholder="Name" required [formControl]="name" name="name" type="text">
+            <mat-error *ngIf="name.invalid">{{getErrorMessageName()}}</mat-error>
+
+          </mat-form-field>
+
+          <mat-form-field>
+
+            <input matInput placeholder="Create your password" [type]="hide ? 'password' : 'text'" required
+              [formControl]="password" name="password" required>
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error *ngIf="password.invalid">{{getErrorMessagePassword()}}</mat-error>
+
+          </mat-form-field>
+
+        </div>
+
+        <mat-error *ngIf="emailInUseMessage">{{signUpErrorMessage}}</mat-error>
+        <button mat-raised-button color="accent" type="submit">Sign Up</button>
+
+      </form>
+
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+</div>

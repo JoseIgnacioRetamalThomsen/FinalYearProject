@@ -1,0 +1,48 @@
+\section{Ahutentication Service Database}
+
+
+\indent
+\indent
+We need a database on where the data can be accessed quickly and reliably by index. We are also looking for a database that can be replicated. A relational SQL database fits the requirements. From MariaDB, MySQL, PostgreSQL, and oracle. MySQL and PostgresSQL have been selected for further analysis.
+
+\subsection{MySql}
+
+\subsubsection{MySQL 5.6 \cite{lbpcmysql}}  
+\paragraph{Pros} 
+\begin{itemize}
+\item Oracle has brought more investment into MySQL, meaning there is a future with it.
+ \item It is a solid product. MySQL 5.6 is a reliable product with all the features fully tested.
+
+\item There are many teams from Oracle working in MySQL.
+\end{itemize}
+
+\paragraph{Cons}
+
+\begin{itemize}
+
+\item Not so mature as other relations databases like PostgreSQL. This means that it has fewer features than the other more mature database systems.
+\item  Not fully open source anymore, in theory, is open source, but in practice, Oracle has taken over. 
+\item Many have replaced MySQL for MariaDB. Since oracle takes over MySQL, many big names like RedHat Enterprise Linux, Fedora, have moved to MariaDB.
+\end{itemize}
+\subsection{ PostgreSQL \cite{sdpost}} 
+
+\paragraph{Pros}
+
+\begin{itemize}
+\item Reach libraries for transactions. Fully documented with comments made it easy to know what part of the code does what and how it is done.
+\item  Many adjustable parameters make the system easier to personalize. 
+\item Easy to extend, if extra features are needed is possible to add the feature. Secure and reliable, also security can be personalized and extendible.
+\end{itemize}
+\paragraph{Cons}
+
+\begin{itemize}
+\item Open source, not owned for any organization that takes care of it. 
+\item Slow performance, there have been reported issues with performance and backup recovery.
+\end{itemize}
+
+
+\subsubsection{Conclusion}
+
+\indent
+\indent
+There is not a real need for a feature-rich database; the database that we need to implement is simple, and the main aspect to consider is the replication—also, some of the cons of MySQL that be considered as advantages. Because MySQL is robust and has all the functionality needed, it has been chosen as the best option.

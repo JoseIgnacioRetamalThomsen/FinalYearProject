@@ -1,4 +1,7 @@
-// Jose I. Retamal 2019
+//Jose I. Retamal
+//GMIT 2020
+
+//Define interface for connect to auth database
 
 syntax = "proto3";
 
@@ -9,59 +12,44 @@ option java_package = "io.grpc.wcity.login";
 option java_outer_classname = "UserLoginProto";
 option objc_class_prefix = "RPC";
 
-// For acces user Database  
-
+// For acces user Database
 //  The Service definition
-service UserAuthDB{
-
+service UserAuthDB {
     // add new user, response include id
-    rpc AddUser(UserDBRequest) returns (UserDBResponse);
-
+    rpc AddUser (UserDBRequest) returns (UserDBResponse);
     // get user details, request should include only the email
-    rpc GetUser(UserDBRequest) returns (UserDBResponse);
-
+    rpc GetUser (UserDBRequest) returns (UserDBResponse);
     //update a user.
-    rpc UpdateUser(UserDBRequest) returns (UserDBResponse);
-
+    rpc UpdateUser (UserDBRequest) returns (UserDBResponse);
     //create seassion
-    rpc CreateSeassion(UserSessionRequest) returns (UserSessionResponse);
-
+    rpc CreateSeassion (UserSessionRequest) returns (UserSessionResponse);
     //get session
-    rpc GetSeassion(UserSessionRequest) returns (UserSessionResponse);
-
+    rpc GetSeassion (UserSessionRequest) returns (UserSessionResponse);
     // delete session
-    rpc DeleteSession(UserSessionRequest) returns (UserDeleteSessionResponse);
-    
+    rpc DeleteSession (UserSessionRequest) returns (UserDeleteSessionResponse);
 }
-
-// The user request.
-message UserDBRequest{
+message UserDBRequest {
     string email = 1;
     bytes passwordHash = 2;
-    bytes passwordSalt = 3; 
+    bytes passwordSalt = 3;
 }
-
-// the response
-message UserDBResponse{
+message UserDBResponse {
     int64 id = 1;
     string email = 2;
     bytes passwordHash = 3;
-    bytes passwordSalt = 4; 
+    bytes passwordSalt = 4;
 }
-
-message UserSessionRequest{
+message UserSessionRequest {
     string email = 1;
     string token = 2;
 }
-
-message UserSessionResponse{
+message UserSessionResponse {
     string email = 1;
     string token = 2;
     string loginTime = 3;
     string lastSeenTime = 4;
 }
-
-message UserDeleteSessionResponse{
+message UserDeleteSessionResponse {
     bool success = 1;
     string email = 2;
 }

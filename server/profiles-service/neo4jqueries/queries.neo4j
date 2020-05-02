@@ -21,12 +21,15 @@ WHERE a.email = "user1@email.com" AND b.name = "gmit" AND b.city = "galway" AND 
 CREATE (a)-[r:VISIT]->(b)
 RETURN r
 
+// all visit places
 MATCH (a:User)
 WHERE a.email = "user" 
 MATCH (b:Place)
 WHERE b.name = "gmit" 
 CREATE (a)-[r:VISIT]->(b)
 RETURN r
+
+
 
 // visit place
 MATCH (a:User)
@@ -40,17 +43,21 @@ RETURN r
 MATCH (a:User)
 WHERE a.email = "user1@email.com" 
 MATCH (b:City)
-WHERE b.name = "gmit"  AND b.city = "galway" AND b.country= "ireland"
+WHERE b.name = "galway"  AND b.country = "ireland"
 CREATE (a)-[r:VISIT{date:date()}]->(b)
 RETURN r
 
 
 
 MATCH (a:City),(b:Place)
-WHERE a.name = "Galway" AND b.name = "GMIT"
+WHERE a.name = "galway" AND a.country="ireland" AND b.name = "gmit" AND b.city="galway" AND b.country = "ireland"
 CREATE (a)-[r:ISIN]->(b)
 RETURN r
 
+MATCH (a:City)-[r:ISIN]-> (b:Place)
+WHERE a.name = "galway" AND a.country="ireland"
+
+return b
 
 # find a user
 
@@ -59,16 +66,21 @@ where a.email = "new"
 return a
 
 
-#all visit
+#all visit 
 MATCH (a:User) -[r:VISIT]-> (b) 
 where a.email = "j@e.com"
 return a, b
 
-
+// all visit place
 MATCH (a:User) -[r:VISIT]-> (b:Place) 
 where a.email = "user1@email.com"
 return  b
 
+
+//al visit city
+MATCH (a:User) -[r:VISIT]-> (b:City) 
+where a.email = "user1@email.com"
+return  b
 
 # find city
 Match (a:City)
@@ -78,4 +90,17 @@ return a
 # find Place
 MATCH (a:Place)
 WHERE a.name = "gmit" AND a.country= "ireland" AND a.city ="galway"
+return a
+
+//update user
+MATCH (a:User)
+WHERE a.email = "user1@email.com"
+SET a.name = "User1", a.description = "new Description"
+return a
+
+//update city
+
+MATCH (a:City)
+WHERE a.name = "galway" AND a.country = "ireland" AND a.creatorEmail ="user1@email.com"
+SET a.description = "very new des" , a.lat =7 , a.lon = 4
 return a

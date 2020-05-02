@@ -10,6 +10,7 @@ import io.grpc.netty.NettyServerBuilder;
 import io.netty.handler.ssl.ClientAuth;
 import io.netty.handler.ssl.SslContextBuilder;
 
+
 public class ProfileDBServer {
 
 	 private Server server;
@@ -78,7 +79,7 @@ public class ProfileDBServer {
 	            SslContextBuilder sslContextBuilder = getSslContextBuilder();
 
 	            server = NettyServerBuilder.forPort(port)
-	                    .addService(new ProfileDBImp())
+	                    .addService(new ConcurrentProfileDBImp())
 	                    .sslContext(sslContextBuilder.build())
 	                    .build()
 	                    .start();
@@ -86,7 +87,7 @@ public class ProfileDBServer {
 	        } else {
 
 	            server = NettyServerBuilder.forPort(port)
-	                    .addService(new ProfileDBImp())
+	                    .addService(new ConcurrentProfileDBImp())
 	                    .build()
 	                    .start();
 

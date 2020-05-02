@@ -1,0 +1,33 @@
+.toolbar{
+    display: flex;
+    
+    align-items:center;
+    justify-content:center;
+    
+}
+.title{
+    margin: 0.4em;
+}
+.toolbarMainButton{
+    font-size: 1em;
+   
+   
+}
+.toolbarLoginButton{
+   
+    
+    
+}
+.toolbarMainSearchBar{
+    
+    width: 20em;
+    
+}
+#searchButton{
+    width: 20em;
+}
+.nameLogout{
+    display: flex;
+  
+    
+}

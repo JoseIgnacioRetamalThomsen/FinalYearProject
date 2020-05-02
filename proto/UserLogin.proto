@@ -1,5 +1,9 @@
-syntax = "proto3";
+//Jose I. Retamal
+//GMIT 2020
 
+//Define interface for connect to main auth service
+
+syntax = "proto3";
 
 package wcity;
 
@@ -8,39 +12,31 @@ option java_package = "io.grpc.wcity.login";
 option java_outer_classname = "UserLoginProto";
 option objc_class_prefix = "RPC";
 
-service UserAuthentication{
-
+service UserAuthentication {
     // created user and return login token
-    rpc CreateUser(UserRequest) returns (UserResponse); 
+    rpc CreateUser (UserRequest) returns (UserResponse);
     //update user
-    rpc UpdateUser(UserRequest) returns (UserResponse);   
-    // used for login 
-    rpc LoginUser(UserRequest) returns (UserResponse);
-      // check if user is logged
-    rpc CheckToken(LogRequest) returns (LogResponse);
+    rpc UpdateUser (UserRequest) returns (UserResponse);
+    // used for login
+    rpc LoginUser (UserRequest) returns (UserResponse);
+    // check if user is logged
+    rpc CheckToken (LogRequest) returns (LogResponse);
     // for logout
-    rpc Logout(LogRequest) returns (LogResponse);
-    
-
+    rpc Logout (LogRequest) returns (LogResponse);
 }
-
-message UserRequest{
+message UserRequest {
     string email = 1;
     string hashPassword = 2;
     string name = 3;
-
 }
-
-message UserResponse{
-     bool isUser = 1;
-     string token = 2;
+message UserResponse {
+    bool isUser = 1;
+    string token = 2;
 }
-
-message LogRequest{
-        string token = 1;
-        string email =2;
+message LogRequest {
+    string token = 1;
+    string email = 2;
 }
-
-message LogResponse{
-     bool sucess = 1; 
+message LogResponse {
+    bool sucess = 1;
 }
