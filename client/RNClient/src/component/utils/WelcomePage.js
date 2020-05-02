@@ -10,7 +10,9 @@ import {logger} from 'react-native-logger'
 
 export default class WelcomePage extends Component {
     componentDidMount() {
-        this.getSavedToken().then(r => logger.log(r))
+        this.getSavedToken().then(r => logger.log(r)),
+        SplashScreen.hide(),
+        this.props.navigation.navigate('auth')
     }
     getSavedToken = async () => {
         try {

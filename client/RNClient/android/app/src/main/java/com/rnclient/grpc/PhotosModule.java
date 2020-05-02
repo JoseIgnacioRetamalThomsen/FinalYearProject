@@ -35,7 +35,7 @@ public class PhotosModule extends ReactContextBaseJavaModule {
 
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
-    private static final String IP_ADDRESS = "35.197.216.42";
+    private static final String IP_ADDRESS = "35.197.242.214";
     private static final int PORT_NUMBER = 30051;
     private static PhotosClient client;
 

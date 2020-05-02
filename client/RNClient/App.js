@@ -184,11 +184,16 @@ export default class App extends React.Component {
                             },
                             (placesJson) => {
                                 let placesMap = JSON.parse(placesJson)
-                                placesMap.forEach(myFunction)
+                                if (placesMap!== null){
+                                    placesMap.forEach(myFunction)
+                                    function myFunction(item, index) {
+                                        global.visitedPlaceMap[item.id] = true
+                                    }
 
-                                function myFunction(item, index) {
-                                    global.visitedPlaceMap[item.id] = true
+
                                 }
+
+
                             })
                     }
                 })
