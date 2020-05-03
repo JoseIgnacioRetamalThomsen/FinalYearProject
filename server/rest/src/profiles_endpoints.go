@@ -189,3 +189,55 @@ func CreatePlaceRequest(w http.ResponseWriter, r *http.Request){
 
 
 }
+
+
+func GetAllCityEndPoint(w http.ResponseWriter, r *http.Request) {
+
+	cities,err := GetAllCities(pb.GetAllRequest{
+		Max:                  1000,
+			})
+
+	if err != nil {
+		fmt.Fprintf(w, "Wrong request, body must contain city data")
+	}
+
+	json.NewEncoder(w).Encode(cities)
+
+}
+
+
+func GetCityPlacesEndPoint(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Get City Places  : %s", r)
+
+	token := r.Header["Token"][0]
+	email := r.Header["Email"][0]
+
+	if len(email) ==0 || len(token) == 0  {
+		http.Error(w, "Wrong request auth", 400)
+		return
+	}
+
+	cityName := mux.Vars(r)["city"]
+	cityCountry := mux.Vars(r)["country"]
+
+	var request  = pb.CreateCityRequestP{
+		Token:                token,
+		Name:                 email,
+		City:                 &pb.City{
+			Name:                 cityName,
+			Country:              cityCountry,
+
+		},
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	}
+
+	response,err := GetAllCityPlaces(request)
+
+	if err != nil {
+		fmt.Fprintf(w, "Wrong request, body must contain city data")
+	}
+
+	json.NewEncoder(w).Encode(response)
+}
