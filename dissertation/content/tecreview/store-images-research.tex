@@ -1,0 +1,29 @@
+\subsection{Store Images}
+Jose I. Retamal
+\vskip 0.1in
+\indent
+\indent
+We have considered a few ways to store the images.
+
+
+\begin{itemize}
+	\item Store image in MongoDB using Gridsfs https://docs.mongodb.com/manual/core/gridfs/
+	
+	\item Store images in MySQL database using binary blobs. 
+	
+	\item  Store in the file system and store URL in a database.
+\end{itemize}
+
+
+The best way to store the images is to use the file system and store the URL in another database, because:
+\begin{itemize}
+	\item Fewer data need to be transferred. If we store the image in a database, it would need to be retrieved from the database and then sent to the user. So the service will need to deal with a huge amount of data. If we just store the URL and allow the user to access the file system, the service will need to deal with a much lower amount of data. Resulting in better performance.
+	
+	\item Much easier to escalate. More buckets can be easily added, and the amount of data store in the database is meager and can be stored in a very simple way, just as single tables without the need to join data.
+	
+	\item Internet services providers(Google Cloud, Azure, and AWS) supply ready to use file systems that can have public access: buckets. They are cheap, have high performance, and are scalable.
+\end{itemize}
+
+To store the URL, we have decided to use a relational database because we need to access the data using keys. 
+
+

@@ -1,5 +1,6 @@
-\section{Profiles Service Database}{Jose I. Retamal }
-
+\subsection{Profiles Service Database}
+Jose I. Retamal
+\vskip 0.1in
 \indent
 \indent
 We need a database that store names and description of the users, cities, and places. Also, we need to access places that are in a city, and users need to be able to mark any city or place as visited for, then get info and make comments about the places that they have been. 
@@ -20,13 +21,13 @@ Considering this, we have chosen a graph database to store the profiles, the key
 	\item Flexibility, more fields, or relationships can be added in a relatively easy way.
 \end{itemize}
 
-\subsection{Considerations}
+\subsubsection{Considerations}
 
 \indent
 \indent
 Some accessible graph databases are TigerGraph, Neo4j, and DataStax. They all have great performance and offer more or less the same functionality \cite{gdbcomparison}. We have chosen Neo4j because it has a more significant community and is more popular, meaning that there is more online documentation and resources.
 
-\subsection{Database access driver}
+\subsubsection{Database access driver}
 
 \indent
 \indent
@@ -39,7 +40,7 @@ Drivers considered:
 	\item Java- https://github.com/neo4j/neo4j-java-driver
 \end{itemize}
 
-\subsection{Decision}
+\subsubsection{Decision}
 
 \indent
 \indent
