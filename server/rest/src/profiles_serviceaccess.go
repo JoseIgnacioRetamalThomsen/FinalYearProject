@@ -5,9 +5,10 @@ import (
 	"fmt"
 	pb "github.com/joseignacioretamalthomsen/wcity"
 	"google.golang.org/grpc"
+	"io"
+	"log"
 	"time"
 )
-
 
 type profileServer struct {
 	context *ProfileServiceContext
@@ -15,8 +16,9 @@ type profileServer struct {
 
 type ProfileServiceContext struct {
 	dbClient pb.ProfilesClient
-	timeout time.Duration
+	timeout  time.Duration
 }
+
 var ProfSerConn profileServer
 
 // create connection
@@ -34,50 +36,84 @@ func newProfilesServiceContext(endpoint string) (*ProfileServiceContext, error) 
 	return ctx, nil
 }
 
-func CreateCity(city pb.CreateCityRequestP)(*pb.CityResponseP,error){
+func CreateCity(city pb.CreateCityRequestP) (*pb.CityResponseP, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
 	defer cancel()
-	r, err := ProfSerConn.context.dbClient.CreateCity(ctx,&city)
-	if err != nil{
-		return nil,err
+	r, err := ProfSerConn.context.dbClient.CreateCity(ctx, &city)
+	if err != nil {
+		return nil, err
 	}
-	return r,nil
+	return r, nil
 }
 
-
-
-
-func GetCity(city pb.GetCityRequestP )(*pb.CityResponseP,error){
+func GetCity(city pb.GetCityRequestP) (*pb.CityResponseP, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
 	defer cancel()
-	r, err := ProfSerConn.context.dbClient.GetCity(ctx,&city)
+	r, err := ProfSerConn.context.dbClient.GetCity(ctx, &city)
 
-	if err != nil{
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
 
 	fmt.Println(r.City)
 	fmt.Println(r)
-	return r,nil
+	return r, nil
 }
 
-func UpdateCity(city pb.CreateCityRequestP)(*pb.CityResponseP,error){
+func GetAllCities(request pb.GetAllRequest) (*[]pb.City, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
 	defer cancel()
-	r, err := ProfSerConn.context.dbClient.UpdateCity(ctx,&city)
-	if err != nil{
-		return nil,err
+
+	stream, err := ProfSerConn.context.dbClient.GetAllCitys(ctx, &request)
+	if err != nil {
+		return nil, err
 	}
-	return r,nil
+
+	var cities []pb.City
+	for {
+		c, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("%v.ListFeatures(_) = _, %v", ProfSerConn.context.dbClient, err)
+		}
+
+		cities = append(cities, *c)
+	}
+
+	return &cities, nil
 }
 
-func CreatePlace(request pb.CreatePlaceRequestP)(*pb.PlaceResponseP,error){
+func UpdateCity(city pb.CreateCityRequestP) (*pb.CityResponseP, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
+	defer cancel()
+	r, err := ProfSerConn.context.dbClient.UpdateCity(ctx, &city)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+func CreatePlace(request pb.CreatePlaceRequestP) (*pb.PlaceResponseP, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := ProfSerConn.context.dbClient.CreatePlace(ctx,&request)
-	if err != nil{
-		return nil,err
+	r, err := ProfSerConn.context.dbClient.CreatePlace(ctx, &request)
+	if err != nil {
+		return nil, err
 	}
 
-	return r,nil
+	return r, nil
+}
+
+func GetAllCityPlaces(request pb.CreateCityRequestP)(*pb.VisitedPlacesResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	res,err := ProfSerConn.context.dbClient.GetCityPlaces(ctx,&request)
+	if err != nil {
+		return nil, err
+	}
+	return res,nil
+
 }

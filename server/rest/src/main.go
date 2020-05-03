@@ -155,9 +155,12 @@ func main() {
 
 
 
-
-
-
+	//temp, _ := GetAllCities(pb.GetAllRequest{
+	//	Max:                  0,
+	//
+	//})
+	//
+	//fmt.Print(temp)
 	//log.Printf("Received: %v", "here")
 	//err, user:= loginUser(pb.UserRequest{
 	//	Email:                "email116",
@@ -187,6 +190,7 @@ func main() {
 	//profiles
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/city", CreateCityRequest).Methods("POST")
+	router.HandleFunc("/city", GetAllCityEndPoint).Methods("GET")
 	router.HandleFunc("/city/{country}/{name}/", GetCityRequest).Methods("GET")
 
 	//put not working
@@ -194,6 +198,8 @@ func main() {
 
 
 	router.HandleFunc("/place", CreatePlaceRequest).Methods("POST")
+	router.HandleFunc("/place/{country}/{city}", GetCityPlacesEndPoint).Methods("GET")
+
 
 	/*router.HandleFunc("/place/{country}/{city}/{name}/", GetPlaceRequest).Methods("GET")
 	router.HandleFunc("/place/{country}/{city}/{name}/",UpdatePlaceRequest).Methods("PUT")
@@ -224,6 +230,9 @@ func main() {
 	log.Fatal(http.ListenAndServe(configuration.Port, handlers.CORS(/*originsOk,*/ headersOk, methodsOk,originsOk1)(router)))
 	//log.Fatal(http.ListenAndServe(":8080", router))
 }
+
+
+
 
 
 
