@@ -1,0 +1,24 @@
+\subsection{Communication Protocol}
+Jose I. Retamal
+\vskip 0.1in
+\indent
+\indent
+
+We need a protocol for the microservices to communicate. We have considering using REST or gRPC. 
+
+We need many services to communicate in a fast and reliable way, and they would all share the same network that is the internet.
+  
+Some advantages of gRPC over REST are:We have compared gRPC with rest and found  advantages of gRPC over REST for our system:
+
+\begin{itemize}
+	\item CLear defined Interfaces.
+	\item Bidirectional streaming.
+	\item Much faster and compact.
+	\item East to understand and implement.
+	\item Lossy coupled between client/server.
+\end{itemize}
+
+
+The interface is defined using Protobuffers, which is programming language independent. The same code is compiled for the different programming languages, it has libraries in most programming languages, and it does have with Go and Java that we will use in the application.
+
+So gRPC is a modern implementation of RPC that has been developed by Google to meets requirements of high traffic distributed systems. It uses HTTP and is fast to learn and easy to implement.
