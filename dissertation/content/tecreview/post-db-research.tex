@@ -1,0 +1,25 @@
+\subsection{Post Database}
+Jose I. Retamal
+\vskip 0.1in
+\indent
+\indent
+For store post, we need a database that:
+\begin{itemize}
+	\item Can store a huge amount of data, because posts are the things that occur more in the application because cities and places can have "any" amount of post each we expect that they would more posts that anything in the application. 
+	
+	\item The post would need to be stored by a city or place, and they would be for one particular city or place. Some sort of indexing would help performance.
+
+
+\end{itemize}
+
+	In resume, we need a highly scalable database with little structure, on this description fits perfect a document-based database.
+
+We have considered three different document base databases: InterSystems cache, MongoDB, and Apache CouchDB(). We have  chosen MongoDB because:
+
+\begin{itemize}
+	\item Simple to use.
+	\item It easy to install in the Linux environment.
+	\item Native replication is included.
+	\item Even if it has fewer features than the others, it is good because we don't really need the extra features.
+	\item It has a go driver to access the database. 
+\end{itemize}
