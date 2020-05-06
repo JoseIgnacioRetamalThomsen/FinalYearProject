@@ -8,32 +8,33 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
-type CityResponseJson struct{
-	City pb.City
+type CityResponseJson struct {
+	City  pb.City
 	Photo pb.CityPhoto
 }
 
 type CityResponse struct {
-	Success   bool      `json:"success"`
-	City pb.CityResponseP `json:"city"`
+	Success bool             `json:"success"`
+	City    pb.City `json:"city"`
+	Images []*pb.CityPhoto
+	Posts []*pb.CityPost
+
 }
 
-func CreateCityRequest(w http.ResponseWriter, r *http.Request){
+func CreateCityRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received: %v", "Create city")
 
 	err2 := r.ParseForm()
 
-	if(err2!=nil){
-		fmt.Print("err:",err2)
+	if err2 != nil {
+		fmt.Print("err:", err2)
 	}
 	//image := []byte(r.Form["image"][0])
 
-
-
-
-	for _,value := range  r.Header{
+	for _, value := range r.Header {
 		fmt.Println(value)
 	}
 
@@ -53,12 +54,12 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 
 	cityRequest.Token = r.Header["Token"][0]
 	cityRequest.Name = r.Header["Email"][0] // name is email
-	cityRequest.City = &city;
+	cityRequest.City = &city
 	fmt.Println(city)
 
-	response,err := CreateCity(cityRequest)
+	response, err := CreateCity(cityRequest)
 
-	if err !=nil {
+	if err != nil {
 		fmt.Println(err)
 	}
 
@@ -67,17 +68,17 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 
 		cityId := response.City.CityId
 
-		photo , err :=SendCityimage(image, r.Header["Email"][0],r.Header["Token"][0], int(cityId))
-		if err !=nil {
+		photo, err := SendCityimage(image, r.Header["Email"][0], r.Header["Token"][0], int(cityId))
+		if err != nil {
 			fmt.Println(err)
 		}
 		jsonResponse := CityResponseJson{
-			City:   *response.City,
+			City:  *response.City,
 			Photo: *photo,
 		}
 
 		json.NewEncoder(w).Encode(jsonResponse)
-	}else {
+	} else {
 
 		//convert reponse into json and send back
 		jsonResponse := CityResponseJson{
@@ -93,33 +94,65 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request){
 
 }
 
-func GetCityRequest(w http.ResponseWriter, r *http.Request){
+func GetCityRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received: %v", "Get city")
 
+token:=       r.Header["Token"][0]
+	name :=        r.Header["Email"][0]
+		cityName:=    mux.Vars(r)["name"]
+		cityCountry:= mux.Vars(r)["country"]
+
 	response, err := GetCity(pb.GetCityRequestP{
-		Token:                r.Header["Token"][0],
-		Name:                 r.Header["Email"][0],
-		CityName:             mux.Vars(r)["name"],
-		CityCountry:          mux.Vars(r)["country"],
-
+		Token:       token,
+		Name:        name,
+		CityName:    cityName,
+		CityCountry: cityCountry,
 	})
-	/*
-		response, err := GetCity(pb.CityRequestP{
-			Token:                r.Header["Token"][0],
-			Name:                 mux.Vars(r)["name"],
-			Country:              mux.Vars(r)["country"],
-			CreatorEmail:         r.Header["Email"][0],
 
-		})*/
 	if err != nil {
 		log.Printf("Server problem: %s", err)
 		fmt.Fprintf(w, "Server problem: %s", err)
 	}
+
+	//get images
+	images,err := GetCityimage(pb.CityPhotoRequestP{
+		Token:                token,
+		Email:                name,
+		CityId:               response.City.CityId,
+
+	})
+
+	var city CityResponse;
+	if images == nil {
+		city = CityResponse{
+			Success: true,
+			City:    *response.City,
+			Images:  nil,
+		}
+	}else {
+		city = CityResponse{
+			Success: true,
+			City:    *response.City,
+			Images:  images.Photos,
+		}
+	}
+
+	//get posts
+	posts,err := GetCityPosts(pb.PostsRequest{
+		IndexId:              response.City.CityId,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	})
+
+	if posts != nil{
+		city.Posts = posts.Posts;
+	}
 	fmt.Println(response.City)
-	json.NewEncoder(w).Encode(response.City)
+	json.NewEncoder(w).Encode(city)
 }
 
-func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
+func UpdateCityRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received: %v", "Update request")
 
 	var request pb.CreateCityRequestP
@@ -132,10 +165,9 @@ func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
 
 	fmt.Println(request)
 
-
 	request.Token = r.Header["Token"][0]
 	//request.CreatorEmail =  r.Header["Email"][0]
-	request.Name =  mux.Vars(r)["name"]
+	request.Name = mux.Vars(r)["name"]
 	//request.Country= mux.Vars(r)["country"]
 
 	request.City = &city
@@ -152,14 +184,12 @@ func UpdateCityRequest(w http.ResponseWriter, r *http.Request){
 
 }
 
-
-func CreatePlaceRequest(w http.ResponseWriter, r *http.Request){
-
+func CreatePlaceRequest(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Header["Token"][0]
 	email := r.Header["Email"][0]
 
-	if len(email) ==0 || len(token) == 0  {
+	if len(email) == 0 || len(token) == 0 {
 		http.Error(w, "Wrong request", 400)
 		return
 	}
@@ -176,7 +206,7 @@ func CreatePlaceRequest(w http.ResponseWriter, r *http.Request){
 
 	request.Token = r.Header["Token"][0]
 	//request.CreatorEmail =  r.Header["Email"][0]
-	request.Name =  mux.Vars(r)["name"]
+	request.Name = mux.Vars(r)["name"]
 
 	// create grpc coity using body data
 	json.Unmarshal(reqBody, &place)
@@ -187,24 +217,57 @@ func CreatePlaceRequest(w http.ResponseWriter, r *http.Request){
 
 	json.NewEncoder(w).Encode(response)
 
-
 }
-
-
+type AllCityResponse struct{
+	Cities *[]pb.City
+	Images []*pb.CitysPhoto
+}
 func GetAllCityEndPoint(w http.ResponseWriter, r *http.Request) {
 
-	cities,err := GetAllCities(pb.GetAllRequest{
-		Max:                  1000,
-			})
+	token := r.Header["Token"][0]
+	email := r.Header["Email"][0]
 
-	if err != nil {
-		fmt.Fprintf(w, "Wrong request, body must contain city data")
+	search := r.FormValue("search")
+
+	if len(search) > 0 {
+
+		sr, err := Search(pb.SearchAllRequest{
+			Max:                  1000,
+			Search:               search,
+			XXX_NoUnkeyedLiteral: struct{}{},
+			XXX_unrecognized:     nil,
+			XXX_sizecache:        0,
+		})
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		json.NewEncoder(w).Encode(sr)
+	} else
+	{
+		cities, err := GetAllCities(pb.GetAllRequest{
+			Max: 1000,
+		})
+
+		cr := AllCityResponse{
+			Cities:cities}
+
+		if err != nil {
+			fmt.Fprintf(w, "Wrong request, body must contain city data")
+		}
+
+		images,err := GetAllCityImages(pb.GetCitysPhotoRequestP{
+			Email:                email,
+			Token:                token,
+
+		})
+		if err==nil{
+			cr.Images= images.CityPhotos
+		}
+
+		json.NewEncoder(w).Encode(cr)
 	}
-
-	json.NewEncoder(w).Encode(cities)
-
 }
-
 
 func GetCityPlacesEndPoint(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Get City Places  : %s", r)
@@ -212,7 +275,7 @@ func GetCityPlacesEndPoint(w http.ResponseWriter, r *http.Request) {
 	token := r.Header["Token"][0]
 	email := r.Header["Email"][0]
 
-	if len(email) ==0 || len(token) == 0  {
+	if len(email) == 0 || len(token) == 0 {
 		http.Error(w, "Wrong request auth", 400)
 		return
 	}
@@ -220,24 +283,96 @@ func GetCityPlacesEndPoint(w http.ResponseWriter, r *http.Request) {
 	cityName := mux.Vars(r)["city"]
 	cityCountry := mux.Vars(r)["country"]
 
-	var request  = pb.CreateCityRequestP{
-		Token:                token,
-		Name:                 email,
-		City:                 &pb.City{
-			Name:                 cityName,
-			Country:              cityCountry,
-
+	var request = pb.CreateCityRequestP{
+		Token: token,
+		Name:  email,
+		City: &pb.City{
+			Name:    cityName,
+			Country: cityCountry,
 		},
 		XXX_NoUnkeyedLiteral: struct{}{},
 		XXX_unrecognized:     nil,
 		XXX_sizecache:        0,
 	}
 
-	response,err := GetAllCityPlaces(request)
+	response, err := GetAllCityPlaces(request)
 
 	if err != nil {
 		fmt.Fprintf(w, "Wrong request, body must contain city data")
 	}
 
 	json.NewEncoder(w).Encode(response)
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {
+
+	log.Printf("Received: %v", "Get User")
+
+	token := r.Header["Token"][0]
+	email := r.Header["Email"][0]
+
+	fmt.Print(token)
+	fmt.Print(email)
+	user, err := GetUserProfile(pb.GetUserRequestP{
+		Token: token,
+		Email: email,
+	})
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	json.NewEncoder(w).Encode(user)
+}
+
+func GetPlaceRequest(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Received: %v", "Get place")
+
+	token := r.Header["Token"][0]
+	email := r.Header["Email"][0]
+	country := mux.Vars(r)["country"]
+	city := mux.Vars(r)["city"]
+	name := mux.Vars(r)["name"]
+	response, err := GetPlace(pb.GetPlaceRequestP{
+		Token:                token,
+		Email:                email,
+		PlaceName:            name,
+		PlaceCity:           city,
+		PlaceCountry:         country,
+
+	})
+	if err != nil {
+		log.Printf("Error: %v", err)
+		fmt.Fprintf(w, "Wrong request, body must contain city data")
+	}
+
+	json.NewEncoder(w).Encode(response)
+}
+
+func VisitCityEndPoint(w http.ResponseWriter, r *http.Request) {
+
+		log.Printf("Received: %v", "Visit city")
+	token := r.Header["Token"][0]
+	email := r.Header["Email"][0]
+
+	i, err := strconv.ParseInt(mux.Vars(r)["id"], 10, 32)
+
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+	res,err := VisitCity(pb.VisitCityRequestP{
+		Token:                token,
+		Email:                email,
+		Id:                   int32(i),
+
+	})
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	json.NewEncoder(w).Encode(res)
+
+
 }

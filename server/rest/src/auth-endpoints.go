@@ -41,16 +41,7 @@ func CreateNewUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
 
-	log.Printf("Received: %v", "Get User")
-
-	token := r.Header["Token"][0]
-	email := r.Header["Email"][0]
-
-	fmt.Print(token);
-	fmt.Print(email);
-}
 
 func UptadeUserEndPoint(w http.ResponseWriter, r *http.Request) {
 

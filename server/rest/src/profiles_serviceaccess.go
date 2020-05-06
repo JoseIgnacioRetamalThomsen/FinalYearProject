@@ -117,3 +117,61 @@ func GetAllCityPlaces(request pb.CreateCityRequestP)(*pb.VisitedPlacesResponseP,
 	return res,nil
 
 }
+
+func Search(request pb.SearchAllRequest)(*[]pb.SearchAllResult,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	stream, err := ProfSerConn.context.dbClient.SearchAllDBA(ctx,&request)
+
+	if err != nil {
+		return nil, err
+	}
+	var sr []pb.SearchAllResult
+	for {
+		c, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			//log.Fatalf("%v.ListFeatures(_) = _, %v", ProfSerConn.context.dbClient, err)
+			return nil, err
+		}
+
+		sr = append(sr, *c)
+	}
+
+	return &sr,nil
+}
+
+func GetUserProfile(request pb.GetUserRequestP)(*pb.UserResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	res,err := ProfSerConn.context.dbClient.GetUser(ctx,&request)
+	if err != nil {
+		return nil, err
+	}
+	return res,nil
+}
+
+func GetPlace(request pb.GetPlaceRequestP)(*pb.PlaceResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
+	defer cancel()
+	r, err := ProfSerConn.context.dbClient.GetPlace(ctx,&request)
+	if err != nil{
+		return nil,err
+	}
+
+	return r,nil
+}
+
+func VisitCity(request pb.VisitCityRequestP) (*pb.VisitCityResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
+	defer cancel()
+	r, err := ProfSerConn.context.dbClient.VisitCity(ctx,&request)
+	if err != nil{
+		return nil,err
+	}
+	return r,nil
+}

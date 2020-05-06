@@ -6,19 +6,11 @@ import (
 
 	//	"strconv"
 
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"os"
-	"time"
-
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
-
-	"context"
-
-	//"fmt"
-	pb "github.com/joseignacioretamalthomsen/wcity"
-	"google.golang.org/grpc"
 )
 
 
@@ -27,26 +19,7 @@ func homeLink(w http.ResponseWriter, r *http.Request) {
 }
 
 /*
-func GetPlaceRequest(w http.ResponseWriter, r *http.Request){
-	log.Printf("Received: %v", "Get place")
 
-	response, err := GetPlace(pb.PlaceRequestP{
-		Token:               r.Header["Token"][0],
-		Name:                 mux.Vars(r)["name"],
-		City:                 mux.Vars(r)["city"],
-		Country:              mux.Vars(r)["country"],
-		CreatorEmail:         r.Header["Email"][0],
-
-
-	})
-	if err != nil {
-		log.Printf("Error: %v", err)
-		fmt.Fprintf(w, "Wrong request, body must contain city data")
-	}
-
-
-	json.NewEncoder(w).Encode(response)
-}
 func UpdatePlaceRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Update place")
 
@@ -85,6 +58,7 @@ func GetCityPostRequest(w http.ResponseWriter, r *http.Request){
 
 	json.NewEncoder(w).Encode(response)
 }
+
 
 func GetPlacePostRequest(w http.ResponseWriter, r *http.Request){
 	log.Printf("Received: %v", "Get place post")
@@ -190,7 +164,8 @@ func main() {
 	//profiles
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/city", CreateCityRequest).Methods("POST")
-	router.HandleFunc("/city", GetAllCityEndPoint).Methods("GET")
+	router.HandleFunc("/city", GetAllCityEndPoint).Methods("GET")//.Queries("search", "{search}")
+	router.HandleFunc("/city", GetAllCityEndPoint).Queries("search", "{search}").Methods("GET")
 	router.HandleFunc("/city/{country}/{name}/", GetCityRequest).Methods("GET")
 
 	//put not working
@@ -200,9 +175,10 @@ func main() {
 	router.HandleFunc("/place", CreatePlaceRequest).Methods("POST")
 	router.HandleFunc("/place/{country}/{city}", GetCityPlacesEndPoint).Methods("GET")
 
+	router.HandleFunc("/visitcity/{id}", VisitCityEndPoint).Methods("POST")
 
-	/*router.HandleFunc("/place/{country}/{city}/{name}/", GetPlaceRequest).Methods("GET")
-	router.HandleFunc("/place/{country}/{city}/{name}/",UpdatePlaceRequest).Methods("PUT")
+	router.HandleFunc("/place/{country}/{city}/{name}/", GetPlaceRequest).Methods("GET")
+	/*router.HandleFunc("/place/{country}/{city}/{name}/",UpdatePlaceRequest).Methods("PUT")
 
 	//post
 	router.HandleFunc("/city/post", CreateCityPostRequest).Methods("POST")
@@ -230,6 +206,8 @@ func main() {
 	log.Fatal(http.ListenAndServe(configuration.Port, handlers.CORS(/*originsOk,*/ headersOk, methodsOk,originsOk1)(router)))
 	//log.Fatal(http.ListenAndServe(":8080", router))
 }
+
+
 
 
 
@@ -291,61 +269,8 @@ const (
 	POST_url ="35.197.216.42:10051"
 )
 
-type postService struct {
-	context *postServiceContext
-}
 
-type postServiceContext struct {
-	dbClient pb.PostsServiceClient
-	timeout time.Duration
-}
-var serviceConn postService
 
-// create connection
-func newPostServiceContext(endpoint string) (*postServiceContext, error) {
-	userConn, err := grpc.Dial(
-		endpoint,
-		grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	ctx := &postServiceContext{
-		dbClient: pb.NewPostsServiceClient(userConn),
-		timeout:  time.Second,
-	}
-	return ctx, nil
-}
-
-func CreateCityPost(post pb.CityPost)(*pb.CreatePostResponse,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := serviceConn.context.dbClient.CreateCityPost(ctx,&post)
-	if err != nil {
-		return nil,err
-	}
-
-	return r,nil
-}
-
-func GetCityPosts(request pb.PostsRequest)(*pb.CityPostsResponse ,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := serviceConn.context.dbClient.GetCityPosts(ctx,&request)
-	if err!=nil{
-		return nil,err
-	}
-	return r,nil
-}
-
-func GetPlacePosts(request pb.PostsRequest)(*pb.PlacePostsResponse,error){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := serviceConn.context.dbClient.GetPlacePosts(ctx,&request);
-	if err!=nil{
-		return nil,err
-	}
-	return r,nil
-}
 
 
 /**
@@ -353,47 +278,7 @@ func GetPlacePosts(request pb.PostsRequest)(*pb.PlacePostsResponse,error){
 Photo
  */
 
-type photosServer struct {
-	context *photosServiceContext
-}
-
-type photosServiceContext struct {
-	dbClient pb.PhotosServiceClient
-	timeout time.Duration
-}
-var photoConn photosServer
-
-// create connection
-func newPhotosServiceContext(endpoint string) (*photosServiceContext, error) {
-
-	userConn, err := grpc.Dial(
-		endpoint,
-		grpc.WithInsecure())
-	if err != nil {
-		return nil, err
-	}
-	ctx := &photosServiceContext{
-		dbClient: pb.NewPhotosServiceClient(userConn),
-		timeout:  time.Second*2,
-	}
-	return ctx, nil
-}
 
 
 
-func SendCityimage(image []byte,email string,token string,cityId int)(*pb.CityPhoto,error){
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	r, err := photoConn.context.dbClient.UploadCityPhoto(ctx,&pb.CityUploadRequestP{
-		Token : token,
-		Email : email,
-		CityId : int32(cityId),
-		Image : image,
-	})
 
-	if err!= nil{
-		return nil,err
-	}
-	fmt.Print(r)
-	return r.Photo,nil
-}
