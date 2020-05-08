@@ -1,0 +1,66 @@
+\chapter{Goland}
+
+\section{Create and Publish Modules}
+
+\begin{itemize}
+	\item Create module
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ go mod init <module-path>
+	\end{minted}
+	
+	
+	\item Install or  update dependencies
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ go get
+	\end{minted}
+	
+	\item Remove unused dependencies
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ go mod tidy
+	\end{minted}
+	
+	\item Publish to GitHub
+	
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ git add .
+	$ git commit -m "the commit"
+	$ git tag v1.0.0
+	$ git push origin v1.0.0
+	\end{minted}
+	
+	
+\section{Install Go in Linux}
+
+	\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+	$ sudo snap install go --classic
+	\end{minted}
+\end{itemize}
+
+\section{Go Docker Image}
+
+	\begin{minted}[linenos,tabsize=2,breaklines]{Dockerfile}
+	 FROM golang:latest
+	 COPY . /usr/src/myapp
+	 WORKDIR /usr/src/myapp
+	 EXPOSE <PORT-NUMBER>
+	 ENTRYPOINT ["./<EXECUTABLE>", "<COMMAND-LINE-PARAMETERS>"]
+	\end{minted}
+	
+\section{Protocol Buffer}
+
+
+	\begin{itemize}
+		\item Install
+		\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+		$ sudo snap install protobuf --clasic
+		\end{minted}
+		\item Compile using GRPC plugin
+		\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+		$ protoc --go_out=plugins=grpc:<OUT-FOLDER> <FILE-NAME(.proto)>
+		\end{minted}
+		
+	\end{itemize}
+
