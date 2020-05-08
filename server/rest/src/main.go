@@ -87,7 +87,7 @@ func main() {
 
 	fmt.Print(configuration.Auth[0])
 	//conect to profiles server
-	dbserverCtx, err := newProfilesServiceContext(configuration.Profiles[0])
+	dbserverCtx, err := newProfilesContextLoadBalancing()//newProfilesServiceContext(configuration.Profiles[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -95,7 +95,7 @@ func main() {
 	ProfSerConn = *s2
 
 	//conect to  post server
-	dbserverCtx1, err := newPostServiceContext(configuration.Post[0])
+	dbserverCtx1, err := newPostContextLoadBalancing()//newPostServiceContext(configuration.Post[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -153,6 +153,7 @@ func main() {
 
 
 
+
 	router := mux.NewRouter().StrictSlash(true)
 	//auth
 	router.HandleFunc("/user", GetUser).Methods("GET")
@@ -164,7 +165,9 @@ func main() {
 	//profiles
 	router.HandleFunc("/", homeLink)
 	router.HandleFunc("/city", CreateCityRequest).Methods("POST")
-	router.HandleFunc("/city", GetAllCityEndPoint).Methods("GET")//.Queries("search", "{search}")
+	router.HandleFunc("/city", GetAllCityEndPoint).Methods("GET")
+	router.HandleFunc("/city", GetAllCityEndPoint).Methods("OPTIONS")
+	//.Queries("search", "{search}")
 	router.HandleFunc("/city", GetAllCityEndPoint).Queries("search", "{search}").Methods("GET")
 	router.HandleFunc("/city/{country}/{name}/", GetCityRequest).Methods("GET")
 
@@ -189,10 +192,6 @@ func main() {
 */
 
 
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With","Content-Type","Accept", "Accept-Language", "Content-Language", "Origin"})
-	//originsOk := handlers.AllowedOrigins([]string{os.Getenv("*")})
-	originsOk1 := handlers.AllowedOrigins([]string{"*"})
-	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
 	//	headersOk := handlers.AllowedHeaders([]string{"*"})
 ////	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
@@ -202,6 +201,10 @@ func main() {
 //	methodsOk := handlers.AllowedMethods([]string{"*"})
 	//methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS","DELETE"})
 
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With","Content-Type","Accept", "Accept-Language", "Content-Language", "Origin","Access-Control-Request-Headers","*","token","email"})
+	//originsOk := handlers.AllowedOrigins([]string{os.Getenv("*")})
+	originsOk1 := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS","*"})
 	log.Printf("Server started at : %v", configuration.Port)
 	log.Fatal(http.ListenAndServe(configuration.Port, handlers.CORS(/*originsOk,*/ headersOk, methodsOk,originsOk1)(router)))
 	//log.Fatal(http.ListenAndServe(":8080", router))

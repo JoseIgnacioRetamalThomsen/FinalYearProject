@@ -17,13 +17,13 @@ cd docker
 ``
 
 ``
-sudo docker image build -t joseretamal/wcity-rest:1.0 .
+sudo docker image build -t joseretamal/wcity-rest:1.1 .
 ``
 
 #push to docker hub
 
 ```
-sudo docker push joseretamal/wcity-rest:1.0
+sudo docker push joseretamal/wcity-rest:1.1
 ```
 
 # run docker image

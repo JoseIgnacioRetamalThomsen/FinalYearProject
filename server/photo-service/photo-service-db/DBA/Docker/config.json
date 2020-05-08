@@ -1,8 +1,0 @@
-{
-  "Port" : ":7172",
-  "Coneection_type" :"tcp",
-  "MySQL_socket" : "127.0.0.1:3306",
-  "MySQL_user": "golandAcces",
-  "MySQL_pass" : "supedPss",
-  "MySQL_db" : "Photos"
-}
