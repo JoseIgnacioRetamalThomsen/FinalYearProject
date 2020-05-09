@@ -201,6 +201,7 @@ func main() {
 //	methodsOk := handlers.AllowedMethods([]string{"*"})
 	//methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS","DELETE"})
 
+	router.Use(commonMiddleware)
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With","Content-Type","Accept", "Accept-Language", "Content-Language", "Origin","Access-Control-Request-Headers","*","token","email"})
 	//originsOk := handlers.AllowedOrigins([]string{os.Getenv("*")})
 	originsOk1 := handlers.AllowedOrigins([]string{"*"})
@@ -217,7 +218,12 @@ func main() {
 
 
 
-
+func commonMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
+}
 
 
 

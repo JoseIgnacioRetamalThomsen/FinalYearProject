@@ -21,6 +21,7 @@ type CityResponse struct {
 	City    pb.City `json:"city"`
 	Images []*pb.CityPhoto
 	Posts []*pb.CityPost
+	PostImages []*pb.PostPhoto
 
 }
 
@@ -145,10 +146,27 @@ token:=       r.Header["Token"][0]
 		XXX_sizecache:        0,
 	})
 
+
+
 	if posts != nil{
 		city.Posts = posts.Posts;
 	}
-	fmt.Println(response.City)
+
+	// get post images
+	postimages,err := GetCityPostImages(pb.GetPostsPhotosPerParentRequestP{
+		Email:                name,
+		Token:                token,
+		Type:                 pb.PostType_CityTypePhoto,
+		ParentId:             response.City.CityId,
+		XXX_NoUnkeyedLiteral: struct{}{},
+		XXX_unrecognized:     nil,
+		XXX_sizecache:        0,
+	})
+
+	if err== nil{
+city.PostImages = postimages.PlacesPhoto
+	}
+
 	json.NewEncoder(w).Encode(city)
 }
 

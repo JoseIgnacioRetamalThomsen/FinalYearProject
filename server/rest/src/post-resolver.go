@@ -100,7 +100,7 @@ func (*postResolver) Close() {}
 
 //init resolvers.
 func init() {
-	resolver.Register(&profilesResolverBuilder{})
+	resolver.Register(&postResolverBuilder{})
 }
 
 
