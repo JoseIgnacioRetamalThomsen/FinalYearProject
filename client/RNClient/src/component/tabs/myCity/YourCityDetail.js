@@ -21,6 +21,10 @@ import {Button, Divider} from "react-native-elements";
 import SpecialHeader from "../../headers/SpecialHeader";
 import {IMAGE} from "../../../constants/Image";
 import GeoLoc from "../../utils/GeoLoc";
+import Geolocation from "@react-native-community/geolocation";
+import Geocoder from "react-native-geocoding";
+import HomeHeader from "../../headers/HomeHeader";
+import CustomHeader from "../../headers/CustomHeader";
 
 const {width: viewWidth} = Dimensions.get('window')
 
@@ -31,7 +35,6 @@ class YourCityDetail extends Component {
         this.state = {
             placesPhotoMap: [],
             postsPhotoMap: [],
-            //city
             isVisible: false,
             isVisible2: false,
             cityId: -99,
@@ -97,38 +100,15 @@ class YourCityDetail extends Component {
     }
 
     callbackFunction = (lat, lng, city, country) => {
+        this.setState({lat: lat})
+        this.setState({lng: lng})
         this.setState({city: city})
         this.setState({country: country})
     }
 
-    getCitiesPhoto() {
+    getCity(){
         AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                stores.map((result, i, store) => {
-                    let email = store[i][0];
-                    let token = store[i][1]
 
-                    if (token !== null) {
-                        NativeModules.PhotosModule.getCitysPhoto(
-                            token,
-                            email,
-                            (err) => {
-                                this.setState({photoMap: require('../../../img/noImage.png')})
-                                console.log("gggg", err)
-                            },
-
-                            (jsonCityPhotoList) => {
-                                this.setState({photoMap: jsonCityPhotoList})
-
-                            })
-                    }
-                })
-            })
-        })
-    }
-
-    componentDidMount() {
-        AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
                     let email = store[i][0];
@@ -136,8 +116,8 @@ class YourCityDetail extends Component {
 
                     if (token !== null) {
                         NativeModules.ProfilesModule.getCity(
-                            email,
                             token,
+                            email,
                             this.state.city,
                             this.state.country,
                             (err) => {
@@ -150,14 +130,79 @@ class YourCityDetail extends Component {
                                 this.setState({lat: lat})
                                 this.setState({lng: lng})
                                 this.setState({description: description})
+                                this.setState({cityId: id})
                                 console.log("successful in getCity values " + city, country, email, description, id)
-
                             })
                     }
                 })
             })
         })
-        this.getCitiesPhoto()
+        this.getCityImages()
+        this.getCityPlaces()
+        this.getPlacesPerCityPhoto()
+        this.getCityPosts()
+        this.getPostsPhotosIdP()
+    }
+    componentDidMount() {
+        Geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+                Geocoder.from(position.coords.latitude, position.coords.longitude)
+                    .then(json => {
+                        let city = json.results[0].address_components.filter(ac => ~ac.types.indexOf('locality'))[0].long_name
+                        let country = json.results[0].address_components.filter(ac => ~ac.types.indexOf('country'))[0].long_name
+                        this.setState({
+                            city: city
+                        })
+                        this.setState({
+                            country: country
+                        })
+                        this.getCity()
+                        console.log("mycityId", this.state.cityId)
+                    })
+                    .catch(error => console.warn(error));
+            },
+            (error) => {
+                // See error code charts below.
+                this.setState({
+                    error: error.message
+                }),
+                    console.log(error.code, error.message);
+            },
+
+            {
+                enableHighAccuracy: false,
+                timeout: 10000,
+                maximumAge: 100000
+            }
+        )
+    }
+
+    getCityImages() {
+        AsyncStorage.getAllKeys((err, keys) => {
+            AsyncStorage.multiGet(keys, (err, stores) => {
+                stores.map((result, i, store) => {
+                    let email = store[i][0];
+                    let token = store[i][1]
+
+                    if (token != null) {
+                        NativeModules.PhotosModule.getCityImage(
+                            token,
+                            email,
+                            parseInt(this.state.cityId),
+                            (err) => {
+                                console.log(err)
+                            },
+                            (images) => {
+                                this.setState({images: JSON.parse(images)})
+                            })
+                    }
+                })
+            })
+        })
     }
 
     getCityPosts() {
@@ -193,7 +238,8 @@ class YourCityDetail extends Component {
                         NativeModules.PhotosModule.getCityImage(
                             token,
                             email,
-                            parseInt(this.state.cityId),
+                            182,
+                            //parseInt(this.state.cityId),
                             (err) => {
                                 console.log(err)
                             },
@@ -223,6 +269,7 @@ class YourCityDetail extends Component {
                                 console.log(err)
                             },
                             (placesList) => {
+                                console.log("placeList ",placesList)
                                 this.setState({places: JSON.parse(placesList)})
                             })
                     }
@@ -310,6 +357,7 @@ class YourCityDetail extends Component {
                                 console.log(err)
                             },
                             (placeUrl) => {
+
                                 this.setState({placeUrl: placeUrl})
                             })
                     }
@@ -369,6 +417,7 @@ class YourCityDetail extends Component {
     }
 
     getPlacesPerCityPhoto() {
+        console.log("this.state.cityId in getPlacesPerCityPhoto", this.state.cityId)
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -379,13 +428,14 @@ class YourCityDetail extends Component {
                         NativeModules.PhotosModule.getPlacesPerCityPhoto(
                             token,
                             email,
-                            this.state.cityId,
+                            182,
                             (err) => {
                                 console.log(err)
                             },
 
                             (jsonCityPhotoList) => {
                                 this.setState({placesPhotoMap: jsonCityPhotoList})
+                                console.log("jsonCityPhotoList ", jsonCityPhotoList)
                             })
                     }
                 })
@@ -431,59 +481,65 @@ class YourCityDetail extends Component {
     }
 
     renderItemPlaces = ({item, index}) => {
-        console.log("@id@", item.id)
-        if (item.id == "") {
-            return (
-                <View style={Style.carouselContainer}>
-                    <Text>No places created yet</Text>
-                </View>
-            )
-        } else {
-            return (
-                <View style={Style.carouselContainer}>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {
-                        placeId: item.id,
-                        name: item.name,
-                        city: this.state.city,
-                        cityId: this.state.cityId,
-                        country: this.state.country,
-                        description: item.description,
-                    })}>
+        return (
+            <View style={Style.carouselContainer}>
+                {/*<TouchableOpacity onPress={() => this.props.navigation.navigate('PlaceDetail', {*/}
+                {/*    placeId: item.id,*/}
+                {/*    name: item.name,*/}
+                {/*    city: this.state.city,*/}
+                {/*    cityId: this.state.cityId,*/}
+                {/*    country: this.state.country,*/}
+                {/*    description: item.description,*/}
+                {/*})}>*/}
+
+                    <View>
+                        <View>
+                            <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
+                                   style={Style.cardPhoto}/>
+                        </View>
 
                         <View>
-                            <View>
-                                <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
-                                       style={Style.cardPhoto}/>
-                            </View>
-
-                            <View>
-                                <Text style={Style.title}>{item.name}</Text>
-                                <Text style={Style.text}>{item.description}</Text>
-                            </View>
+                            <Text style={Style.title}>{item.name}</Text>
+                            <Text style={Style.text}>{item.description}</Text>
                         </View>
-                    </TouchableOpacity>
-                </View>
-            )
-        }
+                    </View>
+                {/*</TouchableOpacity>*/}
+            </View>
+        )
+    }
 
+    onClickPlace() {
+
+        if (this.state.placeName === '' || this.state.placeDescription === '' || this.state.placeImage === '') {
+
+            alert("Please upload image and provide title & description")
+        } else {
+            this.createPlace()
+        }
+    }
+
+    onClickPost() {
+        if (this.state.cityPostTitle === '' || this.state.cityPostBody === '' || this.state.cityPostImage === '') {
+            alert("Please upload image and provide title & description")
+        } else {
+            this.createCityPost()
+        }
     }
 
     render() {
         return (
             <View style={Style.view}>
                 {/*create city Post*/}
-                <Modal
-                    visible={this.state.isVisible}
-                    modalAnimation={new SlideAnimation({
-                        slideFrom: 'bottom',
-                    })}
-                    onTouchOutside={() => {
-                        this.setState({isVisible: false});
-                    }}
+                <Modal style={Style.modal}
+                       visible={this.state.isVisible}
+                       modalAnimation={new SlideAnimation({
+                           slideFrom: 'bottom',
+                       })}
+                       onTouchOutside={() => {
+                           this.setState({isVisible: false});
+                       }}
                 >
-                    <ModalContent style={{
-                        width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6
-                    }}>
+                    <ModalContent style={Style.modalContent}>
                         <TextInput
                             placeholder="Title"
                             underlineColorAndroid='transparent'
@@ -500,30 +556,28 @@ class YourCityDetail extends Component {
                             }
                         }
                         }>
-                            <Image source={IMAGE.UPLOAD_IMG}/>
+                            {this.displayCityPostPhoto()}
                         </PhotoUpload>
 
-                        <Button title="Add city post" style={{height: 200, width: 200, borderColor: 'black'}}
-                                onPress={() => this.createCityPost()}>
-
-                        </Button>
+                        <TouchableOpacity style={Style.modalbtn}
+                                          onPress={() => this.onClickPost()}>
+                            <Text style={Style.txtStyle}>Add city post</Text>
+                        </TouchableOpacity>
                     </ModalContent>
 
                 </Modal>
 
                 {/*create place*/}
-                <Modal
-                    visible={this.state.isVisible2}
-                    modalAnimation={new SlideAnimation({
-                        slideFrom: 'bottom',
-                    })}
-                    onTouchOutside={() => {
-                        this.setState({isVisible2: false});
-                    }}
+                <Modal style={Style.modal}
+                       visible={this.state.isVisible2}
+                       modalAnimation={new SlideAnimation({
+                           slideFrom: 'bottom',
+                       })}
+                       onTouchOutside={() => {
+                           this.setState({isVisible2: false});
+                       }}
                 >
-                    <ModalContent style={{
-                        width: Dimensions.get('window').width * 0.8, height: Dimensions.get('window').height * 0.6
-                    }}>
+                    <ModalContent style={Style.modalContent}>
                         <TextInput
                             placeholder="Title"
                             underlineColorAndroid='transparent'
@@ -540,18 +594,18 @@ class YourCityDetail extends Component {
                             }
                         }
                         }>
-                            <Image source={IMAGE.UPLOAD_IMG}/>
+                            {this.displayPlacePostPhoto()}
                         </PhotoUpload>
 
-                        <Button title="Add a place" style={Style.btnPressStyle} onPress={() => this.createPlace()}>
-
-                        </Button>
+                        <TouchableOpacity style={Style.modalbtn}
+                                          onPress={() => this.onClickPlace()}>
+                            <Text style={Style.txtStyle}>Create Place</Text>
+                        </TouchableOpacity>
                     </ModalContent>
                 </Modal>
-
-                <SpecialHeader title={this.state.city} isHome={true}
+                <CustomHeader title={this.state.city} isHome={true}
                                navigation={this.props.navigation}/>
-                <GeoLoc parentCallback={this.callbackFunction}/>
+                {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
 
                 <ScrollView style={{flex: 1}}>
                     <Card style={Style.cardContainer}>
@@ -585,6 +639,9 @@ class YourCityDetail extends Component {
                     <Text style={Style.heading}> Places in {this.state.city} </Text>
                     <Divider style={{backgroundColor: 'black'}}/>
 
+
+                    {this.displayPlaces()}
+
                     <Carousel
                         ref={(c) => {
                             this._carousel = c;
@@ -596,14 +653,13 @@ class YourCityDetail extends Component {
                         itemWidth={viewWidth}
                     />
 
-
                     {/*Posts*/}
                     <Divider style={{backgroundColor: 'black'}}/>
                     <Text style={Style.heading}> Posts about {this.state.city}</Text>
                     <Divider style={{backgroundColor: 'black'}}/>
 
                     {this.state.posts.map((e, index) => {
-                        if (this.state.posts.postId === undefined){
+                        if (this.state.posts.postId === undefined) {
                             return (
                                 <Card style={Style.cardContainer} key={this.state.posts.postId}>
                                     <CardItem cardBody>
@@ -612,7 +668,7 @@ class YourCityDetail extends Component {
                                     </CardItem>
                                 </Card>
                             )
-                        }else {
+                        } else {
                             return (
                                 <Card style={Style.cardContainer} key={this.state.posts.postId}>
                                     <CardItem cardBody>
@@ -636,18 +692,43 @@ class YourCityDetail extends Component {
                     })}
 
                 </ScrollView>
-                <ActionButton buttonColor='#007AFF'>
-                    <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"
-                                       onPress={() => this.setState({isVisible: true})}>
-                        <Icon name="md-create" style={Style.actionButtonIcon}/>
-                    </ActionButton.Item>
-                    <ActionButton.Item buttonColor='#007AFF' title="Add a place"
-                                       onPress={() => this.setState({isVisible2: true})}>
-                        <Icon name="md-create" style={Style.actionButtonIcon}/>
-                    </ActionButton.Item>
-                </ActionButton>
+                {/*<ActionButton buttonColor='#007AFF'>*/}
+                {/*    <ActionButton.Item buttonColor='#007AFF' title="Write a post about this city"*/}
+                {/*                       onPress={() => this.setState({isVisible: true})}>*/}
+                {/*        <Icon name="md-create" style={Style.actionButtonIcon}/>*/}
+                {/*    </ActionButton.Item>*/}
+                {/*    <ActionButton.Item buttonColor='#007AFF' title="Add a place"*/}
+                {/*                       onPress={() => this.setState({isVisible2: true})}>*/}
+                {/*        <Icon name="md-create" style={Style.actionButtonIcon}/>*/}
+                {/*    </ActionButton.Item>*/}
+                {/*</ActionButton>*/}
             </View>
         )
+    }
+
+    displayCityPostPhoto() {
+        if (this.state.cityPostImage !== '') {
+            return <Image style={Style.uploadPhoto} source={{cityPostImage: this.state.cityPostImage}}/>
+        } else return <Image source={IMAGE.UPLOAD_IMG}/>
+    }
+
+    displayPlacePostPhoto() {
+        if (this.state.placeImage !== '') {
+            return <Image style={Style.uploadPhoto} source={{placeImage: this.state.placeImage}}/>
+        } else return <Image source={IMAGE.UPLOAD_IMG}/>
+    }
+
+    displayPlaces() {
+        if (this.state.places.length === 0) {
+            return (
+                <Card style={Style.cardContainer} key={this.state.posts.postId}>
+                    <CardItem cardBody>
+                        <Image source={IMAGE.NO_PLACES}
+                               style={Style.noPostsPhoto}/>
+                    </CardItem>
+                </Card>
+            )
+        }
     }
 }
 

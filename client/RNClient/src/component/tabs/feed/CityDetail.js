@@ -112,7 +112,7 @@ class CityDetail extends Component {
             description,
             img
         })
-        console.log("this.state.city!!", city)
+        console.log("this.state.city.Id!!", cityId)
         this.setState({cityId: cityId})
         this.getCityImages()
         this.getCityPlaces()
@@ -334,6 +334,7 @@ class CityDetail extends Component {
     }
 
     getPlacesPerCityPhoto() {
+        console.log("this.state.cityId, in citydet", this.state.cityId, this.state.city)
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -351,6 +352,7 @@ class CityDetail extends Component {
 
                             (jsonCityPhotoList) => {
                                 this.setState({placesPhotoMap: jsonCityPhotoList})
+                                console.log("ddd", jsonCityPhotoList)
                             })
                     }
                 })
@@ -435,6 +437,7 @@ class CityDetail extends Component {
 
     onClickPlace() {
         if (this.state.placeName === '' || this.state.placeDescription === '' || this.state.placeImage === '') {
+
             alert("Please upload image and provide title & description")
         } else {
             this.createPlace()

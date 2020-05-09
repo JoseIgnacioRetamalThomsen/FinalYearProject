@@ -30,7 +30,7 @@ class Login extends Component {
         this.setState({hiddenPassword: !this.state.hiddenPassword});
     }
 
-    async onClickListenerLogin() {
+     onClickListenerLogin() {
         let emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
         let isCorrectEmail = emailRegex.test(this.state.email)
 
@@ -50,22 +50,27 @@ class Login extends Component {
                 this.state.email,
                 this.state.password,
                 (err) => {
-                    this.setState({message: 'Incorrect email or password' + err})
+                    this.setState({message: 'Server is unavailable' + err})
+                    this.setState({message: 'Incorrect email or password'})
                 },
-                async (token) => {
+                 (token) => {
                     let value
-                    if (token === "StatusRuntimeException") {
-                        this.setState({message: 'Server is unavailable'})
-                    } else if (token === "User is not registered") {
-                        this.setState({message: 'User is not registered'})
-                    } else {
+                    if (token === "") {
+                        this.setState({message: 'Incorrect email or password'})
+                    }
+                      else if (token === "") {
+                          console.log("PERMISSION_DENIED: Invalid token")
+                            this.setState({message: 'Incorrect email or password'})
+                    }  else {
+                        console.log("here")
+                        console.log("token ",token)
                         try {
-                            await AsyncStorage.setItem(this.state.email, token)
+                             AsyncStorage.setItem(this.state.email, token)
                         } catch (e) {
-                            logger.log(e)
+                            logger.log("ee ", e)
                         }
                         try {
-                            value = await AsyncStorage.getItem(this.state.email)
+                            value =  AsyncStorage.getItem(this.state.email)
                         } catch (e) {
                         }
                         this.setState({token: value})

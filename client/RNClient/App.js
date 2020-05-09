@@ -59,10 +59,6 @@ const MyPostsStack = createStackNavigator({
         screen: YourCityDetail,
         navigationOptions: navOptionHandler
     },
-    SpecialHeader: {
-        screen: SpecialHeader,
-        navigationOptions: navOptionHandler
-    },
 })
 
 const MainTabs = createBottomTabNavigator({
@@ -107,10 +103,6 @@ const MainStack = createStackNavigator({
         screen: Settings,
         navigationOptions: navOptionHandler
     },
-    // Logout: {
-    //     screen: Logout,
-    //     navigationOptions: navOptionHandler
-    // },
 }, {initialRouteName: 'Home'})
 
 const appDrawer = createDrawerNavigator({
@@ -184,8 +176,9 @@ export default class App extends React.Component {
                             },
                             (placesJson) => {
                                 let placesMap = JSON.parse(placesJson)
-                                if (placesMap!== null){
+                                if (placesMap !== null) {
                                     placesMap.forEach(myFunction)
+
                                     function myFunction(item, index) {
                                         global.visitedPlaceMap[item.id] = true
                                     }

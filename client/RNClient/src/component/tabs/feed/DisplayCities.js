@@ -57,11 +57,12 @@ export default class DisplayCities extends Component {
                             token,
                             email,
                             (err) => {
-                                this.setState({photoMap: require('../../../img/noImage.png')})
+
                                 console.log(err)
                             },
 
                             (jsonCityPhotoList) => {
+                                console.log("photos ", jsonCityPhotoList)
                                 this.setState({photoMap: jsonCityPhotoList})
 
                             })
