@@ -106,9 +106,8 @@ class YourCityDetail extends Component {
         this.setState({country: country})
     }
 
-    getCity(){
+    getCity() {
         AsyncStorage.getAllKeys((err, keys) => {
-
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
                     let email = store[i][0];
@@ -132,17 +131,92 @@ class YourCityDetail extends Component {
                                 this.setState({description: description})
                                 this.setState({cityId: id})
                                 console.log("successful in getCity values " + city, country, email, description, id)
+
+                                AsyncStorage.getAllKeys((err, keys) => {
+                                    AsyncStorage.multiGet(keys, (err, stores) => {
+                                        stores.map((result, i, store) => {
+                                            let email = store[i][0];
+                                            let token = store[i][1]
+
+                                            if (token != null) {
+                                                NativeModules.PhotosModule.getCityImage(
+                                                    token,
+                                                    email,
+                                                    this.state.cityId,
+                                                    (err) => {
+                                                        console.log("=====", err)
+                                                    },
+                                                    (images) => {
+                                                        console.log("!!!!!!!!!!!", images)
+                                                        this.setState({images: JSON.parse(images)})
+                                                    })
+                                            }
+                                        })
+                                    })
+                                })
+
+
+                                AsyncStorage.getAllKeys((err, keys) => {
+                                    AsyncStorage.multiGet(keys, (err, stores) => {
+                                        stores.map((result, i, store) => {
+                                            let email = store[i][0];
+                                            let token = store[i][1]
+
+                                            if (token !== null) {
+                                                NativeModules.PhotosModule.getPlacesPerCityPhoto(
+                                                    token,
+                                                    email,
+                                                    this.state.cityId,
+                                                    (err) => {
+                                                        console.log(err)
+                                                    },
+
+                                                    (jsonCityPhotoList) => {
+                                                        this.setState({placesPhotoMap: jsonCityPhotoList})
+                                                        console.log("jsonCityPhotoList ", jsonCityPhotoList)
+                                                    })
+                                            }
+                                        })
+                                    })
+                                })
+
+                                AsyncStorage.getAllKeys((err, keys) => {
+                                    AsyncStorage.multiGet(keys, (err, stores) => {
+                                        stores.map((result, i, store) => {
+                                            let email = store[i][0];
+                                            let token = store[i][1]
+
+                                            if (token !== null) {
+                                                NativeModules.PhotosModule.getPostsPhotosIdP(
+                                                    token,
+                                                    email,
+                                                    0,
+                                                    this.state.cityId,
+                                                    (err) => {
+                                                        console.log(err)
+                                                    },
+
+                                                    (photoList) => {
+                                                        this.setState({postsPhotoMap: photoList})
+
+                                                    })
+                                            }
+                                        })
+                                    })
+                                })
+
                             })
                     }
                 })
             })
         })
-        this.getCityImages()
+
         this.getCityPlaces()
         this.getPlacesPerCityPhoto()
         this.getCityPosts()
         this.getPostsPhotosIdP()
     }
+
     componentDidMount() {
         Geolocation.getCurrentPosition(
             (position) => {
@@ -161,7 +235,6 @@ class YourCityDetail extends Component {
                             country: country
                         })
                         this.getCity()
-                        console.log("mycityId", this.state.cityId)
                     })
                     .catch(error => console.warn(error));
             },
@@ -192,7 +265,7 @@ class YourCityDetail extends Component {
                         NativeModules.PhotosModule.getCityImage(
                             token,
                             email,
-                            parseInt(this.state.cityId),
+                            1,
                             (err) => {
                                 console.log(err)
                             },
@@ -219,33 +292,6 @@ class YourCityDetail extends Component {
                             (cityPosts) => {
                                 this.setState({posts: JSON.parse(cityPosts)})
                             })
-
-                    }
-
-                })
-            })
-        })
-    }
-
-    getCityImages() {
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                stores.map((result, i, store) => {
-                    let email = store[i][0];
-                    let token = store[i][1]
-
-                    if (token != null) {
-                        NativeModules.PhotosModule.getCityImage(
-                            token,
-                            email,
-                            182,
-                            //parseInt(this.state.cityId),
-                            (err) => {
-                                console.log(err)
-                            },
-                            (images) => {
-                                this.setState({images: JSON.parse(images)})
-                            })
                     }
                 })
             })
@@ -269,7 +315,7 @@ class YourCityDetail extends Component {
                                 console.log(err)
                             },
                             (placesList) => {
-                                console.log("placeList ",placesList)
+                                console.log("placeList ", placesList)
                                 this.setState({places: JSON.parse(placesList)})
                             })
                     }
@@ -357,7 +403,6 @@ class YourCityDetail extends Component {
                                 console.log(err)
                             },
                             (placeUrl) => {
-
                                 this.setState({placeUrl: placeUrl})
                             })
                     }
@@ -416,59 +461,33 @@ class YourCityDetail extends Component {
         })
     }
 
-    getPlacesPerCityPhoto() {
-        console.log("this.state.cityId in getPlacesPerCityPhoto", this.state.cityId)
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                stores.map((result, i, store) => {
-                    let email = store[i][0];
-                    let token = store[i][1]
 
-                    if (token !== null) {
-                        NativeModules.PhotosModule.getPlacesPerCityPhoto(
-                            token,
-                            email,
-                            182,
-                            (err) => {
-                                console.log(err)
-                            },
-
-                            (jsonCityPhotoList) => {
-                                this.setState({placesPhotoMap: jsonCityPhotoList})
-                                console.log("jsonCityPhotoList ", jsonCityPhotoList)
-                            })
-                    }
-                })
-            })
-        })
-    }
-
-    getPostsPhotosIdP() {
-        AsyncStorage.getAllKeys((err, keys) => {
-            AsyncStorage.multiGet(keys, (err, stores) => {
-                stores.map((result, i, store) => {
-                    let email = store[i][0];
-                    let token = store[i][1]
-
-                    if (token !== null) {
-                        NativeModules.PhotosModule.getPostsPhotosIdP(
-                            token,
-                            email,
-                            0,
-                            this.state.cityId,
-                            (err) => {
-                                console.log(err)
-                            },
-
-                            (photoList) => {
-                                this.setState({postsPhotoMap: photoList})
-
-                            })
-                    }
-                })
-            })
-        })
-    }
+    // getPostsPhotosIdP() {
+    //     AsyncStorage.getAllKeys((err, keys) => {
+    //         AsyncStorage.multiGet(keys, (err, stores) => {
+    //             stores.map((result, i, store) => {
+    //                 let email = store[i][0];
+    //                 let token = store[i][1]
+    //
+    //                 if (token !== null) {
+    //                     NativeModules.PhotosModule.getPostsPhotosIdP(
+    //                         token,
+    //                         email,
+    //                         0,
+    //                         this.state.cityId,
+    //                         (err) => {
+    //                             console.log(err)
+    //                         },
+    //
+    //                         (photoList) => {
+    //                             this.setState({postsPhotoMap: photoList})
+    //
+    //                         })
+    //                 }
+    //             })
+    //         })
+    //     })
+    // }
 
     _renderItem = ({item, index}) => {
         return (
@@ -492,17 +511,17 @@ class YourCityDetail extends Component {
                 {/*    description: item.description,*/}
                 {/*})}>*/}
 
+                <View>
                     <View>
-                        <View>
-                            <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
-                                   style={Style.cardPhoto}/>
-                        </View>
-
-                        <View>
-                            <Text style={Style.title}>{item.name}</Text>
-                            <Text style={Style.text}>{item.description}</Text>
-                        </View>
+                        <Image source={{uri: this.state.placesPhotoMap["" + item.id]}}
+                               style={Style.cardPhoto}/>
                     </View>
+
+                    <View>
+                        <Text style={Style.title}>{item.name}</Text>
+                        <Text style={Style.text}>{item.description}</Text>
+                    </View>
+                </View>
                 {/*</TouchableOpacity>*/}
             </View>
         )
@@ -604,7 +623,7 @@ class YourCityDetail extends Component {
                     </ModalContent>
                 </Modal>
                 <CustomHeader title={this.state.city} isHome={true}
-                               navigation={this.props.navigation}/>
+                              navigation={this.props.navigation}/>
                 {/*<GeoLoc parentCallback={this.callbackFunction}/>*/}
 
                 <ScrollView style={{flex: 1}}>

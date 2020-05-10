@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, TextInput, View, NativeModules, Image, ScrollView, Icon, TouchableHighlight} from "react-native";
+import {Button, TextInput, View, NativeModules, Image, ScrollView, Icon, TouchableHighlight, Alert} from "react-native";
 import styles from "../../../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
 import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'react-native-material-cards'
@@ -120,7 +120,7 @@ export default class CreateCity extends React.Component {
     onClick() {
         console.log("mmmm", this.state.description, this.state.image)
         if (this.state.description === undefined || this.state.image === '') {
-            alert("Please upload photo and provide description")
+            Alert.alert("", "Please upload photo and provide description")
         } else {
             this.createCity()
         }

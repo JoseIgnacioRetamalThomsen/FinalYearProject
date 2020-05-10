@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    Alert,
     Dimensions,
     Image,
     NativeModules,
@@ -438,7 +439,7 @@ class CityDetail extends Component {
     onClickPlace() {
         if (this.state.placeName === '' || this.state.placeDescription === '' || this.state.placeImage === '') {
 
-            alert("Please upload image and provide title & description")
+            Alert.alert("","Please upload image and provide title & description")
         } else {
             this.createPlace()
         }
@@ -446,7 +447,7 @@ class CityDetail extends Component {
 
     onClickPost() {
         if (this.state.cityPostTitle === '' || this.state.cityPostBody === '' || this.state.cityPostImage === '') {
-            alert("Please upload image and provide title & description")
+            Alert.alert(" ","Please upload image and provide title & description")
         } else {
             this.createCityPost()
         }
@@ -606,8 +607,7 @@ class CityDetail extends Component {
 
                                     <CardItem>
                                         <Body>
-                                            <Text style={Style.text} numberOfLines={1}
-                                                  ellipsizeMode={"tail"}>{e.body} </Text>
+                                            <Text style={Style.text} >{e.body} </Text>
                                         </Body>
                                     </CardItem>
                                 </Card>
