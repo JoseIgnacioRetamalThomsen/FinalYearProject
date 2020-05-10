@@ -48,6 +48,8 @@ We expect to learn and prepare to afront the professional software environment a
 \indent
 In this project, we utilize cutting-edge technologies to develop a micro-service application.   The application is developed using relational, document base, and graph databases. We look at the benefits of each database, and we use them where we can maximize performance base on how the data is store and access on each type of database.
 
+The System is composed of a total of 10 applications: 4 primary services, 1 hashing service, 4 database access applications, and the REST service. The services use  4 databases and 1 file storage bucket (Figure \ref{application:uml}). All services are encapsulated, perform a specific task, they communicate using gRPC, and run in a docker container.
+
 The advantages that we want from developing the application as a distributed system are \cite{dsbook}:
 
 \begin{itemize}
