@@ -1,4 +1,4 @@
-# Screen Casts
+# Screencasts
 
 https://github.com/JoseIgnacioRetamalThomsen/FinalYearProject/blob/master/video/back-end-screencast.mp4
 
@@ -6,7 +6,7 @@ https://github.com/JoseIgnacioRetamalThomsen/FinalYearProject/blob/master/video/
 https://github.com/JoseIgnacioRetamalThomsen/FinalYearProject/blob/master/video/screencast_no_audio.mp4
 
 
-# Diseratation
+# Dissertation
 
 https://github.com/JoseIgnacioRetamalThomsen/FinalYearProject/blob/master/video/screencast_no_audio.mp4
 
