@@ -1,3 +1,4 @@
+# Project Structure
       .
        ├── client                # React Native client
        ├── dissertation          # lattex dissertation
