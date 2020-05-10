@@ -1,10 +1,5 @@
 \begin{thebibliography}{1}
 
-\bibitem{sdpost}
-S.~Dhruv, ``Pros and cons of using postgresql for application development.''
-  \url{https://www.aalpha.net/blog/pros-and-cons-of-using-postgresql-for-application-development/}.
-\newblock [Online; accessed 12-Novemer-2019].
-
 \bibitem{dsbook}
 A.~S. Tanenbaum, {\em Distributed Systems}.
 \newblock 2017.
@@ -18,6 +13,11 @@ K.~Beck, M.~Beedle, A.~van Bennekum, A.~Cockburn, W.~Cunningham, M.~Fowler,
 \bibitem{lbpcmysql}
 L.~Beatty, ``The pros and cons of mysql.''
   \url{https://www.smartfile.com/blog/the-pros-and-cons-of-mysql/}.
+\newblock [Online; accessed 12-Novemer-2019].
+
+\bibitem{sdpost}
+S.~Dhruv, ``Pros and cons of using postgresql for application development.''
+  \url{https://www.aalpha.net/blog/pros-and-cons-of-using-postgresql-for-application-development/}.
 \newblock [Online; accessed 12-Novemer-2019].
 
 \bibitem{gdbad}

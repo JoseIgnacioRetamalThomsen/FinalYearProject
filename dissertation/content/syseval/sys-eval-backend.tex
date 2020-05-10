@@ -198,3 +198,194 @@ Disk: SSD
 Location: Western Europe
 
 
+\subsection{REST API}
+\vskip 0.1in
+\indent
+\indent
+The rest API get data from all the services and create a JSON response. 
+
+The rest API test all services; they perform fine, and the response time is quick. It uses two clusters to balance the request.
+We use postman to test the API; this is the outcome:
+
+\begin{itemize}
+
+
+	\item  All request serves in less than a second even when they are done in a server in N. Virginia.
+	\item  Security tokens are always validated. If the token is not valid, request are refused.
+	\item  If one cluster is down, the request goes automatically to the other. This is a gRPC load balancer feature.
+\end{itemize}
+
+\paragraph{JSON response from  city Profile}
+
+\begin{minted}[linenos,tabsize=2,breaklines]{JSON}
+{
+	"Name": "galway",
+	"Country": "ireland",
+	"CreatorEmail": "g00351330@gmit.ie",
+	"Location": {
+	"lon": 90,
+	"lat": 89
+	},
+	"Description": "Galway is renowned for its vibrant lifestyle and for hosting numerous festivals, celebrations and events[4] such as The Galway Arts Festival. In 2018, it was named the European Region of Gastronomy.[citation needed] The city is currently the European Capital of Culture for 2020, alongside Rijeka, Croatia. ",
+	"Images": [
+	{
+		"id": 86,
+		"cityId": 212,
+		"url": "https://storage.googleapis.com/wcity-images-1/city-1/1294648_1194511.jpg",
+		"timestamp": "2020-05-09 21:05:21"
+	}
+	],
+	"Posts": [
+	{
+		"CreatorEmail": "g00351330@gmit.ie",
+		"Title": "Sunny day in Galway",
+		"Body": "This is weird.",
+		"TimeStamp": "UnixDate",
+		"MongoId": "5eb70f3bfd2fed23c2eb899f",
+		"ImageURL": "https://storage.googleapis.com/wcity-images-1/post-1/1474622_1764929.jpg"
+	},
+	{
+		"CreatorEmail": "g00351330@gmit.ie",
+		"Title": "Nice view of GAlway docks",
+		"Body": "In my friend house",
+		"TimeStamp": "UnixDate",
+		"MongoId": "5eb70f69fd2fed23c2eb89a0",
+		"ImageURL": "https://storage.googleapis.com/wcity-images-1/post-1/1629109_1282408.jpg"
+	}
+	],
+	"Places": [
+	{
+		"PlaceId": 215,
+		"Name": "gmit",
+		"City": "galway",
+		"Location": {
+		"lon": 90,
+		"lat": 89
+		},
+		"Description": "Institute of Technologies",
+		"Images": [
+			{
+			"id": 192,
+			"placeId": 215,
+			"url": "https://storage.googleapis.com/wcity-images-1/place-1/1713341_1425286.jpg",
+			"timestamp": "2020-05-09 21:10:03"
+			}
+		]
+		},
+		{
+		"PlaceId": 214,
+		"Name": "shop street",
+		"City": "galway",
+		"Location": {
+		"lon": 90,
+		"lat": 89
+		},
+		"Description": "Main pedistrian street in galway",
+		"Images": [
+			{
+			"id": 191,
+			"placeId": 214,
+			"url": "https://storage.googleapis.com/wcity-images-1/place-1/1566362_1091161.jpg",
+			"timestamp": "2020-05-09 21:09:06"
+			}
+	]
+	}
+	]
+}
+\end{minted}
+
+
+
+
+\paragraph{JSON response from  user Profile}
+
+\begin{minted}[linenos,tabsize=2,breaklines]{JSON}
+{
+	"Email": "g00351330@gmit.ie",
+	"Name": "jose",
+	"Descripiton": "Student",
+	"Avatar": [
+		{
+		"id": 29,
+		"userEmail": "g00351330@gmit.ie",
+		"url": "https://storage.googleapis.com/wcity-images-1/profile-1/1317523_1625526.jpg",
+		"timestamp": "2020-05-09 21:06:03",
+		"selected": true
+		}
+	],
+	"VisitedCities": [
+		{
+		"CityId": 212,
+		"Name": "galway",
+		"Country": "ireland",
+		"CreatorEmail": "g00351330@gmit.ie",
+		"Description": "Galway is renowned for its vibrant lifestyle and for hosting numerous festivals, celebrations and events[4] such as The Galway Arts Festival. In 2018, it was named the European Region of Gastronomy.[citation needed] The city is currently the European Capital of Culture for 2020, alongside Rijeka, Croatia. ",
+		"Location": {},
+		"Images": [
+		{
+		"id": 86,
+		"cityId": 212,
+		"url": "https://storage.googleapis.com/wcity-images-1/city-1/1294648_1194511.jpg",
+		"timestamp": "2020-05-09 21:05:21"
+		}
+		]
+		},
+		{
+		"CityId": 212,
+		"Name": "galway",
+		"Country": "ireland",
+		"CreatorEmail": "g00351330@gmit.ie",
+		"Description": "Galway is renowned for its vibrant lifestyle and for hosting numerous festivals, celebrations and events[4] such as The Galway Arts Festival. In 2018, it was named the European Region of Gastronomy.[citation needed] The city is currently the European Capital of Culture for 2020, alongside Rijeka, Croatia. ",
+		"Location": {},
+		"Images": [
+		{
+		"id": 86,
+		"cityId": 212,
+		"url": "https://storage.googleapis.com/wcity-images-1/city-1/1294648_1194511.jpg",
+		"timestamp": "2020-05-09 21:05:21"
+		}
+		]
+		}
+	],
+	"VisitedPlaces": [
+		{
+			"PlaceId": 214,
+			"Name": "shop street",
+			"City": "galway",
+			"Country": "ireland",
+			"Location": {
+			"lon": 90,
+			"lat": 89
+		},
+		"Description": "Main pedistrian street in galway",
+		"Images": [
+		{
+		"id": 191,
+		"placeId": 214,
+		"url": "https://storage.googleapis.com/wcity-images-1/place-1/1566362_1091161.jpg",
+		"timestamp": "2020-05-09 21:09:06"
+		}
+		]
+		},
+		{
+			"PlaceId": 215,
+			"Name": "gmit",
+			"City": "galway",
+			"Country": "ireland",
+			"Location": {
+			"lon": 90,
+			"lat": 89
+		},
+			"Description": "Institute of Technologies",
+			"Images": [
+			{
+			"id": 192,
+			"placeId": 215,
+			"url": "https://storage.googleapis.com/wcity-images-1/place-1/1713341_1425286.jpg",
+			"timestamp": "2020-05-09 21:10:03"
+		}
+	]
+	}
+	]
+}
+\end{minted}
