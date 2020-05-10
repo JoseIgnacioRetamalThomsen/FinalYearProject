@@ -1,0 +1,387 @@
+{
+	"info": {
+		"_postman_id": "2bedafc5-1fb0-4c11-bce0-bba80bd5f733",
+		"name": "WCity",
+		"description": "WCity REST API test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create City",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508",
+						"type": "text"
+					},
+					{
+						"key": "email",
+						"value": "a@a",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"cityname\",\"contry\":\"cityCountry\",\"cityname\":\"cityName\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9371/city",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9371",
+					"path": [
+						"city"
+					]
+				},
+				"description": "Create a new City."
+			},
+			"response": []
+		},
+		{
+			"name": "Get City",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508",
+						"type": "text"
+					},
+					{
+						"key": "email",
+						"value": "a@a",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/city/ireland/galway",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"city",
+						"ireland",
+						"galway"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update City",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508",
+						"type": "text"
+					},
+					{
+						"key": "email",
+						"value": "a@a",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"galway\",\n  \"country\": \"ireland\",\n  \"description\": \"Galway is a city in ireland new \",\n  \"location\": {\n    \"lon\": 12,\n    \"lat\": 12\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/city",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"city"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Place",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "a31e31a2fcdf2a9a230120ea620f3b24f7379d923fb122323d3cb9bc56fe6508",
+						"type": "text"
+					},
+					{
+						"key": "email",
+						"value": "a@a",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Place\",\n  \"city\" \"City Place\":\n  \"country\": \"ireland\",\n  \"description\": \"Galway is a city in ireland\",\n  \"location\": {\n    \"lon\": 12,\n    \"lat\": 12\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/place",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"place"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"testUser@mail.com\",\"hashPassword\":\"Qwerty1!\",\"name\":\"Test User\"}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9371/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9371",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "a864816ce45eb526a42540833c7ee7eb45befd6c47992ccee272c8531f2bd756",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Token",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "email",
+						"value": "g00351330@gmit.ie",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9371/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9371",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"g00351330@gmit.ie\",\"hashPassword\":\"Qwerty1!\"}"
+				},
+				"url": {
+					"raw": "http://localhost:9371/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9371",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log out",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get  All City",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "b067c31c14b0a50ef527793ea5751d48f9c7b8401198a64c34e455fb1d5da77d",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Token",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "email",
+						"value": "testUser@mail.com",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9371/city",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9371",
+					"path": [
+						"city"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get City Places",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Place",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "b067c31c14b0a50ef527793ea5751d48f9c7b8401198a64c34e455fb1d5da77d",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Token",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "email",
+						"value": "testUser@mail.com",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9371/place/ireland/galway/gmit",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9371",
+					"path": [
+						"place",
+						"ireland",
+						"galway",
+						"gmit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Visit City",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

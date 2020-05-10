@@ -68,7 +68,7 @@ func newDBContextLoadBalancing() (*dbClientContextLoadBalancing, error) {
 	}
 	ctx := &dbClientContextLoadBalancing{
 		dbClient: pb.NewUserAuthDBClient(userConn),
-		timeout:  time.Second,
+		timeout:  time.Second*MAX_CON_TIME,//set time
 	}
 	return ctx, nil
 }

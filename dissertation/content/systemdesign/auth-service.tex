@@ -1,9 +1,10 @@
 \section{Ahuthentication Service}
-
-
-
+Jose I. Retamal
+\vskip 0.1in
 \indent
 \indent
+
+
 This service provides user authentication. It is composed of three components: the hash service, the database, and the main service (Figure \ref{auth:xxdfdfdfdf}).
 
 The password is store securely, is hashed and salted using the hash service and then the hash and salt is stored in the database.
@@ -50,9 +51,9 @@ Users create an account, and when this happens, a new entry is created in the au
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=90mm,scale=1]{img/auth/CreateUser_sequence.png}
-\caption{Authentication Service- Create User Sequence Diagram.}
-\label{auth:createusersequence}
+	\includegraphics[width=90mm,scale=1]{img/auth/CreateUser_sequence.png}
+	\caption{Authentication Service- Create User Sequence Diagram.}
+	\label{auth:createusersequence}
 \end{center}
 \end{figure}
 
@@ -103,7 +104,7 @@ The request includes the token, and that token is removed from the sessions tabl
 \indent
 This program provides access to the authentications database. Is written in go and runs in a docker container, it connects to a MySQL database running in localhost. The application communicates with the main authentication service through a grpc interface.
 
-\subsubsection{The database}
+\subsubsection{Database}
 
 
 \begin{figure}
@@ -142,7 +143,7 @@ The authentication database store the necessary user data for authentication and
 
 \end{itemize}
 
-\subsection{The Hash Service}
+\subsection{Hash Service}
 
 \indent
 \indent

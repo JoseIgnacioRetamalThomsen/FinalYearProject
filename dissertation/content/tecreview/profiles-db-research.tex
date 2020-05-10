@@ -1,0 +1,47 @@
+\subsection{Profiles Service Database}
+Jose I. Retamal
+\vskip 0.1in
+\indent
+\indent
+We need a database that store names and description of the users, cities, and places. Also, we need to access places that are in a city, and users need to be able to mark any city or place as visited for, then get info and make comments about the places that they have been. 
+
+It makes sense to have some relationship between the users and the places/cities to connect them. Also, a relationship between the place and city can be used. 
+
+We Considered three types of databases: relational, document, and graph database. 
+If we chose the relational database, we would need to have a table where each user has entries for the cities and places they visit. To get the data, we will need to perform expensive joins. If in the future we want to add more relations like friendships, for example, it will get more complicated, and queries will be more expensive. 
+
+If we chose a document database, we could have like a list of places and a list of cities for each user, this would be easy, and queries would be not so expensive but there would it would use much more storage. 
+
+For a graph database relationship are natural, it has flexibility and would be much easier to add extra relationships and also more fields on each node if necessary. The performance would be good, and the relations will not produce the use of extra storage as with a document-based database \cite{gdbad}.
+
+Considering this, we have chosen a graph database to store the profiles, the key advantages this type of database will give are:
+
+\begin{itemize}
+	\item Performance, relationships are natural for a graph database; queries would be no expensive.
+	\item Flexibility, more fields, or relationships can be added in a relatively easy way.
+\end{itemize}
+
+\subsubsection{Considerations}
+
+\indent
+\indent
+Some accessible graph databases are TigerGraph, Neo4j, and DataStax. They all have great performance and offer more or less the same functionality \cite{gdbcomparison}. We have chosen Neo4j because it has a more significant community and is more popular, meaning that there is more online documentation and resources.
+
+\subsubsection{Database access driver}
+
+\indent
+\indent
+After we have decided what database would be used, we need to choose the programing language and the driver to access it.
+Given the main programing language of the system is going, we have considered this programming language. We also research java for the driver.
+
+Drivers considered:
+\begin{itemize}
+	\item Go -https://github.com/johnnadratowski/golang-neo4j-bolt-driver
+	\item Java- https://github.com/neo4j/neo4j-java-driver
+\end{itemize}
+
+\subsubsection{Decision}
+
+\indent
+\indent
+Neo4jdatabase with the official java driver.

@@ -1,0 +1,49 @@
+\chapter{Neo4J}
+Jose I. Retamal
+\vskip 0.1in
+\indent
+\indent
+
+\section {Neo4j With Docker}
+
+\subsection{Install}
+\begin{itemize}
+\item Pull the latest image from docker hub(\url{https://hub.docker.com/_/neo4j/}):
+	
+	
+
+	
+	
+\item Run Neo4j:
+	
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker run \
+--name neo4j \
+-p7474:7474 -p7687:7687 \
+-d \
+-v $HOME/neo4j/data:/data \
+-v $HOME/neo4j/logs:/logs \
+-v $HOME/neo4j/import:/var/lib/neo4j/import \
+-v $HOME/neo4j/plugins:/plugins \
+--env NEO4J_AUTH=neo4j/test \
+neo4j:latest
+\end{minted}
+
+\end{itemize}	
+\subsection{Access bash console:}	
+\begin{itemize}
+	\item Access image bash:
+	
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ sudo docker exec -it neo4j bash
+\end{minted}
+	
+	
+	\item Access neo4j bash:
+	
+\begin{minted}[linenos,tabsize=2,breaklines]{bash}
+$ cypher-shell -u neo4j -p test
+\end{minted}
+
+\end{itemize}	
+	

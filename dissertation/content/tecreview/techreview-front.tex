@@ -1,0 +1,212 @@
+\section{Front-End}
+Elena Makarenko
+
+\subsection{React Native}
+\vskip 0.1in
+\indent
+\indent
+I assume the biggest challenge in mobile development nowadays is the heterogeneity of mobile operating systems. One way of solving this problem is to write code for each platform in its own language. The other solution to this could be cross-platform development, which allows to develop an application for different platforms at once. 
+
+React Native is an open-source javascript mobile application framework created by Facebook in 2015 for developing mobile applications for iOS and/or Android. These 2 platforms cover more than 90\% of market share, which makes their choice clear.
+
+It is a native scripting framework which allows to create cross-platform phone/tablet apps with one code base. Facebook call this approach “Learn once, write everywhere”. Moreover, most of the code can be used for both platforms, and adding platform-specific code is quite simple. In our project we have implemented only android version due to time constraints and lack of IOS device.
+Probably technology evaluation might seem to be incomplete as we did not have experience with development of code for both platforms, still a research was conducted:
+information about RN was gathered, analyzed and evaluated. 
+Thus, we believe we can give an unbiased assessment and draw some conclusions about this framework. 
+
+Most of the principles and concepts are derived from the web framework ReactJS. Because of these similarities web developers can quickly learn how to write mobile applications without prior knowledge in the native languages such as Java and Objective C/Swift respectively.
+
+\subsubsection{Features}
+\paragraph{Native scripting applications.}
+\indent
+\indent
+There are different ways of developing cross-platform applications and each of them has its own pros and cons \cite{hansson2016effects}:
+1. Mobile web applications.
+An application that is accessed in a web browser. Back in the days the limitations of these apps included  requirement of internet connection and inability to access the mobile device software and hardware such as camera, and GPS sensors. Nevertheless, nowadays Progressive Web Apps (PWA) gain more and more popularity leaving those limitations behind.
+
+2. Hybrid applications.
+Simply speaking, it is a combination of the web App and the native App but has a lower performance compared to
+native applications (e.g. Ionic). 
+
+3. Cross-compiled applications.
+
+A cross-compiled application is an application written in a non-native language which can be compiled into a fully native application using a crosscompiler(e.g. Xamarin). 
+
+4. Native scripting/Interpreted  applications.
+Separate tools and programming language is used for each certain mobile platform.
+Since interpreter is used to call native APIs everything that is possible in a native application is possible through native scripting. However this will result in a loss of performance compared to calling the native environment directly.
+
+React Native uses native scripting approach.
+
+\paragraph{Virtual DOM.}
+There are 3 main scenarios how the page is rendered when changes on the page occur:
+
+1. A new HTML request is sent to the server in order to re-render the entire page. 
+
+2. Client-side HTML templating is used that re-renders parts of the page. 
+
+3. Imperative HTML Document Object Model (DOM further in the text) changes (considered to be the most efficient one).
+
+All these approaches have their own merits and flaws. 
+
+For example, the last two are quite expensive in terms of processing and time as good chunks of DOM or even the whole DOM might need to be re-rendered.
+Nevertheless, it allows to achieve code readability and maintainability. 
+
+ReactJS attempts to use the advantages of the aforementioned approaches and work around the disadvantages by using a virtual DOM. When changes occur the virtual DOM creates a queue/patch
+of imperative DOM operations that is asynchronously added to the Browser DOM \cite{danielsson2016react}.
+React Native  uses the same
+approach as ReactJS but instead of a
+virtual DOM it uses a virtual application hierarchy.
+
+\paragraph{JSX and Components}
+
+Another distinctive feature of React is JavaScript syntax extension, that looks similar to XML, called JSX. This code is compiled into regular JavaScript
+code. Consequently, JSX is just a syntactic sugar and anything written in JSX can be written in plain vanilla javascript but still it is highly recommended to use as it allows to make code more readable and easy to write. 
+
+The main idea of React is using components like building blocks in order to create an app. They can be swapped with each other, they are are reusable, interactive and stateful. 
+States are used in order to merge data into components and they are the core of the React interactivity. SetState method is used in order to pass the data to a component which is then re-rendered.
+\paragraph{Threads}
+React Native runs on two threads as well as with additional dispatch
+queues where the the layout is handled. The main thread, where the native UI rendering is performed, and a JavaScript thread that runs the JavaScript code of the React Native application. Every native component also uses a Grand Central Dispatch
+Queue15 (iOS) or a dedicated MessageQueue16 (Android) to handle threads.
+
+\paragraph{Native Modules}
+In our project we use React Native CLI as we needed to build native code.
+Unlike Expo CLI it requires Xcode or Android Studio to get started. Although, it takes a while to install and configure them, you have more control when writing code. In our case it was a necessity as we were using GRPC for establishing communication between client and server that required to a platform API that React Native doesn't have a corresponding module for yet.
+
+"If React Native doesn't support a native feature that you need, you should be able to build it yourself." Although, it is a bit frustrating at the beginning to wire the things up, it gives an access to the full power of the platform. 
+
+The main disadvantage is writing code in 2 separate IDEs: Java code in Android Studio and javascript in Webstorm as intelli-sense for java was not working in Webstorm and js in Android Studio respectively, which was a bit annoying. According to the research conducted the solution to this would be to use Intellij Idea Ultimate Edition with required plugins.
+
+
+\paragraph{Redux}
+Just to make things clear, redux is a js library for managing application state.
+It can be used with any platform like Angular or Deku, it just happened so that it is most commonly used with React.
+It can probably be compared to global storage, which manages passing state between components.
+There are 3 ways of passing states between components: from parent to children by using props (level down), from a child to a parent by using a callback and states (level down) or between siblings by combining the above 2 methods.
+
+In our project we used the above mentioned techniques and global variables which is not the best practice and gets tricky as soon as your app is growing bigger but as our application is not very complex, it did its job.
+
+
+\paragraph{Hot Reloading}
+'Fast Refresh' is a feature that was introduced in September, 2019.
+It allows code to compile automatically whenever changes in the code are made. 
+Yet sometimes it was noticed that it does not pick up the changes and requires a reboot which is quite annoying.
+
+
+\paragraph{ States \& Props }
+The main difference is that props(short for properties) are immutable and are used to pass data down to Child Components. 
+If draw a parallel, state is equivalent to local variables in a function, while props are equivalent to function parameters.
+State can only be used inside the component, props on the other hand allow components receive data from the parent component in the form of props.
+
+\paragraph{Components}
+The main idea of React is the usage of components: independent and reusable bits of code.
+There are 2 types of component in React: functional and class components. Originally states could be used only in class components(in simple words these are dynamic and interactive components). But things changed after introduction of hooks in React 16.8. Consequently, now they can be used interchangeable.
+
+\paragraph{Packages}
+There are 2 main package managers: npm and yarn.
+In the project npm was used.
+
+To check if you have Node.js and npm installed, run these commands in your terminal:
+
+\begin{lstlisting}
+node -v
+npm -v
+\end{lstlisting}
+
+In order install a library with native dependencies and link it run the following commands.
+
+\begin{lstlisting}
+npm install <library-with-native-dependencies> --save
+
+npx react-native link
+\end{lstlisting}
+
+Packages need to be imported in each components they are used in.
+A list of some packages that were used in the project:
+ 1. React Native Elements 
+ 2. React Native Vector Icons
+ 3. NativeBase
+ 4. React Navigation
+ 
+ A complete list of packages that were used in the project can be found in package.json file in dependencies.
+ 
+ \subsubsection{Google API}
+ \indent
+ \indent
+ 2 Google APIs were used in the project. These are:
+ 
+   1. Geolocation
+   In order to identify user's current location and display it in profile page.
+   
+   2. Places API AutoComplete
+   It is used in the search bar, eliminates  errors due to users misspelling of a city.
+   Consequently, the same city (the right one and the one that has a spelling mistake in it) cannot be created twice.
+
+ 
+ \subsubsection{Pros and Cons of RN}
+ \indent
+ \indent
+One of the advantages of this framework is that it has a large community and solutions to most of the problems a developer can encounter can be found online (github or stackoverflow).
+There is also a large amount of open source custom components which makes up quite a big library. The downside of it though is the fact that the quality of some packages can vary which leads to a more detailed analysis of the plugins available.
+
+Moreover, RN documentation is brilliant: very comprehensive and easy to follow.
+Apart from that an impressive list of video and blog tutorials is available online as well.
+
+Nevertheless, while working with React Native I have encountered some difficulties and I would like to enumerate the following disadvantages:
+
+1. First issue with React Native (and all hibernate platforms in general) even though they promise that code can be written once and then used for both platforms, it is not as easy as it seems from the first glance. What happens is you are still writing native code (which contradict to its other advantage that programmers are required to know only one language). Sooner or later a javaScript programmer will have to figure out how swift or java works if there is no React Native API available. In the long run, it might happen so that you will write the same code twice: for IOS and Android. So the question is: "Are we actually killing two birds with one stone?"
+
+2. Second quite noticeable drawback is performance, to be more precise, the time it takes React to load at first start of the app. Launch time leaves much to be desired.
+Although, RN claims near-native performance, still it cannot compete with native apps.
+
+The size of React Native apps is usually larger than native ones and it increases with each added third-party library. This also has a negative impact on the app speed.
+Code of the platform adds another layer of complexity, which makes it more intricate and gives an impression that you cannot have the full control and should rely on the platform itself.
+Or I could be wrong and it just requires a deep knowledge of the targeted platform.
+
+3. Another disadvantage, is dependency on third party modules.
+Sometimes these libraries are not well maintained as in most cases it is an open source software. Consequently, a developer should be more careful when installing a certain package: pay attention to the number of downloads, check the last updates (is it still maintained) and read issues section and Readme carefully. 
+Apart from that there can be issues with versioning and library compatibility. 
+
+4. It’s relatively new, thus codebase is not stable. It is still at its infancy stage, at least compared to mature native technologies, which were tested by time. React Native is getting better but still there is room for improvement.
+
+5. Debugging is quite tricky. Some error messages do not help in understanding the issue, even figuring out which component causes the issue and needs to be fixed can be a problem.
+As a result, you spend a lot of time on fixing even small errors. Especially, when it comes to debugging native code. What makes it even more complicated is the fact that live reloading does not work in this case and code needs to be recompiled. If your laptop is not powerful enough it can take up to 5-7 minutes of you time, which cannot be called a 'smooth developer experience'.
+
+\subsection{gRPC}
+\indent
+\indent
+Even though REST is probably the most preferred architectural style nowadays gRPC is a communication mechanism that gains popularity.
+A number of different organizations have adopted gRPC, such as Square, Netflix, CoreOS, Docker, CockroachDB, Cisco, Juniper Networks.
+
+gRPC (gRPC Remote Procedure Calls) is an open source remote procedure call (RPC) framework initially developed at Google in 2015\cite{wang1993grpc}.
+
+It uses Google Protocol Buffers (protobuf or proto) as a mechanism for serialization or deserialization structured data. Compared to text-file formats such as json, XML or yaml proto is smaller, simpler and faster. 
+
+Here is an example of a proto file:
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=2\textwidth]{img/proto.png}
+     \caption{Protobuff}
+    \label{fig:Protobuff}
+\end{figure}
+
+Among other advantages are:
+1. Language agnostic.
+which means that it does not depend on a language.
+
+2. Machine Readable
+ Protos are binary or machine readable but not human readable.
+ 
+3. Provides Generators to serialize or deserialize
+Protobuf can be easily compiled to source code with protobuf compiler which makes the process of marshaling and unmarshaling easier.
+At the time this paper was written it supported 14 different languages and platforms (such as JAVA, Kotlin, Objective c, python, c\#, ruby, go, c++, etc). 
+
+4. Supports types and Validations
+Field types and validations can be specified in the .proto file.
+
+5. Lesser Boilerplate code
+It generates stubs in the chosen language.
+
+Technology is relatively new, that's why there are not much open source projects and documentation on it.
+
