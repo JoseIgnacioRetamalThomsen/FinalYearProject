@@ -17,44 +17,43 @@ type CityResponseJson struct {
 }
 
 type CityResponse struct {
-	Success bool             `json:"success"`
-	City    pb.City `json:"city"`
-	Images []*pb.CityPhoto
-	Posts []*pb.CityPost
-	PostImages []*pb.PostPhoto
-	Places []*pb.Place
+	Success      bool    `json:"success"`
+	City         pb.City `json:"city"`
+	Images       []*pb.CityPhoto
+	Posts        []*pb.CityPost
+	PostImages   []*pb.PostPhoto
+	Places       []*pb.Place
 	PlacesImages []*pb.PlacesCityPhotos
-
 }
-type PostFull struct{
-	indexId int32
+type PostFull struct {
+	indexId      int32
 	CreatorEmail string
-	Title string
-	Body string
-	TimeStamp string
-	MongoId string
-	ImageURL string
+	Title        string
+	Body         string
+	TimeStamp    string
+	MongoId      string
+	ImageURL     string
 }
-type PlaceNoPost struct{
-	PlaceId int32
-	Name string
-	City  string
-	Location pb.Geolocation
+type PlaceNoPost struct {
+	PlaceId     int32
+	Name        string
+	City        string
+	Location    pb.Geolocation
 	Description string
-	Images []*pb.PlacePhoto
-
+	Images      []*pb.PlacePhoto
 }
-type CityFull struct{
-	cityId  int32
-	Name string
-	Country  string
+type CityFull struct {
+	cityId       int32
+	Name         string
+	Country      string
 	CreatorEmail string
-	Location pb.Geolocation
-	Description string
-	Images []*pb.CityPhoto
-	Posts [] PostFull
-	Places [] PlaceNoPost
+	Location     pb.Geolocation
+	Description  string
+	Images       []*pb.CityPhoto
+	Posts        [] PostFull
+	Places       [] PlaceNoPost
 }
+
 func CreateCityRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received: %v", "Create city")
 
@@ -129,12 +128,12 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request) {
 func GetCityRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received: %v", "Get city")
 
-token:=       r.Header["Token"][0]
-	name :=        r.Header["Email"][0]
-		cityName:=    mux.Vars(r)["name"]
-		cityCountry:= mux.Vars(r)["country"]
+	token := r.Header["Token"][0]
+	name := r.Header["Email"][0]
+	cityName := mux.Vars(r)["name"]
+	cityCountry := mux.Vars(r)["country"]
 
-		var cityFull CityFull
+	var cityFull CityFull
 
 	response, err := GetCity(pb.GetCityRequestP{
 		Token:       token,
@@ -157,24 +156,22 @@ token:=       r.Header["Token"][0]
 	}
 
 	//get images
-	images,err := GetCityimage(pb.CityPhotoRequestP{
-		Token:                token,
-		Email:                name,
-		CityId:               response.City.CityId,
-
+	images, err := GetCityimage(pb.CityPhotoRequestP{
+		Token:  token,
+		Email:  name,
+		CityId: response.City.CityId,
 	})
-	if err== nil {
-	cityFull.Images = images.Photos
-}
+	if err == nil {
+		cityFull.Images = images.Photos
+	}
 
 	//get posts
-	posts,err := GetCityPosts(pb.PostsRequest{
-		IndexId:              response.City.CityId,
-
+	posts, err := GetCityPosts(pb.PostsRequest{
+		IndexId: response.City.CityId,
 	})
 
 	// get post images
-	postimages,err := GetCityPostImages(pb.GetPostsPhotosPerParentRequestP{
+	postimages, err := GetCityPostImages(pb.GetPostsPhotosPerParentRequestP{
 		Email:                name,
 		Token:                token,
 		Type:                 pb.PostType_CityTypePhoto,
@@ -184,20 +181,18 @@ token:=       r.Header["Token"][0]
 		XXX_sizecache:        0,
 	})
 
-
 	m := make(map[string]string)
-	if err== nil{
+	if err == nil {
 
-		for _,img := range postimages.PlacesPhoto{
+		for _, img := range postimages.PlacesPhoto {
 			m[img.PostId] = img.Url
 		}
 	}
 
 	var postFull []PostFull
-	if posts != nil{
-		
+	if posts != nil {
 
-		for _,p := range posts.Posts{
+		for _, p := range posts.Posts {
 
 			postFull = append(postFull, PostFull{
 				indexId:      p.IndexId,
@@ -206,43 +201,36 @@ token:=       r.Header["Token"][0]
 				Body:         p.Body,
 				TimeStamp:    p.TimeStamp,
 				MongoId:      p.MongoId,
-				ImageURL: m[p.MongoId],
+				ImageURL:     m[p.MongoId],
 			})
 		}
 	}
 
-	 cityFull.Posts = postFull
+	cityFull.Posts = postFull
 	//get places
-	places, err:= GetAllCityPlaces(pb.CreateCityRequestP{
-		Token:                token,
-		Name:                 name,
-		City:                 response.City,
-
+	places, err := GetAllCityPlaces(pb.CreateCityRequestP{
+		Token: token,
+		Name:  name,
+		City:  response.City,
 	})
 
-
-
-
-	 placesImages,err := GetCityPlacesImages(pb.GetPlacesPhotosPerCityRequestP{
-		 Email:                name,
-		 Token:                token,
-		 PlaceId:              response.City.CityId,
-
-	 })
+	placesImages, err := GetCityPlacesImages(pb.GetPlacesPhotosPerCityRequestP{
+		Email:   name,
+		Token:   token,
+		PlaceId: response.City.CityId,
+	})
 
 	m1 := make(map[int32]([]*pb.PlacePhoto))
-	if err==nil{
-	//	city.PlacesImages = placesImages.PlacePhotos
-		for _,img := range placesImages.PlacePhotos{
+	if err == nil {
+		for _, img := range placesImages.PlacePhotos {
 			m1[img.PlaceId] = img.PlacePhotos
 		}
 	}
 
 	var placesNoPost []PlaceNoPost
-	if err==nil{
-	//	city.Places = places.Places
-		for _,p := range places.Places{
-			placesNoPost = append(placesNoPost,PlaceNoPost{
+	if err == nil {
+		for _, p := range places.Places {
+			placesNoPost = append(placesNoPost, PlaceNoPost{
 				PlaceId:     p.PlaceId,
 				Name:        p.Name,
 				City:        cityName,
@@ -252,10 +240,8 @@ token:=       r.Header["Token"][0]
 			})
 		}
 	}
-
 	cityFull.Places = placesNoPost
 	json.NewEncoder(w).Encode(cityFull)
-
 }
 
 func UpdateCityRequest(w http.ResponseWriter, r *http.Request) {
@@ -324,10 +310,12 @@ func CreatePlaceRequest(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 
 }
-type AllCityResponse struct{
+
+type AllCityResponse struct {
 	Cities *[]pb.City
 	Images []*pb.CitysPhoto
 }
+
 func GetAllCityEndPoint(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Header["Token"][0]
@@ -356,19 +344,18 @@ func GetAllCityEndPoint(w http.ResponseWriter, r *http.Request) {
 		})
 
 		cr := AllCityResponse{
-			Cities:cities}
+			Cities: cities}
 
 		if err != nil {
 			fmt.Fprintf(w, "Wrong request, body must contain city data")
 		}
 
-		images,err := GetAllCityImages(pb.GetCitysPhotoRequestP{
-			Email:                email,
-			Token:                token,
-
+		images, err := GetAllCityImages(pb.GetCitysPhotoRequestP{
+			Email: email,
+			Token: token,
 		})
-		if err==nil{
-			cr.Images= images.CityPhotos
+		if err == nil {
+			cr.Images = images.CityPhotos
 		}
 
 		json.NewEncoder(w).Encode(cr)
@@ -410,6 +397,36 @@ func GetCityPlacesEndPoint(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+type CityOverview struct{
+	CityId int32
+	Name string
+	Country string
+	CreatorEmail string
+	Description string
+	Location pb.Geolocation
+	Images  []*pb.CityPhoto
+}
+
+type PlaceOverview struct{
+	PlaceId int32
+	Name string
+	City string
+	Country string
+	Location pb.Geolocation
+	Description string
+	Images []*pb.PlacePhoto
+
+}
+
+type UserProfile struct{
+
+	Email string
+	Name string
+	Descripiton string
+	Avatar []*pb.ProfilePhoto
+	VisitedCities [] CityOverview
+	VisitedPlaces []PlaceOverview
+}
 func GetUser(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("Received: %v", "Get User")
@@ -417,8 +434,8 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	token := r.Header["Token"][0]
 	email := r.Header["Email"][0]
 
-	fmt.Print(token)
-	fmt.Print(email)
+	var userProfile UserProfile
+
 	user, err := GetUserProfile(pb.GetUserRequestP{
 		Token: token,
 		Email: email,
@@ -428,12 +445,98 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(user)
+	userProfile.Name = user.User.Name
+	userProfile.Email = user.User.Email
+	userProfile.Descripiton = user.User.Descripiton
+
+	//profile image
+	img,err := GetProfilePhoto(pb.ProfilePhotoRequestP{
+		Email:                email,
+		Token:                token,
+
+	})
+
+	if err== nil{
+		userProfile.Avatar = img.Photos
+	}
+
+	// get visited citys
+
+	//images
+
+	vc ,err := GetUserVisitedCities(pb.VisitedRequestP{
+		Token:                token,
+		Email:                email,
+
+	})
+
+	var citiesid []int32
+	for _,c := range vc.Citys{
+		citiesid = append(citiesid,c.CityId)
+	}
+	vcimg, err := GetVisitedCittiesImages(pb.GetVisitedCitysImagesRequest{
+		Email:                email,
+		Token:                token,
+		CityId:               citiesid,
+
+	})
+
+	m :=  make(map[int32]([]*pb.CityPhoto))
+	for _,img := range vcimg.CityPhotos{
+		m[img.CitysPhotos[0].CityId] = img.CitysPhotos
+	}
+
+	for _,c := range vc.Citys{
+		var city CityOverview
+		city.CityId =c.CityId
+		city.Name = c.Name
+		city.Country = c.Country
+		city.Description = c.Description
+		city.CreatorEmail = c.CreatorEmail
+		city.Images = m[c.CityId]
+		userProfile.VisitedCities = append(userProfile.VisitedCities,city)
+	}
+
+	//get visited places
+	vp,err := GEtVisitedPlaces(pb.VisitedRequestP{
+		Token:                token,
+		Email:                email,
+
+	})
+
+	var placesid []int32
+	for _,c := range vp.Places{
+		placesid = append(placesid,c.PlaceId)
+	}
+	//visited places images
+	vpimg,err := GetVisitedPlacesPhotos(pb.GetVisitedPlacesPhotosRequest{
+		Email:                email,
+		Token:                token,
+		PlaceId:              placesid,
+
+	})
+
+	m1:=  make(map[int32]([]*pb.PlacePhoto))
+	for _,img := range vpimg.PlacePhotos{
+		m1[img.PlacePhotos[0].PlaceId] = img.PlacePhotos
+	}
+	for _,p := range vp.Places{
+		userProfile.VisitedPlaces = append(userProfile.VisitedPlaces,PlaceOverview{
+			PlaceId:     p.PlaceId,
+			Name:        p.Name,
+			City:        p.City,
+			Country:     p.Country,
+			Location:    *p.Location,
+			Description: p.Description,
+			Images:      m1[p.PlaceId],
+		})
+	}
+
+	json.NewEncoder(w).Encode(userProfile)
 }
 
-type PlaceResponse struct{
+type PlaceResponse struct {
 	Place *pb.Place
-
 }
 
 func GetPlaceRequest(w http.ResponseWriter, r *http.Request) {
@@ -449,12 +552,11 @@ func GetPlaceRequest(w http.ResponseWriter, r *http.Request) {
 	var placeResponse PlaceResponse
 
 	response, err := GetPlace(pb.GetPlaceRequestP{
-		Token:                token,
-		Email:                email,
-		PlaceName:            name,
-		PlaceCity:           city,
-		PlaceCountry:         country,
-
+		Token:        token,
+		Email:        email,
+		PlaceName:    name,
+		PlaceCity:    city,
+		PlaceCountry: country,
 	})
 	if err != nil {
 		log.Printf("Error: %v", err)
@@ -468,7 +570,7 @@ func GetPlaceRequest(w http.ResponseWriter, r *http.Request) {
 
 func VisitCityEndPoint(w http.ResponseWriter, r *http.Request) {
 
-		log.Printf("Received: %v", "Visit city")
+	log.Printf("Received: %v", "Visit city")
 	token := r.Header["Token"][0]
 	email := r.Header["Email"][0]
 
@@ -478,11 +580,10 @@ func VisitCityEndPoint(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
-	res,err := VisitCity(pb.VisitCityRequestP{
-		Token:                token,
-		Email:                email,
-		Id:                   int32(i),
-
+	res, err := VisitCity(pb.VisitCityRequestP{
+		Token: token,
+		Email: email,
+		Id:    int32(i),
 	})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -490,6 +591,5 @@ func VisitCityEndPoint(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(res)
-
 
 }

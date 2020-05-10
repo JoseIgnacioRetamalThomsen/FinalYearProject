@@ -150,3 +150,26 @@ func VisitCity(request pb.VisitCityRequestP) (*pb.VisitCityResponseP,error){
 	}
 	return r,nil
 }
+
+
+//  rpc GetVisitedCitys (VisitedRequestP) returns (VisitedCitysResponseP);
+func GetUserVisitedCities(request pb.VisitedRequestP)(*pb.VisitedCitysResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
+	defer cancel()
+	r, err := ProfSerConn.context.dbClient.GetVisitedCitys(ctx,&request)
+	if err != nil{
+		return nil,err
+	}
+	return r,err
+}
+
+//rpc GetVisitedPlaces (VisitedRequestP) returns (VisitedPlacesResponseP);
+func GEtVisitedPlaces(request pb.VisitedRequestP)(*pb.VisitedPlacesResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), DEADLINE*time.Second)
+	defer cancel()
+	r, err := ProfSerConn.context.dbClient.GetVisitedPlaces(ctx,&request)
+	if err != nil{
+		return nil,err
+	}
+	return r,err
+}
