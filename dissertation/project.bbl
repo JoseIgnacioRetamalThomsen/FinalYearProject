@@ -5,17 +5,15 @@ S.~Dhruv, ``Pros and cons of using postgresql for application development.''
   \url{https://www.aalpha.net/blog/pros-and-cons-of-using-postgresql-for-application-development/}.
 \newblock [Online; accessed 12-Novemer-2019].
 
-\bibitem{einstein}
-A.~Einsteion, ``{Zur Elektrodynamik bewegter K{\"o}rper}. ({German}) [{On} the
-  electrodynamics of moving bodies],'' {\em Annalen der Physik}, vol.~322,
-  no.~10, pp.~891--921, 1905.
+\bibitem{dsbook}
+A.~S. Tanenbaum, {\em Distributed Systems}.
+\newblock 2017.
 
-\bibitem{latexcompanion}
-M.~Goossens, F.~Mittelbach, and A.~Samarin, {\em The \LaTeX\ Companion}.
-\newblock Reading, Massachusetts: Addison-Wesley, 1993.
-
-\bibitem{knuthwebsite}
-D.~Knuth, ``Knuth: Computers and typesetting.''
+\bibitem{agilemanifesto}
+K.~Beck, M.~Beedle, A.~van Bennekum, A.~Cockburn, W.~Cunningham, M.~Fowler,
+  J.~Grenning, J.~Highsmith, A.~Hunt, R.~Jeffries, J.~Kern, B.~Marick, R.~C.
+  Martin, S.~Mellor, K.~Schwaber, J.~Sutherland, and D.~Thomas, ``Manifesto for
+  agile software development.''
 
 \bibitem{lbpcmysql}
 L.~Beatty, ``The pros and cons of mysql.''
@@ -31,6 +29,11 @@ M.~Wu, ``What are the major advantages of using a graph database?.''
 solid IT, ``System properties comparison datastax enterprise vs. neo4j vs.
   tigergraph.''
   \url{https://db-engines.com/en/system/Datastax+Enterprise%3BNeo4j%3BTigerGraph}.
+\newblock [Online; accessed 29-Novemer-2019].
+
+\bibitem{dockeradv}
+S.~C. and S.~A., ``Advantages of using docker for microservices.''
+  \url{https://rubygarage.org/blog/advantages-of-using-docker-for-microservices}.
 \newblock [Online; accessed 29-Novemer-2019].
 
 \end{thebibliography}

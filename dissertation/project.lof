@@ -1,23 +1,71 @@
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Application - UML.\relax }}{9}{figure.caption.6}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Methodology- Project Gueneral Gant Chart.\relax }}{17}{figure.caption.8}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Methodology- Component Iteration.\relax }}{18}{figure.caption.12}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Agile Methodology\relax }}{20}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces GitHub\relax }}{22}{figure.caption.17}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Protobuff\relax }}{36}{figure.caption.42}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Authentication Service- UML.\relax }}{37}{figure.caption.43}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Authentication Service- Create User Sequence Diagram.\relax }}{38}{figure.caption.44}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Authentication Service- Create User Sequence Diagram.\relax }}{39}{figure.caption.46}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Authentication Service- Login Sequence Diagram.\relax }}{40}{figure.caption.48}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Authentication Service- Check Token Sequence Diagram.\relax }}{40}{figure.caption.50}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Authentication DBA- Authentication Database.\relax }}{41}{figure.caption.53}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Profiles Service - Main UML.\relax }}{42}{figure.caption.55}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Profiles Service- Request Sequence.\relax }}{43}{figure.caption.56}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Profiles Service- Neo4j DB Classes.\relax }}{44}{figure.caption.61}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Profiles Service- Neo4j DB Dodes.\relax }}{44}{figure.caption.62}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Authentication Service- UML.\relax }}{45}{figure.caption.63}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Photo Service- upload Image Sequence Diagram.\relax }}{46}{figure.caption.65}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Photo Service- Get Image Request Sequence Diagram.\relax }}{46}{figure.caption.67}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Photo Service-URLS Database Entity Diagram.\relax }}{47}{figure.caption.68}%
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Photo Service- Image in Bucker.\relax }}{48}{figure.caption.69}%
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Photo Service-Folders Structur in a Bucket.\relax }}{48}{figure.caption.70}%
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Post Service- UML.\relax }}{49}{figure.caption.71}%
+\contentsline {figure}{\numberline {4.18}{\ignorespaces Post Service- Database Entity Diagram.\relax }}{50}{figure.caption.72}%
+\contentsline {figure}{\numberline {4.19}{\ignorespaces Client-Server Communication Diagram\relax }}{52}{figure.caption.75}%
+\contentsline {figure}{\numberline {4.20}{\ignorespaces Navigation Diagram\relax }}{53}{figure.caption.76}%
+\contentsline {figure}{\numberline {4.21}{\ignorespaces Login Prototype\relax }}{54}{figure.caption.77}%
+\contentsline {figure}{\numberline {4.22}{\ignorespaces Register Prototype\relax }}{54}{figure.caption.77}%
+\contentsline {figure}{\numberline {4.23}{\ignorespaces Profile Prototype\relax }}{55}{figure.caption.78}%
+\contentsline {figure}{\numberline {4.24}{\ignorespaces Home Page Prototype\relax }}{55}{figure.caption.78}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces System Implementation.\relax }}{57}{figure.caption.80}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces System Implementation: Databases Memory Usage.\relax }}{57}{figure.caption.83}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces System Implementation-Master VM.\relax }}{58}{figure.caption.85}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces System Implementation- Master Memory Usage.\relax }}{58}{figure.caption.86}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces System Implementation- GCloun Services.\relax }}{59}{figure.caption.89}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces System Implementation- AWS Services.\relax }}{59}{figure.caption.91}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Register Page\relax }}{62}{figure.caption.94}%
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Login Page\relax }}{62}{figure.caption.94}%
+\contentsline {figure}{\numberline {5.9}{\ignorespaces Drawer\relax }}{63}{figure.caption.95}%
+\contentsline {figure}{\numberline {5.10}{\ignorespaces Profile \relax }}{64}{figure.caption.96}%
+\contentsline {figure}{\numberline {5.11}{\ignorespaces Profile cont.\relax }}{64}{figure.caption.96}%
+\contentsline {figure}{\numberline {5.12}{\ignorespaces Feed\relax }}{65}{figure.caption.97}%
+\contentsline {figure}{\numberline {5.13}{\ignorespaces My City\relax }}{65}{figure.caption.97}%
+\contentsline {figure}{\numberline {5.14}{\ignorespaces Create City Step 1\relax }}{66}{figure.caption.98}%
+\contentsline {figure}{\numberline {5.15}{\ignorespaces Create City Step 2\relax }}{66}{figure.caption.98}%
+\contentsline {figure}{\numberline {5.16}{\ignorespaces fig:Create City Step 3\relax }}{67}{figure.caption.99}%
+\contentsline {figure}{\numberline {5.17}{\ignorespaces Create City Step 4\relax }}{67}{figure.caption.99}%
+\contentsline {figure}{\numberline {5.18}{\ignorespaces Create City Step 5\relax }}{68}{figure.caption.100}%
+\contentsline {figure}{\numberline {5.19}{\ignorespaces Create City Step 6\relax }}{68}{figure.caption.100}%
+\contentsline {figure}{\numberline {5.20}{\ignorespaces Place Post\relax }}{69}{figure.caption.101}%
+\contentsline {figure}{\numberline {5.21}{\ignorespaces Post added\relax }}{69}{figure.caption.101}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Nice pictures\relax }}{10}{figure.caption.6}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Nice pictures\relax }}{11}{figure.caption.7}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Authentication Service- UML.\relax }}{16}{figure.caption.14}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Authentication Service- Create User Sequence Diagram.\relax }}{17}{figure.caption.15}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Authentication Service- Create User Sequence Diagram.\relax }}{18}{figure.caption.17}%
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Authentication Service- Login Sequence Diagram.\relax }}{19}{figure.caption.19}%
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Authentication Service- Check Token Sequence Diagram.\relax }}{19}{figure.caption.21}%
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Authentication DBA- Authentication Database.\relax }}{20}{figure.caption.24}%
-\contentsline {figure}{\numberline {5.7}{\ignorespaces Profiles Service - Main UML.\relax }}{21}{figure.caption.26}%
-\contentsline {figure}{\numberline {5.8}{\ignorespaces Profiles Service- Request Sequence.\relax }}{22}{figure.caption.27}%
-\contentsline {figure}{\numberline {5.9}{\ignorespaces Profiles Service- Neo4j DB Classes.\relax }}{23}{figure.caption.32}%
-\contentsline {figure}{\numberline {5.10}{\ignorespaces Profiles Service- Neo4j DB Dodes.\relax }}{23}{figure.caption.33}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {F.1}{\ignorespaces Metro Server\relax }}{90}{figure.caption.106}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {G.1}{\ignorespaces APK1\relax }}{92}{figure.caption.107}%
+\contentsline {figure}{\numberline {G.2}{\ignorespaces APK2\relax }}{92}{figure.caption.107}%
+\contentsline {figure}{\numberline {G.3}{\ignorespaces APK3\relax }}{93}{figure.caption.108}%
+\contentsline {figure}{\numberline {G.4}{\ignorespaces APK4\relax }}{93}{figure.caption.108}%
+\contentsline {figure}{\numberline {G.5}{\ignorespaces APK5\relax }}{94}{figure.caption.109}%
+\contentsline {figure}{\numberline {G.6}{\ignorespaces APK6\relax }}{94}{figure.caption.109}%
