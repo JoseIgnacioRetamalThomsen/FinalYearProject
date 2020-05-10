@@ -22,9 +22,39 @@ type CityResponse struct {
 	Images []*pb.CityPhoto
 	Posts []*pb.CityPost
 	PostImages []*pb.PostPhoto
+	Places []*pb.Place
+	PlacesImages []*pb.PlacesCityPhotos
 
 }
+type PostFull struct{
+	indexId int32
+	CreatorEmail string
+	Title string
+	Body string
+	TimeStamp string
+	MongoId string
+	ImageURL string
+}
+type PlaceNoPost struct{
+	PlaceId int32
+	Name string
+	City  string
+	Location pb.Geolocation
+	Description string
+	Images []*pb.PlacePhoto
 
+}
+type CityFull struct{
+	cityId  int32
+	Name string
+	Country  string
+	CreatorEmail string
+	Location pb.Geolocation
+	Description string
+	Images []*pb.CityPhoto
+	Posts [] PostFull
+	Places [] PlaceNoPost
+}
 func CreateCityRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received: %v", "Create city")
 
@@ -65,6 +95,7 @@ func CreateCityRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if val, ok := r.Form["image"]; ok {
+		fmt.Print(("image"))
 		image := []byte(val[0])
 
 		cityId := response.City.CityId
@@ -103,12 +134,22 @@ token:=       r.Header["Token"][0]
 		cityName:=    mux.Vars(r)["name"]
 		cityCountry:= mux.Vars(r)["country"]
 
+		var cityFull CityFull
+
 	response, err := GetCity(pb.GetCityRequestP{
 		Token:       token,
 		Name:        name,
 		CityName:    cityName,
 		CityCountry: cityCountry,
 	})
+
+	// set city base data
+	cityFull.cityId = response.City.CityId
+	cityFull.CreatorEmail = response.City.CreatorEmail
+	cityFull.Name = response.City.Name
+	cityFull.Country = response.City.Country
+	cityFull.Description = response.City.Description
+	cityFull.Location = *response.City.Location
 
 	if err != nil {
 		log.Printf("Server problem: %s", err)
@@ -122,35 +163,15 @@ token:=       r.Header["Token"][0]
 		CityId:               response.City.CityId,
 
 	})
-
-	var city CityResponse;
-	if images == nil {
-		city = CityResponse{
-			Success: true,
-			City:    *response.City,
-			Images:  nil,
-		}
-	}else {
-		city = CityResponse{
-			Success: true,
-			City:    *response.City,
-			Images:  images.Photos,
-		}
-	}
+	if err== nil {
+	cityFull.Images = images.Photos
+}
 
 	//get posts
 	posts,err := GetCityPosts(pb.PostsRequest{
 		IndexId:              response.City.CityId,
-		XXX_NoUnkeyedLiteral: struct{}{},
-		XXX_unrecognized:     nil,
-		XXX_sizecache:        0,
+
 	})
-
-
-
-	if posts != nil{
-		city.Posts = posts.Posts;
-	}
 
 	// get post images
 	postimages,err := GetCityPostImages(pb.GetPostsPhotosPerParentRequestP{
@@ -163,11 +184,78 @@ token:=       r.Header["Token"][0]
 		XXX_sizecache:        0,
 	})
 
+
+	m := make(map[string]string)
 	if err== nil{
-city.PostImages = postimages.PlacesPhoto
+
+		for _,img := range postimages.PlacesPhoto{
+			m[img.PostId] = img.Url
+		}
 	}
 
-	json.NewEncoder(w).Encode(city)
+	var postFull []PostFull
+	if posts != nil{
+		
+
+		for _,p := range posts.Posts{
+
+			postFull = append(postFull, PostFull{
+				indexId:      p.IndexId,
+				CreatorEmail: p.CreatorEmail,
+				Title:        p.Title,
+				Body:         p.Body,
+				TimeStamp:    p.TimeStamp,
+				MongoId:      p.MongoId,
+				ImageURL: m[p.MongoId],
+			})
+		}
+	}
+
+	 cityFull.Posts = postFull
+	//get places
+	places, err:= GetAllCityPlaces(pb.CreateCityRequestP{
+		Token:                token,
+		Name:                 name,
+		City:                 response.City,
+
+	})
+
+
+
+
+	 placesImages,err := GetCityPlacesImages(pb.GetPlacesPhotosPerCityRequestP{
+		 Email:                name,
+		 Token:                token,
+		 PlaceId:              response.City.CityId,
+
+	 })
+
+	m1 := make(map[int32]([]*pb.PlacePhoto))
+	if err==nil{
+	//	city.PlacesImages = placesImages.PlacePhotos
+		for _,img := range placesImages.PlacePhotos{
+			m1[img.PlaceId] = img.PlacePhotos
+		}
+	}
+
+	var placesNoPost []PlaceNoPost
+	if err==nil{
+	//	city.Places = places.Places
+		for _,p := range places.Places{
+			placesNoPost = append(placesNoPost,PlaceNoPost{
+				PlaceId:     p.PlaceId,
+				Name:        p.Name,
+				City:        cityName,
+				Location:    *p.Location,
+				Description: p.Description,
+				Images:      m1[p.PlaceId],
+			})
+		}
+	}
+
+	cityFull.Places = placesNoPost
+	json.NewEncoder(w).Encode(cityFull)
+
 }
 
 func UpdateCityRequest(w http.ResponseWriter, r *http.Request) {
@@ -343,14 +431,23 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(user)
 }
 
+type PlaceResponse struct{
+	Place *pb.Place
+
+}
+
 func GetPlaceRequest(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Received: %v", "Get place")
 
+	// parse reueat data
 	token := r.Header["Token"][0]
+	fmt.Print(token)
 	email := r.Header["Email"][0]
 	country := mux.Vars(r)["country"]
 	city := mux.Vars(r)["city"]
 	name := mux.Vars(r)["name"]
+	var placeResponse PlaceResponse
+
 	response, err := GetPlace(pb.GetPlaceRequestP{
 		Token:                token,
 		Email:                email,
@@ -364,7 +461,9 @@ func GetPlaceRequest(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Wrong request, body must contain city data")
 	}
 
-	json.NewEncoder(w).Encode(response)
+	placeResponse.Place = response.Place
+
+	json.NewEncoder(w).Encode(placeResponse)
 }
 
 func VisitCityEndPoint(w http.ResponseWriter, r *http.Request) {

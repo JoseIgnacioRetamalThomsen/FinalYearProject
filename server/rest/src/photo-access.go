@@ -59,3 +59,17 @@ func GetCityPostImages(request pb.GetPostsPhotosPerParentRequestP)(*pb.GetPostsP
 
 	return r,err;
 }
+
+//rpc GetPlacesPerCityPhotoP(GetPlacesPhotosPerCityRequestP) returns (GetPlacesPhotosPerCityResponseP);
+func GetCityPlacesImages(request pb.GetPlacesPhotosPerCityRequestP)(*pb.GetPlacesPhotosPerCityResponseP,error){
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	r, err := photoConn.context.dbClient.GetPlacesPerCityPhotoP(ctx,&request)
+
+
+	if err!= nil{
+		return nil,err
+	}
+
+	return r,err;
+}
