@@ -97,8 +97,6 @@ export default class SearchCity extends Component {
     }
 
     showAlert(city) {
-        console.log("city", city)
-        console.log("in alert", this.state.fcity)
         Alert.alert(
             'City is not created yet.',
             ' Would you like to create a city? ',

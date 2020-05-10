@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    Alert,
     Dimensions,
     Image,
     NativeModules,
@@ -112,7 +113,7 @@ class CityDetail extends Component {
             description,
             img
         })
-        console.log("this.state.city!!", city)
+        console.log("this.state.city.Id!!", cityId)
         this.setState({cityId: cityId})
         this.getCityImages()
         this.getCityPlaces()
@@ -334,6 +335,7 @@ class CityDetail extends Component {
     }
 
     getPlacesPerCityPhoto() {
+        console.log("this.state.cityId, in citydet", this.state.cityId, this.state.city)
         AsyncStorage.getAllKeys((err, keys) => {
             AsyncStorage.multiGet(keys, (err, stores) => {
                 stores.map((result, i, store) => {
@@ -351,6 +353,7 @@ class CityDetail extends Component {
 
                             (jsonCityPhotoList) => {
                                 this.setState({placesPhotoMap: jsonCityPhotoList})
+                                console.log("ddd", jsonCityPhotoList)
                             })
                     }
                 })
@@ -435,7 +438,8 @@ class CityDetail extends Component {
 
     onClickPlace() {
         if (this.state.placeName === '' || this.state.placeDescription === '' || this.state.placeImage === '') {
-            alert("Please upload image and provide title & description")
+
+            Alert.alert("","Please upload image and provide title & description")
         } else {
             this.createPlace()
         }
@@ -443,7 +447,7 @@ class CityDetail extends Component {
 
     onClickPost() {
         if (this.state.cityPostTitle === '' || this.state.cityPostBody === '' || this.state.cityPostImage === '') {
-            alert("Please upload image and provide title & description")
+            Alert.alert(" ","Please upload image and provide title & description")
         } else {
             this.createCityPost()
         }
@@ -603,8 +607,7 @@ class CityDetail extends Component {
 
                                     <CardItem>
                                         <Body>
-                                            <Text style={Style.text} numberOfLines={1}
-                                                  ellipsizeMode={"tail"}>{e.body} </Text>
+                                            <Text style={Style.text} >{e.body} </Text>
                                         </Body>
                                     </CardItem>
                                 </Card>

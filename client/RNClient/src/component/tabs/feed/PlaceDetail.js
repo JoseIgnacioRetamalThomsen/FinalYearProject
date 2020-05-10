@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+    Alert,
     Dimensions,
     Image,
     NativeModules,
@@ -230,7 +231,7 @@ export default class PlaceDetail extends Component {
 
     onClick() {
         if (this.state.placeName == '' || this.state.postTitle == '' || this.state.postDescription == '') {
-            alert("Please upload image and provide title & description")
+            Alert.alert("","Please upload image and provide title & description")
         } else {
             this.createPlacePost()
         }

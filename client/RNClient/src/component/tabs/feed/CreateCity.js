@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, TextInput, View, NativeModules, Image, ScrollView, Icon, TouchableHighlight} from "react-native";
+import {Button, TextInput, View, NativeModules, Image, ScrollView, Icon, TouchableHighlight, Alert} from "react-native";
 import styles from "../../../styles/Style";
 import AsyncStorage from "@react-native-community/async-storage";
 import {Card, CardTitle, CardContent, CardAction, CardButton, CardImage} from 'react-native-material-cards'
@@ -68,11 +68,11 @@ export default class CreateCity extends React.Component {
                         //parseFloat(this.state.lon),
                         this.state.description,
                         (err) => {
-                            console.log(err)
+                            console.log("createCity error", err)
                         },
                         (cityId) => {
                             this.setState({cityId: cityId})
-
+                            console.log("cityId in create city ", cityId)
                             this.props.navigation.navigate('CityDetail', {
                                 cityId: this.state.cityId,
                                 name: this.state.city,
@@ -95,15 +95,20 @@ export default class CreateCity extends React.Component {
                     let value = store[i][1]
 
                     if (value !== null) {
+                        console.log("---cityId in uploadCityPhoto ", this.state.cityId)
                         NativeModules.PhotosModule.uploadCityPhoto(
                             key,
                             value,
                             parseInt(this.state.cityId),
                             this.state.image,
                             (err) => {
-                                console.log(err)
+                                console.log("uploadCityPhoto ", err)
                             },
                             (url) => {
+                                console.log("cityId in uploadCityPhoto ", this.state.cityId)
+                                console.log("url in uploadCityPhoto ", url)
+
+
                                 this.setState({url: url})
                             })
                     }
@@ -114,8 +119,8 @@ export default class CreateCity extends React.Component {
 
     onClick() {
         console.log("mmmm", this.state.description, this.state.image)
-        if (this.state.description === 'undefined' || this.state.image === '') {
-            alert("Please upload photo and provide description")
+        if (this.state.description === undefined || this.state.image === '') {
+            Alert.alert("", "Please upload photo and provide description")
         } else {
             this.createCity()
         }
