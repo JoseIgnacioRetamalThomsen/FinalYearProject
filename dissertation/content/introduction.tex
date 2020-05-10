@@ -1,5 +1,4 @@
 \chapter{Introduction}
-Jose I. Retamal
 \vskip 0.1in
 \indent
 \indent
@@ -21,10 +20,13 @@ We have developed a microservice application using go as a principal back end pr
 \vskip 0.1in
 \indent
 \indent
-We expect to learn and prepare to afront the professional software environment after doing this project. The main objective of this project is to learn as much as we can to be ready to start our professional path in the software industry. Some of the objectives that we expect to achieve by doing this project are:
-
+Doing this project, we expect to learn and prepare to afront the professional software environment, so we tried to organize our work in such a way that would imitate the real-world software development process, including the use of best practices and contemporary tools.
+ The main objective of this project is to learn as much as we can to be ready to start our professional path in the software industry.
+  Some of the objectives that we expect to achieve by doing this project are:
 \begin{itemize}
 	\item Research and learn new technologies that are utilized in the software industry.
+	
+	\item To improve soft skills, including teamwork, critical thinking, time management, and problem-solving.
 	
 	\item Apply agile techniques to develop an application based on initial requirements.
 	
@@ -34,6 +36,8 @@ We expect to learn and prepare to afront the professional software environment a
 	Develop an application that efficiently works with images.
 	
 	\item Implement a reliable authentication system that securely stores passwords using hash and salt.
+	
+	\item To create a CRUD (create, read, update, delete) application.
 	
 	\item Develop a high-performance mobile application that integrates the microservices.
 	
@@ -68,14 +72,27 @@ The advantages that we want from developing the application as a distributed sys
 \subsection{The Solution}
 \indent
 \indent
-We have designed a tourism application where users create the data.  It stores data about three main types: users, cities, and places; all three have a public profile(public to register users of the application). Users create the cities and the places, and they can be created only once. Cities and places have a profile where users can post. Users can mark Cities and places as visited, so they will show in their profiles and have actualization about recent posts.
+We have designed a tourism application where users create the data.  It stores data about three main types: users, cities, and places; all three have a public profile(public to register users of the application). Users create the cities and the places, and they can be created only once. Cities and places have a profile where users can post. Users can mark Cities and places as visited, so they show in their profiles and have actualization about recent posts.
 
-\paragraph{The principal user interfaces in the client are:}
+In brief, it is a social media application similar to TripAdvisor. The main features of the application are:
+
 
 \begin{itemize}
-	\item User profile, which shows visited places and visited cities.
-		\item Cities profile, which includes the places in the city and posts about the city.
-	\item	Places profile, which includes posts about the place.
+	 
+
+\item Register/login/logout.
+\item Create a city if a city is not yet created (add photo and description).
+\item Add a place in a city (add photo and description).
+\item Write a post about a city (add photo and description).
+\item Visit a city (all visited cities displayed in his/her profile).
+\item Visit a place (all visited places displayed in his/her profile)read .reviews/posts about a city.
+\item Review all the cities that were created.
+\item Review places in the city that were added.
+\item Review all posts about a place.
+\item Change information about himself/herself (upload photo, change. name, and description) in settings.
+\item Review all the personal information in the profile (photo, geolocation, email, name, description).
+\item Search a city.
+
 \end{itemize}
 
 \subsection{The Microservices}
@@ -130,10 +147,33 @@ We define stages that are reviewed during all the project development, measure p
 
 The solution was created component by component, integrating them after several independent testing, we keep a working solution all the time to which we integrate more components as they are developed.
 
-\subsection{Context}
+\subsection{Overview}
 \vskip 0.1in
 \indent
 \indent
-In Chapter 2, we explain the methodology used to develop the project. Chapter 3 is a technology review, where we research and decide the best technologies to use in each component for then have an in-depth look at them. In Chapter 4, we explain the full system design and the design of each element. Chapter 5 is the evaluation of the system; we show how it works and test it. And finally, in chapter 6, we provide a conclusion where we look at the achieved goals and possible future work.
+
+The structure of our dissertation is divided into chapters, each one containing different aspects of the project. A brief overview of the content of each chapter is provided below:
+
+\subsubsection{Methodology (Chapter 2)}
+This section outlines the methodologies that were used in order to ensure the project's success.
+Mainly it describes Agile methodology, version control tool, and testing.
+It also explains the criteria to chose languages, platforms, and technologies that were used.
+
+
+\subsection{Technology Review (Chapter 3)}
+
+In this section, we research and decide the best technologies to use in each component of the application. We base our research on the criteria set in the methodology.  Then we reviewed the technologies, describe it, and give an assessment.
+
+\subsection{System Design (Chapter 4)}
+This section provides a detailed explanation of the overall system architecture, thoroughly describing each component in the system. We describe how those components are linked together and how they communicate.
+
+\subsection{System Evaluation (Chapter 5)}
+We show how the system works and how the testing is performed.
+It also criticizes limitations and advantages by taking a detailed look at the pros and cons of the technologies that were used.
+Screenshots of the final UI can be found here as well.
+We also talk about the problems encountered while developing this project and solutions to those problems. 
+\subsection{Conclusion (Chapter 6)}
+This section of the dissertation evaluates our project against the objective. We look at the achieved goals, set a path of progress, and analyze challenges encounter during the development of the project.
+
 
 
