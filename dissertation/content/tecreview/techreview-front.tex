@@ -1,5 +1,10 @@
+\section{Front-End}
+Elena Makarenko
 
-\section{React Native}
+\subsection{React Native}
+\vskip 0.1in
+\indent
+\indent
 I assume the biggest challenge in mobile development nowadays is the heterogeneity of mobile operating systems. One way of solving this problem is to write code for each platform in its own language. The other solution to this could be cross-platform development, which allows to develop an application for different platforms at once. 
 
 React Native is an open-source javascript mobile application framework created by Facebook in 2015 for developing mobile applications for iOS and/or Android. These 2 platforms cover more than 90\% of market share, which makes their choice clear.
@@ -11,8 +16,10 @@ Thus, we believe we can give an unbiased assessment and draw some conclusions ab
 
 Most of the principles and concepts are derived from the web framework ReactJS. Because of these similarities web developers can quickly learn how to write mobile applications without prior knowledge in the native languages such as Java and Objective C/Swift respectively.
 
-\subsection{Features}
-\subsubsection{Native scripting applications.}
+\subsubsection{Features}
+\paragraph{Native scripting applications.}
+\indent
+\indent
 There are different ways of developing cross-platform applications and each of them has its own pros and cons \cite{hansson2016effects}:
 1. Mobile web applications.
 An application that is accessed in a web browser. Back in the days the limitations of these apps included  requirement of internet connection and inability to access the mobile device software and hardware such as camera, and GPS sensors. Nevertheless, nowadays Progressive Web Apps (PWA) gain more and more popularity leaving those limitations behind.
@@ -31,7 +38,7 @@ Since interpreter is used to call native APIs everything that is possible in a n
 
 React Native uses native scripting approach.
 
-\subsubsection{Virtual DOM.}
+\paragraph{Virtual DOM.}
 There are 3 main scenarios how the page is rendered when changes on the page occur:
 
 1. A new HTML request is sent to the server in order to re-render the entire page. 
@@ -51,18 +58,19 @@ React Native  uses the same
 approach as ReactJS but instead of a
 virtual DOM it uses a virtual application hierarchy.
 
-\subsubsection{JSX and Components}
+\paragraph{JSX and Components}
+
 Another distinctive feature of React is JavaScript syntax extension, that looks similar to XML, called JSX. This code is compiled into regular JavaScript
 code. Consequently, JSX is just a syntactic sugar and anything written in JSX can be written in plain vanilla javascript but still it is highly recommended to use as it allows to make code more readable and easy to write. 
 
 The main idea of React is using components like building blocks in order to create an app. They can be swapped with each other, they are are reusable, interactive and stateful. 
 States are used in order to merge data into components and they are the core of the React interactivity. SetState method is used in order to pass the data to a component which is then re-rendered.
-\subsubsection{Threads}
+\paragraph{Threads}
 React Native runs on two threads as well as with additional dispatch
 queues where the the layout is handled. The main thread, where the native UI rendering is performed, and a JavaScript thread that runs the JavaScript code of the React Native application. Every native component also uses a Grand Central Dispatch
 Queue15 (iOS) or a dedicated MessageQueue16 (Android) to handle threads.
 
-\subsubsection{Native Modules}
+\paragraph{Native Modules}
 In our project we use React Native CLI as we needed to build native code.
 Unlike Expo CLI it requires Xcode or Android Studio to get started. Although, it takes a while to install and configure them, you have more control when writing code. In our case it was a necessity as we were using GRPC for establishing communication between client and server that required to a platform API that React Native doesn't have a corresponding module for yet.
 
@@ -71,7 +79,7 @@ Unlike Expo CLI it requires Xcode or Android Studio to get started. Although, it
 The main disadvantage is writing code in 2 separate IDEs: Java code in Android Studio and javascript in Webstorm as intelli-sense for java was not working in Webstorm and js in Android Studio respectively, which was a bit annoying. According to the research conducted the solution to this would be to use Intellij Idea Ultimate Edition with required plugins.
 
 
-\subsubsection{Redux}
+\paragraph{Redux}
 Just to make things clear, redux is a js library for managing application state.
 It can be used with any platform like Angular or Deku, it just happened so that it is most commonly used with React.
 It can probably be compared to global storage, which manages passing state between components.
@@ -80,22 +88,22 @@ There are 3 ways of passing states between components: from parent to children b
 In our project we used the above mentioned techniques and global variables which is not the best practice and gets tricky as soon as your app is growing bigger but as our application is not very complex, it did its job.
 
 
-\subsubsection{Hot Reloading}
+\paragraph{Hot Reloading}
 'Fast Refresh' is a feature that was introduced in September, 2019.
 It allows code to compile automatically whenever changes in the code are made. 
 Yet sometimes it was noticed that it does not pick up the changes and requires a reboot which is quite annoying.
 
 
-\subsubsection{ States \& Props }
+\paragraph{ States \& Props }
 The main difference is that props(short for properties) are immutable and are used to pass data down to Child Components. 
 If draw a parallel, state is equivalent to local variables in a function, while props are equivalent to function parameters.
 State can only be used inside the component, props on the other hand allow components receive data from the parent component in the form of props.
 
-\subsubsection{Components}
+\paragraph{Components}
 The main idea of React is the usage of components: independent and reusable bits of code.
 There are 2 types of component in React: functional and class components. Originally states could be used only in class components(in simple words these are dynamic and interactive components). But things changed after introduction of hooks in React 16.8. Consequently, now they can be used interchangeable.
 
-\subsubsection{Packages}
+\paragraph{Packages}
 There are 2 main package managers: npm and yarn.
 In the project npm was used.
 
@@ -124,6 +132,8 @@ A list of some packages that were used in the project:
  A complete list of packages that were used in the project can be found in package.json file in dependencies.
  
  \subsubsection{Google API}
+ \indent
+ \indent
  2 Google APIs were used in the project. These are:
  
    1. Geolocation
@@ -135,7 +145,8 @@ A list of some packages that were used in the project:
 
  
  \subsubsection{Pros and Cons of RN}
- 
+ \indent
+ \indent
 One of the advantages of this framework is that it has a large community and solutions to most of the problems a developer can encounter can be found online (github or stackoverflow).
 There is also a large amount of open source custom components which makes up quite a big library. The downside of it though is the fact that the quality of some packages can vary which leads to a more detailed analysis of the plugins available.
 
@@ -162,7 +173,9 @@ Apart from that there can be issues with versioning and library compatibility.
 5. Debugging is quite tricky. Some error messages do not help in understanding the issue, even figuring out which component causes the issue and needs to be fixed can be a problem.
 As a result, you spend a lot of time on fixing even small errors. Especially, when it comes to debugging native code. What makes it even more complicated is the fact that live reloading does not work in this case and code needs to be recompiled. If your laptop is not powerful enough it can take up to 5-7 minutes of you time, which cannot be called a 'smooth developer experience'.
 
-\section{gRPC}
+\subsection{gRPC}
+\indent
+\indent
 Even though REST is probably the most preferred architectural style nowadays gRPC is a communication mechanism that gains popularity.
 A number of different organizations have adopted gRPC, such as Square, Netflix, CoreOS, Docker, CockroachDB, Cisco, Juniper Networks.
 
