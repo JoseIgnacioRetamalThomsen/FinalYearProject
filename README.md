@@ -1,3 +1,15 @@
+# Screen Casts
+
+https://github.com/JoseIgnacioRetamalThomsen/FinalYearProject/blob/master/video/back-end-screencast.mp4
+
+
+https://github.com/JoseIgnacioRetamalThomsen/FinalYearProject/blob/master/video/screencast_no_audio.mp4
+
+
+# Diseratation
+
+https://github.com/JoseIgnacioRetamalThomsen/FinalYearProject/blob/master/video/screencast_no_audio.mp4
+
 # Project Structure
       .
        ├── client                # React Native client
