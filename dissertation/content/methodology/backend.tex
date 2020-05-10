@@ -124,6 +124,13 @@ Each functionality needs to be tested by the developer at developing time.
 Bugs found needs to be personally reported to the developer.
 When integrating new components, the full system needs to be checked. 
 
+\subsection{Security considerations for authentication}
+\begin{itemize}
+
+	\item  Feedback for password strength.
+	\item  hash+ salt using bcrypt function on server and client.
+	\item constant time function for compare hashed passwords.
+\end{itemize}
 \subsection{Tools}
 
 We use several free tools that are free to students

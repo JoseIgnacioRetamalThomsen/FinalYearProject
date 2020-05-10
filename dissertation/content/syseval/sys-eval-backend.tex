@@ -1,0 +1,200 @@
+\section{Back-End}
+Jose I. Retamal
+\vskip 0.1in
+\indent
+\indent
+
+\subsection{Implementation}
+
+
+The system is implemented using  6 Virtual machines( 2 in Azure, 1 in  AWS and 3 in gCloud), one file bucket(gCloud), and the React Native app Accessible through Google Play Store(Figure \ref{se:implementation}).
+
+\begin{figure}[]
+	\begin{center}
+		\includegraphics[width=120mm,scale=1]{img/implementation/VM-Diagram.png}
+		\caption{System Implementation.}
+		\label{se:implementation}
+	\end{center}
+	
+\end{figure}
+
+\subsubsection{The databases}
+
+All databases are static, and they can be replicated or partitioned for scalability if we create multiple instances of one service, each instance access the same database or a replica of it. We have test replication in the authentication MySQL database. 
+
+
+
+
+
+\paragraph{Profiles, posts and Photo databases}
+\indent
+
+For convenience and limitation of resources, the profiles neo4j database, post mongo database, and photos MySQL database run all in the same Virtual Machine.
+\\
+
+We implement them in a Google Cloud small  size VM:
+\\
+\indent
+
+Ram: 1.7 GiB
+\\
+\indent
+VCPU: 1
+\\
+\indent
+Estimate cost: 14.04 p/month
+\\
+\indent
+OS: Ubuntu Server 18.04 LTS Minimal
+\\
+\indent
+Disk: Standard HHD
+\\
+\indent
+Location: London
+\\
+\\
+The Memory usage is show below (Figure \ref{se:d1}):
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=170mm,scale=1]{img/implementation/databases-dock-stats.png}
+		\caption{System Implementation: Databases Memory Usage.}
+		\label{se:d1}
+	\end{center}
+	
+\end{figure}
+
+\paragraph{Auth database}
+\indent
+We have implemented one master and one follower, and each database runs in different virtual machines from Azure with same specifications, the VM speficcations are : 
+\\
+\indent
+Ram: 1 GiB
+\\
+\indent
+VCPU: 1
+\\
+\indent
+Estimate cost: 6.96 p/month
+\\
+\indent
+OS: Ubuntu Server 16.04 LTS
+\\
+\indent
+Disk: Standard HHD
+\\
+\indent
+Location: Western Europe
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=170mm,scale=1]{img/implementation/auth-master-vm.png}
+		\caption{System Implementation-Master VM.}
+		\label{se:d2}
+	\end{center}
+	
+\end{figure}
+
+The memory usage for the master(Figure \ref{s2:d3}) :
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=170mm,scale=1]{img/implementation/auth-master-memory.png}
+		\caption{System Implementation- Master Memory Usage.}
+		\label{se:d3}
+	\end{center}
+	
+\end{figure}
+\indent
+\paragraph{The Services}
+
+Services need a small number of resources to run. The go service has a very low memory usage, and we were able to run all of them in a small virtual machine. We run on this way for testing and because we do not have many resources available to run the project.
+We run two instances of each service, one in google cloud located in London(Figure \ref{s2d4}) and another in AWS in North Virginia(Figure \ref{s2:d5}).
+\\
+\indent
+\subparagraph{Gcloud}
+
+\indent
+Ram: 0.6 GiB
+\\
+\indent
+VCPU: 1
+\\
+\indent
+Estimate cost: 5.39 p/month
+\\
+\indent
+OS: Container Optimazed OS 69-10895.385.0 stable
+\\
+\indent
+kernel :ChromiumOS-4.14.145 Kubernetes: 1.11.8 Docker: 17.03.2 Family: cos-69-lts 
+\\
+\indent
+Disk: SSD
+\\
+\indent
+Location: Western Europe
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=170mm,scale=1]{img/implementation/gc-ser-stats.png}
+		\caption{System Implementation- GCloun Services.}
+		\label{se:d4}
+	\end{center}
+	
+\end{figure}
+
+\subparagraph{AWS}
+\indent
+
+Ram : 1 Gib
+\\
+\indent
+VCPU : 1
+\\
+\indent
+Esitmate Cost 3.97 p/month
+\\
+\indent
+OS : ubuntu-bionic-18.04-amd64-server-20200112 
+\\
+\indent
+Disk : Standard HHD
+\\
+\indent
+Location: N. Virginia
+\\
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=170mm,scale=1]{img/implementation/was-service-ls.png}
+		\caption{System Implementation- AWS Services.}
+		\label{se:d5}
+	\end{center}
+	
+\end{figure}
+\paragraph{Rest service}
+\indent
+We run the rest service in a small VM on google cloud.
+\subparagraph{Gcloud}
+
+\indent
+Ram: 0.6 GiB
+\\
+\indent
+VCPU: 1
+\\
+\indent
+Estimate cost: 5.39 p/month
+\\
+\indent
+OS: Container Optimazed OS 69-10895.385.0 stable
+\\
+\indent
+kernel :ChromiumOS-4.14.145 Kubernetes: 1.11.8 Docker: 17.03.2 Family: cos-69-lts 
+\\
+\indent
+Disk: SSD
+\\
+\indent
+Location: Western Europe
+
+
