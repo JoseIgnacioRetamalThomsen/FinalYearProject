@@ -1,11 +1,16 @@
-\section{Back End}
+\indent
+\indent
+In this section, we describe how we develop the project, we set our basis on the start, and them follow them during the development of the project. 
+
+The section is divided in Back-end and Front-End because there where slightly different approaches in the developing process.
+\section{Back-End}
 Jose I. Retamal
 \vskip 0.1in
 \indent
 \indent
-Most successful software projects are developed using some agile methodology(http://agilemanifesto.org/). There is a reason for this and is because the software is an intellectual product that needs to adapt to change on requirements, software dependencies, and hardware. This constant change required an adaptative and iterative way to develop.
+Most successful software projects are developed using some agile methodology\cite{agilemanifesto}. There is a reason for this and is because the software is an intellectual product that needs to adapt to change on requirements, libraries, and hardware. This constant change required adaptative and iterative approaches to develop.
 
-We adapted some of the agile principles for our project:(http://agilemanifesto.org/principles.html):
+We adapted some of the agile principles to our project \cite{agilemanifesto}:
 \begin{itemize}
 	\item Continuous delivery. The application is tested at all stages, and we keep a working application all the time.
 	\item Adapt to changes at any stage. Even if we started with a design and chose the technologies to be use, they can change at any stage. 
@@ -49,8 +54,22 @@ To design the system, first, the requirements where set. Then the design was don
 	
 \end{itemize}
 
+\paragraph{Selection Criteria}
+\label{sel:criteria}
+\begin{itemize}
+	
 
+\item Accessibility. Technologies must be accessible without a cost; they can be free and open-source or offer student free usage.
+\item New to us. One of the ideas of the project is to learn how to work with new technologies and learn. So we look for technologies that are not familiar to us.
 
+\item Popular and used in 
+They are professionally used. We want to learn how to use technologies that are popular and used in professional software development.
+
+\item Mature and recognized. We prefer technologies with background and maintained/developed by a recognized organization or a big open source community. Even if there are always new technologies coming out, we prefer those that are already established.
+
+\item It adapts well to the purpose need in the system.
+Simple and with resources to learn. We need to learn the technologies, so we instead chose those that are fast to learn and with many resources(tutorials and documentation) to access.
+\end{itemize}
 \paragraph{Technology Research}
 
 After we have an idea of the system, some time was spent on looking for the best technologies that will suit the application, some prototypes where design to check if they work.
@@ -94,6 +113,8 @@ Each component is developed iteratively after some functionality is implemented 
 \end{figure}
 
 \subsection{ Testing}
+\indent
+\indent
 Because of the time frame, we do not develop the application using automated testing. We know there are many advantages to it, but we need to trade off this feature. Some aspects that we considered to decide that automated testing is not for the project:
 Most of the benefits of automated testing are long time benefits.
 Automatested testing is practical another application that needs to be maintained.
@@ -102,3 +123,35 @@ Instead, based on the principle of self-motivated development, we develop the pr
 Each functionality needs to be tested by the developer at developing time.
 Bugs found needs to be personally reported to the developer.
 When integrating new components, the full system needs to be checked. 
+
+\subsection{Security considerations for authentication}
+\begin{itemize}
+
+	\item  Feedback for password strength.
+	\item  hash+ salt using bcrypt function on server and client.
+	\item constant time function for compare hashed passwords.
+\end{itemize}
+\subsection{Tools}
+
+We use several free tools that are free to students
+
+\subsubsection{Integrated development environment}
+
+\begin{itemize}
+
+	\item  Eclipse for Java development. Solid IDE with just the right performance, we choose it because its well knows for us and free to use (\url{https://www.eclipse.org/}).
+	\item  Goland, for Go development. Excellent IDE is free for students(\url{https://www.jetbrains.com/go/}). 
+	\item  Visual Studio Code, general code review, and write docker images(\url{https://code.visualstudio.com/}).
+
+\end{itemize}
+\subsubsection{SHH Client}
+\begin{itemize}
+	
+	\item  Putty, free shh client, open-source, and simple to use(\url{https://www.putty.org/}).
+\end{itemize}
+
+\subsubsection{Version Management}
+\begin{itemize}
+\item  Git, very popular with string community, we use the prevalent GitHub server(\url{https://git-scm.com/}). 
+\item  Docker Hub, Manage containers, free for public containers (\url{https://hub.docker.com/}). 
+\end{itemize}
