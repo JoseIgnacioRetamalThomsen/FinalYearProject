@@ -593,3 +593,8 @@ func VisitCityEndPoint(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 
 }
+
+func UpdatePlaceRequest(w http.ResponseWriter, r *http.Request){
+	log.Printf("Received: %v", "Update place")
+
+}

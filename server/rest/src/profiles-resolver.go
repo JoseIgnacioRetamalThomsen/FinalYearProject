@@ -7,6 +7,11 @@ import (
 	"google.golang.org/grpc/resolver"
 	"time"
 )
+const (
+	DEADLINE = 5
+)
+
+
 
 type profileServer struct {
 	context *ProfileServiceContext
